@@ -1,14 +1,14 @@
 import sbtcrossproject.CrossPlugin.autoImport.crossProject
 
+
+
 name := "tree-react root project"
-
 version in ThisBuild := "0.0.1-SNAPSHOT"
-
 organization in ThisBuild := "org.rebeam"
-
 scalaVersion in ThisBuild := "2.12.6"
-
 // crossScalaVersions in ThisBuild := Seq("2.11.12", "2.12.6")
+
+
 
 scalacOptions in ThisBuild ++= Seq(
   "-feature",
@@ -31,11 +31,15 @@ scalacOptions in ThisBuild ++= Seq(
   //"-Yno-predef" ?
 )
 
+
+
 lazy val catsVersion                = "1.2.0"
 lazy val catsEffectVersion          = "0.10.1"
 lazy val scalajsReactVersion        = "1.2.3"
 lazy val circeVersion               = "0.9.3"
 lazy val nodejsVersion              = "0.4.2"
+
+
 
 lazy val root = project.in(file(".")).
   aggregate(
@@ -43,7 +47,9 @@ lazy val root = project.in(file(".")).
     scalajsReactMaterialIconsJS, scalajsReactMaterialIconsJVM,
     scalajsReactDownshiftJS, scalajsReactDownshiftJVM, 
     scalajsReactMaterialUIExtraJS, scalajsReactMaterialUIExtraJVM,
-    scalajsElectronJS, scalajsElectronJVM
+    scalajsElectronJS, scalajsElectronJVM,
+    scalajsElectronReactJS, scalajsElectronReactJVM,
+    scalajsElectronReactAppJS, scalajsElectronReactAppJVM
   ).settings(
     publish := {},
     publishLocal := {}
@@ -141,7 +147,6 @@ lazy val scalajsReactDownshift = crossProject(JSPlatform, JVMPlatform).in(file("
     ),
     
     //Produce a module, so we can use @JSImport.
-    // scalaJSModuleKind := ModuleKind.CommonJSModule//,
     scalaJSLinkerConfig ~= { _.withModuleKind(ModuleKind.CommonJSModule) }
   )
 
@@ -160,18 +165,8 @@ lazy val scalajsReactMaterialUIExtra = crossProject(JSPlatform, JVMPlatform).in(
 
   ).jvmSettings(
 
-  ).jsSettings(
-    //Scalajs dependencies that are used on the client only
-    resolvers += Resolver.jcenterRepo,
-
-    libraryDependencies ++= Seq(
-      "org.rebeam"                  %%% "scalajs-react-material-ui"      % "0.0.1-SNAPSHOT",
-      "org.rebeam"                  %%% "scalajs-react-material-icons"   % "0.0.1-SNAPSHOT",
-      "org.rebeam"                  %%% "scalajs-react-downshift"        % "0.0.1-SNAPSHOT"
-    ),
-    
+  ).jsSettings(    
     //Produce a module, so we can use @JSImport.
-    // scalaJSModuleKind := ModuleKind.CommonJSModule//,
     scalaJSLinkerConfig ~= { _.withModuleKind(ModuleKind.CommonJSModule) }
 
   ).dependsOn(scalajsReactMaterialUI, scalajsReactMaterialIcons, scalajsReactDownshift)
@@ -204,3 +199,60 @@ lazy val scalajsElectron = crossProject(JSPlatform, JVMPlatform).in(file("scalaj
 
 lazy val scalajsElectronJVM = scalajsElectron.jvm
 lazy val scalajsElectronJS = scalajsElectron.js
+
+
+
+  /////////////////////////////
+ // scalajs-electron-react //
+////////////////////////////
+lazy val scalajsElectronReact = crossProject(JSPlatform, JVMPlatform).in(file("scalajs-electron-react")).
+  //Settings for all projects
+  settings(
+    name := "scalajs-electron-react"
+
+  ).jvmSettings(
+
+  ).jsSettings(
+    //Scalajs dependencies that are used on the client only
+    resolvers += Resolver.jcenterRepo,
+
+    libraryDependencies ++= Seq(
+      "com.github.japgolly.scalajs-react" %%% "core" % scalajsReactVersion,
+      "com.github.japgolly.scalajs-react" %%% "extra" % scalajsReactVersion
+    ),
+    
+    //Produce a module, so we can use @JSImport.
+    scalaJSLinkerConfig ~= { _.withModuleKind(ModuleKind.CommonJSModule) }
+
+  ).dependsOn(scalajsElectron)
+
+lazy val scalajsElectronReactJVM = scalajsElectronReact.jvm
+lazy val scalajsElectronReactJS = scalajsElectronReact.js
+
+
+
+  /////////////////////////////////
+ // scalajs-electron-react-app //
+////////////////////////////////
+val scalaJsSrcDir = file("electron-app/scalajs_src")
+lazy val scalajsElectronReactApp = crossProject(JSPlatform, JVMPlatform).in(file("scalajs-electron-react-app")).
+  //Settings for all projects
+  settings(
+    name := "scalajs-electron-react-app"
+
+  ).jvmSettings(
+
+  ).jsSettings(
+
+    //Output scalajs and js dependencies to source folder for electron-app project
+    crossTarget in (Compile, fullOptJS) := scalaJsSrcDir,
+    crossTarget in (Compile, fastOptJS) := scalaJsSrcDir,
+    crossTarget in (Compile, packageJSDependencies) := scalaJsSrcDir,
+
+    //Produce a module, so we can use @JSImport.
+    scalaJSLinkerConfig ~= { _.withModuleKind(ModuleKind.CommonJSModule) }
+
+  ).dependsOn(scalajsElectron, scalajsElectronReact, scalajsReactMaterialUIExtra)
+
+lazy val scalajsElectronReactAppJVM = scalajsElectronReactApp.jvm
+lazy val scalajsElectronReactAppJS = scalajsElectronReactApp.js
