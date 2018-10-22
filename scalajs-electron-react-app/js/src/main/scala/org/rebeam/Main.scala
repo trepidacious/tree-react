@@ -6,7 +6,10 @@ import japgolly.scalajs.react._
 import japgolly.scalajs.react.vdom.html_<^._
 import org.scalajs.dom
 import scala.scalajs.js.annotation._
+import org.rebeam.electron.react._
 
+import org.rebeam.electron.react.CssSettings._
+import scalacss.ScalaCssReact._
 
 @JSExportTopLevel("Main")
 object Main {
@@ -18,6 +21,8 @@ object Main {
 
   @JSExport
   def main(): Unit = {
+
+    Styles.addToDocument()
 
     val theme = mui.styles.Styles.createMuiTheme(
       js.Dynamic.literal(
@@ -32,7 +37,7 @@ object Main {
     mui.MuiThemeProvider(theme = theme: js.Any)(
       <.div(
         ^.className := "mainDiv",
-        TitleBar.TitleBar("Scalajs Electron React App"),
+        TitleBar.TitleBar(TitleBar.Props()),
 
         <.div(
           ^.margin := "20px",

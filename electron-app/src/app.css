@@ -97,3 +97,11 @@
 .card-text {
   margin-top: 12px;
 }
+
+.scalajs-electron-react--titlebar-drag {
+  -webkit-app-region: drag;
+}
+
+.scalajs-electron-react--titlebar-nodrag {
+  -webkit-app-region: no-drag;
+}

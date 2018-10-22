@@ -38,6 +38,7 @@ lazy val catsEffectVersion          = "0.10.1"
 lazy val scalajsReactVersion        = "1.2.3"
 lazy val circeVersion               = "0.9.3"
 lazy val nodejsVersion              = "0.4.2"
+lazy val scalacssVersion            = "0.5.3"
 
 
 
@@ -218,7 +219,9 @@ lazy val scalajsElectronReact = crossProject(JSPlatform, JVMPlatform).in(file("s
 
     libraryDependencies ++= Seq(
       "com.github.japgolly.scalajs-react" %%% "core" % scalajsReactVersion,
-      "com.github.japgolly.scalajs-react" %%% "extra" % scalajsReactVersion
+      "com.github.japgolly.scalajs-react" %%% "extra" % scalajsReactVersion,
+      // "com.github.japgolly.scalacss" %%% "core" % scalacssVersion,
+      "com.github.japgolly.scalacss" %%% "ext-react" % scalacssVersion
     ),
     
     //Produce a module, so we can use @JSImport.
