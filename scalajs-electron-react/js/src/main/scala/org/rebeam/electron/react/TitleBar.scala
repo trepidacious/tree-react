@@ -6,18 +6,35 @@ import japgolly.scalajs.react._
 
 import japgolly.scalajs.react.vdom.html_<^._
 
-// import scalacss.ScalaCssReact._
+ import scalacss.ScalaCssReact._
 
 object TitleBar {
 
-  case class Props(disableMinimize: Boolean = false, disableMaximize: Boolean = false)
+  case class Props(disableMinimize: Boolean = false, disableMaximize: Boolean = false, icon: Option[String] = None)
 
   val TitleBar =
     ScalaComponent.builder[Props]("TitleBar")
       .render_P(p => {
-        <.div(^.id := "electron-app-title-bar", ^.className := "electron-app-title-bar")(
-          <.div(^.className := "resize-handle resize-handle-top"),
-          <.div(^.className := "resize-handle resize-handle-left"),
+        <.div(
+          ^.id := "electron-app-title-bar",
+          ^.className := "electron-app-title-bar",
+          Styles.titlebar
+        )(
+          <.div(
+            Styles.resizeHandle,
+            Styles.resizeHandleTop
+
+          ),
+
+          <.div(
+            Styles.resizeHandle,
+            Styles.resizeHandleLeft
+          ),
+          
+          <.img(
+            Styles.icon,
+            ^.src := p.icon
+          )
           // {!!icon && <img className="icon" src={icon} />}
           // {!!menu && <MenuBar menu={menu} />}
           // {children}
