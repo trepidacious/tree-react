@@ -2,6 +2,7 @@
 package org.rebeam.electron.react
 
 import japgolly.scalajs.react._
+import japgolly.scalajs.react.component.Scala.Unmounted
 // import scalajs.js
 
 import japgolly.scalajs.react.vdom.html_<^._
@@ -12,7 +13,7 @@ object TitleBar {
 
   case class Props(disableMinimize: Boolean = false, disableMaximize: Boolean = false, icon: Option[String] = None)
 
-  val TitleBar =
+  val component =
     ScalaComponent.builder[Props]("TitleBar")
       .render_P(p => {
         <.div(
@@ -30,17 +31,26 @@ object TitleBar {
             Styles.resizeHandle,
             Styles.resizeHandleLeft
           ),
-          
-          <.img(
-            Styles.icon,
-            ^.src := p.icon
-          )
-          // {!!icon && <img className="icon" src={icon} />}
-          // {!!menu && <MenuBar menu={menu} />}
-          // {children}
+
+          p.icon.map(i =>
+            <.img(
+              Styles.icon,
+              ^.src := i
+            )
+          ),
+
+          // TODO allow for extra components in titlebar
+
           WindowControls.WindowControls(WindowControls.Props(p.disableMinimize, p.disableMaximize))
         )
       })
       .build
+
+  def apply(
+    disableMinimize: Boolean = false,
+    disableMaximize: Boolean = false,
+    icon: Option[String] = None): Unmounted[Props, Unit, Unit] = {
+    component(Props(disableMinimize, disableMaximize, icon))
+  }
 
 }

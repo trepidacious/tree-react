@@ -166,7 +166,18 @@ lazy val scalajsReactMaterialUIExtra = crossProject(JSPlatform, JVMPlatform).in(
 
   ).jvmSettings(
 
-  ).jsSettings(    
+  ).jsSettings(
+
+     //Scalajs dependencies that are used on the client only
+     resolvers += Resolver.jcenterRepo,
+
+    //TODO factor this out?
+    libraryDependencies ++= Seq(
+      "com.github.japgolly.scalajs-react" %%% "core" % scalajsReactVersion,
+      "com.github.japgolly.scalajs-react" %%% "extra" % scalajsReactVersion,
+      "com.github.japgolly.scalacss"      %%% "ext-react" % scalacssVersion
+    ),
+
     //Produce a module, so we can use @JSImport.
     scalaJSLinkerConfig ~= { _.withModuleKind(ModuleKind.CommonJSModule) }
 
@@ -214,20 +225,10 @@ lazy val scalajsElectronReact = crossProject(JSPlatform, JVMPlatform).in(file("s
   ).jvmSettings(
 
   ).jsSettings(
-    //Scalajs dependencies that are used on the client only
-    resolvers += Resolver.jcenterRepo,
-
-    libraryDependencies ++= Seq(
-      "com.github.japgolly.scalajs-react" %%% "core" % scalajsReactVersion,
-      "com.github.japgolly.scalajs-react" %%% "extra" % scalajsReactVersion,
-      // "com.github.japgolly.scalacss" %%% "core" % scalacssVersion,
-      "com.github.japgolly.scalacss" %%% "ext-react" % scalacssVersion
-    ),
-    
     //Produce a module, so we can use @JSImport.
     scalaJSLinkerConfig ~= { _.withModuleKind(ModuleKind.CommonJSModule) }
 
-  ).dependsOn(scalajsElectron)
+  ).dependsOn(scalajsElectron, scalajsReactMaterialUIExtra)
 
 lazy val scalajsElectronReactJVM = scalajsElectronReact.jvm
 lazy val scalajsElectronReactJS = scalajsElectronReact.js

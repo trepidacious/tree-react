@@ -37,7 +37,7 @@ object Main {
     mui.MuiThemeProvider(theme = theme: js.Any)(
       <.div(
         ^.className := "mainDiv",
-        TitleBar.TitleBar(TitleBar.Props()),
+        TitleBar(),
 
         <.div(
           ^.margin := "20px",
