@@ -13,6 +13,8 @@ object Node {
 
   val dirName = js.Dynamic.global.__dirname
 
+  def relativePath(path: String): String = s"$dirName/$path"
+
   /**
     * Get the contents of a file at a path relative to the main directory of the electron application
     * (normally `src`, but can be the root of the project - see `package.json`, `main` field).

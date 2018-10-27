@@ -37,7 +37,7 @@ object Main {
     mui.MuiThemeProvider(theme = theme: js.Any)(
       <.div(
         ^.className := "mainDiv",
-        TitleBar(),
+        TitleBar(icon = Some(Node.relativePath("../assets/icons/png/small_icon_32.png"))),
 
         <.div(
           ^.margin := "20px",
@@ -46,7 +46,7 @@ object Main {
         // MainView("World")
         // DownshiftDemo.ctor(DownshiftDemo.Props(DownshiftDemo.countries))
           TextFieldDemo.ctor(),
-          mui.Card(component = "div":js.Any, raised = true, elevation = 1)(<.span("Hi!"))
+          mui.Card(component = "div":js.Any, raised = true, elevation = 1.0)(<.span("Hi!"))
         )
       )
     ).renderIntoDOM(dom.document.getElementById("App"))
