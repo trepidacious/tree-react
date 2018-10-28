@@ -18,15 +18,15 @@ object WindowControls {
   class Backend(bs: BackendScope[Props, State]) {
 
     def handleMinimize(e: ReactEventFromInput) =
-    //e.preventDefaultCB >>
       for {
+        _ <- e.preventDefaultCB
         s <- bs.state
         _ <- Callback{s.win.foreach(w => w.minimize())}
       } yield ()
 
     def handleMaximize(e: ReactEventFromInput) =
-    //e.preventDefaultCB >>
       for {
+        _ <- e.preventDefaultCB
         s <- bs.state
         _ <- Callback{
           s.win.foreach(w => {
@@ -42,10 +42,10 @@ object WindowControls {
       } yield ()
 
     def handleClose(e: ReactEventFromInput) =
-    //e.preventDefaultCB >>
       for {
+        _ <- e.preventDefaultCB
         s <- bs.state
-        _ <- Callback{s.win.foreach(w => w.close())}
+        _ <- Callback{s.win.foreach(_.close())}
       } yield ()
 
     def render(p: Props, s: State): VdomElement =
@@ -94,7 +94,7 @@ object WindowControls {
   }
 
   val WindowControls = ScalaComponent.builder[Props]("WindowControls")
-    .initialStateFromProps(p => State(None, false)) //TODO base on window in props, when we have this
+    .initialStateFromProps(p => State(None, false))
     .renderBackend[Backend]  // ← Use Backend class and backend.render
     .componentDidMount(_.backend.start)
     .build
