@@ -1,6 +1,7 @@
 package org.rebeam.electron.react
 
 import CssSettings._
+import scalacss.internal.ValueT
 
 import scala.language.postfixOps
 
@@ -49,4 +50,65 @@ object Styles extends StyleSheet.Inline {
     margin(6 px)
   )
 
+  val windowControlsButtonSVG: StyleA = style(
+    // Inherit fill color from color of parent
+    svgFill := "currentColor",
+    width(10 px),
+    height(10 px)
+  )
+
+  val windowControls: StyleA = style(
+    flexGrow(0),
+    flexShrink(0),
+    marginLeft.auto,
+    height(100 %%)
+  )
+
+  def windowControlsButton(
+    hoverColor: ValueT[ValueT.Color],
+    activeColor: ValueT[ValueT.Color]
+  ): StyleA = style(
+    appRegionNoDrag,
+    display.inlineBlock,
+    position.relative,
+    width(45 px),
+    height(100 %%),
+    padding.`0`,
+    margin.`0`,
+    overflow.hidden,
+    border.none,
+    boxShadow := "none",
+    borderRadius(0 px),
+    color(c"#a0a0a0"),
+    backgroundColor.transparent,
+    transition := "background-color 0.25s ease",
+    outline.none,
+
+    &.hover(
+      backgroundColor(hoverColor),
+      color(c"#fff")
+    ),
+
+    &.hover.active(
+      backgroundColor(activeColor),
+      transition := "none"
+    )
+  )
+
+  val windowControlsButtonPlain: StyleA = windowControlsButton(
+    rgba(136, 136, 136, 0.4),
+    rgba(102, 102, 102, 0.4)
+  )
+
+  val windowControlsButtonClose: StyleA = windowControlsButton(
+    rgb(232, 17, 35),
+    rgb(191, 15, 29)
+  )
+
+  //TODO if needed
+//  #electron-app-title-bar :not(input):not(textarea), :not(input):not(textarea)::after, :not(input):not(textarea)::before {
+//    -webkit-user-select: none;
+//    user-select: none;
+//    cursor: default;
+//  }
 }

@@ -3,11 +3,10 @@ package org.rebeam.electron.react
 
 import org.rebeam.{BrowserWindow, Electron}
 import japgolly.scalajs.react._
-// import scalajs.js
 
 import japgolly.scalajs.react.vdom.html_<^._
 
-// import scalacss.ScalaCssReact._
+import scalacss.ScalaCssReact._
 
 object WindowControls {
 
@@ -17,14 +16,14 @@ object WindowControls {
 
   class Backend(bs: BackendScope[Props, State]) {
 
-    def handleMinimize(e: ReactEventFromInput) =
+    def handleMinimize(e: ReactEventFromInput): Callback =
       for {
         _ <- e.preventDefaultCB
         s <- bs.state
         _ <- Callback{s.win.foreach(w => w.minimize())}
       } yield ()
 
-    def handleMaximize(e: ReactEventFromInput) =
+    def handleMaximize(e: ReactEventFromInput): Callback =
       for {
         _ <- e.preventDefaultCB
         s <- bs.state
@@ -41,7 +40,7 @@ object WindowControls {
         }
       } yield ()
 
-    def handleClose(e: ReactEventFromInput) =
+    def handleClose(e: ReactEventFromInput): Callback =
       for {
         _ <- e.preventDefaultCB
         s <- bs.state
@@ -49,12 +48,12 @@ object WindowControls {
       } yield ()
 
     def render(p: Props, s: State): VdomElement =
-      <.div(^.className := "window-controls")(
+      <.div(Styles.windowControls)(
 
         <.button(
+          Styles.windowControlsButtonPlain,
           ^.aria.label := "minimize", 
           ^.tabIndex := -1, 
-          ^.className := "window-control window-minimize", 
           ^.disabled := p.disableMinimize,
           ^.onClick ==> handleMinimize
         )(
@@ -62,9 +61,9 @@ object WindowControls {
         ),
 
         <.button(
+          Styles.windowControlsButtonPlain,
           ^.aria.label := "maximize", 
           ^.tabIndex := -1, 
-          ^.className := "window-control window-maximize", 
           ^.disabled := p.disableMaximize,
           ^.onClick ==> handleMaximize
         )(
@@ -72,9 +71,9 @@ object WindowControls {
         ),
 
         <.button(
+          Styles.windowControlsButtonClose,
           ^.aria.label := "close", 
           ^.tabIndex := -1, 
-          ^.className := "window-control window-close",
           ^.onClick ==> handleClose
         )(
           TitleIcons.close
@@ -87,16 +86,19 @@ object WindowControls {
       for {
         win <- CallbackTo(Electron.remote.getCurrentWindow())
         _ <- bs.setState(State(Some(win), win.isMaximized()))
-        _ <- Callback(win.addListener("maximize", () => direct.modState(s => s.copy(isMaximized = true))))
-        _ <- Callback(win.addListener("unmaximize", () => direct.modState(s => s.copy(isMaximized = false))))
+        // TODO store listeners in state and remove on unmount
+        _ <- Callback(win.addListener(eventName = "maximize", () => direct.modState(s => s.copy(isMaximized = true))))
+        _ <- Callback(win.addListener(eventName = "unmaximize", () => direct.modState(s => s.copy(isMaximized = false))))
       } yield ()
     }
+
   }
 
-  val WindowControls = ScalaComponent.builder[Props]("WindowControls")
-    .initialStateFromProps(p => State(None, false))
-    .renderBackend[Backend]  // ← Use Backend class and backend.render
-    .componentDidMount(_.backend.start)
-    .build
+  val WindowControls =
+    ScalaComponent.builder[Props]("WindowControls")
+      .initialState(State(None, isMaximized = false))
+      .renderBackend[Backend]
+      .componentDidMount(_.backend.start)
+      .build
 
 }

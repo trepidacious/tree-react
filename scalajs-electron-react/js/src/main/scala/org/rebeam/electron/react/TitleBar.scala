@@ -3,7 +3,6 @@ package org.rebeam.electron.react
 
 import japgolly.scalajs.react._
 import japgolly.scalajs.react.component.Scala.Unmounted
-// import scalajs.js
 
 import japgolly.scalajs.react.vdom.html_<^._
 
@@ -17,14 +16,11 @@ object TitleBar {
     ScalaComponent.builder[Props]("TitleBar")
       .render_P(p => {
         <.div(
-          ^.id := "electron-app-title-bar",
-          ^.className := "electron-app-title-bar",
           Styles.titlebar
         )(
           <.div(
             Styles.resizeHandle,
             Styles.resizeHandleTop
-
           ),
 
           <.div(
