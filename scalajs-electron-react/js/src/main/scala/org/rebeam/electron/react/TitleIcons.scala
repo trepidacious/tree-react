@@ -27,8 +27,10 @@ object TitleIcons {
     )
 
   val maximize = 
-    <.svg(^.fill := "currentColor", ^.width := "10", ^.height := "10")(
-      <.path(^.d := "M 0,0 0,10 10,10 10,0 Z M 1,1 9,1 9,9 1,9 Z")
+    <.svg(^.shapeRendering := "crispEdges", ^.stroke := "currentColor", ^.fill := "transparent", ^.width := "10", ^.height := "10")(
+//      <.path(^.d := "M 0,0 0,10 10,10 10,0 Z M 1,1 9,1 9,9 1,9 Z")
+      <.path(^.d := "M0.5 10V0.5H10V10H0.5Z")
+//      <.rect(^.x:=1.5, ^.y := 1.5, ^.width := 9, ^.height := 9)
     )
 
   val close = 

@@ -14,7 +14,7 @@ object TitleBar {
 
   val component =
     ScalaComponent.builder[Props]("TitleBar")
-      .render_P(p => {
+      .render_PC{case (p, c) => {
         <.div(
           Styles.titlebar
         )(
@@ -28,6 +28,7 @@ object TitleBar {
             Styles.resizeHandleLeft
           ),
 
+
           p.icon.map(i =>
             <.img(
               Styles.icon,
@@ -35,18 +36,18 @@ object TitleBar {
             )
           ),
 
-          // TODO allow for extra components in titlebar
+          c,
 
           WindowControls.WindowControls(WindowControls.Props(p.disableMinimize, p.disableMaximize))
         )
-      })
+      }}
       .build
 
   def apply(
     disableMinimize: Boolean = false,
     disableMaximize: Boolean = false,
-    icon: Option[String] = None): Unmounted[Props, Unit, Unit] = {
-    component(Props(disableMinimize, disableMaximize, icon))
+    icon: Option[String] = None)(children: VdomNode*): Unmounted[Props, Unit, Unit] = {
+    component(Props(disableMinimize, disableMaximize, icon))(children: _*)
   }
 
 }

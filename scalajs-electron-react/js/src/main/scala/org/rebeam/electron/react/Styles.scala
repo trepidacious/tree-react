@@ -14,7 +14,7 @@ object Styles extends StyleSheet.Inline {
 
   val titlebar: StyleA = style(
     backgroundColor(c"#2e3b84"),
-    color(c"#2e3b84"),
+    color(c"#fff"),
     appRegionDrag,
     height(28 px),
     width(100 %%),
@@ -25,6 +25,13 @@ object Styles extends StyleSheet.Inline {
 //    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", Arial, sans-serif;
 //    font-size: 12px;
 //    border-bottom: 1px solid #000;
+  )
+
+  val titleColor = color(c"#fff")
+
+  val title: StyleA = style (
+    padding(3 px),
+    titleColor
   )
 
   val resizeHandle: StyleA = style(
@@ -79,7 +86,7 @@ object Styles extends StyleSheet.Inline {
     border.none,
     boxShadow := "none",
     borderRadius(0 px),
-    color(c"#a0a0a0"),
+    titleColor,
     backgroundColor.transparent,
     transition := "background-color 0.25s ease",
     outline.none,
