@@ -17,7 +17,9 @@ object Title {
         p => {
           val o = ElectronUtils.isOSXWithHiddenTitleBarSupport
           <.div(
-            if (o) Styles.titleOSX else Styles.title
+            if (o) Styles.titleOSX else Styles.title,
+            //TODO move to Styles - not clear how to represent this without src values etc.
+            ^.fontFamily := """-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", Arial, sans-serif"""
           )(
             if (o) p else Typography(color = Typography.Color.Inherit, variant = Typography.Variant.Body2, style = Style("fontWeight" -> "300"))(p)
           )
