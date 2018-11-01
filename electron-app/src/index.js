@@ -17,7 +17,7 @@ const createWindow = async () => {
     width: 600,
     height: 700,
     frame: false,
-    // titleBarStyle: 'hidden',
+    titleBarStyle: 'hidden',
     // backgroundColor: '#312450',
     icon: path.join(__dirname, 'assets/icons/png/512x512.png')
   });

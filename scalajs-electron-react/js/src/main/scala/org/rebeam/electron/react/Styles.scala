@@ -27,10 +27,36 @@ object Styles extends StyleSheet.Inline {
 //    border-bottom: 1px solid #000;
   )
 
+  val titlebarOSX: StyleA = style(
+    backgroundColor(c"#2e3b84"),
+    color(c"#fff"),
+    appRegionDrag,
+    height(22 px),
+    width(100 %%),
+    flexGrow(0),
+    flexShrink(0),
+    display.flex,
+    flexDirection.row
+    //    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", Arial, sans-serif;
+    //    font-size: 12px;
+    //    border-bottom: 1px solid #000;
+  )
+
   val titleColor = color(c"#fff")
 
   val title: StyleA = style (
     padding(3 px),
+    titleColor
+  )
+
+//  val appleSystem = fontFace("-apple-system")(_.src("local(-apple-system)"))
+
+  val titleOSX: StyleA = style (
+    padding(2 px),
+    fontSize(14 px),
+    width(100 %%),
+    textAlign.center,
+    //    fontFamily(appleSystem),
     titleColor
   )
 
@@ -55,6 +81,11 @@ object Styles extends StyleSheet.Inline {
     height(16 px),
     width(16 px),
     margin(6 px)
+  )
+
+  val titleBarPaddingOSX: StyleA = style(
+    height(22 px),
+    width(80 px),
   )
 
   val windowControlsButtonSVG: StyleA = style(

@@ -3,10 +3,9 @@ package org.rebeam.electron.react
 
 import japgolly.scalajs.react._
 import japgolly.scalajs.react.component.Scala.Unmounted
-
 import japgolly.scalajs.react.vdom.html_<^._
-
- import scalacss.ScalaCssReact._
+import org.rebeam.ElectronUtils
+import scalacss.ScalaCssReact._
 
 object TitleBar {
 
@@ -15,8 +14,11 @@ object TitleBar {
   val component =
     ScalaComponent.builder[Props]("TitleBar")
       .render_PC{case (p, c) => {
+
+        val o = ElectronUtils.isOSXWithHiddenTitleBarSupport
+
         <.div(
-          Styles.titlebar
+          if (o) Styles.titlebarOSX else Styles.titlebar
         )(
           <.div(
             Styles.resizeHandle,
@@ -34,11 +36,19 @@ object TitleBar {
               Styles.icon,
               ^.src := i
             )
-          ),
+          ).when(!o),
+
+          <.div(
+            Styles.titleBarPaddingOSX
+          ).when(o),
 
           c,
 
-          WindowControls.WindowControls(WindowControls.Props(p.disableMinimize, p.disableMaximize))
+          //TODO add a resizeHandleRight on OSX
+          //TODO replace icon with padding div on OSX so children don't interfere with controls (plus padding on right so title is centered?)
+          //TODO Make Title adapt to OSX by centering and using apple system font?
+
+          WindowControls.WindowControls(WindowControls.Props(p.disableMinimize, p.disableMaximize)).when(!o)
         )
       }}
       .build
