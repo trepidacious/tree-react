@@ -21,10 +21,9 @@ object Styles extends StyleSheet.Inline {
     flexGrow(0),
     flexShrink(0),
     display.flex,
-    flexDirection.row
-//    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", Arial, sans-serif;
-//    font-size: 12px;
-//    border-bottom: 1px solid #000;
+    flexDirection.row,
+    userSelect := "none",
+    cursor.default
   )
 
   val titlebarOSX: StyleA = style(
@@ -36,10 +35,9 @@ object Styles extends StyleSheet.Inline {
     flexGrow(0),
     flexShrink(0),
     display.flex,
-    flexDirection.row
-    //    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", Arial, sans-serif;
-    //    font-size: 12px;
-    //    border-bottom: 1px solid #000;
+    flexDirection.row,
+    userSelect := "none",
+    cursor.default
   )
 
   val titleColor = color(c"#fff")
