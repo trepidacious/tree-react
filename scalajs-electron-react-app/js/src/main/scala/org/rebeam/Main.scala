@@ -43,12 +43,12 @@ object Main {
 
         <.div(
           ^.margin := "20px",
-          MultiSelectDemo.component(MultiSelectDemo.Props(MultiSelectDemo.countries)),
+          MultiSelectDemo.component(MultiSelectDemo.Props(MultiSelectDemo.countries))
         // DownshiftMultiDemo.ctor(DownshiftMultiDemo.Props(DownshiftDemo.countries))
         // MainView("World")
         // DownshiftDemo.ctor(DownshiftDemo.Props(DownshiftDemo.countries))
-          TextFieldDemo.ctor(),
-          mui.Card(component = "div":js.Any, raised = true, elevation = 1.0)(<.span("Hi!"))
+        //  TextFieldDemo.ctor(),
+        //  mui.Card(component = "div":js.Any, raised = true, elevation = 1.0)(<.span("Hi!"))
         )
       )
     ).renderIntoDOM(dom.document.getElementById("App"))

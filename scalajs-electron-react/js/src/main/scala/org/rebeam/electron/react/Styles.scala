@@ -1,7 +1,6 @@
 package org.rebeam.electron.react
 
 import CssSettings._
-import scalacss.internal.ValueT
 
 import scala.language.postfixOps
 
@@ -16,7 +15,6 @@ object Styles extends StyleSheet.Inline {
     backgroundColor(c"#2e3b84"),
     color(c"#fff"),
     appRegionDrag,
-    height(28 px),
     width(100 %%),
     flexGrow(0),
     flexShrink(0),
@@ -26,18 +24,14 @@ object Styles extends StyleSheet.Inline {
     cursor.default
   )
 
+  val titlebarWindows: StyleA = style(
+    titlebar,
+    height(28 px),
+  )
+
   val titlebarOSX: StyleA = style(
-    backgroundColor(c"#2e3b84"),
-    color(c"#fff"),
-    appRegionDrag,
-    height(22 px),
-    width(100 %%),
-    flexGrow(0),
-    flexShrink(0),
-    display.flex,
-    flexDirection.row,
-    userSelect := "none",
-    cursor.default
+    titlebar,
+    height(22 px)
   )
 
   val titleColor = color(c"#fff")
@@ -50,8 +44,8 @@ object Styles extends StyleSheet.Inline {
 //  val appleSystem = fontFace("-apple-system")(_.src("local(-apple-system)"))
 
   val titleOSX: StyleA = style (
-    padding(2 px),
-    fontSize(14 px),
+    padding(3 px),
+    fontSize(12 px),
     width(100 %%),
     textAlign.center,
     //    fontFamily(appleSystem),
@@ -100,10 +94,7 @@ object Styles extends StyleSheet.Inline {
     height(100 %%)
   )
 
-  def windowControlsButton(
-    hoverColor: ValueT[ValueT.Color],
-    activeColor: ValueT[ValueT.Color]
-  ): StyleA = style(
+  val windowControlsButtonBase: StyleA = style(
     appRegionNoDrag,
     display.inlineBlock,
     position.relative,
@@ -119,32 +110,32 @@ object Styles extends StyleSheet.Inline {
     backgroundColor.transparent,
     transition := "background-color 0.25s ease",
     outline.none,
+  )
 
+  val windowControlsButtonPlain: StyleA = style(
+    windowControlsButtonBase,
     &.hover(
-      backgroundColor(hoverColor),
+      backgroundColor(rgba(136, 136, 136, 0.4)),
       color(c"#fff")
     ),
 
     &.hover.active(
-      backgroundColor(activeColor),
+      backgroundColor(rgba(102, 102, 102, 0.4)),
       transition := "none"
     )
   )
 
-  val windowControlsButtonPlain: StyleA = windowControlsButton(
-    rgba(136, 136, 136, 0.4),
-    rgba(102, 102, 102, 0.4)
+  val windowControlsButtonClose: StyleA = style(
+    windowControlsButtonBase,
+    &.hover(
+      backgroundColor(rgb(232, 17, 35)),
+      color(c"#fff")
+    ),
+
+    &.hover.active(
+      backgroundColor(rgb(191, 15, 29)),
+      transition := "none"
+    )
   )
 
-  val windowControlsButtonClose: StyleA = windowControlsButton(
-    rgb(232, 17, 35),
-    rgb(191, 15, 29)
-  )
-
-  //TODO if needed
-//  #electron-app-title-bar :not(input):not(textarea), :not(input):not(textarea)::after, :not(input):not(textarea)::before {
-//    -webkit-user-select: none;
-//    user-select: none;
-//    cursor: default;
-//  }
 }

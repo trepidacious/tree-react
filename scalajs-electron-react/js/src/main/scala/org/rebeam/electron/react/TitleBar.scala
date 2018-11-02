@@ -18,7 +18,7 @@ object TitleBar {
         val o = ElectronUtils.isOSXWithHiddenTitleBarSupport
 
         <.div(
-          if (o) Styles.titlebarOSX else Styles.titlebar
+          if (o) Styles.titlebarOSX else Styles.titlebarWindows
         )(
           <.div(
             Styles.resizeHandle,
