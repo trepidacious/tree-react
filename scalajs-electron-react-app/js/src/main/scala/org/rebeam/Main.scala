@@ -43,7 +43,8 @@ object Main {
 
         <.div(
           ^.margin := "20px",
-          MultiSelectDemo.component(MultiSelectDemo.Props(MultiSelectDemo.countries))
+          MultiSelectDemo.component(MultiSelectDemo.Props(MultiSelectDemo.countries)),
+          NotificationSnackbar("notifications")
         // DownshiftMultiDemo.ctor(DownshiftMultiDemo.Props(DownshiftDemo.countries))
         // MainView("World")
         // DownshiftDemo.ctor(DownshiftDemo.Props(DownshiftDemo.countries))
