@@ -26,7 +26,7 @@ object Styles extends StyleSheet.Inline {
 
   val titlebarWindows: StyleA = style(
     titlebar,
-    height(28 px),
+    height(24 px),
   )
 
   val titlebarOSX: StyleA = style(
@@ -37,7 +37,8 @@ object Styles extends StyleSheet.Inline {
   val titleColor = color(c"#fff")
 
   val title: StyleA = style (
-    padding(3 px),
+    padding(4 px),
+    fontSize(12 px),
     titleColor
   )
 
@@ -72,7 +73,7 @@ object Styles extends StyleSheet.Inline {
   val icon: StyleA = style(
     height(16 px),
     width(16 px),
-    margin(6 px)
+    margin(4 px)
   )
 
   val titleBarPaddingOSX: StyleA = style(

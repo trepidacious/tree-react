@@ -53,7 +53,7 @@ object NotificationSnackbar {
           "horizontal" -> "left"
         ),
         open = state.notificationOpen,
-        autoHideDuration = 3000,
+        autoHideDuration = 3000.0,
         onClose = scope.modState(_.copy(notificationOpen = false)),
         message = <.span(state.notification): VdomNode
       )()

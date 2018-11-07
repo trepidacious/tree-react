@@ -6,8 +6,8 @@ import japgolly.scalajs.react.component.Scala.Unmounted
 import japgolly.scalajs.react.vdom.html_<^._
 import org.rebeam.ElectronUtils
 import scalacss.ScalaCssReact._
-import org.rebeam.mui.Typography
-import org.rebeam.mui.styles.Style
+//import org.rebeam.mui.Typography
+//import org.rebeam.mui.styles.Style
 
 object Title {
 
@@ -21,7 +21,8 @@ object Title {
             //TODO move to Styles - not clear how to represent this without src values etc.
             ^.fontFamily := """-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", Arial, sans-serif"""
           )(
-            if (o) p else Typography(color = Typography.Color.Inherit, variant = Typography.Variant.Body2, style = Style("fontWeight" -> "300"))(p)
+//          if (o) p else Typography(color = Typography.Color.Inherit, variant = Typography.Variant.Body2, style = Style("fontWeight" -> "300"))(p)
+            p
           )
         }
       }
