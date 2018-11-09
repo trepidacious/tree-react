@@ -2,7 +2,9 @@ package org.rebeam
 
 import io.scalajs.nodejs.os._
 
+import scala.scalajs.js
 import scala.util.Try
+import js.JSConverters._
 
 object ElectronUtils {
 
@@ -15,6 +17,144 @@ object ElectronUtils {
     //supporting hidden title bar.
     OS.platform() == platformOSX &&
       OS.release().split('.').headOption.flatMap(toIntOption).exists(_ >= 13)
+  }
+
+  sealed trait DialogProperty {
+    val s: String
+  }
+
+  /**
+    * Allow files to be selected.
+    */
+  case object OpenFile extends DialogProperty {
+    val s: String = "openFile"
+  }
+
+  /**
+    * Allow directories to be selected.
+    */
+  case object OpenDirectory extends DialogProperty {
+    val s: String = "openDirectory"
+  }
+
+  /**
+    * Allow multiple paths to be selected.
+    */
+  case object MultiSelections extends DialogProperty {
+    val s: String = "multiSelections"
+  }
+
+  /**
+    * Show hidden files in dialog.
+    */
+  case object ShowHiddenFiles extends DialogProperty {
+    val s: String = "showHiddenFiles"
+  }
+
+  /**
+    * macOS - Allow creating new directories from dialog.
+    */
+  case object CreateDirectory extends DialogProperty {
+    val s: String = "createDirectory"
+  }
+
+  /**
+    * Windows - Prompt for creation if the file path entered in the dialog does not exist.
+    * This does not actually create the file at the path but allows non-existent paths to be returned
+    * that should be created by the application.
+    */
+  case object PromptToCreate extends DialogProperty {
+    val s: String = "promptToCreate"
+  }
+
+  /**
+    * macOS - Disable the automatic alias (symlink) path resolution.
+    * Selected aliases will now return the alias path instead of their target path.
+    */
+  case object NoResolveAliases extends DialogProperty {
+    val s: String = "noResolveAliases"
+  }
+
+  /**
+    * macOS - Treat packages, such as .app folders, as a directory instead of a file.
+    */
+  case object TreatPackageAsDirectory extends DialogProperty {
+    val s: String = "treatPackageAsDirectory"
+  }
+
+  case class DialogFileFilter(name: String, extensions: List[String])
+
+  def showOpenDialog(
+    title: js.UndefOr[String] = js.undefined,
+    defaultPath: js.UndefOr[String] = js.undefined,
+    buttonLabel: js.UndefOr[String] = js.undefined,
+    filters: List[DialogFileFilter] = Nil,
+    properties: Set[DialogProperty] = Set.empty,
+    message: js.UndefOr[String] = js.undefined,
+    securityScopedBookmarks: js.UndefOr[Boolean] = js.undefined
+  ): List[String] = {
+    val p = (new js.Object).asInstanceOf[DialogOptions]
+
+    if (title.isDefined) {p.title = title}
+    if (defaultPath.isDefined) {p.defaultPath = defaultPath}
+    if (buttonLabel.isDefined) {p.buttonLabel = buttonLabel}
+
+    if (properties.nonEmpty) {
+      p.properties = properties.map(_.s).toJSArray
+    }
+
+    if (message.isDefined) {p.message = message}
+    if (securityScopedBookmarks.isDefined) {p.securityScopedBookmarks = securityScopedBookmarks}
+
+    if (filters.nonEmpty) {
+      p.filters = filters.map(
+        f => {
+          val g = (new js.Object).asInstanceOf[FileFilter]
+          g.name = f.name
+          g.extensions = f.extensions.toJSArray
+          g
+        }
+      ).toJSArray
+    }
+
+    Electron.remote.dialog.showOpenDialog(Electron.remote.getCurrentWindow(), p, js.undefined).toList.map(_.toList).flatten
+  }
+
+  def showOpenDialogAsync(
+                      title: js.UndefOr[String] = js.undefined,
+                      defaultPath: js.UndefOr[String] = js.undefined,
+                      buttonLabel: js.UndefOr[String] = js.undefined,
+                      filters: List[DialogFileFilter] = Nil,
+                      properties: Set[DialogProperty] = Set.empty,
+                      message: js.UndefOr[String] = js.undefined,
+                      securityScopedBookmarks: js.UndefOr[Boolean] = js.undefined,
+                      callback: (List[String]) => Unit
+                    ): List[String] = {
+    val p = (new js.Object).asInstanceOf[DialogOptions]
+
+    if (title.isDefined) {p.title = title}
+    if (defaultPath.isDefined) {p.defaultPath = defaultPath}
+    if (buttonLabel.isDefined) {p.buttonLabel = buttonLabel}
+
+    if (properties.nonEmpty) {
+      p.properties = properties.map(_.s).toJSArray
+    }
+
+    if (message.isDefined) {p.message = message}
+    if (securityScopedBookmarks.isDefined) {p.securityScopedBookmarks = securityScopedBookmarks}
+
+    if (filters.nonEmpty) {
+      p.filters = filters.map(
+        f => {
+          val g = (new js.Object).asInstanceOf[FileFilter]
+          g.name = f.name
+          g.extensions = f.extensions.toJSArray
+          g
+        }
+      ).toJSArray
+    }
+
+    Electron.remote.dialog.showOpenDialog(Electron.remote.getCurrentWindow(), p, js.defined((filenames: js.Array[String], _: js.Array[String]) => callback(filenames.toList))).toList.map(_.toList).flatten
   }
 
 }

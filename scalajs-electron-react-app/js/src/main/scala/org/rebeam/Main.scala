@@ -1,13 +1,13 @@
 package org.rebeam
 
 import scalajs.js
-
-import japgolly.scalajs.react._
+import japgolly.scalajs.react.{Callback, ReactMouseEvent, _}
 import japgolly.scalajs.react.vdom.html_<^._
+import org.rebeam.ElectronUtils.{DialogFileFilter}
 import org.scalajs.dom
+
 import scala.scalajs.js.annotation._
 import org.rebeam.electron.react._
-
 import org.rebeam.electron.react.CssSettings._
 import scalacss.ScalaCssReact._
 
@@ -44,6 +44,32 @@ object Main {
         <.div(
           ^.margin := "20px",
           MultiSelectDemo.component(MultiSelectDemo.Props(MultiSelectDemo.countries)),
+          mui.Button(onClick = (e: ReactMouseEvent) => Callback{
+            println(
+              ElectronUtils.showOpenDialog(
+                title = "Select file to print",
+                buttonLabel = "Print",
+                filters = List(
+                  DialogFileFilter("Text file", List("txt"))
+                ),
+                properties = Set(ElectronUtils.MultiSelections, ElectronUtils.OpenFile),
+                message = "Example message"
+              )
+            )
+          })("Show open dialog"),
+
+          mui.Button(onClick = (e: ReactMouseEvent) => Callback{
+            ElectronUtils.showOpenDialogAsync(
+              title = "Select file to print",
+              buttonLabel = "Print",
+              filters = List(
+                DialogFileFilter("Text file", List("txt"))
+              ),
+              properties = Set(ElectronUtils.MultiSelections, ElectronUtils.OpenFile),
+              message = "Example message",
+              callback = filenames => println(filenames)
+            )
+          })("Show open dialog async"),
           NotificationSnackbar("notifications")
         // DownshiftMultiDemo.ctor(DownshiftMultiDemo.Props(DownshiftDemo.countries))
         // MainView("World")
