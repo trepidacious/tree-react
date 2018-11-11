@@ -114,7 +114,6 @@ Some components are missing props because they "inherit" from another component 
 12. Consider changing PascalCase prop names to camelCase to be more idiomatic. Consider typing these based on a map from prop names to the Component name of the sub element. This would still allow use of a `js.Object` containing props, in an `additionalProps` field.
 13. Support component methods
 14. Support for withStyles?
-15. Look at missing events onBlur, onEmpty, onFilled, onFocus, onKeyDown, onKeyUp in Input, NativeSelect, Select
 
 ## scalajs-react-material-icons
 Scalajs react facade for material-ui icons

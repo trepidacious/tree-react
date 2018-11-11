@@ -1,12 +1,7 @@
 
 package org.rebeam.electron.react
 
-// import japgolly.scalajs.react._
-// import scalajs.js
-
 import japgolly.scalajs.react.vdom.svg_<^.{<, _}
-
-// import scalacss.ScalaCssReact._
 
 object TitleIcons {
 
@@ -14,20 +9,6 @@ object TitleIcons {
   //TODO restore ^.version := "1.1", in each <.svg
 
   //TODO use scalacss Styles.windowControlsButtonSVG if possible
-
-  //    <.svg(^.shapeRendering := "crispEdges", ^.strokeWidth := 0.5, ^.fill := "currentColor", ^.width := "10", ^.height := "10")(
-  //        <.path(^.d := "M 0,5 10,5 10,6 0,6 Z")
-  //    )
-
-  //  val unmaximize =
-  //    <.svg(^.shapeRendering := "crispEdges", ^.strokeWidth := 0.5, ^.stroke := "currentColor", ^.width := "10", ^.height := "10")(
-  //      <.rect(^.x:=0.5, ^.y := 0.5, ^.width := 9, ^.height := 9)
-  //    )
-  //    <.svg(^.shapeRendering := "crispEdges", ^.strokeWidth := 0.5, ^.fill := "currentColor", ^.width := "10", ^.height := "10")(
-  //      <.path(^.d := "m 2,1e-5 0,2 -2,0 0,8 8,0 0,-2 2,0 0,-8 z m 1,1 6,0 0,6 -1,0 0,-5 -5,0 z m -2,2 6,0 0,6 -6,0 z")
-  //    )
-
-
 
 //  // "currentColor" is to inherit fill color from color of parent
 //  val minimize =

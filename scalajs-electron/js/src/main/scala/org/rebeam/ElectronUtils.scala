@@ -84,15 +84,15 @@ object ElectronUtils {
 
   case class DialogFileFilter(name: String, extensions: List[String])
 
-  def showOpenDialog(
-    title: js.UndefOr[String] = js.undefined,
-    defaultPath: js.UndefOr[String] = js.undefined,
-    buttonLabel: js.UndefOr[String] = js.undefined,
-    filters: List[DialogFileFilter] = Nil,
-    properties: Set[DialogProperty] = Set.empty,
-    message: js.UndefOr[String] = js.undefined,
-    securityScopedBookmarks: js.UndefOr[Boolean] = js.undefined
-  ): List[String] = {
+  private def options(
+                      title: js.UndefOr[String],
+                      defaultPath: js.UndefOr[String],
+                      buttonLabel: js.UndefOr[String],
+                      filters: List[DialogFileFilter],
+                      properties: Set[DialogProperty],
+                      message: js.UndefOr[String],
+                      securityScopedBookmarks: js.UndefOr[Boolean]
+                    ): DialogOptions = {
     val p = (new js.Object).asInstanceOf[DialogOptions]
 
     if (title.isDefined) {p.title = title}
@@ -117,7 +117,20 @@ object ElectronUtils {
       ).toJSArray
     }
 
-    Electron.remote.dialog.showOpenDialog(Electron.remote.getCurrentWindow(), p, js.undefined).toList.map(_.toList).flatten
+    p
+  }
+
+  def showOpenDialog(
+    title: js.UndefOr[String] = js.undefined,
+    defaultPath: js.UndefOr[String] = js.undefined,
+    buttonLabel: js.UndefOr[String] = js.undefined,
+    filters: List[DialogFileFilter] = Nil,
+    properties: Set[DialogProperty] = Set.empty,
+    message: js.UndefOr[String] = js.undefined,
+    securityScopedBookmarks: js.UndefOr[Boolean] = js.undefined
+  ): List[String] = {
+    val p = options(title, defaultPath, buttonLabel, filters, properties, message, securityScopedBookmarks)
+    Electron.remote.dialog.showOpenDialog(Electron.remote.getCurrentWindow(), p, js.undefined).toList.flatMap(_.toList)
   }
 
   def showOpenDialogAsync(
@@ -129,32 +142,16 @@ object ElectronUtils {
                       message: js.UndefOr[String] = js.undefined,
                       securityScopedBookmarks: js.UndefOr[Boolean] = js.undefined,
                       callback: (List[String]) => Unit
-                    ): List[String] = {
-    val p = (new js.Object).asInstanceOf[DialogOptions]
+                    ): Unit = {
+    val p = options(title, defaultPath, buttonLabel, filters, properties, message, securityScopedBookmarks)
+    Electron.remote.dialog.showOpenDialog(
+      Electron.remote.getCurrentWindow(),
+      p,
+      js.defined((filenames: js.UndefOr[js.Array[String]], _: js.UndefOr[js.Array[String]]) =>
+        callback(filenames.toList.flatMap(_.toList)))
+    ).toList.flatMap(_.toList)
 
-    if (title.isDefined) {p.title = title}
-    if (defaultPath.isDefined) {p.defaultPath = defaultPath}
-    if (buttonLabel.isDefined) {p.buttonLabel = buttonLabel}
-
-    if (properties.nonEmpty) {
-      p.properties = properties.map(_.s).toJSArray
-    }
-
-    if (message.isDefined) {p.message = message}
-    if (securityScopedBookmarks.isDefined) {p.securityScopedBookmarks = securityScopedBookmarks}
-
-    if (filters.nonEmpty) {
-      p.filters = filters.map(
-        f => {
-          val g = (new js.Object).asInstanceOf[FileFilter]
-          g.name = f.name
-          g.extensions = f.extensions.toJSArray
-          g
-        }
-      ).toJSArray
-    }
-
-    Electron.remote.dialog.showOpenDialog(Electron.remote.getCurrentWindow(), p, js.defined((filenames: js.Array[String], _: js.Array[String]) => callback(filenames.toList))).toList.map(_.toList).flatten
+    ()
   }
 
 }

@@ -43,7 +43,8 @@ trait Dialog extends js.Object {
   def showOpenDialog(
     browserWindow: js.UndefOr[BrowserWindow],
     options: DialogOptions,
-    callback: js.UndefOr[js.Function2[js.Array[String], js.Array[String], Unit]]): js.UndefOr[js.Array[String]] = js.native
+    callback: js.UndefOr[js.Function2[js.UndefOr[js.Array[String]], js.UndefOr[js.Array[String]], Unit]]) :
+  js.UndefOr[js.Array[String]] = js.native
 }
 
 @js.native
