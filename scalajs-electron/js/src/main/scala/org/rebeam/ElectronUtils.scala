@@ -141,7 +141,7 @@ object ElectronUtils {
                       properties: Set[DialogProperty] = Set.empty,
                       message: js.UndefOr[String] = js.undefined,
                       securityScopedBookmarks: js.UndefOr[Boolean] = js.undefined,
-                      callback: (List[String]) => Unit
+                      callback: List[String] => Unit
                     ): Unit = {
     val p = options(title, defaultPath, buttonLabel, filters, properties, message, securityScopedBookmarks)
     Electron.remote.dialog.showOpenDialog(
