@@ -15,10 +15,12 @@
   "license": "MIT",
   "build": {
     "appId": "org.rebeam.scalajs-electron-react-app",
+    "productName": "ScalaJS Electron React App",
     "files": [
       "src",
       "scalajs_src",
-      "assets"
+      "assets",
+      "build"
     ],
     "mac": {
       "category": "public.app-category.developer-tools"

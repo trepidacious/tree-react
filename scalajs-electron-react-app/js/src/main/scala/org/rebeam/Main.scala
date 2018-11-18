@@ -37,7 +37,7 @@ object Main {
     mui.MuiThemeProvider(theme = theme: js.Any)(
       <.div(
         ^.className := "mainDiv",
-        TitleBar(icon = Some(Node.relativePath("../assets/icons/png/small_icon_32.png")))(
+        TitleBar(icon = Some(Node.relativePath("../build/icons/small_icon_32.png")))(
           Title("Electron Demo")
         ),
 
