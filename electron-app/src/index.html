@@ -5,19 +5,13 @@
   <link rel="stylesheet" href="../node_modules/typeface-roboto/index.css">
   <link rel="stylesheet" href="app.css">
 </head>
+
 <body style="background-color: #f1f3f4; margin: 0" >
-
-
-
   <div id="App"></div>
 </body>
 
 <script type="text/javascript">
-  // Todo - work out why these aren't JSImported...
-  // window.net      = require('net');
-  // window.fs       = require('fs');
-
-  var scalajs     = require('../scalajs_src/scalajs-electron-react-app-fastopt.js');  
+  var scalajs = require('../scalajs_src/scalajs-electron-react-app-fastopt.js');
   scalajs.Main.main();
 </script>
 

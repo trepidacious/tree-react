@@ -19,8 +19,13 @@ const createWindow = async () => {
     frame: false,
     titleBarStyle: 'hidden',
     backgroundColor: '#2e3b84',
-    icon: path.join(__dirname, 'build/icons/512x512.png')
+    icon: path.join(__dirname, 'build/icons/512x512.png'),
+    show: false
   });
+
+  mainWindow.once('ready-to-show', () => {
+    mainWindow.show()
+  })
 
   if (!isDev) {
     mainWindow.setMenu(null);
