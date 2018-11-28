@@ -32,13 +32,13 @@ scalacOptions in ThisBuild ++= Seq(
 )
 
 
-
 lazy val catsVersion                = "1.2.0"
 lazy val catsEffectVersion          = "0.10.1"
 lazy val scalajsReactVersion        = "1.2.3"
 lazy val circeVersion               = "0.9.3"
 lazy val nodejsVersion              = "0.4.2"
 lazy val scalacssVersion            = "0.5.3"
+lazy val scalatestVersion           = "3.0.5"
 
 
 
@@ -50,7 +50,8 @@ lazy val root = project.in(file(".")).
     scalajsReactMaterialUIExtraJS, scalajsReactMaterialUIExtraJVM,
     scalajsElectronJS, scalajsElectronJVM,
     scalajsElectronReactJS, scalajsElectronReactJVM,
-    scalajsElectronReactAppJS, scalajsElectronReactAppJVM
+    scalajsElectronReactAppJS, scalajsElectronReactAppJVM,
+    scalajsGoogleDriveJS, scalajsGoogleDriveJVM
   ).settings(
     publish := {},
     publishLocal := {}
@@ -260,3 +261,37 @@ lazy val scalajsElectronReactApp = crossProject(JSPlatform, JVMPlatform).in(file
 
 lazy val scalajsElectronReactAppJVM = scalajsElectronReactApp.jvm
 lazy val scalajsElectronReactAppJS = scalajsElectronReactApp.js
+
+
+//////////////////////
+// scalajs-electron //
+//////////////////////
+lazy val scalajsGoogleDrive = crossProject(JSPlatform, JVMPlatform).in(file("scalajs-google-drive")).
+  //Settings for all projects
+  settings(
+  name := "scalajs-google-drive",
+
+//  libraryDependencies += "org.scalactic" %% "scalactic" % "3.0.5",
+  libraryDependencies ++= Seq(
+    "org.scalatest"               %%% "scalatest"         % scalatestVersion % "test",
+    "io.circe"                    %%% "circe-core"        % circeVersion,
+    "io.circe"                    %%% "circe-generic"     % circeVersion,
+    "io.circe"                    %%% "circe-parser"      % circeVersion,
+    "io.circe"                    %%% "circe-generic-extras"      % circeVersion,
+    "org.typelevel"               %%% "cats-core"         % catsVersion,
+    "org.typelevel"               %%% "cats-effect"       % catsEffectVersion,
+  ),
+
+  addCompilerPlugin(
+    "org.scalamacros" % "paradise" % "2.1.1" cross CrossVersion.patch
+  )
+
+).jvmSettings(
+
+).jsSettings(
+  //Produce a module, so we can use @JSImport.
+  scalaJSLinkerConfig ~= { _.withModuleKind(ModuleKind.CommonJSModule) }
+)
+
+lazy val scalajsGoogleDriveJVM = scalajsGoogleDrive.jvm
+lazy val scalajsGoogleDriveJS = scalajsGoogleDrive.js
