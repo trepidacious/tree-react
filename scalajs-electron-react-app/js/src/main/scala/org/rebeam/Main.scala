@@ -1,9 +1,9 @@
 package org.rebeam
 
 import scalajs.js
-import japgolly.scalajs.react.{Callback, ReactMouseEvent, _}
+import japgolly.scalajs.react._
 import japgolly.scalajs.react.vdom.html_<^._
-import org.rebeam.ElectronUtils.{DialogFileFilter}
+import org.rebeam.ElectronUtils.DialogFileFilter
 import org.scalajs.dom
 
 import scala.scalajs.js.annotation._
@@ -11,13 +11,10 @@ import org.rebeam.electron.react._
 import org.rebeam.electron.react.CssSettings._
 import scalacss.ScalaCssReact._
 
+import japgolly.scalajs.react._
+
 @JSExportTopLevel("Main")
 object Main {
-
-  val MainView =
-    ScalaComponent.builder[String]("MainView")
-      .render_P(name => <.div("Hello ", name))
-      .build
 
   @JSExport
   def main(): Unit = {
@@ -44,6 +41,11 @@ object Main {
         <.div(
           ^.margin := "20px",
           MultiSelectDemo.component(MultiSelectDemo.Props(MultiSelectDemo.countries)),
+
+//          provider(1234),
+
+          ContextDemo.dataProvider(),
+
           mui.Button(onClick = (e: ReactMouseEvent) => Callback{
             println(
               ElectronUtils.showOpenDialog(
