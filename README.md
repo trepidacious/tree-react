@@ -11,6 +11,30 @@ Includes and replaces several originally separate projects:
  * [scalajs-react-downshift](https://github.com/trepidacious/scalajs-react-downshift)
  * [scalajs-electron](https://github.com/trepidacious/scalajs-electron)
 
+## Electron App Demo
+
+The scalajs-electron-react-app project provides a very simple demo of some material-ui components. This may be extended in future to demonstrate more components.
+
+This also includes a demo of an approach to using Context to allow access to a key-value store, with optimised updates of components when values they render change.
+
+Run the following from the project root directory:
+
+```
+# Build the scalajs sources
+sbt fastOptJS
+
+# Switch to the electron app root directory
+cd electron-app
+
+# Install yarn dependencies
+yarn
+
+# Run the electron app
+yarn start
+```
+
+The console shows debug output from the update process for components using the data context.
+
 ## scalajs-react-material-ui
 
 Facade for [material-ui](https://material-ui.com/) 3.1.2 in [scalajs-react](https://github.com/japgolly/scalajs-react).
