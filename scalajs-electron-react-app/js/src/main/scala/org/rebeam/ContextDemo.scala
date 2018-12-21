@@ -59,18 +59,38 @@ object ContextDemo {
 
   object DataComponentB {
 
-    // Essentially we memoise the DataRenderer function. Both render and the shouldComponentUpdate call
-    // following it will need the results. Render needs the VdomElement to return, and shouldComponentUpdate
-    // needs to know what data Keys are used when rendering "currentProps". We expect currentProps to generally
-    // yield the same results as those previously supplied to render, so we can just check this and if it is true, return
-    // the cached result. While this does involve mutation, this is not apparent outside the Backend, and this
-    // increases efficiency.
-    // Note that we need a reference to the last rendered props to make this work, and this will be held until the
-    // component is unmounted and GCed, but React will be holding a reference to the props at least as long as the
-    // component is mounted anyway, so this is not a memory leak.
-    // Note that we only cache the usedKeys, not the VdomElement rendered, since we expect to receive new props
-    // in react render, then see equivalent ones later in SCU. SCU only uses lastUsedKeys, so this is all we
-    // need to cache.
+    case class Props[A](a: A, data: Data)
+
+    /**
+      * This class provides for memoisation of a DataRenderer, working with the expected React lifecycle to
+      * avoid calling DataRenderer.apply when we know it will return the same result. This is done by providing
+      * a render method that calls the DataRenderer and caches necessary data, and a shouldComponentUpdate method
+      * that can be called from a component, which uses cached data to evaluate the need for an update without
+      * having to call the DataRenderer again. Where this is not possible based on the cache (which should only be
+      * if the React lifecycle is not as expected), an update is triggered for safety.
+      *
+      * The expected lifecycle is:
+      * 1. render
+      * 2. 0 or more SCU calls that return false.
+      * 3. 1 SCU call that returns true
+      * 4. Repeat from stage 1
+      *
+      * It is expected that the first call to SCU after a render will have currentProps eq renderProps, where
+      * renderProps is what was passed to render.
+      * It is expected that subsequent calls to SCU (before another call to render) will each have currentProps equal
+      * to the nextProps from the previous call to SCU. In other words, React will pass a continuous chain of changes
+      * to SCU - when an update is skipped, the nextProps will be applied to the component anyway, so will be the
+      * currentProps in the next call. When an update is not skipped, render will be called with nextProps, and then
+      * this will be the same props used for the next call to SCU after render.
+      *
+      * Note that we need a reference to the last props passed to render or SCU to make this work, and this will be
+      * held until the component is unmounted and GCed, but React will be holding a reference to the props at least as
+      * long as the component is mounted anyway, so this is not a memory leak.
+      *
+      * @param r    The DataRenderer
+      * @param ev$1 Reusability for props, to allow us to compare them in SCU
+      * @tparam A   The type of model in the props (alongside the data)
+      */
     class DataRendererMemo[A: Reusability](r: DataRenderer[A]) {
       var lastProps: Props[A] = _
       var lastUsedKeys: Set[Key] = _
@@ -83,60 +103,69 @@ object ContextDemo {
         drr
       }
 
-      // Get the usedKeys for rendering Props - if renderer will produce the same value with new pros as with
-      // lastProps, return the cached usedKeys
-      def usedKeys(p: Props[A]): Set[Key] = {
-        val reuse =
-          // If we haven't run before, we can't reuse
-          if (lastProps == null || lastUsedKeys == null) {
-            println("DataRendererMemo.usedKeys - memo miss, first render")
-            false
-
-          // If props are not reusable, can't reuse
-          } else if (!implicitly[Reusability[A]].test(lastProps.a, p.a)) {
-            println("DataRendererMemo.usedKeys - memo miss, props not reusable (" + lastProps.a + " -> " + p.a + ")")
-            false
-
-          // If any values used in the last render have changed in the new data, can't reuse
-          } else if (valuesChanged(lastUsedKeys, lastProps.data, p.data)) {
-            println("DataRendererMemo.usedKeys - memo miss, data value(s) changed")
-            false
-
-          // Can reuse
-          } else {
-            true
+      // TODO optimise - e.g. could return keys and revisions from DataRendererMemo.usedKeys to skip a map.get
+      // Check whether any of the values referenced by the set of keys has changed revision between
+      // currentData and nextData.
+      def valuesChanged(keys: Set[Key], currentData: Data, nextData: Data): Boolean = keys.exists(
+        key => {
+          val currentItem = currentData.map.get(key)
+          val nextItem = nextData.map.get(key)
+          (currentItem, nextItem) match {
+            case (Some(Item(_, currentRev)), Some(Item(_, nextRev))) if currentRev == nextRev => false
+            case _ => true
           }
+        }
+      )
 
-        if (reuse) {
-          println("DataRendererMemo.usedKeys - memo hit, memoised used keys are " + lastUsedKeys)
-          lastUsedKeys
+      def shouldComponentUpdate(currentProps: Props[A], nextProps: Props[A]): Boolean =
+        // This shouldn't happen, since we should have render called before SCU, but if it happens
+        // just permit the update to get our first memoised render.
+        if (lastProps == null || lastUsedKeys == null) {
+          println("DataRendererMemo.shouldComponentUpdate - UPDATE: first render")
+          true
+
+        // If the current props are not the ones we saw last, then cache is invalid, so just allow another render.
+        // We do not expect this to happen, based on lifecycle in the DataRendererMemo scaladoc, but if something
+        // unexpected happens it's safer to just update, this will refresh the cache when render is called.
+        } else if (lastProps ne currentProps) {
+          println(
+            "DataRendererMemo.shouldComponentUpdate - UPDATE: lastProps "
+              + lastProps + " ne currentProps " + currentProps
+          )
+          true
+
+        // If the instance of A in the props has changed, we should update
+        } else if (!implicitly[Reusability[A]].test(currentProps.a, nextProps.a)) {
+          println(
+            "DataRendererMemo.shouldComponentUpdate - UPDATE: props not reusable ("
+              + currentProps.a + " -> " + nextProps.a + ")"
+          )
+          true
+
+        // If any values used in the memoised render have changed in the new data, can't reuse
+        } else if (valuesChanged(lastUsedKeys, currentProps.data, nextProps.data)) {
+          println("DataRendererMemo.shouldComponentUpdate - UPDATE: new data value revision(s)")
+          true
+
+        // Data and props will produce the same result from renderer. Note we update lastProps to
+        // nextProps - we have established that they produce the same result from the DataRenderer,
+        // but note above that we require lastProps eq currentProps, so we need to update to allow the
+        // next call to SCU to work, since nexProps may have different data contents (that are still
+        // equivalent for our DataRenderer). This assumes that React will set the component's props
+        // to nextProps, so we will see this as currentProps on the next call.
         } else {
-          println("DataRendererMemo.usedKeys - memo miss, calling cachedRender")
-          render(p).usedKeys
+          println(
+            "DataRendererMemo.shouldComponentUpdate - skip: updating lastProps from "
+              + lastProps + " to nextProps " + nextProps
+          )
+          lastProps = nextProps
+          false
         }
-      }
     }
-
-    // TODO optimise - e.g. could return keys and revisions from DataRendererMemo.usedKeys to skip a map.get
-    // Check whether any of the values referenced by the set of keys has changed revision between
-    // currentData and nextData.
-    def valuesChanged(keys: Set[Key], currentData: Data, nextData: Data): Boolean = keys.exists(
-      key => {
-        val currentItem = currentData.map.get(key)
-        val nextItem = nextData.map.get(key)
-        (currentItem, nextItem) match {
-          case (Some(Item(_, currentRev)), Some(Item(_, nextRev))) if currentRev == nextRev => false
-          case _ => true
-        }
-      }
-    )
-
-    case class Props[A](a: A, data: Data)
 
     class Backend[A: Reusability](bs: BackendScope[Props[A], Unit], r: DataRenderer[A]) {
       val dataRendererMemo = new DataRendererMemo[A](r)
       def render(p: Props[A]): VdomElement = {
-        println("Backend.render(" + p + ")")
         dataRendererMemo.render(p).v
       }
     }
@@ -145,34 +174,7 @@ object ContextDemo {
     def component[A: Reusability](name: String, r: DataRenderer[A]) = ScalaComponent.builder[Props[A]](name)
       .backend(scope => new Backend[A](scope, r))
       .render(s => s.backend.render(s.props))
-      .shouldComponentUpdatePure(f => {
-
-        // If props have changed (according to reusability), there's no point in checking data, we need to update
-        if (!implicitly[Reusability[A]].test(f.currentProps.a, f.nextProps.a)) {
-          false
-
-        // Otherwise, only need to update if any of the data we used in the last render has changed
-        } else {
-
-          // This is where we (usually) use the memoised result of calling dataRendererMemo.render from Backend.render.
-          // If it turns out that the memoised value is out of date we will get a fresh render's usedKeys as required.
-          val lastUsedKeys = f.backend.dataRendererMemo.usedKeys(f.currentProps)
-
-          val currentData = f.currentProps.data
-          val nextData = f.nextProps.data
-
-          val dataChanged = valuesChanged(lastUsedKeys, currentData, nextData)
-
-          println("ShouldComponentUpdate for data " + currentData + " -> " + nextData + ", a " + f.currentProps.a + " -> " + f.nextProps.a + ", lastUsedKeys " + lastUsedKeys + ", dataChanged? " + dataChanged)
-          if (dataChanged) {
-            println(" => CHANGED")
-          } else {
-            println(" => same")
-          }
-          dataChanged
-        }
-
-      })
+      .shouldComponentUpdatePure(f => f.backend.dataRendererMemo.shouldComponentUpdate(f.currentProps, f.nextProps))
       .build
 
   }
@@ -185,7 +187,7 @@ object ContextDemo {
         a => {
           dataContext.consume(
             data => {
-              println("dataComponent.render_P, data " + data + ", a = " + a)
+              println(">>>dataComponent.render_P, data " + data + ", a = " + a)
               b(DataComponentB.Props(a, data))
             }
           )
@@ -198,7 +200,7 @@ object ContextDemo {
       .build
   }
 
-//  val itemDisplay = ScalaFnComponent[Int](id => <.pre(dataContext.consume(data => s"$id = ${data.map(id)}")))
+  //  val itemDisplay = ScalaFnComponent[Int](id => <.pre(dataContext.consume(data => s"$id = ${data.map(id)}")))
 
   val itemDisplay = {
     val r = new DataRenderer[Int] {
@@ -249,4 +251,3 @@ object ContextDemo {
     .build
 
 }
-
