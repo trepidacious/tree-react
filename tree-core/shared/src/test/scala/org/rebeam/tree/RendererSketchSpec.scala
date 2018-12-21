@@ -1,13 +1,12 @@
 package org.rebeam.tree
 
-//import cats.Monad
 import cats.implicits._
 import org.rebeam.tree.DataSourceViewOps._
 import org.rebeam.tree.SpecUtils._
 import org.scalatest._
 import org.scalatest.prop.Checkers
 
-class TextRendererSpec extends WordSpec with Matchers with Checkers {
+class RendererSketchSpec extends WordSpec with Matchers with Checkers {
 
   val dataSource: DataSource =
     MapDataSource.empty
@@ -16,7 +15,7 @@ class TextRendererSpec extends WordSpec with Matchers with Checkers {
 
     "render Person" in {
 
-      import org.rebeam.tree.view.TextTest._
+      import org.rebeam.tree.view.RendererSketch._
       val bob = Person("Bob", 99)
       val renderBob = personR.render[S](bob, ())
 

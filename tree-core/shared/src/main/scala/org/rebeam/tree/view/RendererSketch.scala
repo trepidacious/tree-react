@@ -3,11 +3,11 @@ package org.rebeam.tree.view
 import cats.Monad
 import org.rebeam.tree.ViewOps
 
-trait Renderer[A, S, R]{
-  def render[F[_]: Monad](a: A, state: S)(implicit stm: ViewOps[F]): F[R]
-}
+object RendererSketch {
 
-object TextTest {
+  trait Renderer[A, S, R]{
+    def render[F[_]: Monad](a: A, state: S)(implicit stm: ViewOps[F]): F[R]
+  }
 
   case class Person(name: String, age: Int)
 
@@ -36,14 +36,6 @@ object TextTest {
   trait PureTextRenderer[A] extends TextRenderer[A, Unit] {
     override def apply(a: A): Suspend[A, Unit] = Suspend(a, this)
   }
-
-//  object TextRenderer {
-//    def apply[A, S]() = new Renderer[A, S, TextNode] {
-//      def apply[F[_]: Monad](a: A, state: S)(implicit stm: ViewOps[F]): F[TextNode] = {
-//
-//      }
-//    }
-//  }
 
   val stringR: TextRenderer[String, Unit] = new TextRenderer[String, Unit] {
     def render[F[_]: Monad](a: String, state: Unit)(implicit stm: ViewOps[F]): F[TextNode] = {
