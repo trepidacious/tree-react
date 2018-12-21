@@ -169,8 +169,7 @@ object ContextDemo {
         dataRendererMemo.render(p).v
       }
     }
-
-
+    
     def component[A: Reusability](name: String, r: DataRenderer[A]) = ScalaComponent.builder[Props[A]](name)
       .backend(scope => new Backend[A](scope, r))
       .render(s => s.backend.render(s.props))
