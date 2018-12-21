@@ -10,7 +10,8 @@ Includes and replaces several originally separate projects:
  * [scalajs-react-material-ui-extra](https://github.com/trepidacious/scalajs-react-material-ui-extra)
  * [scalajs-react-downshift](https://github.com/trepidacious/scalajs-react-downshift)
  * [scalajs-electron](https://github.com/trepidacious/scalajs-electron)
-
+ * [tree-stm](https://github.com/trepidacious/tree-stm) - as tree-core
+ 
 ## Electron App Demo
 
 The scalajs-electron-react-app project provides a very simple demo of some material-ui components. This may be extended in future to demonstrate more components.
@@ -34,6 +35,12 @@ yarn start
 ```
 
 The console shows debug output from the update process for components using the data context.
+
+## tree-core
+
+A simple, functional software transactional memory, plus an approach to updating it using serialisable transactions, synchronising data between server and clients, and editing immutable data structures using lenses.
+
+This is still in progress, see [notes](https://github.com/trepidacious/tree-react/blob/master/tree-core/Notes.md).
 
 ## scalajs-react-material-ui
 
