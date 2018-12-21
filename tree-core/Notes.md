@@ -70,7 +70,16 @@ For example we could accept the store and an `Id[A]`, and render the value at th
 This would be a final tagless function like `Id[A] => F[String]`, producing a value of F that could be "run" with a revision of a store to produce a String describing the data.
 On each new revision, this would be run again. The disadvantage here is that without memoization it will be inefficient - the entire value is re-rendered each time the function is called.
 To improve this, we can use a different output type - rather than just `String` we could model a tree of rendered elements, where one of the types of elements is itself a suspended render function.
-There is a simple example of this at 
+There is a simple example of this in `org.rebeam.tree.view.RendererSketch`, note this is missing the actual rendering code, it just shows the structure used to render.
+
+#### React
+
+In React, we can make use of a Context to provide the STM to components. 
+We can then provide a generic component that uses a rendering function similar to the one outlined above, and handles implementation of the `shouldComponentUpdate` function to update components only when there is a change to the data they used to render (or to their props, as usual). 
+This can use the list of rendered ids and the revisions used to implement an efficient check for modifications, even if there are a large number of values in the store. 
+This is one advantage over using plain data structures - for example, consider a long list of items - if this is a plain list, then a component will be updated any time any element of the list changes. 
+If a list of references is used instead, then each render will produce a list of ids that were actually used (which may be for only a small range somewhere in the list), and updates will only occur when one of these values changes. 
+Note that an update would also be triggered by a change to props, for example if the list is scrolled, and this would generate a new list of used ids.
 
 ## Ids
 
