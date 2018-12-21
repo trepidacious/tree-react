@@ -34,6 +34,7 @@ object ContextDemo {
     */
   case class DataRenderResult(v: VdomElement, usedKeys: Set[Key])
 
+  // TODO how can we connect this to Reusability? Output must not change for reusable instances of A
   /**
     * Renders using props of type A, and Data, tracking which
     * keys were used from the data to allow us to determine exactly
@@ -41,46 +42,102 @@ object ContextDemo {
     * @tparam A The props.
     */
   trait DataRenderer[A] {
+    /**
+      * Perform a render
+      * Must meet the following contract:
+      * 1. Function is pure
+      * 2. Function only accesses values in Data using the keys returned in DataRenderResult.
+      * 3. Function produces identical results for values of A where Reusability[A].test returns true.
+      * These requirements allow us to memoise the render, so it is only reapplied if the data it uses changes.
+      *
+      * @param a    The data model ("props") to render
+      * @param data The Data to use to look up references
+      * @return     The result of rendering - Vdom, and a set of keys used.
+      */
     def apply(a: A, data: Data): DataRenderResult
   }
 
   object DataComponentB {
 
-    case class Props[A](a: A, data: Data)
+    // Essentially we memoise the DataRenderer function. Both render and the shouldComponentUpdate call
+    // following it will need the results. Render needs the VdomElement to return, and shouldComponentUpdate
+    // needs to know what data Keys are used when rendering "currentProps". We expect currentProps to generally
+    // yield the same results as those previously supplied to render, so we can just check this and if it is true, return
+    // the cached result. While this does involve mutation, this is not apparent outside the Backend, and this
+    // increases efficiency.
+    // Note that we need a reference to the last rendered props to make this work, and this will be held until the
+    // component is unmounted and GCed, but React will be holding a reference to the props at least as long as the
+    // component is mounted anyway, so this is not a memory leak.
+    // Note that we only cache the usedKeys, not the VdomElement rendered, since we expect to receive new props
+    // in react render, then see equivalent ones later in SCU. SCU only uses lastUsedKeys, so this is all we
+    // need to cache.
+    class DataRendererMemo[A: Reusability](r: DataRenderer[A]) {
+      var lastProps: Props[A] = _
+      var lastUsedKeys: Set[Key] = _
 
-    class Backend[A](bs: BackendScope[Props[A], Unit], r: DataRenderer[A]) {
-
-      // Essentially we memoise the DataRenderer function. Both render and the shouldComponentUpdate call
-      // following it will need the results. Render needs the VdomElement to return, and shouldComponentUpdate
-      // needs to know what data Keys are used when rendering "currentProps". We expect currentProps to generally
-      // be exactly the same as those previously supplied to render, so we can just check this and if it is true, return
-      // the cached result. While this does involve mutation, this is not apparent outside the Backend, and this
-      // increases efficiency.
-      // Note that we need a reference to the last rendered props to make this work, and this will be held until the
-      // component is unmounted and GCed, but React will be holding a reference to the props at least as long as the
-      // component is mounted anyway, so this is not a memory leak.
-      case class DataRendererCache(p: Props[A], usedKeys: Set[Key])
-      var dataRendererCache: Option[DataRendererCache] = None
-      private def cachedRender(p: Props[A]): DataRenderResult = {
+      def render(p: Props[A]): DataRenderResult = {
         val drr = r(p.a, p.data)
-        dataRendererCache = Some(DataRendererCache(p, drr.usedKeys))
-        println("Cached - props " + p + " give used keys " + drr.usedKeys)
+        lastProps = p
+        lastUsedKeys = drr.usedKeys
+        println("DataRendererMemo.render(" + p + ") gives used keys " + drr.usedKeys)
         drr
       }
 
-      // Get the usedKeys for rendering Props - if they are eq to last props used, we use the cached value
-      private[DataComponentB] def usedKeys(p: Props[A]): Set[Key] = dataRendererCache match {
-        case Some(DataRendererCache(lastP, lastUsedKeys)) if p eq lastP => {
-          println("Cache hit - props are still " + p + " so used keys are " + lastUsedKeys)
-          lastUsedKeys
-        }
-        case _ => cachedRender(p).usedKeys
-      }
+      // Get the usedKeys for rendering Props - if renderer will produce the same value with new pros as with
+      // lastProps, return the cached usedKeys
+      def usedKeys(p: Props[A]): Set[Key] = {
+        val reuse =
+          // If we haven't run before, we can't reuse
+          if (lastProps == null || lastUsedKeys == null) {
+            println("DataRendererMemo.usedKeys - memo miss, first render")
+            false
 
+          // If props are not reusable, can't reuse
+          } else if (!implicitly[Reusability[A]].test(lastProps.a, p.a)) {
+            println("DataRendererMemo.usedKeys - memo miss, props not reusable (" + lastProps.a + " -> " + p.a + ")")
+            false
+
+          // If any values used in the last render have changed in the new data, can't reuse
+          } else if (valuesChanged(lastUsedKeys, lastProps.data, p.data)) {
+            println("DataRendererMemo.usedKeys - memo miss, data value(s) changed")
+            false
+
+          // Can reuse
+          } else {
+            true
+          }
+
+        if (reuse) {
+          println("DataRendererMemo.usedKeys - memo hit, memoised used keys are " + lastUsedKeys)
+          lastUsedKeys
+        } else {
+          println("DataRendererMemo.usedKeys - memo miss, calling cachedRender")
+          render(p).usedKeys
+        }
+      }
+    }
+
+    // TODO optimise - e.g. could return keys and revisions from DataRendererMemo.usedKeys to skip a map.get
+    // Check whether any of the values referenced by the set of keys has changed revision between
+    // currentData and nextData.
+    def valuesChanged(keys: Set[Key], currentData: Data, nextData: Data): Boolean = keys.exists(
+      key => {
+        val currentItem = currentData.map.get(key)
+        val nextItem = nextData.map.get(key)
+        (currentItem, nextItem) match {
+          case (Some(Item(_, currentRev)), Some(Item(_, nextRev))) if currentRev == nextRev => false
+          case _ => true
+        }
+      }
+    )
+
+    case class Props[A](a: A, data: Data)
+
+    class Backend[A: Reusability](bs: BackendScope[Props[A], Unit], r: DataRenderer[A]) {
+      val dataRendererMemo = new DataRendererMemo[A](r)
       def render(p: Props[A]): VdomElement = {
-        println("Rendering props " + p)
-        val rr = cachedRender(p)
-        rr.v
+        println("Backend.render(" + p + ")")
+        dataRendererMemo.render(p).v
       }
     }
 
@@ -97,28 +154,16 @@ object ContextDemo {
         // Otherwise, only need to update if any of the data we used in the last render has changed
         } else {
 
-          // This is where we (usually) use the cached result of calling the renderer in Backend.render, if
-          // it turns out that the cached value is for different props we will get a fresh render as required.
-          val lastUsedKeys = f.backend.usedKeys(f.currentProps)
+          // This is where we (usually) use the memoised result of calling dataRendererMemo.render from Backend.render.
+          // If it turns out that the memoised value is out of date we will get a fresh render's usedKeys as required.
+          val lastUsedKeys = f.backend.dataRendererMemo.usedKeys(f.currentProps)
 
           val currentData = f.currentProps.data
           val nextData = f.nextProps.data
 
-          // TODO optimise - e.g. could return keys and revisions from Backend.usedKeys
-          // If we have no previous render, assume data is changed.
-          // Otherwise, see if the rev of any used data has changed.
-          val dataChanged = lastUsedKeys.exists(
-            key => {
-              val currentItem = currentData.map.get(key)
-              val nextItem = nextData.map.get(key)
-              (currentItem, nextItem) match {
-                case (Some(Item(_, currentRev)), Some(Item(_, nextRev))) if currentRev == nextRev => false
-                case _ => true
-              }
-            }
-          )
+          val dataChanged = valuesChanged(lastUsedKeys, currentData, nextData)
 
-          println("ShouldComponentUpdate for data " + currentData + " -> " + nextData + ", a " + f.currentProps.a + " -> " + f.nextProps.a + ", lastUsedKeys " + lastUsedKeys)
+          println("ShouldComponentUpdate for data " + currentData + " -> " + nextData + ", a " + f.currentProps.a + " -> " + f.nextProps.a + ", lastUsedKeys " + lastUsedKeys + ", dataChanged? " + dataChanged)
           if (dataChanged) {
             println(" => CHANGED")
           } else {
@@ -140,7 +185,7 @@ object ContextDemo {
         a => {
           dataContext.consume(
             data => {
-              println("dataComponent render_P, data " + data + ", a = " + a)
+              println("dataComponent.render_P, data " + data + ", a = " + a)
               b(DataComponentB.Props(a, data))
             }
           )
