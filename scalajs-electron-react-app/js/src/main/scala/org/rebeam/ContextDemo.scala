@@ -87,6 +87,17 @@ object ContextDemo {
       * held until the component is unmounted and GCed, but React will be holding a reference to the props at least as
       * long as the component is mounted anyway, so this is not a memory leak.
       *
+      * However this does indicate a bit of a problem with the approach of pulling the Data from context and passing to
+      * DataComponentB as part of props - we will hold on to the whole Data at the last revision used to render
+      * each component. If we have a lot of churn in the Data, this will increase memory requirements (it's not a leak
+      * since it doesn't grow indefinitely, but it will be holding on to data that is not needed - we only need the
+      * revision numbers of the values used by the last render for SCU).
+      *
+      * TODO this can be improved by using React 16.6 contextType API to allow access to context from any lifecycle
+      * method, including SCU. This will need support from scalajs-react (which is on React 16.3 when this is written),
+      * or some kind of messing around with the raw component created by scalajs-react to add the contextType and
+      * access it from SCU.
+      *
       * @param r    The DataRenderer
       * @param ev$1 Reusability for props, to allow us to compare them in SCU
       * @tparam A   The type of model in the props (alongside the data)
@@ -169,7 +180,7 @@ object ContextDemo {
         dataRendererMemo.render(p).v
       }
     }
-    
+
     def component[A: Reusability](name: String, r: DataRenderer[A]) = ScalaComponent.builder[Props[A]](name)
       .backend(scope => new Backend[A](scope, r))
       .render(s => s.backend.render(s.props))
