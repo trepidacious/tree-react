@@ -99,3 +99,18 @@ Just use UUIDS? Need to look at generation, ideally can be repeatably generated 
  * Should just be an implementation detail? Used to check whether transaction is local or remote to a client.
  * Used to seed GUID generation on client? We would know we don't have this part of the seed the same between different any pair of transactions.
  * Not to be used in database ids?
+
+## Structure of data
+
+The system leaves the design of the data structure to the user. This can be anywhere from:
+1. A single key-value pair, with a normal, immutable data structure as the value. This can largely ignore the reference system, and just use transactions, lenses, deltas etc. to edit the data. For example, `case class Person(name: String, age: Int, friend: Person)`
+2. A structure with Refs used everywhere there would be data in a standard immutable data structure, e.g. `case class Person(name: Ref[String], age: Ref[Int], friend: Ref[Person])`
+
+Approach 1 is simpler, and avoids any issues with dangling references, but leads to issues updating data - e.g. what do we do when the `Person` in the friend field is updated? Do we find the person elsewhere in the data structure and update those copies too?
+Approach 2 is the most flexible, but can lead to confusing issues - what if two `Person` instances reference the same String value for their names? Updating one will rename the other, which may or may not be what is needed.
+
+Practically, it is probably best to use references only where needed for:
+1. Deliberate sharing of data between different structures. For example, referencing the same user data from each post on a forum. That way, if they update their nickname it will be visible immediately on all posts.
+2. Segmenting data to allow viewing part of a large graph. In the forum example, including every possible linked data item for a post (e.g. every post of every user who comments) could generate a very large data set, potentially the entire forum. Using references allows for only the immediately visible parts of a data structure to be sent to a client. When a ref is followed by a renderer, it can be retrieved in the background.
+3. Making transactions preserve user intent. Using a `List[Ref[A]]` rather than a `List[A]` allows transactions to be "anchored" to a Ref, rather than (for example) to an index in the list. If the list is reordered on the server, before the transaction is applied, the same data will be edited. This could also be implemented by use of some "find" function to locate the correct data, using the contents of the list elements, however this may be less efficient, or may require introducing another, ad-hoc Id to find the item.
+4. Efficiency - the use of Ids and revisions allows us to quickly establish whether a value may have changed, without relying on equality.
