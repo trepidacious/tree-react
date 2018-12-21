@@ -375,5 +375,5 @@ lazy val treeReact = crossProject(JSPlatform, JVMPlatform).in(file("tree-react")
   scalaJSLinkerConfig ~= { _.withModuleKind(ModuleKind.CommonJSModule) }
 ).dependsOn(treeCore)
 
-lazy val treeReactJVM = tree-react.jvm
-lazy val treeReactJS = tree-react.js
+lazy val treeReactJVM = treeReact.jvm
+lazy val treeReactJS = treeReact.js
