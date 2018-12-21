@@ -9,7 +9,6 @@ scalaVersion in ThisBuild := "2.12.6"
 // crossScalaVersions in ThisBuild := Seq("2.11.12", "2.12.6")
 
 
-
 scalacOptions in ThisBuild ++= Seq(
   "-feature",
   "-deprecation",
@@ -31,6 +30,12 @@ scalacOptions in ThisBuild ++= Seq(
   //"-Yno-predef" ?
 )
 
+testOptions in Test += Tests.Argument(TestFrameworks.ScalaCheck, "-verbosity", "2")
+
+resolvers ++= Seq(
+  Resolver.sonatypeRepo("releases"),
+  Resolver.sonatypeRepo("snapshots")
+)
 
 lazy val catsVersion                = "1.5.0"
 lazy val catsEffectVersion          = "1.1.0"
@@ -38,8 +43,11 @@ lazy val scalajsReactVersion        = "1.3.1"
 lazy val circeVersion               = "0.10.0"
 lazy val nodejsVersion              = "0.4.2"
 lazy val scalacssVersion            = "0.5.3"
+lazy val shapelessVersion           = "2.3.3"
+lazy val monocleVersion             = "1.5.0-cats"
+lazy val scalacticVersion           = "3.0.5" // Needed?
 lazy val scalatestVersion           = "3.0.5"
-
+lazy val scalacheckVersion          = "1.14.0"
 
 
 lazy val root = project.in(file(".")).
@@ -51,7 +59,8 @@ lazy val root = project.in(file(".")).
     scalajsElectronJS, scalajsElectronJVM,
     scalajsElectronReactJS, scalajsElectronReactJVM,
     scalajsElectronReactAppJS, scalajsElectronReactAppJVM,
-    scalajsGoogleDriveJS, scalajsGoogleDriveJVM
+    scalajsGoogleDriveJS, scalajsGoogleDriveJVM,
+    treeCoreJS, treeCoreJVM
   ).settings(
     publish := {},
     publishLocal := {}
@@ -263,9 +272,9 @@ lazy val scalajsElectronReactAppJVM = scalajsElectronReactApp.jvm
 lazy val scalajsElectronReactAppJS = scalajsElectronReactApp.js
 
 
-//////////////////////
-// scalajs-electron //
-//////////////////////
+  //////////////////////////
+ // scalajs-google-drive //
+/////////////////////////
 lazy val scalajsGoogleDrive = crossProject(JSPlatform, JVMPlatform).in(file("scalajs-google-drive")).
   //Settings for all projects
   settings(
@@ -295,3 +304,76 @@ lazy val scalajsGoogleDrive = crossProject(JSPlatform, JVMPlatform).in(file("sca
 
 lazy val scalajsGoogleDriveJVM = scalajsGoogleDrive.jvm
 lazy val scalajsGoogleDriveJS = scalajsGoogleDrive.js
+
+
+  ////////////////
+ // tree-core //
+///////////////
+lazy val treeCore = crossProject(JSPlatform, JVMPlatform).in(file("tree-core")).
+  //Settings for all projects
+  settings(
+  name := "tree-core",
+
+  //  libraryDependencies += "org.scalactic" %% "scalactic" % "3.0.5",
+  libraryDependencies ++= Seq(
+    "io.circe"                    %%% "circe-core"        % circeVersion,
+    "io.circe"                    %%% "circe-generic"     % circeVersion,
+    "io.circe"                    %%% "circe-parser"      % circeVersion,
+
+    "org.typelevel"               %%% "cats-free"         % catsVersion,
+
+    "com.chuusai"                 %%% "shapeless"         % shapelessVersion,
+
+    "com.github.julien-truffaut"  %%% "monocle-core"      % monocleVersion,
+    "com.github.julien-truffaut"  %%% "monocle-generic"   % monocleVersion,
+    "com.github.julien-truffaut"  %%% "monocle-macro"     % monocleVersion,
+    "com.github.julien-truffaut"  %%% "monocle-state"     % monocleVersion,
+    "com.github.julien-truffaut"  %%% "monocle-refined"   % monocleVersion,
+    "com.github.julien-truffaut"  %%% "monocle-law"       % monocleVersion      % "test",
+
+    "org.scalactic"               %%% "scalactic"         % scalacticVersion    % "test",
+    "org.scalatest"               %%% "scalatest"         % scalatestVersion    % "test",
+    "org.scalacheck"              %%% "scalacheck"        % scalacheckVersion   % "test"
+  ),
+
+  addCompilerPlugin(
+    "org.scalamacros" % "paradise" % "2.1.1" cross CrossVersion.patch
+  )
+
+).jvmSettings(
+
+).jsSettings(
+  //Produce a module, so we can use @JSImport.
+  scalaJSLinkerConfig ~= { _.withModuleKind(ModuleKind.CommonJSModule) }
+)
+
+lazy val treeCoreJVM = treeCore.jvm
+lazy val treeCoreJS = treeCore.js
+
+
+  /////////////////
+ // tree-react //
+///////////////
+lazy val treeReact = crossProject(JSPlatform, JVMPlatform).in(file("tree-react")).
+  //Settings for all projects
+  settings(
+  name := "tree-react"
+
+).jvmSettings(
+
+).jsSettings(
+  //Scalajs dependencies that are used on the client only
+  resolvers += Resolver.jcenterRepo,
+
+  //TODO factor this out?
+  libraryDependencies ++= Seq(
+    "com.github.japgolly.scalajs-react" %%% "core" % scalajsReactVersion,
+    "com.github.japgolly.scalajs-react" %%% "extra" % scalajsReactVersion
+  ),
+
+  //Produce a module, so we can use @JSImport.
+  scalaJSLinkerConfig ~= { _.withModuleKind(ModuleKind.CommonJSModule) }
+).dependsOn(treeCore)
+
+lazy val treeReactJVM = tree-react.jvm
+lazy val treeReactJS = tree-react.js
