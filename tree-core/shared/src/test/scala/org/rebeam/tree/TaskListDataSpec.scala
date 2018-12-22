@@ -15,7 +15,7 @@ import SpecUtils._
 
 class TaskListDataSpec extends WordSpec with Matchers with Checkers {
 
-  private def taskListResult = runS(createTaskList[S])
+  private def taskListResult = runS(createTaskList[MapState])
 
   private val taskListGuid = guid(0, 0, 0)
 
@@ -27,7 +27,7 @@ class TaskListDataSpec extends WordSpec with Matchers with Checkers {
       val (s1, taskList) = taskListResult
 
       assert(taskList == TaskList(taskListId, "Task List", List(Task("task 1", done = false), Task("task 2", done = true))))
-      assert(s1.getDataRevision(taskListId).contains(DataRevision(taskList, guid(0, 0, 1), taskListIdCodec)))
+      assert(s1.getDataRevision(taskListId).contains(DataRevision(taskList, RevId(guid(0, 0, 1)), taskListIdCodec)))
       assert(s1.nextGuid ==guid(0, 0, 2))
     }
 
@@ -47,7 +47,7 @@ class TaskListDataSpec extends WordSpec with Matchers with Checkers {
       // We should have a transaction with expected delta at expected id
       assert (t1 == DeltaAtId(taskListId, LensDelta(TaskList.name, ValueDelta(newName))))
 
-      val (s2, _) = runS(t1[S], s1)
+      val (s2, _) = runS(t1[MapState], s1)
 
       assert(s2.getData(taskListId).map(_.name).contains(newName))
 
@@ -85,7 +85,7 @@ class TaskListDataSpec extends WordSpec with Matchers with Checkers {
         )
       )
 
-      val (s2, _) = runS(t1[S], s1)
+      val (s2, _) = runS(t1[MapState], s1)
 
       assert(s2.getData(taskListId).map(_.tasks.head.name).contains(newName))
     }

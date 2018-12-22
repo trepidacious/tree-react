@@ -19,7 +19,7 @@ import SpecUtils._
 
 class RefTaskListDataSpec extends WordSpec with Matchers with Checkers {
 
-  private def taskListResult = runS(createTaskList[S])
+  private def taskListResult = runS(createTaskList[MapState])
 
   private val taskListGuid = guid(0, 0, 0)
 
@@ -33,7 +33,7 @@ class RefTaskListDataSpec extends WordSpec with Matchers with Checkers {
       println(s1)
       println(taskList)
 
-      val (s2, printed) = runS(printTaskList[S](taskList), s1)
+      val (s2, printed) = runS(printTaskList[MapState](taskList), s1)
 
       println(printed)
 

@@ -1,43 +1,32 @@
-package org.rebeam
+package org.rebeam.tree.react
 
 import japgolly.scalajs.react.React.Context
-import japgolly.scalajs.react.vdom.html_<^._
 import japgolly.scalajs.react._
 import japgolly.scalajs.react.extra.Reusability
+import japgolly.scalajs.react.vdom.html_<^._
+import org.rebeam.tree._
 
-object ContextDemo {
+object DataContext {
 
-  type Key = Int
-  type Rev = Int
-
-  case class Item(value: String, rev: Rev) {
-    def modify(f: String => String): Item = copy(value = f(value), rev = rev + 1)
+  val emptyDataSource = new DataSource {
+    override def get[A](id: Id[A]): Option[A] = None
+    override def getWithRev[A](id: Id[A]): Option[(A, RevId[A])] = None
   }
 
-  case class Data(map: Map[Key, Item]) {
-    def exclaim(k: Key): Data = this.copy(
-      map = this.map.updated(k, this.map(k).modify(_ + "!"))
-    )
-  }
-
-  object Data {
-    def apply(entries: (Key, String)*): Data =
-      Data(Map(entries.map{case (i, v) => (i, Item(v, 0))}: _*))
-  }
+  val default: Context[DataSource] = React.createContext(emptyDataSource)
 
   /**
-    * Result of a render - the actual Vdom, and the keys for values in the
-    * Data that we used to render. This can be used with a
-    * new Data to see if any used values have changed.
+    * Result of a render - the actual Vdom, and the Ids for values in the
+    * DataSource that we used to render. This can be used with a
+    * new DataSource to see if any used values have changed.
     * @param v          Rendered Vdom
-    * @param usedKeys   Keys of data used to render
+    * @param usedIds    Ids of data retrieved from the DataSource and used to render
     */
-  case class DataRenderResult(v: VdomElement, usedKeys: Set[Key])
+  case class DataRenderResult(v: VdomElement, usedIds: Set[Id[_]])
 
-  // TODO how can we connect this to Reusability? Output must not change for reusable instances of A
   /**
     * Renders using props of type A, and Data, tracking which
-    * keys were used from the data to allow us to determine exactly
+    * ids were used from the DataSource to allow us to determine exactly
     * when an update is needed.
     * @tparam A The props.
     */
@@ -46,20 +35,20 @@ object ContextDemo {
       * Perform a render
       * Must meet the following contract:
       * 1. Function is pure
-      * 2. Function only accesses values in Data using the keys returned in DataRenderResult.
+      * 2. Function only accesses values in DataSource using the ids returned in DataRenderResult.usedIds
       * 3. Function produces identical results for values of A where Reusability[A].test returns true.
       * These requirements allow us to memoise the render, so it is only reapplied if the data it uses changes.
       *
       * @param a    The data model ("props") to render
-      * @param data The Data to use to look up references
+      * @param data The DataSource to use to look up references
       * @return     The result of rendering - Vdom, and a set of keys used.
       */
-    def apply(a: A, data: Data): DataRenderResult
+    def apply(a: A, data: DataSource): DataRenderResult
   }
 
   object DataComponentB {
 
-    case class Props[A](a: A, data: Data)
+    case class Props[A](a: A, data: DataSource)
 
     /**
       * This class provides for memoisation of a DataRenderer, working with the expected React lifecycle to
@@ -104,34 +93,28 @@ object ContextDemo {
       */
     class DataRendererMemo[A: Reusability](r: DataRenderer[A]) {
       var lastProps: Props[A] = _
-      var lastUsedKeys: Set[Key] = _
+      var lastUsedIds: Set[Id[_]] = _
 
       def render(p: Props[A]): DataRenderResult = {
         val drr = r(p.a, p.data)
         lastProps = p
-        lastUsedKeys = drr.usedKeys
-        println("DataRendererMemo.render(" + p + ") gives used keys " + drr.usedKeys)
+        lastUsedIds = drr.usedIds
+        println("DataRendererMemo.render(" + p + ") gives used ids " + drr.usedIds)
         drr
       }
 
-      // TODO optimise - e.g. could return keys and revisions from DataRendererMemo.usedKeys to skip a map.get
+      // TODO optimise - e.g. could return ids and revisions from DataRendererMemo.usedKeys to skip a map.get
       // Check whether any of the values referenced by the set of keys has changed revision between
       // currentData and nextData.
-      def valuesChanged(keys: Set[Key], currentData: Data, nextData: Data): Boolean = keys.exists(
-        key => {
-          val currentItem = currentData.map.get(key)
-          val nextItem = nextData.map.get(key)
-          (currentItem, nextItem) match {
-            case (Some(Item(_, currentRev)), Some(Item(_, nextRev))) if currentRev == nextRev => false
-            case _ => true
-          }
-        }
+      def valuesChanged(ids: Set[Id[_]], currentData: DataSource, nextData: DataSource): Boolean = ids.exists(
+        // Note that if both are None, this is not counted as a change (data is still missing)
+        id => currentData.getWithRev(id).map(_._2.guid) != nextData.getWithRev(id).map(_._2.guid)
       )
 
       def shouldComponentUpdate(currentProps: Props[A], nextProps: Props[A]): Boolean =
         // This shouldn't happen, since we should have render called before SCU, but if it happens
         // just permit the update to get our first memoised render.
-        if (lastProps == null || lastUsedKeys == null) {
+        if (lastProps == null || lastUsedIds == null) {
           println("DataRendererMemo.shouldComponentUpdate - UPDATE: first render")
           true
 
@@ -154,7 +137,7 @@ object ContextDemo {
           true
 
         // If any values used in the memoised render have changed in the new data, can't reuse
-        } else if (valuesChanged(lastUsedKeys, currentProps.data, nextProps.data)) {
+        } else if (valuesChanged(lastUsedIds, currentProps.data, nextProps.data)) {
           println("DataRendererMemo.shouldComponentUpdate - UPDATE: new data value revision(s)")
           true
 
@@ -189,7 +172,7 @@ object ContextDemo {
 
   }
 
-  def dataComponent[A: Reusability](r: DataRenderer[A], name: String, dataContext: Context[Data] = DataContext.default) = {
+  def dataComponent[A: Reusability](r: DataRenderer[A], name: String, dataContext: Context[DataSource] = DataContext.default) = {
     // Each dataComponent wraps a DataComponentB, and provides it with props that are built from A and the DataContext
     val b = DataComponentB.component(name + "B", r)
     ScalaComponent.builder[A](name + "A")
@@ -210,49 +193,87 @@ object ContextDemo {
       .build
   }
 
+// TODO can we get at this.context to use this? Is contextType actually set as required by React?
+//  def dataComponent[A: Reusability](r: DataRenderer[A], name: String, dataContext: Context[Data] = DataContext.default) = {
+//    // Each dataComponent wraps a DataComponentB, and provides it with props that are built from A and the DataContext
+//    val b = DataComponentB.component(name + "B", r)
+//    val c = ScalaComponent.builder[A](name + "A")
+//      .render_P {
+//        a => {
+//          dataContext.consume(
+//            data => {
+//              println(">>>dataComponent.render_P, data " + data + ", a = " + a)
+//              b(DataComponentB.Props(a, data))
+//            }
+//          )
+//        }
+//      }
+//      // Note that the component will always be updated when the data context changes - React updates everything that
+//      // consumes a context, when that context changes. However when only the props change, SCU will be called, and
+//      // we can skip this when the props are reusable, as normal.
+//      .configure(Reusability.shouldComponentUpdate)
+//      .build
+//    val raw: ComponentClassP[Box[A]] = c.raw
+//    raw.asInstanceOf[js.Dynamic].contextType = dataContext.raw
+//    c
+//  }
+
   //  val itemDisplay = ScalaFnComponent[Int](id => <.pre(dataContext.consume(data => s"$id = ${data.map(id)}")))
 
+  object DataExample {
+    val id0 = Id(Guid.raw(0,0,0))
+    val id1 = Id(Guid.raw(0,0,1))
+    val id2 = Id(Guid.raw(0,0,2))
+    val ids = List(id0, id1, id2)
+
+    val initial = MapDataSource.empty
+      .put[String](id0, "Zero", RevId(Guid.raw(0,0,100)))
+      .put[String](id1, "One", RevId(Guid.raw(0,0,101)))
+      .put[String](id2, "Two", RevId(Guid.raw(0,0,102)))
+
+    def incrementRev[A](r: RevId[A]): RevId[A] = {
+      RevId(r.guid.copy(transactionClock =  r.guid.transactionClock.next))
+    }
+
+    def exclaim(i: Int, m: MapDataSource): MapDataSource = {
+      val mod = for {
+        id <- ids.lift.apply(i)
+        r <- m.getWithRev(id)
+      } yield m.modify[String](id, (s: String) => s + "!", incrementRev(r._2))
+      mod.getOrElse(m)
+    }
+  }
+
+  implicit def idReusability[A]: Reusability[Id[A]] = Reusability.by_==
+
   val itemDisplay = {
-    val r = new DataRenderer[Int] {
-      def apply(a: Int, data: Data): DataRenderResult = DataRenderResult(
-        <.pre(s"$a = ${data.map(a)}"),
+    val r = new DataRenderer[Id[Int]] {
+      def apply(a: Id[Int], data: DataSource): DataRenderResult = DataRenderResult(
+        <.pre(s"$a = ${data.get(a)}"),
         Set(a)
       )
     }
-    dataComponent[Int](r, "itemDisplay")
+    dataComponent[Id[Int]](r, "itemDisplay")
   }
-
-  object DataContext {
-    val default: Context[Data] = React.createContext(Data())
-  }
-
 
   val dataProvider = ScalaComponent.builder[Unit]("dataProvider")
-    .initialState(Data(
-      0 -> "Zero",
-      1 -> "One",
-      2 -> "Two"
-    ))
+    .initialState(DataExample.initial)
     .renderS{ case(scope, data) =>
       DataContext.default.provide(data)(
         <.div(
-          itemDisplay(0),
-          itemDisplay(1),
-          itemDisplay(2),
+          itemDisplay(DataExample.id0),
+          itemDisplay(DataExample.id1),
+          itemDisplay(DataExample.id2),
           <.button(
-            ^.onClick --> (scope.modState(_.exclaim(0).exclaim(1).exclaim(2)) >> Callback.log("Exclaim all")),
-            "Exclaim!"
-          ),
-          <.button(
-            ^.onClick --> (scope.modState(_.exclaim(0)) >> Callback.log("Exclaim 0")),
+            ^.onClick --> (scope.modState(DataExample.exclaim(0, _)) >> Callback.log("Exclaim 0")),
             "Exclaim 0!"
           ),
           <.button(
-            ^.onClick --> (scope.modState(_.exclaim(1)) >> Callback.log("Exclaim 1")),
+            ^.onClick --> (scope.modState(DataExample.exclaim(1, _)) >> Callback.log("Exclaim 1")),
             "Exclaim 1!"
           ),
           <.button(
-            ^.onClick --> (scope.modState(_.exclaim(2)) >> Callback.log("Exclaim 2")),
+            ^.onClick --> (scope.modState(DataExample.exclaim(2, _)) >> Callback.log("Exclaim 2")),
             "Exclaim 2!"
           )
         )

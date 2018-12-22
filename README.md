@@ -16,7 +16,7 @@ Includes and replaces several originally separate projects:
 
 The scalajs-electron-react-app project provides a very simple demo of some material-ui components. This may be extended in future to demonstrate more components.
 
-This also includes a demo of an approach to using Context to allow access to a key-value store, with optimised updates of components when values they render change.
+This also includes a demo of DataContext from the tree-react project, which uses React Context to allow access to a DataSource, with optimised updates of components when values they render change.
 
 Run the following from the project root directory:
 
@@ -34,13 +34,19 @@ yarn
 yarn start
 ```
 
-The console shows debug output from the update process for components using the data context.
+The console shows debug output from the update process for components using the DataSource context.
 
 ## tree-core
 
 A simple, functional software transactional memory, plus an approach to updating it using serialisable transactions, synchronising data between server and clients, and editing immutable data structures using lenses.
 
 This is still in progress, see [notes](https://github.com/trepidacious/tree-react/blob/master/tree-core/Notes.md).
+
+## tree-react
+
+React components for use with tree-core.
+
+Also still in progress, there is an example of current functionality in electron-app.
 
 ## scalajs-react-material-ui
 

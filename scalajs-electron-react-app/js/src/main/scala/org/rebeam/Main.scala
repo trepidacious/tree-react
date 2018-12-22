@@ -10,8 +10,8 @@ import scala.scalajs.js.annotation._
 import org.rebeam.electron.react._
 import org.rebeam.electron.react.CssSettings._
 import scalacss.ScalaCssReact._
-
 import japgolly.scalajs.react._
+import org.rebeam.tree.react.DataContext
 
 @JSExportTopLevel("Main")
 object Main {
@@ -44,7 +44,7 @@ object Main {
 
 //          provider(1234),
 
-          ContextDemo.dataProvider(),
+          DataContext.dataProvider(),
 
           mui.Button(onClick = (e: ReactMouseEvent) => Callback{
             println(

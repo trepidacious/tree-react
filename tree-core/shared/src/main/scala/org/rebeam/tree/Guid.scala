@@ -94,4 +94,7 @@ object Guid {
   implicit val guidKeyEncoder: KeyEncoder[Guid] = KeyEncoder.instance(Guid.toString)
   implicit val guidKeyDecoder: KeyDecoder[Guid] = KeyDecoder.instance(Guid.fromString)
 
+  def raw(sid: Long, stid: Long, tc: Long): Guid =
+    Guid(SessionId(sid), SessionTransactionId(stid), TransactionClock(tc))
+
 }

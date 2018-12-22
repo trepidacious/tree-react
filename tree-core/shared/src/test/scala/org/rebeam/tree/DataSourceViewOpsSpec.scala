@@ -9,28 +9,23 @@ import cats.Monad
 
 class DataSourceViewOpsSpec extends WordSpec with Matchers with Checkers {
 
-  case class MapDataSource(map: Map[Guid, Any]) extends DataSource {
-    override def get[A](id: Id[A]): Option[A] = map.get(id.guid).map(_.asInstanceOf[A])
-
-    def put[A](id: Id[A], a: A): MapDataSource =
-      copy(map = map.updated(id.guid, a))
-  }
-
-  object MapDataSource {
-    val empty: MapDataSource = MapDataSource(Map.empty)
-  }
-
   val id0: Id[Int] = Id[Int](guid(0, 0, 0))
   val id1: Id[Int] = Id[Int](guid(0, 0, 1))
   val id2: Id[String] = Id[String](guid(0, 0, 2))
   val idInfinity: Id[Int] = Id[Int](guid(42, 42, 42))
   val idInfinitySquared: Id[Int] = Id[Int](guid(84, 84, 84))
 
+  val rev0: RevId[Int] = RevId[Int](guid(0, 0, 100))
+  val rev1: RevId[Int] = RevId[Int](guid(0, 0, 101))
+  val rev2: RevId[String] = RevId[String](guid(0, 0, 102))
+  val revInfinity: RevId[Int] = RevId[Int](guid(42, 42, 142))
+  val revInfinitySquared: RevId[Int] = RevId[Int](guid(84, 84, 184))
+
   val dataSource: DataSource =
     MapDataSource.empty
-      .put(id0, 0)
-      .put(id1, 1)
-      .put(id2, "2")
+      .put(id0, 0, rev0)
+      .put(id1, 1, rev1)
+      .put(id2, "2", rev2)
 
   def printValidIds[F[_]: Monad](implicit v: ViewOps[F]): F[String] = {
     import v._

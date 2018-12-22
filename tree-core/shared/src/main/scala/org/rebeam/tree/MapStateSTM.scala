@@ -18,7 +18,7 @@ object MapStateSTM {
     def message: String = toString
   }
 
-  case class DataRevision[A](data: A, revision: Guid, idCodec: IdCodec[A])
+  case class DataRevision[A](data: A, revId: RevId[A], idCodec: IdCodec[A])
 
   case class StateData(
       nextGuid: Guid,
@@ -27,8 +27,8 @@ object MapStateSTM {
       context: TransactionContext) extends IdCodecs {
     def getDataRevision[A](id: Id[A]): Option[DataRevision[A]] = map.get(id.guid).map(_.asInstanceOf[DataRevision[A]])
     def getData[A](id: Id[A]): Option[A] = getDataRevision(id).map(_.data)
-    def updated[A](id: Id[A], a: A, revision: Guid)(implicit mCodecA: IdCodec[A]): StateData = {
-      copy(map = map.updated(id.guid, DataRevision(a, revision, mCodecA)))
+    def updated[A](id: Id[A], a: A, revId: RevId[A])(implicit mCodecA: IdCodec[A]): StateData = {
+      copy(map = map.updated(id.guid, DataRevision(a, revId, mCodecA)))
     }
 
     override def codecFor[A](id: Id[A]): Option[IdCodec[A]] =
@@ -43,43 +43,43 @@ object MapStateSTM {
   )
 
   type ErrorOr[A] = Either[Error, A]
-  type S[A] = StateT[ErrorOr, StateData, A]
+  type MapState[A] = StateT[ErrorOr, StateData, A]
 
-  private def rand[A](rf: PRandom => (PRandom, A)): S[A] =
+  private def rand[A](rf: PRandom => (PRandom, A)): MapState[A] =
     StateT[ErrorOr, StateData, A](sd => {
       val (newRandom, a) = rf(sd.random)
       Right((sd.copy(random = newRandom), a))
     })
 
-  implicit val stmInstance: STMOps[S] = new STMOps[S] {
+  implicit val stmInstance: STMOps[MapState] = new STMOps[MapState] {
 
-    def get[A](id: Id[A]): S[A] =
+    def get[A](id: Id[A]): MapState[A] =
       StateT.inspectF[ErrorOr, StateData, A](_.getData(id).toRight(IdNotFoundError(id)))
 
-    private def getDataState[A](id: Id[A]): S[DataRevision[A]] =
+    private def getDataState[A](id: Id[A]): MapState[DataRevision[A]] =
       StateT.inspectF[ErrorOr, StateData, DataRevision[A]](_.getDataRevision(id).toRight(IdNotFoundError(id)))
 
-    private def set[A](id: Id[A], a: A)(implicit idCodec: IdCodec[A]): S[Unit] = for {
-      rev <- createGuid
-      _ <- StateT.modify[ErrorOr, StateData](_.updated(id, a, rev))
+    private def set[A](id: Id[A], a: A)(implicit idCodec: IdCodec[A]): MapState[Unit] = for {
+      revGuid <- createGuid
+      _ <- StateT.modify[ErrorOr, StateData](_.updated(id, a, RevId(revGuid)))
     } yield ()
 
-    def modifyF[A](id: Id[A], f: A => S[A]): S[A] = for {
+    def modifyF[A](id: Id[A], f: A => MapState[A]): MapState[A] = for {
       ds <- getDataState(id)
       newData <- f(ds.data)
       _ <- set[A](id, newData)(ds.idCodec)
     } yield newData
 
-    def randomInt: S[Int] = rand(_.int)
-    def randomIntUntil(bound: Int): S[Int] = rand(_.intUntil(bound))
-    def randomLong: S[Long] = rand(_.long)
-    def randomBoolean: S[Boolean] = rand(_.boolean)
-    def randomFloat: S[Float] = rand(_.float)
-    def randomDouble: S[Double] = rand(_.double)
+    def randomInt: MapState[Int] = rand(_.int)
+    def randomIntUntil(bound: Int): MapState[Int] = rand(_.intUntil(bound))
+    def randomLong: MapState[Long] = rand(_.long)
+    def randomBoolean: MapState[Boolean] = rand(_.boolean)
+    def randomFloat: MapState[Float] = rand(_.float)
+    def randomDouble: MapState[Double] = rand(_.double)
 
-    def context: S[TransactionContext] = StateT.inspect(_.context)
+    def context: MapState[TransactionContext] = StateT.inspect(_.context)
 
-    private def createGuid: S[Guid] =
+    private def createGuid: MapState[Guid] =
       StateT[ErrorOr, StateData, Guid](sd => {
         Right(
           (
@@ -89,7 +89,7 @@ object MapStateSTM {
         )
       })
 
-    def putF[A](create: Id[A] => S[A])(implicit idCodec: IdCodec[A]) : S[A] = for {
+    def putF[A](create: Id[A] => MapState[A])(implicit idCodec: IdCodec[A]) : MapState[A] = for {
       id <- createGuid.map(guid => Id[A](guid))
       a <- create(id)
       _ <- set(id, a)
