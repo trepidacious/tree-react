@@ -48,6 +48,8 @@ lazy val monocleVersion             = "1.5.0-cats"
 lazy val scalacticVersion           = "3.0.5" // Needed?
 lazy val scalatestVersion           = "3.0.5"
 lazy val scalacheckVersion          = "1.14.0"
+lazy val log4sVersion               = "1.6.1"
+
 
 
 lazy val root = project.in(file(".")).
@@ -66,7 +68,6 @@ lazy val root = project.in(file(".")).
     publish := {},
     publishLocal := {}
   )
-
 
 
   ///////////////////////////////
@@ -330,9 +331,10 @@ lazy val treeCoreJS = treeCore.js
 lazy val treeReact = crossProject(JSPlatform, JVMPlatform).in(file("tree-react")).
   //Settings for all projects
   settings(
-  name := "tree-react"
+  name := "tree-react",
+  libraryDependencies += "org.log4s" %%% "log4s" % log4sVersion
 
-).jvmSettings(
+ ).jvmSettings(
 
 ).jsSettings(
   //Scalajs dependencies that are used on the client only

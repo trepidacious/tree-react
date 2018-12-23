@@ -6,7 +6,11 @@ import japgolly.scalajs.react.extra.Reusability
 import japgolly.scalajs.react.vdom.html_<^._
 import org.rebeam.tree._
 
+import org.log4s._
+
 object DataContext {
+
+  private val logger = getLogger
 
   val emptyDataSource = new DataSource {
     override def get[A](id: Id[A]): Option[A] = None
@@ -99,7 +103,7 @@ object DataContext {
         val drr = r(p.a, p.data)
         lastProps = p
         lastUsedIds = drr.usedIds
-        println("DataRendererMemo.render(" + p + ") gives used ids " + drr.usedIds)
+        logger.trace(s"DataRendererMemo.render($p) gives used ids ${drr.usedIds}")
         drr
       }
 
@@ -115,30 +119,28 @@ object DataContext {
         // This shouldn't happen, since we should have render called before SCU, but if it happens
         // just permit the update to get our first memoised render.
         if (lastProps == null || lastUsedIds == null) {
-          println("DataRendererMemo.shouldComponentUpdate - UPDATE: first render")
+          logger.trace("DataRendererMemo.shouldComponentUpdate - UPDATE: first render")
           true
 
         // If the current props are not the ones we saw last, then cache is invalid, so just allow another render.
         // We do not expect this to happen, based on lifecycle in the DataRendererMemo scaladoc, but if something
         // unexpected happens it's safer to just update, this will refresh the cache when render is called.
         } else if (lastProps ne currentProps) {
-          println(
-            "DataRendererMemo.shouldComponentUpdate - UPDATE: lastProps "
-              + lastProps + " ne currentProps " + currentProps
+          logger.trace(
+            s"DataRendererMemo.shouldComponentUpdate - UPDATE: lastProps $lastProps ne currentProps $currentProps"
           )
           true
 
         // If the instance of A in the props has changed, we should update
         } else if (!implicitly[Reusability[A]].test(currentProps.a, nextProps.a)) {
-          println(
-            "DataRendererMemo.shouldComponentUpdate - UPDATE: props not reusable ("
-              + currentProps.a + " -> " + nextProps.a + ")"
+          logger.trace(
+            s"DataRendererMemo.shouldComponentUpdate - UPDATE: props not reusable, ($currentProps.a -> $nextProps.a)"
           )
           true
 
         // If any values used in the memoised render have changed in the new data, can't reuse
         } else if (valuesChanged(lastUsedIds, currentProps.data, nextProps.data)) {
-          println("DataRendererMemo.shouldComponentUpdate - UPDATE: new data value revision(s)")
+          logger.trace("DataRendererMemo.shouldComponentUpdate - UPDATE: new data value revision(s)")
           true
 
         // Data and props will produce the same result from renderer. Note we update lastProps to
@@ -148,9 +150,8 @@ object DataContext {
         // equivalent for our DataRenderer). This assumes that React will set the component's props
         // to nextProps, so we will see this as currentProps on the next call.
         } else {
-          println(
-            "DataRendererMemo.shouldComponentUpdate - skip: updating lastProps from "
-              + lastProps + " to nextProps " + nextProps
+          logger.trace(
+            s"DataRendererMemo.shouldComponentUpdate - skip: updating lastProps from $lastProps to nextProps $nextProps"
           )
           lastProps = nextProps
           false
@@ -180,7 +181,7 @@ object DataContext {
         a => {
           dataContext.consume(
             data => {
-              println(">>>dataComponent.render_P, data " + data + ", a = " + a)
+              logger.trace(s">>>dataComponent.render_P, data $data, a = $a")
               b(DataComponentB.Props(a, data))
             }
           )
@@ -202,7 +203,7 @@ object DataContext {
 //        a => {
 //          dataContext.consume(
 //            data => {
-//              println(">>>dataComponent.render_P, data " + data + ", a = " + a)
+//              logger.trace(s">>>dataComponent.render_P, data $data, a = $a")
 //              b(DataComponentB.Props(a, data))
 //            }
 //          )
