@@ -1,5 +1,5 @@
 {
-  "packages\\material-ui\\src\\AppBar\\AppBar.js": {
+  "AppBar/AppBar.js": {
     "description": "",
     "displayName": "AppBar",
     "methods": [],
@@ -81,15 +81,19 @@
           ]
         },
         "required": false,
-        "description": "The positioning type. The behavior of the different options is described\r\n[here](https://developer.mozilla.org/en-US/docs/Learn/CSS/CSS_layout/Positioning).\r\nNote: `sticky` is not universally supported and will fall back to `static` when unavailable.",
+        "description": "The positioning type. The behavior of the different options is described\r\n[in the MDN web docs](https://developer.mozilla.org/en-US/docs/Learn/CSS/CSS_layout/Positioning).\r\nNote: `sticky` is not universally supported and will fall back to `static` when unavailable.",
         "defaultValue": {
           "value": "'fixed'",
           "computed": false
         }
       }
+    },
+    "inheritance": {
+      "component": "Paper",
+      "pathname": "https://material-ui.com/api/Paper"
     }
   },
-  "packages\\material-ui\\src\\Avatar\\Avatar.js": {
+  "Avatar/Avatar.js": {
     "description": "",
     "displayName": "Avatar",
     "methods": [],
@@ -131,18 +135,8 @@
       },
       "component": {
         "type": {
-          "name": "union",
-          "value": [
-            {
-              "name": "string"
-            },
-            {
-              "name": "func"
-            },
-            {
-              "name": "object"
-            }
-          ]
+          "name": "custom",
+          "raw": "componentPropType"
         },
         "required": false,
         "description": "The component used for the root node.\r\nEither a string to use a DOM element or a component.",
@@ -181,7 +175,7 @@
       }
     }
   },
-  "packages\\material-ui\\src\\Backdrop\\Backdrop.js": {
+  "Backdrop/Backdrop.js": {
     "description": "",
     "displayName": "Backdrop",
     "methods": [],
@@ -245,7 +239,7 @@
       }
     }
   },
-  "packages\\material-ui\\src\\Badge\\Badge.js": {
+  "Badge/Badge.js": {
     "description": "",
     "displayName": "Badge",
     "methods": [],
@@ -309,18 +303,8 @@
       },
       "component": {
         "type": {
-          "name": "union",
-          "value": [
-            {
-              "name": "string"
-            },
-            {
-              "name": "func"
-            },
-            {
-              "name": "object"
-            }
-          ]
+          "name": "custom",
+          "raw": "componentPropType"
         },
         "required": false,
         "description": "The component used for the root node.\r\nEither a string to use a DOM element or a component.",
@@ -328,10 +312,21 @@
           "value": "'span'",
           "computed": false
         }
+      },
+      "invisible": {
+        "type": {
+          "name": "bool"
+        },
+        "required": false,
+        "description": "If `true`, the badge will be invisible.",
+        "defaultValue": {
+          "value": "false",
+          "computed": false
+        }
       }
     }
   },
-  "packages\\material-ui\\src\\BottomNavigation\\BottomNavigation.js": {
+  "BottomNavigation/BottomNavigation.js": {
     "description": "",
     "displayName": "BottomNavigation",
     "methods": [],
@@ -356,6 +351,18 @@
         },
         "required": false,
         "description": "@ignore"
+      },
+      "component": {
+        "type": {
+          "name": "custom",
+          "raw": "componentPropType"
+        },
+        "required": false,
+        "description": "The component used for the root node.\r\nEither a string to use a DOM element or a component.",
+        "defaultValue": {
+          "value": "'div'",
+          "computed": false
+        }
       },
       "onChange": {
         "type": {
@@ -384,7 +391,7 @@
       }
     }
   },
-  "packages\\material-ui\\src\\BottomNavigationAction\\BottomNavigationAction.js": {
+  "BottomNavigationAction/BottomNavigationAction.js": {
     "description": "",
     "displayName": "BottomNavigationAction",
     "methods": [
@@ -473,9 +480,13 @@
         "required": false,
         "description": "You can provide your own value. Otherwise, we fallback to the child position index."
       }
+    },
+    "inheritance": {
+      "component": "ButtonBase",
+      "pathname": "https://material-ui.com/api/ButtonBase"
     }
   },
-  "packages\\material-ui\\src\\Button\\Button.js": {
+  "Button/Button.js": {
     "description": "",
     "displayName": "Button",
     "methods": [],
@@ -532,18 +543,8 @@
       },
       "component": {
         "type": {
-          "name": "union",
-          "value": [
-            {
-              "name": "string"
-            },
-            {
-              "name": "func"
-            },
-            {
-              "name": "object"
-            }
-          ]
+          "name": "custom",
+          "raw": "componentPropType"
         },
         "required": false,
         "description": "The component used for the root node.\r\nEither a string to use a DOM element or a component.",
@@ -662,19 +663,11 @@
               "computed": false
             },
             {
-              "value": "'flat'",
-              "computed": false
-            },
-            {
               "value": "'outlined'",
               "computed": false
             },
             {
               "value": "'contained'",
-              "computed": false
-            },
-            {
-              "value": "'raised'",
               "computed": false
             },
             {
@@ -684,19 +677,31 @@
             {
               "value": "'extendedFab'",
               "computed": false
+            },
+            {
+              "value": "'flat'",
+              "computed": false
+            },
+            {
+              "value": "'raised'",
+              "computed": false
             }
           ]
         },
         "required": false,
-        "description": "The variant to use. __WARNING__: `flat` and `raised` are deprecated. Instead use\r\n`text` and `contained` respectively.",
+        "description": "The variant to use.\r\n__WARNING__: `flat` and `raised` are deprecated.\r\nInstead use `text` and `contained` respectively.\r\n`fab` and `extendedFab` are deprecated.\r\nInstead use `<Fab>` and `<Fab variant=\"extended\">`",
         "defaultValue": {
           "value": "'text'",
           "computed": false
         }
       }
+    },
+    "inheritance": {
+      "component": "ButtonBase",
+      "pathname": "https://material-ui.com/api/ButtonBase"
     }
   },
-  "packages\\material-ui\\src\\ButtonBase\\ButtonBase.js": {
+  "ButtonBase/ButtonBase.js": {
     "description": "`ButtonBase` contains as few styles as possible.\r\nIt aims to be a simple building block for creating a button.\r\nIt contains a load of style reset and some focus/ripple logic.",
     "displayName": "ButtonBase",
     "methods": [
@@ -836,18 +841,8 @@
       },
       "component": {
         "type": {
-          "name": "union",
-          "value": [
-            {
-              "name": "string"
-            },
-            {
-              "name": "func"
-            },
-            {
-              "name": "object"
-            }
-          ]
+          "name": "custom",
+          "raw": "componentPropType"
         },
         "required": false,
         "description": "The component used for the root node.\r\nEither a string to use a DOM element or a component.",
@@ -1033,75 +1028,7 @@
       }
     }
   },
-  "packages\\material-ui\\src\\ButtonBase\\Ripple.js": {
-    "description": "@ignore - internal component.",
-    "displayName": "Ripple",
-    "methods": [
-      {
-        "name": "handleEnter",
-        "docblock": null,
-        "modifiers": [],
-        "params": [],
-        "returns": null
-      },
-      {
-        "name": "handleExit",
-        "docblock": null,
-        "modifiers": [],
-        "params": [],
-        "returns": null
-      }
-    ],
-    "props": {
-      "classes": {
-        "type": {
-          "name": "object"
-        },
-        "required": true,
-        "description": "Override or extend the styles applied to the component.\r\nSee [CSS API](#css-api) below for more details."
-      },
-      "className": {
-        "type": {
-          "name": "string"
-        },
-        "required": false,
-        "description": "@ignore"
-      },
-      "pulsate": {
-        "type": {
-          "name": "bool"
-        },
-        "required": false,
-        "description": "If `true`, the ripple pulsates, typically indicating the keyboard focus state of an element.",
-        "defaultValue": {
-          "value": "false",
-          "computed": false
-        }
-      },
-      "rippleSize": {
-        "type": {
-          "name": "number"
-        },
-        "required": false,
-        "description": "Diameter of the ripple."
-      },
-      "rippleX": {
-        "type": {
-          "name": "number"
-        },
-        "required": false,
-        "description": "Horizontal position of the ripple center."
-      },
-      "rippleY": {
-        "type": {
-          "name": "number"
-        },
-        "required": false,
-        "description": "Vertical position of the ripple center."
-      }
-    }
-  },
-  "packages\\material-ui\\src\\ButtonBase\\TouchRipple.js": {
+  "ButtonBase/TouchRipple.js": {
     "description": "",
     "displayName": "TouchRipple",
     "methods": [
@@ -1189,7 +1116,7 @@
       }
     }
   },
-  "packages\\material-ui\\src\\Card\\Card.js": {
+  "Card/Card.js": {
     "description": "",
     "displayName": "Card",
     "methods": [],
@@ -1219,9 +1146,13 @@
           "computed": false
         }
       }
+    },
+    "inheritance": {
+      "component": "Paper",
+      "pathname": "https://material-ui.com/api/Paper"
     }
   },
-  "packages\\material-ui\\src\\CardActionArea\\CardActionArea.js": {
+  "CardActionArea/CardActionArea.js": {
     "description": "",
     "displayName": "CardActionArea",
     "methods": [],
@@ -1254,9 +1185,13 @@
         "required": false,
         "description": "@ignore"
       }
+    },
+    "inheritance": {
+      "component": "ButtonBase",
+      "pathname": "https://material-ui.com/api/ButtonBase"
     }
   },
-  "packages\\material-ui\\src\\CardActions\\CardActions.js": {
+  "CardActions/CardActions.js": {
     "description": "",
     "displayName": "CardActions",
     "methods": [],
@@ -1295,7 +1230,7 @@
       }
     }
   },
-  "packages\\material-ui\\src\\CardContent\\CardContent.js": {
+  "CardContent/CardContent.js": {
     "description": "",
     "displayName": "CardContent",
     "methods": [],
@@ -1316,18 +1251,8 @@
       },
       "component": {
         "type": {
-          "name": "union",
-          "value": [
-            {
-              "name": "string"
-            },
-            {
-              "name": "func"
-            },
-            {
-              "name": "object"
-            }
-          ]
+          "name": "custom",
+          "raw": "componentPropType"
         },
         "required": false,
         "description": "The component used for the root node.\r\nEither a string to use a DOM element or a component.",
@@ -1338,7 +1263,7 @@
       }
     }
   },
-  "packages\\material-ui\\src\\CardHeader\\CardHeader.js": {
+  "CardHeader/CardHeader.js": {
     "description": "",
     "displayName": "CardHeader",
     "methods": [],
@@ -1373,18 +1298,8 @@
       },
       "component": {
         "type": {
-          "name": "union",
-          "value": [
-            {
-              "name": "string"
-            },
-            {
-              "name": "func"
-            },
-            {
-              "name": "object"
-            }
-          ]
+          "name": "custom",
+          "raw": "componentPropType"
         },
         "required": false,
         "description": "The component used for the root node.\r\nEither a string to use a DOM element or a component.",
@@ -1434,7 +1349,7 @@
       }
     }
   },
-  "packages\\material-ui\\src\\CardMedia\\CardMedia.js": {
+  "CardMedia/CardMedia.js": {
     "description": "",
     "displayName": "CardMedia",
     "methods": [],
@@ -1455,18 +1370,8 @@
       },
       "component": {
         "type": {
-          "name": "union",
-          "value": [
-            {
-              "name": "string"
-            },
-            {
-              "name": "func"
-            },
-            {
-              "name": "object"
-            }
-          ]
+          "name": "custom",
+          "raw": "componentPropType"
         },
         "required": false,
         "description": "Component for rendering image.\r\nEither a string to use a DOM element or a component.",
@@ -1498,7 +1403,7 @@
       }
     }
   },
-  "packages\\material-ui\\src\\Checkbox\\Checkbox.js": {
+  "Checkbox/Checkbox.js": {
     "description": "",
     "displayName": "Checkbox",
     "methods": [],
@@ -1667,7 +1572,7 @@
       }
     }
   },
-  "packages\\material-ui\\src\\Chip\\Chip.js": {
+  "Chip/Chip.js": {
     "description": "Chips represent complex entities in small blocks, such as a contact.",
     "displayName": "Chip",
     "methods": [
@@ -1743,11 +1648,7 @@
           "name": "bool"
         },
         "required": false,
-        "description": "If true, the chip will appear clickable, and will raise when pressed,\r\neven if the onClick property is not defined. This can be used, for example,\r\nalong with the component property to indicate an anchor Chip is clickable.",
-        "defaultValue": {
-          "value": "false",
-          "computed": false
-        }
+        "description": "If true, the chip will appear clickable, and will raise when pressed,\r\neven if the onClick property is not defined.\r\nIf false, the chip will not be clickable, even if onClick peoperty is defined.\r\nThis can be used, for example,\r\nalong with the component property to indicate an anchor Chip is clickable."
       },
       "color": {
         "type": {
@@ -1776,18 +1677,8 @@
       },
       "component": {
         "type": {
-          "name": "union",
-          "value": [
-            {
-              "name": "string"
-            },
-            {
-              "name": "func"
-            },
-            {
-              "name": "object"
-            }
-          ]
+          "name": "custom",
+          "raw": "componentPropType"
         },
         "required": false,
         "description": "The component used for the root node.\r\nEither a string to use a DOM element or a component.",
@@ -1883,7 +1774,7 @@
       }
     }
   },
-  "packages\\material-ui\\src\\CircularProgress\\CircularProgress.js": {
+  "CircularProgress/CircularProgress.js": {
     "description": "## ARIA\r\n\nIf the progress bar is describing the loading progress of a particular region of a page,\r\nyou should use `aria-describedby` to point to the progress bar, and set the `aria-busy`\r\nattribute to `true` on that region until it has finished loading.",
     "displayName": "CircularProgress",
     "methods": [],
@@ -1924,6 +1815,17 @@
         "description": "The color of the component. It supports those theme colors that make sense for this component.",
         "defaultValue": {
           "value": "'primary'",
+          "computed": false
+        }
+      },
+      "disableShrink": {
+        "type": {
+          "name": "bool"
+        },
+        "required": false,
+        "description": "If `true`, the shrink animation is disabled.\r\nThis only works if variant is `indeterminate`.",
+        "defaultValue": {
+          "value": "false",
           "computed": false
         }
       },
@@ -2002,7 +1904,7 @@
       }
     }
   },
-  "packages\\material-ui\\src\\ClickAwayListener\\ClickAwayListener.js": {
+  "ClickAwayListener/ClickAwayListener.js": {
     "description": "Listen for click events that occur somewhere in the document, outside of the element itself.\r\nFor instance, if you need to hide a menu when people click anywhere else on your page.",
     "displayName": "ClickAwayListener",
     "methods": [
@@ -2016,6 +1918,13 @@
             "type": null
           }
         ],
+        "returns": null
+      },
+      {
+        "name": "handleTouchMove",
+        "docblock": null,
+        "modifiers": [],
+        "params": [],
         "returns": null
       }
     ],
@@ -2088,9 +1997,13 @@
           "computed": false
         }
       }
+    },
+    "inheritance": {
+      "component": "EventListener",
+      "pathname": "https://github.com/oliviertassinari/react-event-listener"
     }
   },
-  "packages\\material-ui\\src\\Collapse\\Collapse.js": {
+  "Collapse/Collapse.js": {
     "description": "The Collapse transition is used by the\r\n[Vertical Stepper](/demos/steppers/#vertical-stepper) StepContent component.\r\nIt uses [react-transition-group](https://github.com/reactjs/react-transition-group) internally.",
     "displayName": "Collapse",
     "methods": [
@@ -2206,18 +2119,8 @@
       },
       "component": {
         "type": {
-          "name": "union",
-          "value": [
-            {
-              "name": "string"
-            },
-            {
-              "name": "func"
-            },
-            {
-              "name": "object"
-            }
-          ]
+          "name": "custom",
+          "raw": "componentPropType"
         },
         "required": false,
         "description": "The component used for the root node.\r\nEither a string to use a DOM element or a component.",
@@ -2320,9 +2223,13 @@
           "computed": true
         }
       }
+    },
+    "inheritance": {
+      "component": "Transition",
+      "pathname": "https://reactcommunity.org/react-transition-group/#Transition"
     }
   },
-  "packages\\material-ui\\src\\CssBaseline\\CssBaseline.js": {
+  "CssBaseline/CssBaseline.js": {
     "description": "Kickstart an elegant, consistent, and simple baseline to build upon.",
     "displayName": "CssBaseline",
     "methods": [],
@@ -2347,10 +2254,23 @@
       }
     }
   },
-  "packages\\material-ui\\src\\Dialog\\Dialog.js": {
+  "Dialog/Dialog.js": {
     "description": "Dialogs are overlaid modal paper based components with a backdrop.",
     "displayName": "Dialog",
-    "methods": [],
+    "methods": [
+      {
+        "name": "handleBackdropClick",
+        "docblock": null,
+        "modifiers": [],
+        "params": [
+          {
+            "name": "event",
+            "type": null
+          }
+        ],
+        "returns": null
+      }
+    ],
     "props": {
       "BackdropProps": {
         "type": {
@@ -2445,6 +2365,10 @@
               "computed": false
             },
             {
+              "value": "'xl'",
+              "computed": false
+            },
+            {
               "value": "false",
               "computed": false
             }
@@ -2469,7 +2393,7 @@
           "name": "func"
         },
         "required": false,
-        "description": "Callback fired when the component requests to be closed.\r\n\n@param {object} event The event source of the callback"
+        "description": "Callback fired when the component requests to be closed.\r\n\n@param {object} event The event source of the callback\r\n@param {string} reason Can be:`\"escapeKeyDown\"`, `\"backdropClick\"`"
       },
       "onEnter": {
         "type": {
@@ -2527,6 +2451,18 @@
         "required": true,
         "description": "If `true`, the Dialog is open."
       },
+      "PaperComponent": {
+        "type": {
+          "name": "custom",
+          "raw": "componentPropType"
+        },
+        "required": false,
+        "description": "The component used to render the body of the dialog.",
+        "defaultValue": {
+          "value": "Paper",
+          "computed": true
+        }
+      },
       "PaperProps": {
         "type": {
           "name": "object"
@@ -2557,21 +2493,11 @@
       },
       "TransitionComponent": {
         "type": {
-          "name": "union",
-          "value": [
-            {
-              "name": "string"
-            },
-            {
-              "name": "func"
-            },
-            {
-              "name": "object"
-            }
-          ]
+          "name": "custom",
+          "raw": "componentPropType"
         },
         "required": false,
-        "description": "Transition component.",
+        "description": "The component used for the transition.",
         "defaultValue": {
           "value": "Fade",
           "computed": true
@@ -2613,9 +2539,13 @@
         "required": false,
         "description": "Properties applied to the `Transition` element."
       }
+    },
+    "inheritance": {
+      "component": "Modal",
+      "pathname": "https://material-ui.com/api/Modal"
     }
   },
-  "packages\\material-ui\\src\\DialogActions\\DialogActions.js": {
+  "DialogActions/DialogActions.js": {
     "description": "",
     "displayName": "DialogActions",
     "methods": [],
@@ -2654,7 +2584,7 @@
       }
     }
   },
-  "packages\\material-ui\\src\\DialogContent\\DialogContent.js": {
+  "DialogContent/DialogContent.js": {
     "description": "",
     "displayName": "DialogContent",
     "methods": [],
@@ -2682,7 +2612,7 @@
       }
     }
   },
-  "packages\\material-ui\\src\\DialogContentText\\DialogContentText.js": {
+  "DialogContentText/DialogContentText.js": {
     "description": "",
     "displayName": "DialogContentText",
     "methods": [],
@@ -2701,9 +2631,13 @@
         "required": true,
         "description": "Override or extend the styles applied to the component.\r\nSee [CSS API](#css-api) below for more details."
       }
+    },
+    "inheritance": {
+      "component": "Typography",
+      "pathname": "https://material-ui.com/api/Typography"
     }
   },
-  "packages\\material-ui\\src\\DialogTitle\\DialogTitle.js": {
+  "DialogTitle/DialogTitle.js": {
     "description": "",
     "displayName": "DialogTitle",
     "methods": [],
@@ -2742,7 +2676,7 @@
       }
     }
   },
-  "packages\\material-ui\\src\\Divider\\Divider.js": {
+  "Divider/Divider.js": {
     "description": "",
     "displayName": "Divider",
     "methods": [],
@@ -2752,7 +2686,7 @@
           "name": "bool"
         },
         "required": false,
-        "description": "",
+        "description": "Absolutely position the element.",
         "defaultValue": {
           "value": "false",
           "computed": false
@@ -2774,18 +2708,8 @@
       },
       "component": {
         "type": {
-          "name": "union",
-          "value": [
-            {
-              "name": "string"
-            },
-            {
-              "name": "func"
-            },
-            {
-              "name": "object"
-            }
-          ]
+          "name": "custom",
+          "raw": "componentPropType"
         },
         "required": false,
         "description": "The component used for the root node.\r\nEither a string to use a DOM element or a component.",
@@ -2799,11 +2723,7 @@
           "name": "bool"
         },
         "required": false,
-        "description": "If `true`, the divider will be indented.",
-        "defaultValue": {
-          "value": "false",
-          "computed": false
-        }
+        "description": "If `true`, the divider will be indented.\r\n__WARNING__: `inset` is deprecated.\r\nInstead use `variant=\"inset\"`."
       },
       "light": {
         "type": {
@@ -2815,10 +2735,35 @@
           "value": "false",
           "computed": false
         }
+      },
+      "variant": {
+        "type": {
+          "name": "enum",
+          "value": [
+            {
+              "value": "'fullWidth'",
+              "computed": false
+            },
+            {
+              "value": "'inset'",
+              "computed": false
+            },
+            {
+              "value": "'middle'",
+              "computed": false
+            }
+          ]
+        },
+        "required": false,
+        "description": "The variant to use.",
+        "defaultValue": {
+          "value": "'fullWidth'",
+          "computed": false
+        }
       }
     }
   },
-  "packages\\material-ui\\src\\Drawer\\Drawer.js": {
+  "Drawer/Drawer.js": {
     "description": "The properties of the [Modal](/api/modal/) component are available\r\nwhen `variant=\"temporary\"` is set.",
     "displayName": "Drawer",
     "methods": [],
@@ -2986,7 +2931,7 @@
       }
     }
   },
-  "packages\\material-ui\\src\\ExpansionPanel\\ExpansionPanel.js": {
+  "ExpansionPanel/ExpansionPanel.js": {
     "description": "",
     "displayName": "ExpansionPanel",
     "methods": [
@@ -3068,9 +3013,13 @@
         "required": false,
         "description": "Callback fired when the expand/collapse state is changed.\r\n\n@param {object} event The event source of the callback\r\n@param {boolean} expanded The `expanded` state of the panel"
       }
+    },
+    "inheritance": {
+      "component": "Paper",
+      "pathname": "https://material-ui.com/api/Paper"
     }
   },
-  "packages\\material-ui\\src\\ExpansionPanelActions\\ExpansionPanelActions.js": {
+  "ExpansionPanelActions/ExpansionPanelActions.js": {
     "description": "",
     "displayName": "ExpansionPanelActions",
     "methods": [],
@@ -3098,7 +3047,7 @@
       }
     }
   },
-  "packages\\material-ui\\src\\ExpansionPanelDetails\\ExpansionPanelDetails.js": {
+  "ExpansionPanelDetails/ExpansionPanelDetails.js": {
     "description": "",
     "displayName": "ExpansionPanelDetails",
     "methods": [],
@@ -3126,22 +3075,32 @@
       }
     }
   },
-  "packages\\material-ui\\src\\ExpansionPanelSummary\\ExpansionPanelSummary.js": {
+  "ExpansionPanelSummary/ExpansionPanelSummary.js": {
     "description": "",
     "displayName": "ExpansionPanelSummary",
     "methods": [
       {
-        "name": "handleFocus",
+        "name": "handleFocusVisible",
         "docblock": null,
         "modifiers": [],
-        "params": [],
+        "params": [
+          {
+            "name": "event",
+            "type": null
+          }
+        ],
         "returns": null
       },
       {
         "name": "handleBlur",
         "docblock": null,
         "modifiers": [],
-        "params": [],
+        "params": [
+          {
+            "name": "event",
+            "type": null
+          }
+        ],
         "returns": null
       },
       {
@@ -3225,9 +3184,186 @@
         "required": false,
         "description": "@ignore"
       }
+    },
+    "inheritance": {
+      "component": "ButtonBase",
+      "pathname": "https://material-ui.com/api/ButtonBase"
     }
   },
-  "packages\\material-ui\\src\\Fade\\Fade.js": {
+  "Fab/Fab.js": {
+    "description": "",
+    "displayName": "Fab",
+    "methods": [],
+    "props": {
+      "children": {
+        "type": {
+          "name": "node"
+        },
+        "required": true,
+        "description": "The content of the button."
+      },
+      "classes": {
+        "type": {
+          "name": "object"
+        },
+        "required": true,
+        "description": "Override or extend the styles applied to the component.\r\nSee [CSS API](#css-api) below for more details."
+      },
+      "className": {
+        "type": {
+          "name": "string"
+        },
+        "required": false,
+        "description": "@ignore"
+      },
+      "color": {
+        "type": {
+          "name": "enum",
+          "value": [
+            {
+              "value": "'default'",
+              "computed": false
+            },
+            {
+              "value": "'inherit'",
+              "computed": false
+            },
+            {
+              "value": "'primary'",
+              "computed": false
+            },
+            {
+              "value": "'secondary'",
+              "computed": false
+            }
+          ]
+        },
+        "required": false,
+        "description": "The color of the component. It supports those theme colors that make sense for this component.",
+        "defaultValue": {
+          "value": "'default'",
+          "computed": false
+        }
+      },
+      "component": {
+        "type": {
+          "name": "custom",
+          "raw": "componentPropType"
+        },
+        "required": false,
+        "description": "The component used for the root node.\r\nEither a string to use a DOM element or a component.",
+        "defaultValue": {
+          "value": "'button'",
+          "computed": false
+        }
+      },
+      "disabled": {
+        "type": {
+          "name": "bool"
+        },
+        "required": false,
+        "description": "If `true`, the button will be disabled.",
+        "defaultValue": {
+          "value": "false",
+          "computed": false
+        }
+      },
+      "disableFocusRipple": {
+        "type": {
+          "name": "bool"
+        },
+        "required": false,
+        "description": "If `true`, the  keyboard focus ripple will be disabled.\r\n`disableRipple` must also be true.",
+        "defaultValue": {
+          "value": "false",
+          "computed": false
+        }
+      },
+      "disableRipple": {
+        "type": {
+          "name": "bool"
+        },
+        "required": false,
+        "description": "If `true`, the ripple effect will be disabled."
+      },
+      "focusVisibleClassName": {
+        "type": {
+          "name": "string"
+        },
+        "required": false,
+        "description": "@ignore"
+      },
+      "href": {
+        "type": {
+          "name": "string"
+        },
+        "required": false,
+        "description": "The URL to link to when the button is clicked.\r\nIf defined, an `a` element will be used as the root node."
+      },
+      "size": {
+        "type": {
+          "name": "enum",
+          "value": [
+            {
+              "value": "'small'",
+              "computed": false
+            },
+            {
+              "value": "'medium'",
+              "computed": false
+            },
+            {
+              "value": "'large'",
+              "computed": false
+            }
+          ]
+        },
+        "required": false,
+        "description": "The size of the button.\r\n`small` is equivalent to the dense button styling.",
+        "defaultValue": {
+          "value": "'large'",
+          "computed": false
+        }
+      },
+      "type": {
+        "type": {
+          "name": "string"
+        },
+        "required": false,
+        "description": "@ignore",
+        "defaultValue": {
+          "value": "'button'",
+          "computed": false
+        }
+      },
+      "variant": {
+        "type": {
+          "name": "enum",
+          "value": [
+            {
+              "value": "'round'",
+              "computed": false
+            },
+            {
+              "value": "'extended'",
+              "computed": false
+            }
+          ]
+        },
+        "required": false,
+        "description": "The variant to use.",
+        "defaultValue": {
+          "value": "'round'",
+          "computed": false
+        }
+      }
+    },
+    "inheritance": {
+      "component": "ButtonBase",
+      "pathname": "https://material-ui.com/api/ButtonBase"
+    }
+  },
+  "Fade/Fade.js": {
     "description": "The Fade transition is used by the [Modal](/utils/modal/) component.\r\nIt uses [react-transition-group](https://github.com/reactjs/react-transition-group) internally.",
     "displayName": "Fade",
     "methods": [
@@ -3336,9 +3472,13 @@
           "computed": false
         }
       }
+    },
+    "inheritance": {
+      "component": "Transition",
+      "pathname": "https://reactcommunity.org/react-transition-group/#Transition"
     }
   },
-  "packages\\material-ui\\src\\FilledInput\\FilledInput.js": {
+  "FilledInput/FilledInput.js": {
     "description": "",
     "displayName": "FilledInput",
     "methods": [],
@@ -3380,6 +3520,32 @@
             },
             {
               "name": "number"
+            },
+            {
+              "name": "bool"
+            },
+            {
+              "name": "object"
+            },
+            {
+              "name": "arrayOf",
+              "value": {
+                "name": "union",
+                "value": [
+                  {
+                    "name": "string"
+                  },
+                  {
+                    "name": "number"
+                  },
+                  {
+                    "name": "bool"
+                  },
+                  {
+                    "name": "object"
+                  }
+                ]
+              }
             }
           ]
         },
@@ -3392,6 +3558,13 @@
         },
         "required": false,
         "description": "If `true`, the input will be disabled."
+      },
+      "disableUnderline": {
+        "type": {
+          "name": "bool"
+        },
+        "required": false,
+        "description": "If `true`, the input will not have an underline."
       },
       "endAdornment": {
         "type": {
@@ -3423,18 +3596,8 @@
       },
       "inputComponent": {
         "type": {
-          "name": "union",
-          "value": [
-            {
-              "name": "string"
-            },
-            {
-              "name": "func"
-            },
-            {
-              "name": "object"
-            }
-          ]
+          "name": "custom",
+          "raw": "componentPropType"
         },
         "required": false,
         "description": "The component used for the native input.\r\nEither a string to use a DOM element or a component."
@@ -3578,6 +3741,9 @@
               "name": "bool"
             },
             {
+              "name": "object"
+            },
+            {
               "name": "arrayOf",
               "value": {
                 "name": "union",
@@ -3590,6 +3756,9 @@
                   },
                   {
                     "name": "bool"
+                  },
+                  {
+                    "name": "object"
                   }
                 ]
               }
@@ -3599,12 +3768,34 @@
         "required": false,
         "description": "The input value, required for a controlled component."
       }
+    },
+    "inheritance": {
+      "component": "InputBase",
+      "pathname": "https://material-ui.com/api/InputBase"
     }
   },
-  "packages\\material-ui\\src\\FormControl\\FormControl.js": {
+  "FormControl/FormControl.js": {
     "description": "Provides context such as filled/focused/error/required for form inputs.\r\nRelying on the context provides high flexibilty and ensures that the state always stays\r\nconsistent across the children of the `FormControl`.\r\nThis context is used by the following components:\r\n - FormLabel\r\n - FormHelperText\r\n - Input\r\n - InputLabel\r\n\n⚠️ Only one input can be used within a FormControl.",
     "displayName": "FormControl",
     "methods": [
+      {
+        "name": "getDerivedStateFromProps",
+        "docblock": null,
+        "modifiers": [
+          "static"
+        ],
+        "params": [
+          {
+            "name": "props",
+            "type": null
+          },
+          {
+            "name": "state",
+            "type": null
+          }
+        ],
+        "returns": null
+      },
       {
         "name": "handleFocus",
         "docblock": null,
@@ -3658,18 +3849,8 @@
       },
       "component": {
         "type": {
-          "name": "union",
-          "value": [
-            {
-              "name": "string"
-            },
-            {
-              "name": "func"
-            },
-            {
-              "name": "object"
-            }
-          ]
+          "name": "custom",
+          "raw": "componentPropType"
         },
         "required": false,
         "description": "The component used for the root node.\r\nEither a string to use a DOM element or a component.",
@@ -3772,17 +3953,9 @@
           "computed": false
         }
       }
-    },
-    "childContext": {
-      "muiFormControl": {
-        "type": {
-          "name": "object"
-        },
-        "required": false
-      }
     }
   },
-  "packages\\material-ui\\src\\FormControlLabel\\FormControlLabel.js": {
+  "FormControlLabel/FormControlLabel.js": {
     "description": "Drop in replacement of the `Radio`, `Switch` and `Checkbox` component.\r\nUse this component if you want to display an extra label.",
     "displayName": "FormControlLabel",
     "methods": [],
@@ -3863,6 +4036,14 @@
             {
               "value": "'start'",
               "computed": false
+            },
+            {
+              "value": "'top'",
+              "computed": false
+            },
+            {
+              "value": "'bottom'",
+              "computed": false
             }
           ]
         },
@@ -3872,6 +4053,13 @@
           "value": "'end'",
           "computed": false
         }
+      },
+      "muiFormControl": {
+        "type": {
+          "name": "object"
+        },
+        "required": false,
+        "description": "@ignore"
       },
       "name": {
         "type": {
@@ -3894,17 +4082,9 @@
         "required": false,
         "description": "The value of the component."
       }
-    },
-    "context": {
-      "muiFormControl": {
-        "type": {
-          "name": "object"
-        },
-        "required": false
-      }
     }
   },
-  "packages\\material-ui\\src\\FormGroup\\FormGroup.js": {
+  "FormGroup/FormGroup.js": {
     "description": "`FormGroup` wraps controls such as `Checkbox` and `Switch`.\r\nIt provides compact row layout.\r\nFor the `Radio`, you should be using the `RadioGroup` component instead of this one.",
     "displayName": "FormGroup",
     "methods": [],
@@ -3943,7 +4123,7 @@
       }
     }
   },
-  "packages\\material-ui\\src\\FormHelperText\\FormHelperText.js": {
+  "FormHelperText/FormHelperText.js": {
     "description": "",
     "displayName": "FormHelperText",
     "methods": [],
@@ -3971,18 +4151,8 @@
       },
       "component": {
         "type": {
-          "name": "union",
-          "value": [
-            {
-              "name": "string"
-            },
-            {
-              "name": "func"
-            },
-            {
-              "name": "object"
-            }
-          ]
+          "name": "custom",
+          "raw": "componentPropType"
         },
         "required": false,
         "description": "The component used for the root node.\r\nEither a string to use a DOM element or a component.",
@@ -4032,6 +4202,13 @@
         "required": false,
         "description": "If `dense`, will adjust vertical spacing. This is normally obtained via context from\r\nFormControl."
       },
+      "muiFormControl": {
+        "type": {
+          "name": "object"
+        },
+        "required": false,
+        "description": "@ignore"
+      },
       "required": {
         "type": {
           "name": "bool"
@@ -4060,17 +4237,9 @@
         "required": false,
         "description": "The variant to use."
       }
-    },
-    "context": {
-      "muiFormControl": {
-        "type": {
-          "name": "object"
-        },
-        "required": false
-      }
     }
   },
-  "packages\\material-ui\\src\\FormLabel\\FormLabel.js": {
+  "FormLabel/FormLabel.js": {
     "description": "",
     "displayName": "FormLabel",
     "methods": [],
@@ -4098,18 +4267,8 @@
       },
       "component": {
         "type": {
-          "name": "union",
-          "value": [
-            {
-              "name": "string"
-            },
-            {
-              "name": "func"
-            },
-            {
-              "name": "object"
-            }
-          ]
+          "name": "custom",
+          "raw": "componentPropType"
         },
         "required": false,
         "description": "The component used for the root node.\r\nEither a string to use a DOM element or a component.",
@@ -4146,6 +4305,13 @@
         "required": false,
         "description": "If `true`, the input of this label is focused (used by `FormGroup` components)."
       },
+      "muiFormControl": {
+        "type": {
+          "name": "object"
+        },
+        "required": false,
+        "description": "@ignore"
+      },
       "required": {
         "type": {
           "name": "bool"
@@ -4153,17 +4319,9 @@
         "required": false,
         "description": "If `true`, the label will indicate that the input is required."
       }
-    },
-    "context": {
-      "muiFormControl": {
-        "type": {
-          "name": "object"
-        },
-        "required": false
-      }
     }
   },
-  "packages\\material-ui\\src\\Grid\\Grid.js": {
+  "Grid/Grid.js": {
     "description": "",
     "displayName": "Grid",
     "methods": [],
@@ -4261,18 +4419,8 @@
       },
       "component": {
         "type": {
-          "name": "union",
-          "value": [
-            {
-              "name": "string"
-            },
-            {
-              "name": "func"
-            },
-            {
-              "name": "object"
-            }
-          ]
+          "name": "custom",
+          "raw": "componentPropType"
         },
         "required": false,
         "description": "The component used for the root node.\r\nEither a string to use a DOM element or a component.",
@@ -4809,7 +4957,7 @@
       }
     }
   },
-  "packages\\material-ui\\src\\GridList\\GridList.js": {
+  "GridList/GridList.js": {
     "description": "",
     "displayName": "GridList",
     "methods": [],
@@ -4873,18 +5021,8 @@
       },
       "component": {
         "type": {
-          "name": "union",
-          "value": [
-            {
-              "name": "string"
-            },
-            {
-              "name": "func"
-            },
-            {
-              "name": "object"
-            }
-          ]
+          "name": "custom",
+          "raw": "componentPropType"
         },
         "required": false,
         "description": "The component used for the root node.\r\nEither a string to use a DOM element or a component.",
@@ -4913,7 +5051,7 @@
       }
     }
   },
-  "packages\\material-ui\\src\\GridListTile\\GridListTile.js": {
+  "GridListTile/GridListTile.js": {
     "description": "",
     "displayName": "GridListTile",
     "methods": [
@@ -4967,18 +5105,8 @@
       },
       "component": {
         "type": {
-          "name": "union",
-          "value": [
-            {
-              "name": "string"
-            },
-            {
-              "name": "func"
-            },
-            {
-              "name": "object"
-            }
-          ]
+          "name": "custom",
+          "raw": "componentPropType"
         },
         "required": false,
         "description": "The component used for the root node.\r\nEither a string to use a DOM element or a component.",
@@ -5000,7 +5128,7 @@
       }
     }
   },
-  "packages\\material-ui\\src\\GridListTileBar\\GridListTileBar.js": {
+  "GridListTileBar/GridListTileBar.js": {
     "description": "",
     "displayName": "GridListTileBar",
     "methods": [],
@@ -5084,7 +5212,7 @@
       }
     }
   },
-  "packages\\material-ui\\src\\Grow\\Grow.js": {
+  "Grow/Grow.js": {
     "description": "The Grow transition is used by the [Tooltip](/demos/tooltips/) and\r\n[Popover](/utils/popover/) components.\r\nIt uses [react-transition-group](https://github.com/reactjs/react-transition-group) internally.",
     "displayName": "Grow",
     "methods": [
@@ -5218,9 +5346,13 @@
           "computed": false
         }
       }
+    },
+    "inheritance": {
+      "component": "Transition",
+      "pathname": "https://reactcommunity.org/react-transition-group/#Transition"
     }
   },
-  "packages\\material-ui\\src\\Hidden\\Hidden.js": {
+  "Hidden/Hidden.js": {
     "description": "Responsively hides children based on the selected implementation.",
     "displayName": "Hidden",
     "methods": [],
@@ -5254,7 +5386,7 @@
           ]
         },
         "required": false,
-        "description": "Specify which implementation to use.  'js' is the default, 'css' works better for server\r\nside rendering.",
+        "description": "Specify which implementation to use.  'js' is the default, 'css' works better for\r\nserver-side rendering.",
         "defaultValue": {
           "value": "'js'",
           "computed": false
@@ -5287,7 +5419,7 @@
           ]
         },
         "required": false,
-        "description": "You can use this property when choosing the `js` implementation with server side rendering.\r\n\nAs `window.innerWidth` is unavailable on the server,\r\nwe default to rendering an empty componenent during the first mount.\r\nIn some situation you might want to use an heristic to approximate\r\nthe screen width of the client browser screen width.\r\n\nFor instance, you could be using the user-agent or the client-hints.\r\nhttps://caniuse.com/#search=client%20hint"
+        "description": "You can use this property when choosing the `js` implementation with server-side rendering.\r\n\nAs `window.innerWidth` is unavailable on the server,\r\nwe default to rendering an empty componenent during the first mount.\r\nYou might want to use an heristic to approximate\r\nthe screen width of the client browser screen width.\r\n\nFor instance, you could be using the user-agent or the client-hints.\r\nhttps://caniuse.com/#search=client%20hint"
       },
       "lgDown": {
         "type": {
@@ -5463,184 +5595,7 @@
       }
     }
   },
-  "packages\\material-ui\\src\\Hidden\\HiddenCss.js": {
-    "description": "@ignore - internal component.",
-    "displayName": "HiddenCss",
-    "methods": [],
-    "props": {
-      "children": {
-        "type": {
-          "name": "node"
-        },
-        "required": false,
-        "description": "The content of the component."
-      },
-      "classes": {
-        "type": {
-          "name": "object"
-        },
-        "required": true,
-        "description": "Override or extend the styles applied to the component.\r\nSee [CSS API](#css-api) below for more details."
-      },
-      "className": {
-        "type": {
-          "name": "string"
-        },
-        "required": false,
-        "description": "@ignore"
-      },
-      "implementation": {
-        "type": {
-          "name": "enum",
-          "value": [
-            {
-              "value": "'js'",
-              "computed": false
-            },
-            {
-              "value": "'css'",
-              "computed": false
-            }
-          ]
-        },
-        "required": false,
-        "description": "Specify which implementation to use.  'js' is the default, 'css' works better for server\r\nside rendering."
-      },
-      "lgDown": {
-        "type": {
-          "name": "bool"
-        },
-        "required": false,
-        "description": "If true, screens this size and down will be hidden."
-      },
-      "lgUp": {
-        "type": {
-          "name": "bool"
-        },
-        "required": false,
-        "description": "If true, screens this size and up will be hidden."
-      },
-      "mdDown": {
-        "type": {
-          "name": "bool"
-        },
-        "required": false,
-        "description": "If true, screens this size and down will be hidden."
-      },
-      "mdUp": {
-        "type": {
-          "name": "bool"
-        },
-        "required": false,
-        "description": "If true, screens this size and up will be hidden."
-      },
-      "only": {
-        "type": {
-          "name": "union",
-          "value": [
-            {
-              "name": "enum",
-              "value": [
-                {
-                  "value": "'xs'",
-                  "computed": false
-                },
-                {
-                  "value": "'sm'",
-                  "computed": false
-                },
-                {
-                  "value": "'md'",
-                  "computed": false
-                },
-                {
-                  "value": "'lg'",
-                  "computed": false
-                },
-                {
-                  "value": "'xl'",
-                  "computed": false
-                }
-              ]
-            },
-            {
-              "name": "arrayOf",
-              "value": {
-                "name": "enum",
-                "value": [
-                  {
-                    "value": "'xs'",
-                    "computed": false
-                  },
-                  {
-                    "value": "'sm'",
-                    "computed": false
-                  },
-                  {
-                    "value": "'md'",
-                    "computed": false
-                  },
-                  {
-                    "value": "'lg'",
-                    "computed": false
-                  },
-                  {
-                    "value": "'xl'",
-                    "computed": false
-                  }
-                ]
-              }
-            }
-          ]
-        },
-        "required": false,
-        "description": "Hide the given breakpoint(s)."
-      },
-      "smDown": {
-        "type": {
-          "name": "bool"
-        },
-        "required": false,
-        "description": "If true, screens this size and down will be hidden."
-      },
-      "smUp": {
-        "type": {
-          "name": "bool"
-        },
-        "required": false,
-        "description": "If true, screens this size and up will be hidden."
-      },
-      "xlDown": {
-        "type": {
-          "name": "bool"
-        },
-        "required": false,
-        "description": "If true, screens this size and down will be hidden."
-      },
-      "xlUp": {
-        "type": {
-          "name": "bool"
-        },
-        "required": false,
-        "description": "If true, screens this size and up will be hidden."
-      },
-      "xsDown": {
-        "type": {
-          "name": "bool"
-        },
-        "required": false,
-        "description": "If true, screens this size and down will be hidden."
-      },
-      "xsUp": {
-        "type": {
-          "name": "bool"
-        },
-        "required": false,
-        "description": "If true, screens this size and up will be hidden."
-      }
-    }
-  },
-  "packages\\material-ui\\src\\Icon\\Icon.js": {
+  "Icon/Icon.js": {
     "description": "",
     "displayName": "Icon",
     "methods": [],
@@ -5705,18 +5660,8 @@
       },
       "component": {
         "type": {
-          "name": "union",
-          "value": [
-            {
-              "name": "string"
-            },
-            {
-              "name": "func"
-            },
-            {
-              "name": "object"
-            }
-          ]
+          "name": "custom",
+          "raw": "componentPropType"
         },
         "required": false,
         "description": "The component used for the root node.\r\nEither a string to use a DOM element or a component.",
@@ -5756,7 +5701,7 @@
       }
     }
   },
-  "packages\\material-ui\\src\\IconButton\\IconButton.js": {
+  "IconButton/IconButton.js": {
     "description": "Refer to the [Icons](/style/icons/) section of the documentation\r\nregarding the available icon options.",
     "displayName": "IconButton",
     "methods": [],
@@ -5829,9 +5774,13 @@
         "required": false,
         "description": "If `true`, the ripple will be disabled."
       }
+    },
+    "inheritance": {
+      "component": "ButtonBase",
+      "pathname": "https://material-ui.com/api/ButtonBase"
     }
   },
-  "packages\\material-ui\\src\\Input\\Input.js": {
+  "Input/Input.js": {
     "description": "",
     "displayName": "Input",
     "methods": [],
@@ -5873,6 +5822,32 @@
             },
             {
               "name": "number"
+            },
+            {
+              "name": "bool"
+            },
+            {
+              "name": "object"
+            },
+            {
+              "name": "arrayOf",
+              "value": {
+                "name": "union",
+                "value": [
+                  {
+                    "name": "string"
+                  },
+                  {
+                    "name": "number"
+                  },
+                  {
+                    "name": "bool"
+                  },
+                  {
+                    "name": "object"
+                  }
+                ]
+              }
             }
           ]
         },
@@ -5923,18 +5898,8 @@
       },
       "inputComponent": {
         "type": {
-          "name": "union",
-          "value": [
-            {
-              "name": "string"
-            },
-            {
-              "name": "func"
-            },
-            {
-              "name": "object"
-            }
-          ]
+          "name": "custom",
+          "raw": "componentPropType"
         },
         "required": false,
         "description": "The component used for the native input.\r\nEither a string to use a DOM element or a component."
@@ -6078,6 +6043,9 @@
               "name": "bool"
             },
             {
+              "name": "object"
+            },
+            {
               "name": "arrayOf",
               "value": {
                 "name": "union",
@@ -6090,6 +6058,9 @@
                   },
                   {
                     "name": "bool"
+                  },
+                  {
+                    "name": "object"
                   }
                 ]
               }
@@ -6099,9 +6070,13 @@
         "required": false,
         "description": "The input value, required for a controlled component."
       }
+    },
+    "inheritance": {
+      "component": "InputBase",
+      "pathname": "https://material-ui.com/api/InputBase"
     }
   },
-  "packages\\material-ui\\src\\InputAdornment\\InputAdornment.js": {
+  "InputAdornment/InputAdornment.js": {
     "description": "",
     "displayName": "InputAdornment",
     "methods": [],
@@ -6129,18 +6104,8 @@
       },
       "component": {
         "type": {
-          "name": "union",
-          "value": [
-            {
-              "name": "string"
-            },
-            {
-              "name": "func"
-            },
-            {
-              "name": "object"
-            }
-          ]
+          "name": "custom",
+          "raw": "componentPropType"
         },
         "required": false,
         "description": "The component used for the root node.\r\nEither a string to use a DOM element or a component.",
@@ -6200,10 +6165,28 @@
       }
     }
   },
-  "packages\\material-ui\\src\\InputBase\\InputBase.js": {
+  "InputBase/InputBase.js": {
     "description": "`InputBase` contains as few styles as possible.\r\nIt aims to be a simple building block for creating an input.\r\nIt contains a load of style reset and some state logic.",
     "displayName": "InputBase",
     "methods": [
+      {
+        "name": "getDerivedStateFromProps",
+        "docblock": null,
+        "modifiers": [
+          "static"
+        ],
+        "params": [
+          {
+            "name": "props",
+            "type": null
+          },
+          {
+            "name": "state",
+            "type": null
+          }
+        ],
+        "returns": null
+      },
       {
         "name": "handleFocus",
         "docblock": null,
@@ -6315,6 +6298,32 @@
             },
             {
               "name": "number"
+            },
+            {
+              "name": "bool"
+            },
+            {
+              "name": "object"
+            },
+            {
+              "name": "arrayOf",
+              "value": {
+                "name": "union",
+                "value": [
+                  {
+                    "name": "string"
+                  },
+                  {
+                    "name": "number"
+                  },
+                  {
+                    "name": "bool"
+                  },
+                  {
+                    "name": "object"
+                  }
+                ]
+              }
             }
           ]
         },
@@ -6362,18 +6371,8 @@
       },
       "inputComponent": {
         "type": {
-          "name": "union",
-          "value": [
-            {
-              "name": "string"
-            },
-            {
-              "name": "func"
-            },
-            {
-              "name": "object"
-            }
-          ]
+          "name": "custom",
+          "raw": "componentPropType"
         },
         "required": false,
         "description": "The component used for the native input.\r\nEither a string to use a DOM element or a component.",
@@ -6420,6 +6419,13 @@
         },
         "required": false,
         "description": "If `dense`, will adjust vertical spacing. This is normally obtained via context from\r\nFormControl."
+      },
+      "muiFormControl": {
+        "type": {
+          "name": "object"
+        },
+        "required": false,
+        "description": "@ignore"
       },
       "multiline": {
         "type": {
@@ -6578,6 +6584,9 @@
               "name": "bool"
             },
             {
+              "name": "object"
+            },
+            {
               "name": "arrayOf",
               "value": {
                 "name": "union",
@@ -6590,6 +6599,9 @@
                   },
                   {
                     "name": "bool"
+                  },
+                  {
+                    "name": "object"
                   }
                 ]
               }
@@ -6599,195 +6611,9 @@
         "required": false,
         "description": "The input value, required for a controlled component."
       }
-    },
-    "context": {
-      "muiFormControl": {
-        "type": {
-          "name": "object"
-        },
-        "required": false
-      }
-    },
-    "childContext": {
-      "muiFormControl": {
-        "type": {
-          "name": "object"
-        },
-        "required": false
-      }
     }
   },
-  "packages\\material-ui\\src\\InputBase\\Textarea.js": {
-    "description": "@ignore - internal component.",
-    "displayName": "Textarea",
-    "methods": [
-      {
-        "name": "handleRefInput",
-        "docblock": null,
-        "modifiers": [],
-        "params": [
-          {
-            "name": "ref",
-            "type": null
-          }
-        ],
-        "returns": null
-      },
-      {
-        "name": "handleRefSinglelineShadow",
-        "docblock": null,
-        "modifiers": [],
-        "params": [
-          {
-            "name": "ref",
-            "type": null
-          }
-        ],
-        "returns": null
-      },
-      {
-        "name": "handleRefShadow",
-        "docblock": null,
-        "modifiers": [],
-        "params": [
-          {
-            "name": "ref",
-            "type": null
-          }
-        ],
-        "returns": null
-      },
-      {
-        "name": "handleChange",
-        "docblock": null,
-        "modifiers": [],
-        "params": [
-          {
-            "name": "event",
-            "type": null
-          }
-        ],
-        "returns": null
-      },
-      {
-        "name": "syncHeightWithShadow",
-        "docblock": null,
-        "modifiers": [],
-        "params": [],
-        "returns": null
-      }
-    ],
-    "props": {
-      "classes": {
-        "type": {
-          "name": "object"
-        },
-        "required": true,
-        "description": "Override or extend the styles applied to the component.\r\nSee [CSS API](#css-api) below for more details."
-      },
-      "className": {
-        "type": {
-          "name": "string"
-        },
-        "required": false,
-        "description": "@ignore"
-      },
-      "defaultValue": {
-        "type": {
-          "name": "union",
-          "value": [
-            {
-              "name": "string"
-            },
-            {
-              "name": "number"
-            }
-          ]
-        },
-        "required": false,
-        "description": "@ignore"
-      },
-      "disabled": {
-        "type": {
-          "name": "bool"
-        },
-        "required": false,
-        "description": "@ignore"
-      },
-      "onChange": {
-        "type": {
-          "name": "func"
-        },
-        "required": false,
-        "description": "@ignore"
-      },
-      "rows": {
-        "type": {
-          "name": "union",
-          "value": [
-            {
-              "name": "string"
-            },
-            {
-              "name": "number"
-            }
-          ]
-        },
-        "required": false,
-        "description": "Number of rows to display when multiline option is set to true.",
-        "defaultValue": {
-          "value": "1",
-          "computed": false
-        }
-      },
-      "rowsMax": {
-        "type": {
-          "name": "union",
-          "value": [
-            {
-              "name": "string"
-            },
-            {
-              "name": "number"
-            }
-          ]
-        },
-        "required": false,
-        "description": "Maximum number of rows to display when multiline option is set to true."
-      },
-      "textareaRef": {
-        "type": {
-          "name": "union",
-          "value": [
-            {
-              "name": "func"
-            },
-            {
-              "name": "object"
-            }
-          ]
-        },
-        "required": false,
-        "description": "Use that property to pass a ref callback to the native textarea element."
-      },
-      "value": {
-        "type": {
-          "name": "union",
-          "value": [
-            {
-              "name": "string"
-            },
-            {
-              "name": "number"
-            }
-          ]
-        },
-        "required": false,
-        "description": "@ignore"
-      }
-    }
-  },
-  "packages\\material-ui\\src\\InputLabel\\InputLabel.js": {
+  "InputLabel/InputLabel.js": {
     "description": "",
     "displayName": "InputLabel",
     "methods": [],
@@ -6865,6 +6691,13 @@
         "required": false,
         "description": "If `dense`, will adjust vertical spacing. This is normally obtained via context from\r\nFormControl."
       },
+      "muiFormControl": {
+        "type": {
+          "name": "object"
+        },
+        "required": false,
+        "description": "@ignore"
+      },
       "required": {
         "type": {
           "name": "bool"
@@ -6901,16 +6734,12 @@
         "description": "The variant to use."
       }
     },
-    "context": {
-      "muiFormControl": {
-        "type": {
-          "name": "object"
-        },
-        "required": false
-      }
+    "inheritance": {
+      "component": "FormLabel",
+      "pathname": "https://material-ui.com/api/FormLabel"
     }
   },
-  "packages\\material-ui\\src\\LinearProgress\\LinearProgress.js": {
+  "LinearProgress/LinearProgress.js": {
     "description": "## ARIA\r\n\nIf the progress bar is describing the loading progress of a particular region of a page,\r\nyou should use `aria-describedby` to point to the progress bar, and set the `aria-busy`\r\nattribute to `true` on that region until it has finished loading.",
     "displayName": "LinearProgress",
     "methods": [],
@@ -6995,7 +6824,7 @@
       }
     }
   },
-  "packages\\material-ui\\src\\List\\List.js": {
+  "List/List.js": {
     "description": "",
     "displayName": "List",
     "methods": [],
@@ -7023,18 +6852,8 @@
       },
       "component": {
         "type": {
-          "name": "union",
-          "value": [
-            {
-              "name": "string"
-            },
-            {
-              "name": "func"
-            },
-            {
-              "name": "object"
-            }
-          ]
+          "name": "custom",
+          "raw": "componentPropType"
         },
         "required": false,
         "description": "The component used for the root node.\r\nEither a string to use a DOM element or a component.",
@@ -7072,21 +6891,34 @@
         "required": false,
         "description": "The content of the subheader, normally `ListSubheader`."
       }
-    },
-    "childContext": {
-      "dense": {
-        "type": {
-          "name": "bool"
-        },
-        "required": false
-      }
     }
   },
-  "packages\\material-ui\\src\\ListItem\\ListItem.js": {
+  "ListItem/ListItem.js": {
     "description": "",
     "displayName": "ListItem",
     "methods": [],
     "props": {
+      "alignItems": {
+        "type": {
+          "name": "enum",
+          "value": [
+            {
+              "value": "'flex-start'",
+              "computed": false
+            },
+            {
+              "value": "'center'",
+              "computed": false
+            }
+          ]
+        },
+        "required": false,
+        "description": "Defines the `align-items` style property.",
+        "defaultValue": {
+          "value": "'center'",
+          "computed": false
+        }
+      },
       "button": {
         "type": {
           "name": "bool"
@@ -7121,36 +6953,16 @@
       },
       "component": {
         "type": {
-          "name": "union",
-          "value": [
-            {
-              "name": "string"
-            },
-            {
-              "name": "func"
-            },
-            {
-              "name": "object"
-            }
-          ]
+          "name": "custom",
+          "raw": "componentPropType"
         },
         "required": false,
         "description": "The component used for the root node.\r\nEither a string to use a DOM element or a component.\r\nBy default, it's a `li` when `button` is `false` and a `div` when `button` is `true`."
       },
       "ContainerComponent": {
         "type": {
-          "name": "union",
-          "value": [
-            {
-              "name": "string"
-            },
-            {
-              "name": "func"
-            },
-            {
-              "name": "object"
-            }
-          ]
+          "name": "custom",
+          "raw": "componentPropType"
         },
         "required": false,
         "description": "The container component used when a `ListItemSecondaryAction` is rendered.",
@@ -7228,26 +7040,10 @@
           "computed": false
         }
       }
-    },
-    "context": {
-      "dense": {
-        "type": {
-          "name": "bool"
-        },
-        "required": false
-      }
-    },
-    "childContext": {
-      "dense": {
-        "type": {
-          "name": "bool"
-        },
-        "required": false
-      }
     }
   },
-  "packages\\material-ui\\src\\ListItemAvatar\\ListItemAvatar.js": {
-    "description": "This is a simple wrapper to apply the `dense` mode styles to `Avatar`.",
+  "ListItemAvatar/ListItemAvatar.js": {
+    "description": "This is a simple wrapper to apply the `dense`\r\nand `align-items=\"flex-start\"` mode styles to `Avatar`.",
     "displayName": "ListItemAvatar",
     "methods": [],
     "props": {
@@ -7272,17 +7068,9 @@
         "required": false,
         "description": "@ignore"
       }
-    },
-    "context": {
-      "dense": {
-        "type": {
-          "name": "bool"
-        },
-        "required": false
-      }
     }
   },
-  "packages\\material-ui\\src\\ListItemIcon\\ListItemIcon.js": {
+  "ListItemIcon/ListItemIcon.js": {
     "description": "A simple wrapper to apply `List` styles to an `Icon` or `SvgIcon`.",
     "displayName": "ListItemIcon",
     "methods": [],
@@ -7310,7 +7098,7 @@
       }
     }
   },
-  "packages\\material-ui\\src\\ListItemSecondaryAction\\ListItemSecondaryAction.js": {
+  "ListItemSecondaryAction/ListItemSecondaryAction.js": {
     "description": "",
     "displayName": "ListItemSecondaryAction",
     "methods": [],
@@ -7338,7 +7126,7 @@
       }
     }
   },
-  "packages\\material-ui\\src\\ListItemText\\ListItemText.js": {
+  "ListItemText/ListItemText.js": {
     "description": "",
     "displayName": "ListItemText",
     "methods": [],
@@ -7414,17 +7202,9 @@
         "required": false,
         "description": "These props will be forwarded to the secondary typography component\r\n(as long as disableTypography is not `true`)."
       }
-    },
-    "context": {
-      "dense": {
-        "type": {
-          "name": "bool"
-        },
-        "required": false
-      }
     }
   },
-  "packages\\material-ui\\src\\ListSubheader\\ListSubheader.js": {
+  "ListSubheader/ListSubheader.js": {
     "description": "",
     "displayName": "ListSubheader",
     "methods": [],
@@ -7477,18 +7257,8 @@
       },
       "component": {
         "type": {
-          "name": "union",
-          "value": [
-            {
-              "name": "string"
-            },
-            {
-              "name": "func"
-            },
-            {
-              "name": "object"
-            }
-          ]
+          "name": "custom",
+          "raw": "componentPropType"
         },
         "required": false,
         "description": "The component used for the root node.\r\nEither a string to use a DOM element or a component.",
@@ -7532,7 +7302,7 @@
       }
     }
   },
-  "packages\\material-ui\\src\\Menu\\Menu.js": {
+  "Menu/Menu.js": {
     "description": "",
     "displayName": "Menu",
     "methods": [
@@ -7551,7 +7321,19 @@
         "returns": null
       },
       {
-        "name": "handleEnter",
+        "name": "handleMenuListRef",
+        "docblock": null,
+        "modifiers": [],
+        "params": [
+          {
+            "name": "ref",
+            "type": null
+          }
+        ],
+        "returns": null
+      },
+      {
+        "name": "handleEntering",
         "docblock": null,
         "modifiers": [],
         "params": [
@@ -7632,7 +7414,7 @@
           "name": "func"
         },
         "required": false,
-        "description": "Callback fired when the component requests to be closed.\r\n\n@param {object} event The event source of the callback"
+        "description": "Callback fired when the component requests to be closed.\r\n\n@param {object} event The event source of the callback\r\n@param {string} reason Can be:`\"escapeKeyDown\"`, `\"backdropClick\"`, `\"tabKeyDown\"`"
       },
       "onEnter": {
         "type": {
@@ -7742,9 +7524,13 @@
           "computed": false
         }
       }
+    },
+    "inheritance": {
+      "component": "Popover",
+      "pathname": "https://material-ui.com/api/Popover"
     }
   },
-  "packages\\material-ui\\src\\MenuItem\\MenuItem.js": {
+  "MenuItem/MenuItem.js": {
     "description": "",
     "displayName": "MenuItem",
     "methods": [],
@@ -7772,23 +7558,24 @@
       },
       "component": {
         "type": {
-          "name": "union",
-          "value": [
-            {
-              "name": "string"
-            },
-            {
-              "name": "func"
-            },
-            {
-              "name": "object"
-            }
-          ]
+          "name": "custom",
+          "raw": "componentPropType"
         },
         "required": false,
         "description": "The component used for the root node.\r\nEither a string to use a DOM element or a component.",
         "defaultValue": {
           "value": "'li'",
+          "computed": false
+        }
+      },
+      "disableGutters": {
+        "type": {
+          "name": "bool"
+        },
+        "required": false,
+        "description": "If `true`, the left and right padding is removed.",
+        "defaultValue": {
+          "value": "false",
           "computed": false
         }
       },
@@ -7810,9 +7597,13 @@
         "required": false,
         "description": "@ignore"
       }
+    },
+    "inheritance": {
+      "component": "ListItem",
+      "pathname": "https://material-ui.com/api/ListItem"
     }
   },
-  "packages\\material-ui\\src\\MenuList\\MenuList.js": {
+  "MenuList/MenuList.js": {
     "description": "",
     "displayName": "MenuList",
     "methods": [
@@ -7908,9 +7699,13 @@
         "required": false,
         "description": "@ignore"
       }
+    },
+    "inheritance": {
+      "component": "List",
+      "pathname": "https://material-ui.com/api/List"
     }
   },
-  "packages\\material-ui\\src\\MobileStepper\\MobileStepper.js": {
+  "MobileStepper/MobileStepper.js": {
     "description": "",
     "displayName": "MobileStepper",
     "methods": [],
@@ -8018,9 +7813,13 @@
           "computed": false
         }
       }
+    },
+    "inheritance": {
+      "component": "Paper",
+      "pathname": "https://material-ui.com/api/Paper"
     }
   },
-  "packages\\material-ui\\src\\Modal\\Modal.js": {
+  "Modal/Modal.js": {
     "description": "This component shares many concepts with [react-overlays](https://react-bootstrap.github.io/react-overlays/#modals).",
     "displayName": "Modal",
     "methods": [
@@ -8039,6 +7838,13 @@
         "returns": null
       },
       {
+        "name": "handleOpen",
+        "docblock": null,
+        "modifiers": [],
+        "params": [],
+        "returns": null
+      },
+      {
         "name": "handleRendered",
         "docblock": null,
         "modifiers": [],
@@ -8046,7 +7852,7 @@
         "returns": null
       },
       {
-        "name": "handleOpen",
+        "name": "handleOpened",
         "docblock": null,
         "modifiers": [],
         "params": [],
@@ -8091,17 +7897,46 @@
         "returns": null
       },
       {
-        "name": "checkForFocus",
+        "name": "enforceFocus",
         "docblock": null,
         "modifiers": [],
         "params": [],
         "returns": null
       },
       {
-        "name": "enforceFocus",
+        "name": "handlePortalRef",
         "docblock": null,
         "modifiers": [],
-        "params": [],
+        "params": [
+          {
+            "name": "ref",
+            "type": null
+          }
+        ],
+        "returns": null
+      },
+      {
+        "name": "handleModalRef",
+        "docblock": null,
+        "modifiers": [],
+        "params": [
+          {
+            "name": "ref",
+            "type": null
+          }
+        ],
+        "returns": null
+      },
+      {
+        "name": "onRootRef",
+        "docblock": null,
+        "modifiers": [],
+        "params": [
+          {
+            "name": "ref",
+            "type": null
+          }
+        ],
         "returns": null
       },
       {
@@ -8129,18 +7964,8 @@
     "props": {
       "BackdropComponent": {
         "type": {
-          "name": "union",
-          "value": [
-            {
-              "name": "string"
-            },
-            {
-              "name": "func"
-            },
-            {
-              "name": "object"
-            }
-          ]
+          "name": "custom",
+          "raw": "componentPropType"
         },
         "required": false,
         "description": "A backdrop component. This property enables custom backdrop rendering.",
@@ -8328,7 +8153,7 @@
       }
     }
   },
-  "packages\\material-ui\\src\\NativeSelect\\NativeSelect.js": {
+  "NativeSelect/NativeSelect.js": {
     "description": "An alternative to `<Select native />` with a much smaller bundle size footprint.",
     "displayName": "NativeSelect",
     "methods": [],
@@ -8349,18 +8174,8 @@
       },
       "IconComponent": {
         "type": {
-          "name": "union",
-          "value": [
-            {
-              "name": "string"
-            },
-            {
-              "name": "func"
-            },
-            {
-              "name": "object"
-            }
-          ]
+          "name": "custom",
+          "raw": "componentPropType"
         },
         "required": false,
         "description": "The icon that displays the arrow.",
@@ -8387,6 +8202,13 @@
         "required": false,
         "description": "Attributes applied to the `select` element."
       },
+      "muiFormControl": {
+        "type": {
+          "name": "object"
+        },
+        "required": false,
+        "description": "@ignore"
+      },
       "onChange": {
         "type": {
           "name": "func"
@@ -8406,6 +8228,23 @@
             },
             {
               "name": "bool"
+            },
+            {
+              "name": "arrayOf",
+              "value": {
+                "name": "union",
+                "value": [
+                  {
+                    "name": "string"
+                  },
+                  {
+                    "name": "number"
+                  },
+                  {
+                    "name": "bool"
+                  }
+                ]
+              }
             }
           ]
         },
@@ -8434,137 +8273,12 @@
         "description": "The variant to use."
       }
     },
-    "context": {
-      "muiFormControl": {
-        "type": {
-          "name": "object"
-        },
-        "required": false
-      }
+    "inheritance": {
+      "component": "Input",
+      "pathname": "https://material-ui.com/api/Input"
     }
   },
-  "packages\\material-ui\\src\\NativeSelect\\NativeSelectInput.js": {
-    "description": "@ignore - internal component.",
-    "displayName": "NativeSelectInput",
-    "methods": [],
-    "props": {
-      "children": {
-        "type": {
-          "name": "node"
-        },
-        "required": false,
-        "description": "The option elements to populate the select with.\r\nCan be some `<option>` elements."
-      },
-      "classes": {
-        "type": {
-          "name": "object"
-        },
-        "required": true,
-        "description": "Override or extend the styles applied to the component.\r\nSee [CSS API](#css-api) below for more details."
-      },
-      "className": {
-        "type": {
-          "name": "string"
-        },
-        "required": false,
-        "description": "The CSS class name of the select element."
-      },
-      "disabled": {
-        "type": {
-          "name": "bool"
-        },
-        "required": false,
-        "description": "If `true`, the select will be disabled."
-      },
-      "IconComponent": {
-        "type": {
-          "name": "union",
-          "value": [
-            {
-              "name": "string"
-            },
-            {
-              "name": "func"
-            },
-            {
-              "name": "object"
-            }
-          ]
-        },
-        "required": false,
-        "description": "The icon that displays the arrow."
-      },
-      "inputRef": {
-        "type": {
-          "name": "union",
-          "value": [
-            {
-              "name": "func"
-            },
-            {
-              "name": "object"
-            }
-          ]
-        },
-        "required": false,
-        "description": "Use that property to pass a ref callback to the native select element."
-      },
-      "name": {
-        "type": {
-          "name": "string"
-        },
-        "required": false,
-        "description": "Name attribute of the `select` or hidden `input` element."
-      },
-      "onChange": {
-        "type": {
-          "name": "func"
-        },
-        "required": false,
-        "description": "Callback function fired when a menu item is selected.\r\n\n@param {object} event The event source of the callback.\r\nYou can pull out the new value by accessing `event.target.value`."
-      },
-      "value": {
-        "type": {
-          "name": "union",
-          "value": [
-            {
-              "name": "string"
-            },
-            {
-              "name": "number"
-            },
-            {
-              "name": "bool"
-            }
-          ]
-        },
-        "required": false,
-        "description": "The input value."
-      },
-      "variant": {
-        "type": {
-          "name": "enum",
-          "value": [
-            {
-              "value": "'standard'",
-              "computed": false
-            },
-            {
-              "value": "'outlined'",
-              "computed": false
-            },
-            {
-              "value": "'filled'",
-              "computed": false
-            }
-          ]
-        },
-        "required": false,
-        "description": "The variant to use."
-      }
-    }
-  },
-  "packages\\material-ui\\src\\NoSsr\\NoSsr.js": {
+  "NoSsr/NoSsr.js": {
     "description": "NoSsr purposely removes components from the subject of Server Side Rendering (SSR).\r\n\nThis component can be useful in a variety of situations:\r\n- Escape hatch for broken dependencies not supporting SSR.\r\n- Improve the time-to-first paint on the client by only rendering above the fold.\r\n- Reduce the rendering time on the server.\r\n- Under too heavy server load, you can turn on service degradation.",
     "displayName": "NoSsr",
     "methods": [],
@@ -8581,7 +8295,7 @@
           "name": "bool"
         },
         "required": false,
-        "description": "If `true`, the component will not only prevent server side rendering.\r\nIt will also defer the rendering of the children into a different screen frame.",
+        "description": "If `true`, the component will not only prevent server-side rendering.\r\nIt will also defer the rendering of the children into a different screen frame.",
         "defaultValue": {
           "value": "false",
           "computed": false
@@ -8600,77 +8314,7 @@
       }
     }
   },
-  "packages\\material-ui\\src\\OutlinedInput\\NotchedOutline.js": {
-    "description": "@ignore - internal component.",
-    "displayName": "NotchedOutline",
-    "methods": [],
-    "props": {
-      "classes": {
-        "type": {
-          "name": "object"
-        },
-        "required": false,
-        "description": "Override or extend the styles applied to the component.\r\nSee [CSS API](#css-api) below for more details."
-      },
-      "className": {
-        "type": {
-          "name": "string"
-        },
-        "required": false,
-        "description": "@ignore"
-      },
-      "disabled": {
-        "type": {
-          "name": "bool"
-        },
-        "required": false,
-        "description": "If `true`, the outline should be displayed in a disabled state."
-      },
-      "error": {
-        "type": {
-          "name": "bool"
-        },
-        "required": false,
-        "description": "If `true`, the outline should be displayed in an error state."
-      },
-      "focused": {
-        "type": {
-          "name": "bool"
-        },
-        "required": false,
-        "description": "If `true`, the outline should be displayed in a focused state."
-      },
-      "labelWidth": {
-        "type": {
-          "name": "number"
-        },
-        "required": true,
-        "description": "The width of the legend."
-      },
-      "notched": {
-        "type": {
-          "name": "bool"
-        },
-        "required": true,
-        "description": "If `true`, the outline is notched to accommodate the label."
-      },
-      "style": {
-        "type": {
-          "name": "object"
-        },
-        "required": false,
-        "description": "@ignore"
-      },
-      "theme": {
-        "type": {
-          "name": "object"
-        },
-        "required": false,
-        "description": "@ignore"
-      }
-    }
-  },
-  "packages\\material-ui\\src\\OutlinedInput\\OutlinedInput.js": {
+  "OutlinedInput/OutlinedInput.js": {
     "description": "",
     "displayName": "OutlinedInput",
     "methods": [],
@@ -8712,6 +8356,32 @@
             },
             {
               "name": "number"
+            },
+            {
+              "name": "bool"
+            },
+            {
+              "name": "object"
+            },
+            {
+              "name": "arrayOf",
+              "value": {
+                "name": "union",
+                "value": [
+                  {
+                    "name": "string"
+                  },
+                  {
+                    "name": "number"
+                  },
+                  {
+                    "name": "bool"
+                  },
+                  {
+                    "name": "object"
+                  }
+                ]
+              }
             }
           ]
         },
@@ -8755,18 +8425,8 @@
       },
       "inputComponent": {
         "type": {
-          "name": "union",
-          "value": [
-            {
-              "name": "string"
-            },
-            {
-              "name": "func"
-            },
-            {
-              "name": "object"
-            }
-          ]
+          "name": "custom",
+          "raw": "componentPropType"
         },
         "required": false,
         "description": "The component used for the native input.\r\nEither a string to use a DOM element or a component."
@@ -8924,6 +8584,9 @@
               "name": "bool"
             },
             {
+              "name": "object"
+            },
+            {
               "name": "arrayOf",
               "value": {
                 "name": "union",
@@ -8936,6 +8599,9 @@
                   },
                   {
                     "name": "bool"
+                  },
+                  {
+                    "name": "object"
                   }
                 ]
               }
@@ -8945,9 +8611,13 @@
         "required": false,
         "description": "The input value, required for a controlled component."
       }
+    },
+    "inheritance": {
+      "component": "InputBase",
+      "pathname": "https://material-ui.com/api/InputBase"
     }
   },
-  "packages\\material-ui\\src\\Paper\\Paper.js": {
+  "Paper/Paper.js": {
     "description": "",
     "displayName": "Paper",
     "methods": [],
@@ -8975,18 +8645,8 @@
       },
       "component": {
         "type": {
-          "name": "union",
-          "value": [
-            {
-              "name": "string"
-            },
-            {
-              "name": "func"
-            },
-            {
-              "name": "object"
-            }
-          ]
+          "name": "custom",
+          "raw": "componentPropType"
         },
         "required": false,
         "description": "The component used for the root node.\r\nEither a string to use a DOM element or a component.",
@@ -9019,7 +8679,7 @@
       }
     }
   },
-  "packages\\material-ui\\src\\Popover\\Popover.js": {
+  "Popover/Popover.js": {
     "description": "",
     "displayName": "Popover",
     "methods": [
@@ -9095,7 +8755,7 @@
         "returns": null
       },
       {
-        "name": "handleEnter",
+        "name": "handleEntering",
         "docblock": null,
         "modifiers": [],
         "params": [
@@ -9307,7 +8967,7 @@
           "name": "func"
         },
         "required": false,
-        "description": "Callback fired when the component requests to be closed.\r\n\n@param {object} event The event source of the callback."
+        "description": "Callback fired when the component requests to be closed.\r\n\n@param {object} event The event source of the callback.\r\n@param {string} reason Can be:`\"escapeKeyDown\"`, `\"backdropClick\"`"
       },
       "onEnter": {
         "type": {
@@ -9439,21 +9099,11 @@
       },
       "TransitionComponent": {
         "type": {
-          "name": "union",
-          "value": [
-            {
-              "name": "string"
-            },
-            {
-              "name": "func"
-            },
-            {
-              "name": "object"
-            }
-          ]
+          "name": "custom",
+          "raw": "componentPropType"
         },
         "required": false,
-        "description": "Transition component.",
+        "description": "The component used for the transition.",
         "defaultValue": {
           "value": "Grow",
           "computed": true
@@ -9504,9 +9154,13 @@
         "required": false,
         "description": "Properties applied to the `Transition` element."
       }
+    },
+    "inheritance": {
+      "component": "Modal",
+      "pathname": "https://material-ui.com/api/Modal"
     }
   },
-  "packages\\material-ui\\src\\Popper\\Popper.js": {
+  "Popper/Popper.js": {
     "description": "Poppers rely on the 3rd party library [Popper.js](https://github.com/FezVrasta/popper.js) for positioning.",
     "displayName": "Popper",
     "methods": [
@@ -9704,13 +9358,6 @@
         "required": false,
         "description": "Options provided to the [`popper.js`](https://github.com/FezVrasta/popper.js) instance."
       },
-      "theme": {
-        "type": {
-          "name": "object"
-        },
-        "required": true,
-        "description": "@ignore"
-      },
       "transition": {
         "type": {
           "name": "bool"
@@ -9724,7 +9371,7 @@
       }
     }
   },
-  "packages\\material-ui\\src\\Portal\\Portal.js": {
+  "Portal/Portal.js": {
     "description": "Portals provide a first-class way to render children into a DOM node\r\nthat exists outside the DOM hierarchy of the parent component.",
     "displayName": "Portal",
     "methods": [
@@ -9792,7 +9439,7 @@
       }
     }
   },
-  "packages\\material-ui\\src\\Radio\\Radio.js": {
+  "Radio/Radio.js": {
     "description": "",
     "displayName": "Radio",
     "methods": [],
@@ -9917,14 +9564,25 @@
       },
       "value": {
         "type": {
-          "name": "string"
+          "name": "union",
+          "value": [
+            {
+              "name": "string"
+            },
+            {
+              "name": "number"
+            },
+            {
+              "name": "bool"
+            }
+          ]
         },
         "required": false,
         "description": "The value of the component."
       }
     }
   },
-  "packages\\material-ui\\src\\RadioGroup\\RadioGroup.js": {
+  "RadioGroup/RadioGroup.js": {
     "description": "",
     "displayName": "RadioGroup",
     "methods": [
@@ -9936,16 +9594,12 @@
         "returns": null
       },
       {
-        "name": "handleRadioChange",
+        "name": "handleChange",
         "docblock": null,
         "modifiers": [],
         "params": [
           {
             "name": "event",
-            "type": null
-          },
-          {
-            "name": "checked",
             "type": null
           }
         ],
@@ -9990,14 +9644,29 @@
       },
       "value": {
         "type": {
-          "name": "string"
+          "name": "union",
+          "value": [
+            {
+              "name": "string"
+            },
+            {
+              "name": "number"
+            },
+            {
+              "name": "bool"
+            }
+          ]
         },
         "required": false,
         "description": "Value of the selected radio button."
       }
+    },
+    "inheritance": {
+      "component": "FormGroup",
+      "pathname": "https://material-ui.com/api/FormGroup"
     }
   },
-  "packages\\material-ui\\src\\RootRef\\RootRef.js": {
+  "RootRef/RootRef.js": {
     "description": "Helper component to allow attaching a ref to a\r\nwrapped element to access the underlying DOM element.\r\n\nIt's highly inspired by https://github.com/facebook/react/issues/11401#issuecomment-340543801.\r\nFor example:\r\n```jsx\r\nimport React from 'react';\r\nimport RootRef from '@material-ui/core/RootRef';\r\n\nclass MyComponent extends React.Component {\r\n  constructor() {\r\n    super();\r\n    this.domRef = React.createRef();\r\n  }\r\n\n  componentDidMount() {\r\n    console.log(this.domRef.current); // DOM node\r\n  }\r\n\n  render() {\r\n    return (\r\n      <RootRef rootRef={this.domRef}>\r\n        <SomeChildComponent />\r\n      </RootRef>\r\n    );\r\n  }\r\n}\r\n```",
     "displayName": "RootRef",
     "methods": [],
@@ -10026,7 +9695,7 @@
       }
     }
   },
-  "packages\\material-ui\\src\\Select\\Select.js": {
+  "Select/Select.js": {
     "description": "",
     "displayName": "Select",
     "methods": [],
@@ -10069,18 +9738,8 @@
       },
       "IconComponent": {
         "type": {
-          "name": "union",
-          "value": [
-            {
-              "name": "string"
-            },
-            {
-              "name": "func"
-            },
-            {
-              "name": "object"
-            }
-          ]
+          "name": "custom",
+          "raw": "componentPropType"
         },
         "required": false,
         "description": "The icon that displays the arrow.",
@@ -10119,7 +9778,7 @@
           "name": "bool"
         },
         "required": false,
-        "description": "If true, `value` must be an array and the menu will support multiple selections.\r\nYou can only use it when the `native` property is `false` (default).",
+        "description": "If true, `value` must be an array and the menu will support multiple selections.",
         "defaultValue": {
           "value": "false",
           "computed": false
@@ -10192,6 +9851,9 @@
               "name": "bool"
             },
             {
+              "name": "object"
+            },
+            {
               "name": "arrayOf",
               "value": {
                 "name": "union",
@@ -10204,6 +9866,9 @@
                   },
                   {
                     "name": "bool"
+                  },
+                  {
+                    "name": "object"
                   }
                 ]
               }
@@ -10235,371 +9900,12 @@
         "description": "The variant to use."
       }
     },
-    "context": {
-      "muiFormControl": {
-        "type": {
-          "name": "object"
-        },
-        "required": false
-      }
+    "inheritance": {
+      "component": "Input",
+      "pathname": "https://material-ui.com/api/Input"
     }
   },
-  "packages\\material-ui\\src\\Select\\SelectInput.js": {
-    "description": "@ignore - internal component.",
-    "displayName": "SelectInput",
-    "methods": [
-      {
-        "name": "update",
-        "docblock": null,
-        "modifiers": [],
-        "params": [
-          {
-            "name": "{ event, open }",
-            "type": null
-          }
-        ],
-        "returns": null
-      },
-      {
-        "name": "handleClick",
-        "docblock": null,
-        "modifiers": [],
-        "params": [
-          {
-            "name": "event",
-            "type": null
-          }
-        ],
-        "returns": null
-      },
-      {
-        "name": "handleClose",
-        "docblock": null,
-        "modifiers": [],
-        "params": [
-          {
-            "name": "event",
-            "type": null
-          }
-        ],
-        "returns": null
-      },
-      {
-        "name": "handleItemClick",
-        "docblock": null,
-        "modifiers": [],
-        "params": [
-          {
-            "name": "child",
-            "type": null
-          }
-        ],
-        "returns": null
-      },
-      {
-        "name": "handleBlur",
-        "docblock": null,
-        "modifiers": [],
-        "params": [
-          {
-            "name": "event",
-            "type": null
-          }
-        ],
-        "returns": null
-      },
-      {
-        "name": "handleKeyDown",
-        "docblock": null,
-        "modifiers": [],
-        "params": [
-          {
-            "name": "event",
-            "type": null
-          }
-        ],
-        "returns": null
-      },
-      {
-        "name": "handleDisplayRef",
-        "docblock": null,
-        "modifiers": [],
-        "params": [
-          {
-            "name": "ref",
-            "type": null
-          }
-        ],
-        "returns": null
-      },
-      {
-        "name": "handleInputRef",
-        "docblock": null,
-        "modifiers": [],
-        "params": [
-          {
-            "name": "ref",
-            "type": null
-          }
-        ],
-        "returns": null
-      }
-    ],
-    "props": {
-      "autoFocus": {
-        "type": {
-          "name": "bool"
-        },
-        "required": false,
-        "description": "@ignore"
-      },
-      "autoWidth": {
-        "type": {
-          "name": "bool"
-        },
-        "required": false,
-        "description": "If true, the width of the popover will automatically be set according to the items inside the\r\nmenu, otherwise it will be at least the width of the select input."
-      },
-      "children": {
-        "type": {
-          "name": "node"
-        },
-        "required": false,
-        "description": "The option elements to populate the select with.\r\nCan be some `<MenuItem>` elements."
-      },
-      "classes": {
-        "type": {
-          "name": "object"
-        },
-        "required": true,
-        "description": "Override or extend the styles applied to the component.\r\nSee [CSS API](#css-api) below for more details."
-      },
-      "className": {
-        "type": {
-          "name": "string"
-        },
-        "required": false,
-        "description": "The CSS class name of the select element."
-      },
-      "disabled": {
-        "type": {
-          "name": "bool"
-        },
-        "required": false,
-        "description": "If `true`, the select will be disabled."
-      },
-      "displayEmpty": {
-        "type": {
-          "name": "bool"
-        },
-        "required": false,
-        "description": "If `true`, the selected item is displayed even if its value is empty."
-      },
-      "IconComponent": {
-        "type": {
-          "name": "union",
-          "value": [
-            {
-              "name": "string"
-            },
-            {
-              "name": "func"
-            },
-            {
-              "name": "object"
-            }
-          ]
-        },
-        "required": false,
-        "description": "The icon that displays the arrow."
-      },
-      "inputRef": {
-        "type": {
-          "name": "union",
-          "value": [
-            {
-              "name": "func"
-            },
-            {
-              "name": "object"
-            }
-          ]
-        },
-        "required": false,
-        "description": "Use that property to pass a ref callback to the native select element."
-      },
-      "MenuProps": {
-        "type": {
-          "name": "object"
-        },
-        "required": false,
-        "description": "Properties applied to the [`Menu`](/api/menu/) element."
-      },
-      "multiple": {
-        "type": {
-          "name": "bool"
-        },
-        "required": false,
-        "description": "If true, `value` must be an array and the menu will support multiple selections."
-      },
-      "name": {
-        "type": {
-          "name": "string"
-        },
-        "required": false,
-        "description": "Name attribute of the `select` or hidden `input` element."
-      },
-      "onBlur": {
-        "type": {
-          "name": "func"
-        },
-        "required": false,
-        "description": "@ignore"
-      },
-      "onChange": {
-        "type": {
-          "name": "func"
-        },
-        "required": false,
-        "description": "Callback function fired when a menu item is selected.\r\n\n@param {object} event The event source of the callback.\r\nYou can pull out the new value by accessing `event.target.value`.\r\n@param {object} [child] The react element that was selected."
-      },
-      "onClose": {
-        "type": {
-          "name": "func"
-        },
-        "required": false,
-        "description": "Callback fired when the component requests to be closed.\r\nUse in controlled mode (see open).\r\n\n@param {object} event The event source of the callback"
-      },
-      "onFocus": {
-        "type": {
-          "name": "func"
-        },
-        "required": false,
-        "description": "@ignore"
-      },
-      "onOpen": {
-        "type": {
-          "name": "func"
-        },
-        "required": false,
-        "description": "Callback fired when the component requests to be opened.\r\nUse in controlled mode (see open).\r\n\n@param {object} event The event source of the callback"
-      },
-      "open": {
-        "type": {
-          "name": "bool"
-        },
-        "required": false,
-        "description": "Control `select` open state."
-      },
-      "readOnly": {
-        "type": {
-          "name": "bool"
-        },
-        "required": false,
-        "description": "@ignore"
-      },
-      "renderValue": {
-        "type": {
-          "name": "func"
-        },
-        "required": false,
-        "description": "Render the selected value.\r\n\n@param {*} value The `value` provided to the component.\r\n@returns {ReactElement}"
-      },
-      "required": {
-        "type": {
-          "name": "bool"
-        },
-        "required": false,
-        "description": "@ignore"
-      },
-      "SelectDisplayProps": {
-        "type": {
-          "name": "object"
-        },
-        "required": false,
-        "description": "Properties applied to the clickable div element."
-      },
-      "tabIndex": {
-        "type": {
-          "name": "union",
-          "value": [
-            {
-              "name": "number"
-            },
-            {
-              "name": "string"
-            }
-          ]
-        },
-        "required": false,
-        "description": "@ignore"
-      },
-      "type": {
-        "type": {
-          "name": "string"
-        },
-        "required": false,
-        "description": "@ignore"
-      },
-      "value": {
-        "type": {
-          "name": "union",
-          "value": [
-            {
-              "name": "string"
-            },
-            {
-              "name": "number"
-            },
-            {
-              "name": "bool"
-            },
-            {
-              "name": "arrayOf",
-              "value": {
-                "name": "union",
-                "value": [
-                  {
-                    "name": "string"
-                  },
-                  {
-                    "name": "number"
-                  },
-                  {
-                    "name": "bool"
-                  }
-                ]
-              }
-            }
-          ]
-        },
-        "required": true,
-        "description": "The input value."
-      },
-      "variant": {
-        "type": {
-          "name": "enum",
-          "value": [
-            {
-              "value": "'standard'",
-              "computed": false
-            },
-            {
-              "value": "'outlined'",
-              "computed": false
-            },
-            {
-              "value": "'filled'",
-              "computed": false
-            }
-          ]
-        },
-        "required": false,
-        "description": "The variant to use."
-      }
-    }
-  },
-  "packages\\material-ui\\src\\Slide\\Slide.js": {
+  "Slide/Slide.js": {
     "description": "The Slide transition is used by the [Snackbar](/demos/snackbars/) component.\r\nIt uses [react-transition-group](https://github.com/reactjs/react-transition-group) internally.",
     "displayName": "Slide",
     "methods": [
@@ -10782,9 +10088,13 @@
           "computed": false
         }
       }
+    },
+    "inheritance": {
+      "component": "Transition",
+      "pathname": "https://reactcommunity.org/react-transition-group/#Transition"
     }
   },
-  "packages\\material-ui\\src\\Snackbar\\Snackbar.js": {
+  "Snackbar/Snackbar.js": {
     "description": "",
     "displayName": "Snackbar",
     "methods": [
@@ -10914,10 +10224,6 @@
                   "computed": false
                 },
                 {
-                  "value": "'center'",
-                  "computed": false
-                },
-                {
                   "value": "'bottom'",
                   "computed": false
                 }
@@ -10945,7 +10251,7 @@
           "name": "element"
         },
         "required": false,
-        "description": "If you wish the take control over the children of the component you can use this property.\r\nWhen used, you replace the `SnackbarContent` component with the children."
+        "description": "Replace the `SnackbarContent` component."
       },
       "classes": {
         "type": {
@@ -11079,21 +10385,11 @@
       },
       "TransitionComponent": {
         "type": {
-          "name": "union",
-          "value": [
-            {
-              "name": "string"
-            },
-            {
-              "name": "func"
-            },
-            {
-              "name": "object"
-            }
-          ]
+          "name": "custom",
+          "raw": "componentPropType"
         },
         "required": false,
-        "description": "Transition component.",
+        "description": "The component used for the transition.",
         "defaultValue": {
           "value": "Slide",
           "computed": true
@@ -11137,7 +10433,7 @@
       }
     }
   },
-  "packages\\material-ui\\src\\SnackbarContent\\SnackbarContent.js": {
+  "SnackbarContent/SnackbarContent.js": {
     "description": "",
     "displayName": "SnackbarContent",
     "methods": [],
@@ -11170,9 +10466,13 @@
         "required": false,
         "description": "The message to display."
       }
+    },
+    "inheritance": {
+      "component": "Paper",
+      "pathname": "https://material-ui.com/api/Paper"
     }
   },
-  "packages\\material-ui\\src\\Step\\Step.js": {
+  "Step/Step.js": {
     "description": "",
     "displayName": "Step",
     "methods": [],
@@ -11278,7 +10578,7 @@
       }
     }
   },
-  "packages\\material-ui\\src\\StepButton\\StepButton.js": {
+  "StepButton/StepButton.js": {
     "description": "",
     "displayName": "StepButton",
     "methods": [],
@@ -11370,9 +10670,13 @@
         "required": false,
         "description": "@ignore"
       }
+    },
+    "inheritance": {
+      "component": "ButtonBase",
+      "pathname": "https://material-ui.com/api/ButtonBase"
     }
   },
-  "packages\\material-ui\\src\\StepConnector\\StepConnector.js": {
+  "StepConnector/StepConnector.js": {
     "description": "",
     "displayName": "StepConnector",
     "methods": [],
@@ -11453,7 +10757,7 @@
       }
     }
   },
-  "packages\\material-ui\\src\\StepContent\\StepContent.js": {
+  "StepContent/StepContent.js": {
     "description": "",
     "displayName": "StepContent",
     "methods": [],
@@ -11533,10 +10837,11 @@
       },
       "TransitionComponent": {
         "type": {
-          "name": "func"
+          "name": "custom",
+          "raw": "componentPropType"
         },
         "required": false,
-        "description": "Collapse component.",
+        "description": "The component used for the transition.",
         "defaultValue": {
           "value": "Collapse",
           "computed": true
@@ -11589,7 +10894,7 @@
       }
     }
   },
-  "packages\\material-ui\\src\\StepIcon\\StepIcon.js": {
+  "StepIcon/StepIcon.js": {
     "description": "",
     "displayName": "StepIcon",
     "methods": [],
@@ -11643,7 +10948,7 @@
       }
     }
   },
-  "packages\\material-ui\\src\\StepLabel\\StepLabel.js": {
+  "StepLabel/StepLabel.js": {
     "description": "",
     "displayName": "StepLabel",
     "methods": [],
@@ -11772,18 +11077,8 @@
       },
       "StepIconComponent": {
         "type": {
-          "name": "union",
-          "value": [
-            {
-              "name": "string"
-            },
-            {
-              "name": "func"
-            },
-            {
-              "name": "object"
-            }
-          ]
+          "name": "custom",
+          "raw": "componentPropType"
         },
         "required": false,
         "description": "The component to render in place of the [`StepIcon`](/api/step-icon/)."
@@ -11797,7 +11092,7 @@
       }
     }
   },
-  "packages\\material-ui\\src\\Stepper\\Stepper.js": {
+  "Stepper/Stepper.js": {
     "description": "",
     "displayName": "Stepper",
     "methods": [],
@@ -11888,9 +11183,13 @@
           "computed": false
         }
       }
+    },
+    "inheritance": {
+      "component": "Paper",
+      "pathname": "https://material-ui.com/api/Paper"
     }
   },
-  "packages\\material-ui\\src\\SvgIcon\\SvgIcon.js": {
+  "SvgIcon/SvgIcon.js": {
     "description": "",
     "displayName": "SvgIcon",
     "methods": [],
@@ -11955,18 +11254,8 @@
       },
       "component": {
         "type": {
-          "name": "union",
-          "value": [
-            {
-              "name": "string"
-            },
-            {
-              "name": "func"
-            },
-            {
-              "name": "object"
-            }
-          ]
+          "name": "custom",
+          "raw": "componentPropType"
         },
         "required": false,
         "description": "The component used for the root node.\r\nEither a string to use a DOM element or a component.",
@@ -12011,6 +11300,13 @@
         "required": false,
         "description": "Applies a color attribute to the SVG element."
       },
+      "shapeRendering": {
+        "type": {
+          "name": "string"
+        },
+        "required": false,
+        "description": "The shape-rendering attribute. The behavior of the different options is described\r\n[here](https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/shape-rendering).\r\nIf you are having issues with blurry icons you should investigate this property."
+      },
       "titleAccess": {
         "type": {
           "name": "string"
@@ -12031,53 +11327,7 @@
       }
     }
   },
-  "packages\\material-ui\\src\\SwipeableDrawer\\SwipeArea.js": {
-    "description": "@ignore - internal component.",
-    "displayName": "SwipeArea",
-    "methods": [],
-    "props": {
-      "anchor": {
-        "type": {
-          "name": "enum",
-          "value": [
-            {
-              "value": "'left'",
-              "computed": false
-            },
-            {
-              "value": "'top'",
-              "computed": false
-            },
-            {
-              "value": "'right'",
-              "computed": false
-            },
-            {
-              "value": "'bottom'",
-              "computed": false
-            }
-          ]
-        },
-        "required": true,
-        "description": "Side on which to attach the discovery area."
-      },
-      "classes": {
-        "type": {
-          "name": "object"
-        },
-        "required": true,
-        "description": "@ignore"
-      },
-      "width": {
-        "type": {
-          "name": "number"
-        },
-        "required": true,
-        "description": "The width of the left most (or right most) area in pixels where the\r\ndrawer can be swiped open from."
-      }
-    }
-  },
-  "packages\\material-ui\\src\\SwipeableDrawer\\SwipeableDrawer.js": {
+  "SwipeableDrawer/SwipeableDrawer.js": {
     "description": "",
     "displayName": "SwipeableDrawer",
     "methods": [
@@ -12336,6 +11586,13 @@
         "required": false,
         "description": "@ignore"
       },
+      "SwipeAreaProps": {
+        "type": {
+          "name": "object"
+        },
+        "required": false,
+        "description": "Properties applied to the swipe area element."
+      },
       "swipeAreaWidth": {
         "type": {
           "name": "number"
@@ -12408,9 +11665,13 @@
           "computed": false
         }
       }
+    },
+    "inheritance": {
+      "component": "Drawer",
+      "pathname": "https://material-ui.com/api/Drawer"
     }
   },
-  "packages\\material-ui\\src\\Switch\\Switch.js": {
+  "Switch/Switch.js": {
     "description": "",
     "displayName": "Switch",
     "methods": [],
@@ -12549,14 +11810,25 @@
       },
       "value": {
         "type": {
-          "name": "string"
+          "name": "union",
+          "value": [
+            {
+              "name": "string"
+            },
+            {
+              "name": "number"
+            },
+            {
+              "name": "bool"
+            }
+          ]
         },
         "required": false,
         "description": "The value of the component."
       }
     }
   },
-  "packages\\material-ui\\src\\Tab\\Tab.js": {
+  "Tab/Tab.js": {
     "description": "",
     "displayName": "Tab",
     "methods": [
@@ -12633,7 +11905,7 @@
           "name": "node"
         },
         "required": false,
-        "description": "@ignore\r\nFor server side rendering consideration, we let the selected tab\r\nrender the indicator."
+        "description": "@ignore\r\nFor server-side rendering consideration, we let the selected tab\r\nrender the indicator."
       },
       "label": {
         "type": {
@@ -12695,19 +11967,36 @@
         "required": false,
         "description": "You can provide your own value. Otherwise, we fallback to the child position index."
       }
+    },
+    "inheritance": {
+      "component": "ButtonBase",
+      "pathname": "https://material-ui.com/api/ButtonBase"
     }
   },
-  "packages\\material-ui\\src\\Table\\Table.js": {
+  "Table/Table.js": {
     "description": "",
     "displayName": "Table",
-    "methods": [],
+    "methods": [
+      {
+        "name": "useMemo",
+        "docblock": null,
+        "modifiers": [],
+        "params": [
+          {
+            "name": "contextValue",
+            "type": null
+          }
+        ],
+        "returns": null
+      }
+    ],
     "props": {
       "children": {
         "type": {
           "name": "node"
         },
         "required": true,
-        "description": "The content of the table, normally `TableHeader` and `TableBody`."
+        "description": "The content of the table, normally `TableHead` and `TableBody`."
       },
       "classes": {
         "type": {
@@ -12725,18 +12014,8 @@
       },
       "component": {
         "type": {
-          "name": "union",
-          "value": [
-            {
-              "name": "string"
-            },
-            {
-              "name": "func"
-            },
-            {
-              "name": "object"
-            }
-          ]
+          "name": "custom",
+          "raw": "componentPropType"
         },
         "required": false,
         "description": "The component used for the root node.\r\nEither a string to use a DOM element or a component.",
@@ -12774,17 +12053,9 @@
           "computed": false
         }
       }
-    },
-    "childContext": {
-      "table": {
-        "type": {
-          "name": "object"
-        },
-        "required": false
-      }
     }
   },
-  "packages\\material-ui\\src\\TableBody\\TableBody.js": {
+  "TableBody/TableBody.js": {
     "description": "",
     "displayName": "TableBody",
     "methods": [],
@@ -12793,7 +12064,7 @@
         "type": {
           "name": "node"
         },
-        "required": true,
+        "required": false,
         "description": "The content of the component, normally `TableRow`."
       },
       "classes": {
@@ -12812,18 +12083,8 @@
       },
       "component": {
         "type": {
-          "name": "union",
-          "value": [
-            {
-              "name": "string"
-            },
-            {
-              "name": "func"
-            },
-            {
-              "name": "object"
-            }
-          ]
+          "name": "custom",
+          "raw": "componentPropType"
         },
         "required": false,
         "description": "The component used for the root node.\r\nEither a string to use a DOM element or a component.",
@@ -12832,21 +12093,46 @@
           "computed": false
         }
       }
-    },
-    "childContext": {
-      "tablelvl2": {
-        "type": {
-          "name": "object"
-        },
-        "required": false
-      }
     }
   },
-  "packages\\material-ui\\src\\TableCell\\TableCell.js": {
+  "TableCell/TableCell.js": {
     "description": "",
     "displayName": "TableCell",
     "methods": [],
     "props": {
+      "align": {
+        "type": {
+          "name": "enum",
+          "value": [
+            {
+              "value": "'inherit'",
+              "computed": false
+            },
+            {
+              "value": "'left'",
+              "computed": false
+            },
+            {
+              "value": "'center'",
+              "computed": false
+            },
+            {
+              "value": "'right'",
+              "computed": false
+            },
+            {
+              "value": "'justify'",
+              "computed": false
+            }
+          ]
+        },
+        "required": false,
+        "description": "Set the text-align on the table cell content.\r\n\nMonetary or generally number fields **should be right aligned** as that allows\r\nyou to add them up quickly in your head without having to worry about decimals.",
+        "defaultValue": {
+          "value": "'inherit'",
+          "computed": false
+        }
+      },
       "children": {
         "type": {
           "name": "node"
@@ -12870,18 +12156,8 @@
       },
       "component": {
         "type": {
-          "name": "union",
-          "value": [
-            {
-              "name": "string"
-            },
-            {
-              "name": "func"
-            },
-            {
-              "name": "object"
-            }
-          ]
+          "name": "custom",
+          "raw": "componentPropType"
         },
         "required": false,
         "description": "The component used for the root node.\r\nEither a string to use a DOM element or a component."
@@ -12891,11 +12167,7 @@
           "name": "bool"
         },
         "required": false,
-        "description": "If `true`, content will align to the right.",
-        "defaultValue": {
-          "value": "false",
-          "computed": false
-        }
+        "description": "If `true`, content will align to the right. Deprecated: Instead, use the `align` property."
       },
       "padding": {
         "type": {
@@ -12971,23 +12243,9 @@
         "required": false,
         "description": "Specify the cell type.\r\nBy default, the TableHead, TableBody or TableFooter parent component set the value."
       }
-    },
-    "context": {
-      "table": {
-        "type": {
-          "name": "object"
-        },
-        "required": false
-      },
-      "tablelvl2": {
-        "type": {
-          "name": "object"
-        },
-        "required": false
-      }
     }
   },
-  "packages\\material-ui\\src\\TableFooter\\TableFooter.js": {
+  "TableFooter/TableFooter.js": {
     "description": "",
     "displayName": "TableFooter",
     "methods": [],
@@ -13015,18 +12273,8 @@
       },
       "component": {
         "type": {
-          "name": "union",
-          "value": [
-            {
-              "name": "string"
-            },
-            {
-              "name": "func"
-            },
-            {
-              "name": "object"
-            }
-          ]
+          "name": "custom",
+          "raw": "componentPropType"
         },
         "required": false,
         "description": "The component used for the root node.\r\nEither a string to use a DOM element or a component.",
@@ -13035,17 +12283,9 @@
           "computed": false
         }
       }
-    },
-    "childContext": {
-      "tablelvl2": {
-        "type": {
-          "name": "object"
-        },
-        "required": false
-      }
     }
   },
-  "packages\\material-ui\\src\\TableHead\\TableHead.js": {
+  "TableHead/TableHead.js": {
     "description": "",
     "displayName": "TableHead",
     "methods": [],
@@ -13054,7 +12294,7 @@
         "type": {
           "name": "node"
         },
-        "required": true,
+        "required": false,
         "description": "The content of the component, normally `TableRow`."
       },
       "classes": {
@@ -13073,18 +12313,8 @@
       },
       "component": {
         "type": {
-          "name": "union",
-          "value": [
-            {
-              "name": "string"
-            },
-            {
-              "name": "func"
-            },
-            {
-              "name": "object"
-            }
-          ]
+          "name": "custom",
+          "raw": "componentPropType"
         },
         "required": false,
         "description": "The component used for the root node.\r\nEither a string to use a DOM element or a component.",
@@ -13093,35 +12323,17 @@
           "computed": false
         }
       }
-    },
-    "childContext": {
-      "tablelvl2": {
-        "type": {
-          "name": "object"
-        },
-        "required": false
-      }
     }
   },
-  "packages\\material-ui\\src\\TablePagination\\TablePagination.js": {
+  "TablePagination/TablePagination.js": {
     "description": "A `TableCell` based component for placing inside `TableFooter` for pagination.",
     "displayName": "TablePagination",
     "methods": [],
     "props": {
       "ActionsComponent": {
         "type": {
-          "name": "union",
-          "value": [
-            {
-              "name": "string"
-            },
-            {
-              "name": "func"
-            },
-            {
-              "name": "object"
-            }
-          ]
+          "name": "custom",
+          "raw": "componentPropType"
         },
         "required": false,
         "description": "The component used for displaying the actions.\r\nEither a string to use a DOM element or a component.",
@@ -13153,18 +12365,8 @@
       },
       "component": {
         "type": {
-          "name": "union",
-          "value": [
-            {
-              "name": "string"
-            },
-            {
-              "name": "func"
-            },
-            {
-              "name": "object"
-            }
-          ]
+          "name": "custom",
+          "raw": "componentPropType"
         },
         "required": false,
         "description": "The component used for the root node.\r\nEither a string to use a DOM element or a component.",
@@ -13244,7 +12446,7 @@
         "required": false,
         "description": "Customizes the options of the rows per page select field. If less than two options are\r\navailable, no select field will be displayed.",
         "defaultValue": {
-          "value": "[5, 10, 25]",
+          "value": "[10, 25, 50, 100]",
           "computed": false
         }
       },
@@ -13255,90 +12457,13 @@
         "required": false,
         "description": "Properties applied to the rows per page [`Select`](/api/select/) element."
       }
+    },
+    "inheritance": {
+      "component": "TableCell",
+      "pathname": "https://material-ui.com/api/TableCell"
     }
   },
-  "packages\\material-ui\\src\\TablePaginationActions\\TablePaginationActions.js": {
-    "description": "@ignore - internal component.",
-    "displayName": "TablePaginationActions",
-    "methods": [
-      {
-        "name": "handleBackButtonClick",
-        "docblock": null,
-        "modifiers": [],
-        "params": [
-          {
-            "name": "event",
-            "type": null
-          }
-        ],
-        "returns": null
-      },
-      {
-        "name": "handleNextButtonClick",
-        "docblock": null,
-        "modifiers": [],
-        "params": [
-          {
-            "name": "event",
-            "type": null
-          }
-        ],
-        "returns": null
-      }
-    ],
-    "props": {
-      "backIconButtonProps": {
-        "type": {
-          "name": "object"
-        },
-        "required": false,
-        "description": "Properties applied to the back arrow [`IconButton`](/api/icon-button/) element."
-      },
-      "count": {
-        "type": {
-          "name": "number"
-        },
-        "required": true,
-        "description": "The total number of rows."
-      },
-      "nextIconButtonProps": {
-        "type": {
-          "name": "object"
-        },
-        "required": false,
-        "description": "Properties applied to the next arrow [`IconButton`](/api/icon-button/) element."
-      },
-      "onChangePage": {
-        "type": {
-          "name": "func"
-        },
-        "required": true,
-        "description": "Callback fired when the page is changed.\r\n\n@param {object} event The event source of the callback\r\n@param {number} page The page selected"
-      },
-      "page": {
-        "type": {
-          "name": "number"
-        },
-        "required": true,
-        "description": "The zero-based index of the current page."
-      },
-      "rowsPerPage": {
-        "type": {
-          "name": "number"
-        },
-        "required": true,
-        "description": "The number of rows per page."
-      },
-      "theme": {
-        "type": {
-          "name": "object"
-        },
-        "required": true,
-        "description": "@ignore"
-      }
-    }
-  },
-  "packages\\material-ui\\src\\TableRow\\TableRow.js": {
+  "TableRow/TableRow.js": {
     "description": "Will automatically set dynamic row height\r\nbased on the material table element parent (head, body, etc).",
     "displayName": "TableRow",
     "methods": [],
@@ -13366,18 +12491,8 @@
       },
       "component": {
         "type": {
-          "name": "union",
-          "value": [
-            {
-              "name": "string"
-            },
-            {
-              "name": "func"
-            },
-            {
-              "name": "object"
-            }
-          ]
+          "name": "custom",
+          "raw": "componentPropType"
         },
         "required": false,
         "description": "The component used for the root node.\r\nEither a string to use a DOM element or a component.",
@@ -13408,17 +12523,9 @@
           "computed": false
         }
       }
-    },
-    "context": {
-      "tablelvl2": {
-        "type": {
-          "name": "object"
-        },
-        "required": false
-      }
     }
   },
-  "packages\\material-ui\\src\\TableSortLabel\\TableSortLabel.js": {
+  "TableSortLabel/TableSortLabel.js": {
     "description": "A button based label for placing inside `TableCell` for column sorting.",
     "displayName": "TableSortLabel",
     "methods": [],
@@ -13489,7 +12596,8 @@
       },
       "IconComponent": {
         "type": {
-          "name": "func"
+          "name": "custom",
+          "raw": "componentPropType"
         },
         "required": false,
         "description": "Sort icon to use.",
@@ -13498,132 +12606,13 @@
           "computed": true
         }
       }
+    },
+    "inheritance": {
+      "component": "ButtonBase",
+      "pathname": "https://material-ui.com/api/ButtonBase"
     }
   },
-  "packages\\material-ui\\src\\Tabs\\ScrollbarSize.js": {
-    "description": "@ignore - internal component.\r\nThe component is originates from https://github.com/STORIS/react-scrollbar-size.\r\nIt has been moved into the core in order to minimize the bundle size.",
-    "displayName": "ScrollbarSize",
-    "methods": [
-      {
-        "name": "setMeasurements",
-        "docblock": null,
-        "modifiers": [],
-        "params": [],
-        "returns": null
-      }
-    ],
-    "props": {
-      "onChange": {
-        "type": {
-          "name": "func"
-        },
-        "required": true,
-        "description": ""
-      },
-      "onLoad": {
-        "type": {
-          "name": "func"
-        },
-        "required": true,
-        "description": ""
-      }
-    }
-  },
-  "packages\\material-ui\\src\\Tabs\\TabIndicator.js": {
-    "description": "@ignore - internal component.",
-    "displayName": "TabIndicator",
-    "methods": [],
-    "props": {
-      "classes": {
-        "type": {
-          "name": "object"
-        },
-        "required": true,
-        "description": "Override or extend the styles applied to the component.\r\nSee [CSS API](#css-api) below for more details."
-      },
-      "className": {
-        "type": {
-          "name": "string"
-        },
-        "required": false,
-        "description": "@ignore"
-      },
-      "color": {
-        "type": {
-          "name": "enum",
-          "value": [
-            {
-              "value": "'primary'",
-              "computed": false
-            },
-            {
-              "value": "'secondary'",
-              "computed": false
-            }
-          ]
-        },
-        "required": false,
-        "description": "@ignore\r\nThe color of the tab indicator."
-      }
-    }
-  },
-  "packages\\material-ui\\src\\Tabs\\TabScrollButton.js": {
-    "description": "@ignore - internal component.",
-    "displayName": "TabScrollButton",
-    "methods": [],
-    "props": {
-      "classes": {
-        "type": {
-          "name": "object"
-        },
-        "required": true,
-        "description": "Override or extend the styles applied to the component.\r\nSee [CSS API](#css-api) below for more details."
-      },
-      "className": {
-        "type": {
-          "name": "string"
-        },
-        "required": false,
-        "description": "@ignore"
-      },
-      "direction": {
-        "type": {
-          "name": "enum",
-          "value": [
-            {
-              "value": "'left'",
-              "computed": false
-            },
-            {
-              "value": "'right'",
-              "computed": false
-            }
-          ]
-        },
-        "required": false,
-        "description": "Which direction should the button indicate?"
-      },
-      "onClick": {
-        "type": {
-          "name": "func"
-        },
-        "required": false,
-        "description": "Callback to execute for button press."
-      },
-      "visible": {
-        "type": {
-          "name": "bool"
-        },
-        "required": false,
-        "description": "Should the button be present or just consume space.",
-        "defaultValue": {
-          "value": "true",
-          "computed": false
-        }
-      }
-    }
-  },
-  "packages\\material-ui\\src\\Tabs\\Tabs.js": {
+  "Tabs/Tabs.js": {
     "description": "",
     "displayName": "Tabs",
     "methods": [
@@ -13670,7 +12659,7 @@
         "modifiers": [],
         "params": [
           {
-            "name": "{ scrollbarHeight }",
+            "name": "scrollbarHeight",
             "type": null
           }
         ],
@@ -13769,18 +12758,8 @@
       },
       "component": {
         "type": {
-          "name": "union",
-          "value": [
-            {
-              "name": "string"
-            },
-            {
-              "name": "func"
-            },
-            {
-              "name": "object"
-            }
-          ]
+          "name": "custom",
+          "raw": "componentPropType"
         },
         "required": false,
         "description": "The component used for the root node.\r\nEither a string to use a DOM element or a component.",
@@ -13841,18 +12820,8 @@
       },
       "ScrollButtonComponent": {
         "type": {
-          "name": "union",
-          "value": [
-            {
-              "name": "string"
-            },
-            {
-              "name": "func"
-            },
-            {
-              "name": "object"
-            }
-          ]
+          "name": "custom",
+          "raw": "componentPropType"
         },
         "required": false,
         "description": "The component used to render the scroll buttons.",
@@ -13934,7 +12903,7 @@
       }
     }
   },
-  "packages\\material-ui\\src\\TextField\\TextField.js": {
+  "TextField/TextField.js": {
     "description": "The `TextField` is a convenience wrapper for the most common cases (80%).\r\nIt cannot be all things to all people, otherwise the API would grow out of control.\r\n\n## Advanced Configuration\r\n\nIt's important to understand that the text field is a simple abstraction\r\non top of the following components:\r\n- [FormControl](/api/form-control/)\r\n- [InputLabel](/api/input-label/)\r\n- [Input](/api/input/)\r\n- [FormHelperText](/api/form-helper-text/)\r\n\nIf you wish to alter the properties applied to the native input, you can do so as follows:\r\n\n```jsx\r\nconst inputProps = {\r\n  step: 300,\r\n};\r\n\nreturn <TextField id=\"time\" type=\"time\" inputProps={inputProps} />;\r\n```\r\n\nFor advanced cases, please look at the source of TextField by clicking on the\r\n\"Edit this page\" button above. Consider either:\r\n- using the upper case props for passing values directly to the components\r\n- using the underlying components directly as shown in the demos",
     "displayName": "TextField",
     "methods": [],
@@ -14256,9 +13225,13 @@
           "computed": false
         }
       }
+    },
+    "inheritance": {
+      "component": "FormControl",
+      "pathname": "https://material-ui.com/api/FormControl"
     }
   },
-  "packages\\material-ui\\src\\Toolbar\\Toolbar.js": {
+  "Toolbar/Toolbar.js": {
     "description": "",
     "displayName": "Toolbar",
     "methods": [],
@@ -14318,7 +13291,7 @@
       }
     }
   },
-  "packages\\material-ui\\src\\Tooltip\\Tooltip.js": {
+  "Tooltip/Tooltip.js": {
     "description": "",
     "displayName": "Tooltip",
     "methods": [
@@ -14494,7 +13467,18 @@
           "name": "string"
         },
         "required": false,
-        "description": "The relationship between the tooltip and the wrapper component is not clear from the DOM.\r\nThis property is used with aria-describedby to solve the accessibility issue.\r\nIf you don't provide this property. It fallback to a random generated id."
+        "description": "The relationship between the tooltip and the wrapper component is not clear from the DOM.\r\nThis property is used with aria-describedby to solve the accessibility issue.\r\nIf you don't provide this property. It falls back to a randomly generated id."
+      },
+      "interactive": {
+        "type": {
+          "name": "bool"
+        },
+        "required": false,
+        "description": "Makes a tooltip interactive, i.e. will not close when the user\r\nhovers over the tooltip before the `leaveDelay` is expired.",
+        "defaultValue": {
+          "value": "false",
+          "computed": false
+        }
       },
       "leaveDelay": {
         "type": {
@@ -14623,21 +13607,11 @@
       },
       "TransitionComponent": {
         "type": {
-          "name": "union",
-          "value": [
-            {
-              "name": "string"
-            },
-            {
-              "name": "func"
-            },
-            {
-              "name": "object"
-            }
-          ]
+          "name": "custom",
+          "raw": "componentPropType"
         },
         "required": false,
-        "description": "Transition component.",
+        "description": "The component used for the transition.",
         "defaultValue": {
           "value": "Grow",
           "computed": true
@@ -14652,7 +13626,7 @@
       }
     }
   },
-  "packages\\material-ui\\src\\Typography\\Typography.js": {
+  "Typography/Typography.js": {
     "description": "",
     "displayName": "Typography",
     "methods": [],
@@ -14754,18 +13728,8 @@
       },
       "component": {
         "type": {
-          "name": "union",
-          "value": [
-            {
-              "name": "string"
-            },
-            {
-              "name": "func"
-            },
-            {
-              "name": "object"
-            }
-          ]
+          "name": "custom",
+          "raw": "componentPropType"
         },
         "required": false,
         "description": "The component used for the root node.\r\nEither a string to use a DOM element or a component.\r\nBy default, it maps the variant to a good default headline component."
@@ -14797,7 +13761,7 @@
           "name": "bool"
         },
         "required": false,
-        "description": "A deprecated variant is used from an internal component. Users don't need\r\na deprecation warning here if they switched to the v2 theme. They already\r\nget the mapping that will be applied in the next major release.\r\n@internal"
+        "description": "A deprecated variant is used from an internal component. Users don't need\r\na deprecation warning here if they switched to the v2 theme. They already\r\nget the mapping that will be applied in the next major release.\r\n\n@internal"
       },
       "noWrap": {
         "type": {
@@ -14916,15 +13880,11 @@
           ]
         },
         "required": false,
-        "description": "Applies the theme typography styles.",
-        "defaultValue": {
-          "value": "'body1'",
-          "computed": false
-        }
+        "description": "Applies the theme typography styles.\r\nUse `body1` as the default value with the legacy implementation and `body2` with the new one."
       }
     }
   },
-  "packages\\material-ui\\src\\Zoom\\Zoom.js": {
+  "Zoom/Zoom.js": {
     "description": "The Zoom transition can be used for the floating variant of the\r\n[Button](https://material-ui.com/demos/buttons/#floating-action-buttons) component.\r\nIt uses [react-transition-group](https://github.com/reactjs/react-transition-group) internally.",
     "displayName": "Zoom",
     "methods": [
@@ -15033,232 +13993,13 @@
           "computed": false
         }
       }
-    }
-  },
-  "packages\\material-ui\\src\\internal\\SwitchBase.js": {
-    "description": "@ignore - internal component.",
-    "displayName": "SwitchBase",
-    "methods": [
-      {
-        "name": "handleFocus",
-        "docblock": null,
-        "modifiers": [],
-        "params": [
-          {
-            "name": "event",
-            "type": null
-          }
-        ],
-        "returns": null
-      },
-      {
-        "name": "handleBlur",
-        "docblock": null,
-        "modifiers": [],
-        "params": [
-          {
-            "name": "event",
-            "type": null
-          }
-        ],
-        "returns": null
-      },
-      {
-        "name": "handleInputChange",
-        "docblock": null,
-        "modifiers": [],
-        "params": [
-          {
-            "name": "event",
-            "type": null
-          }
-        ],
-        "returns": null
-      }
-    ],
-    "props": {
-      "autoFocus": {
-        "type": {
-          "name": "bool"
-        },
-        "required": false,
-        "description": "If `true`, the input will be focused during the first mount."
-      },
-      "checked": {
-        "type": {
-          "name": "union",
-          "value": [
-            {
-              "name": "bool"
-            },
-            {
-              "name": "string"
-            }
-          ]
-        },
-        "required": false,
-        "description": "If `true`, the component is checked."
-      },
-      "checkedIcon": {
-        "type": {
-          "name": "node"
-        },
-        "required": true,
-        "description": "The icon to display when the component is checked."
-      },
-      "classes": {
-        "type": {
-          "name": "object"
-        },
-        "required": true,
-        "description": "Override or extend the styles applied to the component.\r\nSee [CSS API](#css-api) below for more details."
-      },
-      "className": {
-        "type": {
-          "name": "string"
-        },
-        "required": false,
-        "description": "@ignore"
-      },
-      "defaultChecked": {
-        "type": {
-          "name": "bool"
-        },
-        "required": false,
-        "description": "@ignore"
-      },
-      "disabled": {
-        "type": {
-          "name": "bool"
-        },
-        "required": false,
-        "description": "If `true`, the switch will be disabled."
-      },
-      "disableRipple": {
-        "type": {
-          "name": "bool"
-        },
-        "required": false,
-        "description": "If `true`, the ripple effect will be disabled."
-      },
-      "icon": {
-        "type": {
-          "name": "node"
-        },
-        "required": true,
-        "description": "The icon to display when the component is unchecked."
-      },
-      "id": {
-        "type": {
-          "name": "string"
-        },
-        "required": false,
-        "description": "The id of the `input` element."
-      },
-      "inputProps": {
-        "type": {
-          "name": "object"
-        },
-        "required": false,
-        "description": "Attributes applied to the `input` element."
-      },
-      "inputRef": {
-        "type": {
-          "name": "union",
-          "value": [
-            {
-              "name": "func"
-            },
-            {
-              "name": "object"
-            }
-          ]
-        },
-        "required": false,
-        "description": "Use that property to pass a ref callback to the native input component."
-      },
-      "name": {
-        "type": {
-          "name": "string"
-        },
-        "required": false,
-        "description": ""
-      },
-      "onBlur": {
-        "type": {
-          "name": "func"
-        },
-        "required": false,
-        "description": "@ignore"
-      },
-      "onChange": {
-        "type": {
-          "name": "func"
-        },
-        "required": false,
-        "description": "Callback fired when the state is changed.\r\n\n@param {object} event The event source of the callback.\r\nYou can pull out the new value by accessing `event.target.checked`.\r\n@param {boolean} checked The `checked` value of the switch"
-      },
-      "onFocus": {
-        "type": {
-          "name": "func"
-        },
-        "required": false,
-        "description": "@ignore"
-      },
-      "readOnly": {
-        "type": {
-          "name": "bool"
-        },
-        "required": false,
-        "description": "It prevents the user from changing the value of the field\r\n(not from interacting with the field)."
-      },
-      "required": {
-        "type": {
-          "name": "bool"
-        },
-        "required": false,
-        "description": "If `true`, the input will be required."
-      },
-      "tabIndex": {
-        "type": {
-          "name": "union",
-          "value": [
-            {
-              "name": "number"
-            },
-            {
-              "name": "string"
-            }
-          ]
-        },
-        "required": false,
-        "description": "@ignore"
-      },
-      "type": {
-        "type": {
-          "name": "string"
-        },
-        "required": true,
-        "description": "The input component property `type`."
-      },
-      "value": {
-        "type": {
-          "name": "string"
-        },
-        "required": false,
-        "description": "The value of the component."
-      }
     },
-    "context": {
-      "muiFormControl": {
-        "type": {
-          "name": "object"
-        },
-        "required": false
-      }
+    "inheritance": {
+      "component": "Transition",
+      "pathname": "https://reactcommunity.org/react-transition-group/#Transition"
     }
   },
-  "packages\\material-ui\\src\\styles\\MuiThemeProvider.js": {
+  "MuiThemeProvider.js": {
     "description": "This component takes a `theme` property.\r\nIt makes the `theme` available down the React tree thanks to React context.\r\nThis component should preferably be used at **the root of your component tree**.",
     "displayName": "MuiThemeProvider",
     "methods": [
@@ -15288,7 +14029,14 @@
           "name": "bool"
         },
         "required": false,
-        "description": "You can disable the generation of the styles with this option.\r\nIt can be useful when traversing the React tree outside of the HTML\r\nrendering step on the server.\r\nLet's say you are using react-apollo to extract all\r\nthe queries made by the interface server side.\r\nYou can significantly speed up the traversal with this property."
+        "description": "You can disable the generation of the styles with this option.\r\nIt can be useful when traversing the React tree outside of the HTML\r\nrendering step on the server.\r\nLet's say you are using react-apollo to extract all\r\nthe queries made by the interface server-side.\r\nYou can significantly speed up the traversal with this property."
+      },
+      "sheetsCache": {
+        "type": {
+          "name": "object"
+        },
+        "required": false,
+        "description": "@ignore\r\n\nIn beta."
       },
       "sheetsManager": {
         "type": {

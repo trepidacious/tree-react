@@ -90,10 +90,6 @@ object DataContext {
       * method, including SCU. This will need support from scalajs-react (which is on React 16.3 when this is written),
       * or some kind of messing around with the raw component created by scalajs-react to add the contextType and
       * access it from SCU.
-      *
-      * @param r    The DataRenderer
-      * @param ev$1 Reusability for props, to allow us to compare them in SCU
-      * @tparam A   The type of model in the props (alongside the data)
       */
     class DataRendererMemo[A: Reusability](r: DataRenderer[A]) {
       var lastProps: Props[A] = _

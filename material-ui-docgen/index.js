@@ -185,10 +185,17 @@ console.log("Running react-docgen with handlers...")
 // We need to process the actual original source of material-ui (as is done for the material-ui API docs) since the sources
 // distributed in npm have been processed with a production check to remove propTypes that confuses react-docgen.
 const coreComponents = processComponents(path.resolve('..', '..', 'material-ui', 'packages', 'material-ui', 'src'))
+const styleComponents = processComponents(path.resolve('..', '..', 'material-ui', 'packages', 'material-ui', 'src', 'styles'))
 
 const api = {}
 
 coreComponents.forEach(c => {
+  console.log(c.path)
+  if (c.inheritance) c.api.inheritance = c.inheritance
+  api[c.path] = c.api
+})
+
+styleComponents.forEach(c => {
   console.log(c.path)
   if (c.inheritance) c.api.inheritance = c.inheritance
   api[c.path] = c.api

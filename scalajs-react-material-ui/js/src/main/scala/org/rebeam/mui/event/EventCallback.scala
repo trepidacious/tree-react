@@ -1,6 +1,6 @@
-package org.rebeam.mui
+package org.rebeam.mui.event
 
-import japgolly.scalajs.react._
+import japgolly.scalajs.react.{Callback, ReactEvent}
 
 object EventCallback {
   def apply(f: => Unit): ReactEvent => Callback = {

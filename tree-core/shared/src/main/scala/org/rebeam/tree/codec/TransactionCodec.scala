@@ -24,7 +24,7 @@ object TransactionCodec {
 
   /**
     * A [[TransactionCodec]] for a simple [[Transaction]] that can be encoded and decoded
-    * by plain [[Encoder]] and [[Decoder]] instances.
+    * by plain Encoder and Decoder instances.
     * @param name     Name of the transaction, used as a type tag
     * @param ct       Classtag to identify transaction when encoding - best not to use generic transactions
     * @param encodeA  Encoder for A

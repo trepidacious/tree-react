@@ -25,7 +25,7 @@ trait DeltaCursor[A] {
 
   /**
     * Produce a [[Transaction]] setting the value at the cursor
-    * using a [[ValueDelta]]
+    * using a ValueDelta
     * @param a  The value to set
     * @return   The transaction
     */

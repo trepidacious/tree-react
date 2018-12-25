@@ -23,7 +23,7 @@ object Generate {
     def component(all: Map[String, Component], path: String, c: Component): Unit = {
       val code = genComponent(all, path, c)
       val name = c.displayName
-      code.foreach(s => writeToFile(s"./scalajs-react-material-ui/js/src/main/scala/org/rebeam/mui/$name.scala", s))
+      code.foreach(s => writeToFile(s"./scalajs-react-material-ui/js/src/main/scala/org/rebeam/mui/$name.scala", s.replaceAllLiterally("\r\n", "\n")))
     }
 
     val s = scala.io.Source.fromInputStream(getClass.getResourceAsStream("/muiapi.json"), "utf-8").mkString

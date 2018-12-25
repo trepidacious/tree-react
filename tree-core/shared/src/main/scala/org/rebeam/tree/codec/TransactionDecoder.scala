@@ -5,7 +5,7 @@ import org.rebeam.tree.Transaction
 
 trait TransactionDecoder { self =>
   /**
-    * Decode the given [[HCursor]] as a [[Transaction]]
+    * Decode the given HCursor as a [[Transaction]]
     */
   def apply(c: HCursor)(idCodecs: IdCodecs): Decoder.Result[Transaction]
 
