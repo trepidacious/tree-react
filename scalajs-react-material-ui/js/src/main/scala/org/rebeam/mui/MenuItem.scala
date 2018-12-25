@@ -9,10 +9,18 @@ import japgolly.scalajs.react.vdom.html_<^._
 
 object MenuItem {
   
+  sealed trait AlignItems{ val value: String }
+
+  object AlignItems {
+    case object FlexStart extends AlignItems { val value: String = "flex-start" }
+    case object Center extends AlignItems { val value: String = "center" }
+  }
+          
   @js.native
   trait Props extends js.Object {
     var ContainerComponent: js.UndefOr[js.Any] = js.native
     var ContainerProps: js.UndefOr[js.Object] = js.native
+    var alignItems: js.UndefOr[String] = js.native
     var button: js.UndefOr[Boolean] = js.native
     var className: js.UndefOr[String] = js.native
     var classes: js.UndefOr[js.Object] = js.native
@@ -44,6 +52,9 @@ object MenuItem {
    *        Properties applied to the container element when the component
    *        is used to display a `ListItemSecondaryAction`.
    *        Passed to ListItem
+   * @param alignItems
+   *        Defines the `align-items` style property.
+   *        Passed to ListItem
    * @param button
    *        If `true`, the list item will be a button (using `ButtonBase`).
    *        Passed to ListItem
@@ -62,7 +73,6 @@ object MenuItem {
    *        Passed to ListItem
    * @param disableGutters
    *        If `true`, the left and right padding is removed.
-   *        Passed to ListItem
    * @param disabled
    *        If `true`, the list item will be disabled.
    *        Passed to ListItem
@@ -95,6 +105,7 @@ object MenuItem {
   def apply(
     ContainerComponent: js.UndefOr[js.Any] = js.undefined,
     ContainerProps: js.UndefOr[js.Object] = js.undefined,
+    alignItems: js.UndefOr[AlignItems] = js.undefined,
     button: js.UndefOr[Boolean] = js.undefined,
     className: js.UndefOr[String] = js.undefined,
     classes: js.UndefOr[js.Object] = js.undefined,
@@ -115,6 +126,7 @@ object MenuItem {
     val p = (new js.Object).asInstanceOf[Props]
     if (ContainerComponent.isDefined) {p.ContainerComponent = ContainerComponent}
     if (ContainerProps.isDefined) {p.ContainerProps = ContainerProps}
+    if (alignItems.isDefined) {p.alignItems = alignItems.map(v => v.value)}
     if (button.isDefined) {p.button = button}
     if (className.isDefined) {p.className = className}
     if (classes.isDefined) {p.classes = classes}

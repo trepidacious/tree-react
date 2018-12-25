@@ -42,7 +42,7 @@ object StepContent {
   /**
    * 
    * @param TransitionComponent
-   *        Collapse component.
+   *        The component used for the transition.
    * @param TransitionProps
    *        Properties applied to the `Transition` element.
    * @param active

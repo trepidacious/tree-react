@@ -9,6 +9,16 @@ import japgolly.scalajs.react.vdom.html_<^._
 
 object TablePagination {
   
+  sealed trait Align{ val value: String }
+
+  object Align {
+    case object Center extends Align { val value: String = "center" }
+    case object Left extends Align { val value: String = "left" }
+    case object Justify extends Align { val value: String = "justify" }
+    case object Right extends Align { val value: String = "right" }
+    case object Inherit extends Align { val value: String = "inherit" }
+  }
+            
   sealed trait Padding{ val value: String }
 
   object Padding {
@@ -38,6 +48,7 @@ object TablePagination {
   trait Props extends js.Object {
     var ActionsComponent: js.UndefOr[js.Any] = js.native
     var SelectProps: js.UndefOr[js.Object] = js.native
+    var align: js.UndefOr[String] = js.native
     var backIconButtonProps: js.UndefOr[js.Object] = js.native
     var className: js.UndefOr[String] = js.native
     var classes: js.UndefOr[js.Object] = js.native
@@ -74,6 +85,12 @@ object TablePagination {
    *        Either a string to use a DOM element or a component.
    * @param SelectProps
    *        Properties applied to the rows per page [`Select`](/api/select/) element.
+   * @param align
+   *        Set the text-align on the table cell content.
+   *        
+   *        Monetary or generally number fields **should be right aligned** as that allows
+   *        you to add them up quickly in your head without having to worry about decimals.
+   *        Passed to TableCell
    * @param backIconButtonProps
    *        Properties applied to the back arrow [`IconButton`](/api/icon-button/) component.
    * @param children
@@ -102,7 +119,7 @@ object TablePagination {
    * @param nextIconButtonProps
    *        Properties applied to the next arrow [`IconButton`](/api/icon-button/) element.
    * @param numeric
-   *        If `true`, content will align to the right.
+   *        If `true`, content will align to the right. Deprecated: Instead, use the `align` property.
    *        Passed to TableCell
    * @param onChangePage
    *        Callback fired when the page is changed.
@@ -148,6 +165,7 @@ object TablePagination {
   def apply(
     ActionsComponent: js.UndefOr[js.Any] = js.undefined,
     SelectProps: js.UndefOr[js.Object] = js.undefined,
+    align: js.UndefOr[Align] = js.undefined,
     backIconButtonProps: js.UndefOr[js.Object] = js.undefined,
     className: js.UndefOr[String] = js.undefined,
     classes: js.UndefOr[js.Object] = js.undefined,
@@ -175,6 +193,7 @@ object TablePagination {
     val p = (new js.Object).asInstanceOf[Props]
     if (ActionsComponent.isDefined) {p.ActionsComponent = ActionsComponent}
     if (SelectProps.isDefined) {p.SelectProps = SelectProps}
+    if (align.isDefined) {p.align = align.map(v => v.value)}
     if (backIconButtonProps.isDefined) {p.backIconButtonProps = backIconButtonProps}
     if (className.isDefined) {p.className = className}
     if (classes.isDefined) {p.classes = classes}

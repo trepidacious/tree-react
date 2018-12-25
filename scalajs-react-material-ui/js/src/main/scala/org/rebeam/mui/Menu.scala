@@ -90,7 +90,7 @@ object Menu {
    * @param PopoverClasses
    *        `classes` property applied to the [`Popover`](/api/popover/) element.
    * @param TransitionComponent
-   *        Transition component.
+   *        The component used for the transition.
    *        Passed to Popover
    * @param TransitionProps
    *        Properties applied to the `Transition` element.
@@ -202,6 +202,7 @@ object Menu {
    *        Callback fired when the component requests to be closed.
    *        
    *        parameter {object} event The event source of the callback
+   *        parameter {string} reason Can be:`"escapeKeyDown"`, `"backdropClick"`, `"tabKeyDown"`
    * @param onEnter
    *        Callback fired before the Menu enters.
    * @param onEntered

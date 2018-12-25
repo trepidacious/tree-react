@@ -14,6 +14,8 @@ object FormControlLabel {
   object LabelPlacement {
     case object End extends LabelPlacement { val value: String = "end" }
     case object Start extends LabelPlacement { val value: String = "start" }
+    case object Top extends LabelPlacement { val value: String = "top" }
+    case object Bottom extends LabelPlacement { val value: String = "bottom" }
   }
           
   @js.native
@@ -27,6 +29,7 @@ object FormControlLabel {
     var key: js.UndefOr[String] = js.native
     var label: js.UndefOr[japgolly.scalajs.react.raw.React.Node] = js.native
     var labelPlacement: js.UndefOr[String] = js.native
+    var muiFormControl: js.UndefOr[js.Object] = js.native
     var name: js.UndefOr[String] = js.native
     var onChange: js.UndefOr[scalajs.js.Function1[ReactEvent, Unit]] = js.native
     var style: js.UndefOr[js.Object] = js.native
@@ -61,6 +64,8 @@ object FormControlLabel {
    *        The text to be used in an enclosing label element.
    * @param labelPlacement
    *        The position of the label.
+   * @param muiFormControl
+   *        Property spread to root element
    * @param name
    *        
    * @param onChange
@@ -92,6 +97,7 @@ object FormControlLabel {
     key: js.UndefOr[String] = js.undefined,
     label: js.UndefOr[VdomNode] = js.undefined,
     labelPlacement: js.UndefOr[LabelPlacement] = js.undefined,
+    muiFormControl: js.UndefOr[js.Object] = js.undefined,
     name: js.UndefOr[String] = js.undefined,
     onChange: js.UndefOr[ReactEvent => Callback] = js.undefined,
     style: js.UndefOr[org.rebeam.mui.styles.Style] = js.undefined,
@@ -109,6 +115,7 @@ object FormControlLabel {
     if (key.isDefined) {p.key = key}
     if (label.isDefined) {p.label = label.map(v => v.rawNode)}
     if (labelPlacement.isDefined) {p.labelPlacement = labelPlacement.map(v => v.value)}
+    if (muiFormControl.isDefined) {p.muiFormControl = muiFormControl}
     if (name.isDefined) {p.name = name}
     if (onChange.isDefined) {p.onChange = onChange.map(v => (e: ReactEvent) => v(e).runNow())}
     if (style.isDefined) {p.style = style.map(v => v.o)}

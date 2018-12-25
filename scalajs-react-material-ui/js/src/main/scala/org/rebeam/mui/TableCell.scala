@@ -9,6 +9,16 @@ import japgolly.scalajs.react.vdom.html_<^._
 
 object TableCell {
   
+  sealed trait Align{ val value: String }
+
+  object Align {
+    case object Center extends Align { val value: String = "center" }
+    case object Left extends Align { val value: String = "left" }
+    case object Justify extends Align { val value: String = "justify" }
+    case object Right extends Align { val value: String = "right" }
+    case object Inherit extends Align { val value: String = "inherit" }
+  }
+            
   sealed trait Padding{ val value: String }
 
   object Padding {
@@ -36,6 +46,7 @@ object TableCell {
           
   @js.native
   trait Props extends js.Object {
+    var align: js.UndefOr[String] = js.native
     var className: js.UndefOr[String] = js.native
     var classes: js.UndefOr[js.Object] = js.native
     var component: js.UndefOr[js.Any] = js.native
@@ -56,6 +67,11 @@ object TableCell {
   
   /**
    * 
+   * @param align
+   *        Set the text-align on the table cell content.
+   *        
+   *        Monetary or generally number fields **should be right aligned** as that allows
+   *        you to add them up quickly in your head without having to worry about decimals.
    * @param children
    *        The table cell contents.
    * @param className
@@ -69,7 +85,7 @@ object TableCell {
    * @param key
    *        React key
    * @param numeric
-   *        If `true`, content will align to the right.
+   *        If `true`, content will align to the right. Deprecated: Instead, use the `align` property.
    * @param padding
    *        Sets the padding applied to the cell.
    *        By default, the Table parent component set the value.
@@ -92,6 +108,7 @@ object TableCell {
    *        Since this is untyped, use with care - e.g. make sure props are in the correct format for JS components
    */
   def apply(
+    align: js.UndefOr[Align] = js.undefined,
     className: js.UndefOr[String] = js.undefined,
     classes: js.UndefOr[js.Object] = js.undefined,
     component: js.UndefOr[js.Any] = js.undefined,
@@ -106,6 +123,7 @@ object TableCell {
   )(children: VdomNode *) = {
 
     val p = (new js.Object).asInstanceOf[Props]
+    if (align.isDefined) {p.align = align.map(v => v.value)}
     if (className.isDefined) {p.className = className}
     if (classes.isDefined) {p.classes = classes}
     if (component.isDefined) {p.component = component}

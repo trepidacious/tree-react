@@ -152,7 +152,6 @@ object Select {
    *        Passed to Input
    * @param multiple
    *        If true, `value` must be an array and the menu will support multiple selections.
-   *        You can only use it when the `native` property is `false` (default).
    * @param name
    *        Name attribute of the `input` element.
    *        Passed to Input

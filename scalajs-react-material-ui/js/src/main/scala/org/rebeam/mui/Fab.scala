@@ -7,90 +7,90 @@ import scalajs.js.annotation.JSImport
 
 import japgolly.scalajs.react.vdom.html_<^._
 
-object Chip {
+object Fab {
   
   sealed trait Color{ val value: String }
 
   object Color {
     case object Default extends Color { val value: String = "default" }
+    case object Inherit extends Color { val value: String = "inherit" }
     case object Primary extends Color { val value: String = "primary" }
     case object Secondary extends Color { val value: String = "secondary" }
+  }
+            
+  sealed trait Size{ val value: String }
+
+  object Size {
+    case object Small extends Size { val value: String = "small" }
+    case object Medium extends Size { val value: String = "medium" }
+    case object Large extends Size { val value: String = "large" }
   }
             
   sealed trait Variant{ val value: String }
 
   object Variant {
-    case object Default extends Variant { val value: String = "default" }
-    case object Outlined extends Variant { val value: String = "outlined" }
+    case object Round extends Variant { val value: String = "round" }
+    case object Extended extends Variant { val value: String = "extended" }
   }
           
   @js.native
   trait Props extends js.Object {
-    var avatar: js.UndefOr[japgolly.scalajs.react.raw.React.Element] = js.native
     var className: js.UndefOr[String] = js.native
     var classes: js.UndefOr[js.Object] = js.native
-    var clickable: js.UndefOr[Boolean] = js.native
     var color: js.UndefOr[String] = js.native
     var component: js.UndefOr[js.Any] = js.native
-    var deleteIcon: js.UndefOr[japgolly.scalajs.react.raw.React.Element] = js.native
-    var icon: js.UndefOr[japgolly.scalajs.react.raw.React.Element] = js.native
+    var disableFocusRipple: js.UndefOr[Boolean] = js.native
+    var disableRipple: js.UndefOr[Boolean] = js.native
+    var disabled: js.UndefOr[Boolean] = js.native
+    var focusVisibleClassName: js.UndefOr[String] = js.native
+    var href: js.UndefOr[String] = js.native
     var key: js.UndefOr[String] = js.native
-    var label: js.UndefOr[japgolly.scalajs.react.raw.React.Node] = js.native
-    var onClick: js.UndefOr[scalajs.js.Function1[ReactMouseEvent, Unit]] = js.native
-    var onDelete: js.UndefOr[scalajs.js.Function0[Unit]] = js.native
-    var onKeyDown: js.UndefOr[scalajs.js.Function1[ReactKeyboardEvent, Unit]] = js.native
-    var onKeyUp: js.UndefOr[scalajs.js.Function1[ReactKeyboardEvent, Unit]] = js.native
+    var size: js.UndefOr[String] = js.native
     var style: js.UndefOr[js.Object] = js.native
-    var tabIndex: js.UndefOr[js.Any] = js.native
+    var `type`: js.UndefOr[String] = js.native
     var variant: js.UndefOr[String] = js.native
   }
 
-  @JSImport("@material-ui/core/Chip", JSImport.Default)
+  @JSImport("@material-ui/core/Fab", JSImport.Default)
   @js.native
-  object ChipJS extends js.Object
+  object FabJS extends js.Object
 
-  val jsComponent = JsFnComponent[Props, Children.None](ChipJS)
+  val jsComponent = JsFnComponent[Props, Children.Varargs](FabJS)
   
   /**
-   * Chips represent complex entities in small blocks, such as a contact.
-   * @param avatar
-   *        Avatar element.
+   * 
+   * @param children
+   *        The content of the button.
    * @param className
    *        Property spread to root element
    * @param classes
    *        Override or extend the styles applied to the component.
    *        See [CSS API](#css-api) below for more details.
-   * @param clickable
-   *        If true, the chip will appear clickable, and will raise when pressed,
-   *        even if the onClick property is not defined.
-   *        If false, the chip will not be clickable, even if onClick peoperty is defined.
-   *        This can be used, for example,
-   *        along with the component property to indicate an anchor Chip is clickable.
    * @param color
    *        The color of the component. It supports those theme colors that make sense for this component.
    * @param component
    *        The component used for the root node.
    *        Either a string to use a DOM element or a component.
-   * @param deleteIcon
-   *        Override the default delete icon element. Shown only if `onDelete` is set.
-   * @param icon
-   *        Icon element.
+   * @param disableFocusRipple
+   *        If `true`, the  keyboard focus ripple will be disabled.
+   *        `disableRipple` must also be true.
+   * @param disableRipple
+   *        If `true`, the ripple effect will be disabled.
+   * @param disabled
+   *        If `true`, the button will be disabled.
+   * @param focusVisibleClassName
+   *        Property spread to root element
+   * @param href
+   *        The URL to link to when the button is clicked.
+   *        If defined, an `a` element will be used as the root node.
    * @param key
    *        React key
-   * @param label
-   *        The content of the label.
-   * @param onClick
-   *        Property spread to root element
-   * @param onDelete
-   *        Callback function fired when the delete icon is clicked.
-   *        If set, the delete icon will be shown.
-   * @param onKeyDown
-   *        Property spread to root element
-   * @param onKeyUp
-   *        Property spread to root element
+   * @param size
+   *        The size of the button.
+   *        `small` is equivalent to the dense button styling.
    * @param style
    *        React element CSS style
-   * @param tabIndex
+   * @param `type`
    *        Property spread to root element
    * @param variant
    *        The variant to use.
@@ -104,43 +104,37 @@ object Chip {
    *        Since this is untyped, use with care - e.g. make sure props are in the correct format for JS components
    */
   def apply(
-    avatar: js.UndefOr[VdomElement] = js.undefined,
     className: js.UndefOr[String] = js.undefined,
     classes: js.UndefOr[js.Object] = js.undefined,
-    clickable: js.UndefOr[Boolean] = js.undefined,
     color: js.UndefOr[Color] = js.undefined,
     component: js.UndefOr[js.Any] = js.undefined,
-    deleteIcon: js.UndefOr[VdomElement] = js.undefined,
-    icon: js.UndefOr[VdomElement] = js.undefined,
+    disableFocusRipple: js.UndefOr[Boolean] = js.undefined,
+    disableRipple: js.UndefOr[Boolean] = js.undefined,
+    disabled: js.UndefOr[Boolean] = js.undefined,
+    focusVisibleClassName: js.UndefOr[String] = js.undefined,
+    href: js.UndefOr[String] = js.undefined,
     key: js.UndefOr[String] = js.undefined,
-    label: js.UndefOr[VdomNode] = js.undefined,
-    onClick: js.UndefOr[ReactMouseEvent => Callback] = js.undefined,
-    onDelete: js.UndefOr[Callback] = js.undefined,
-    onKeyDown: js.UndefOr[ReactKeyboardEvent => Callback] = js.undefined,
-    onKeyUp: js.UndefOr[ReactKeyboardEvent => Callback] = js.undefined,
+    size: js.UndefOr[Size] = js.undefined,
     style: js.UndefOr[org.rebeam.mui.styles.Style] = js.undefined,
-    tabIndex: js.UndefOr[js.Any] = js.undefined,
+    `type`: js.UndefOr[String] = js.undefined,
     variant: js.UndefOr[Variant] = js.undefined,
     additionalProps: js.UndefOr[js.Object] = js.undefined
-  ) = {
+  )(children: VdomNode *) = {
 
     val p = (new js.Object).asInstanceOf[Props]
-    if (avatar.isDefined) {p.avatar = avatar.map(v => v.rawElement)}
     if (className.isDefined) {p.className = className}
     if (classes.isDefined) {p.classes = classes}
-    if (clickable.isDefined) {p.clickable = clickable}
     if (color.isDefined) {p.color = color.map(v => v.value)}
     if (component.isDefined) {p.component = component}
-    if (deleteIcon.isDefined) {p.deleteIcon = deleteIcon.map(v => v.rawElement)}
-    if (icon.isDefined) {p.icon = icon.map(v => v.rawElement)}
+    if (disableFocusRipple.isDefined) {p.disableFocusRipple = disableFocusRipple}
+    if (disableRipple.isDefined) {p.disableRipple = disableRipple}
+    if (disabled.isDefined) {p.disabled = disabled}
+    if (focusVisibleClassName.isDefined) {p.focusVisibleClassName = focusVisibleClassName}
+    if (href.isDefined) {p.href = href}
     if (key.isDefined) {p.key = key}
-    if (label.isDefined) {p.label = label.map(v => v.rawNode)}
-    if (onClick.isDefined) {p.onClick = onClick.map(v => (e: ReactMouseEvent) => v(e).runNow())}
-    if (onDelete.isDefined) {p.onDelete = onDelete.map(v => v.toJsFn)}
-    if (onKeyDown.isDefined) {p.onKeyDown = onKeyDown.map(v => (e: ReactKeyboardEvent) => v(e).runNow())}
-    if (onKeyUp.isDefined) {p.onKeyUp = onKeyUp.map(v => (e: ReactKeyboardEvent) => v(e).runNow())}
+    if (size.isDefined) {p.size = size.map(v => v.value)}
     if (style.isDefined) {p.style = style.map(v => v.o)}
-    if (tabIndex.isDefined) {p.tabIndex = tabIndex}
+    if (`type`.isDefined) {p.`type` = `type`}
     if (variant.isDefined) {p.variant = variant.map(v => v.value)}
 
     additionalProps.foreach {
@@ -153,7 +147,7 @@ object Chip {
       }
     }
     
-    jsComponent(p)
+    jsComponent(p)(children: _*)
   }
 
 }

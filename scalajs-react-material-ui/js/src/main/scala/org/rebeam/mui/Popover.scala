@@ -82,7 +82,7 @@ object Popover {
    * @param PaperProps
    *        Properties applied to the [`Paper`](/api/paper/) element.
    * @param TransitionComponent
-   *        Transition component.
+   *        The component used for the transition.
    * @param TransitionProps
    *        Properties applied to the `Transition` element.
    * @param action
@@ -183,6 +183,7 @@ object Popover {
    *        Callback fired when the component requests to be closed.
    *        
    *        parameter {object} event The event source of the callback.
+   *        parameter {string} reason Can be:`"escapeKeyDown"`, `"backdropClick"`
    * @param onEnter
    *        Callback fired before the component is entering.
    * @param onEntered

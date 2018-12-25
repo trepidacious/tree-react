@@ -51,7 +51,7 @@ object Snackbar {
    * @param ContentProps
    *        Properties applied to the [`SnackbarContent`](/api/snackbar-content/) element.
    * @param TransitionComponent
-   *        Transition component.
+   *        The component used for the transition.
    * @param TransitionProps
    *        Properties applied to the `Transition` element.
    * @param action
@@ -64,8 +64,7 @@ object Snackbar {
    *        prop to hide the Snackbar. This behavior is disabled by default with
    *        the `null` value.
    * @param children
-   *        If you wish the take control over the children of the component you can use this property.
-   *        When used, you replace the `SnackbarContent` component with the children.
+   *        Replace the `SnackbarContent` component.
    * @param className
    *        Property spread to root element
    * @param classes

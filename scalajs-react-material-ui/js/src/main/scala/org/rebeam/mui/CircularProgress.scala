@@ -30,6 +30,7 @@ object CircularProgress {
     var className: js.UndefOr[String] = js.native
     var classes: js.UndefOr[js.Object] = js.native
     var color: js.UndefOr[String] = js.native
+    var disableShrink: js.UndefOr[Boolean] = js.native
     var key: js.UndefOr[String] = js.native
     var size: js.UndefOr[js.Any] = js.native
     var style: js.UndefOr[js.Object] = js.native
@@ -57,6 +58,9 @@ object CircularProgress {
    *        See [CSS API](#css-api) below for more details.
    * @param color
    *        The color of the component. It supports those theme colors that make sense for this component.
+   * @param disableShrink
+   *        If `true`, the shrink animation is disabled.
+   *        This only works if variant is `indeterminate`.
    * @param key
    *        React key
    * @param size
@@ -84,6 +88,7 @@ object CircularProgress {
     className: js.UndefOr[String] = js.undefined,
     classes: js.UndefOr[js.Object] = js.undefined,
     color: js.UndefOr[Color] = js.undefined,
+    disableShrink: js.UndefOr[Boolean] = js.undefined,
     key: js.UndefOr[String] = js.undefined,
     size: js.UndefOr[js.Any] = js.undefined,
     style: js.UndefOr[org.rebeam.mui.styles.Style] = js.undefined,
@@ -97,6 +102,7 @@ object CircularProgress {
     if (className.isDefined) {p.className = className}
     if (classes.isDefined) {p.classes = classes}
     if (color.isDefined) {p.color = color.map(v => v.value)}
+    if (disableShrink.isDefined) {p.disableShrink = disableShrink}
     if (key.isDefined) {p.key = key}
     if (size.isDefined) {p.size = size}
     if (style.isDefined) {p.style = style.map(v => v.o)}

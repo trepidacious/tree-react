@@ -38,7 +38,6 @@ object Popper {
     var placement: js.UndefOr[String] = js.native
     var popperOptions: js.UndefOr[js.Object] = js.native
     var style: js.UndefOr[js.Object] = js.native
-    var theme: js.Object = js.native
     var transition: js.UndefOr[Boolean] = js.native
   }
 
@@ -87,8 +86,6 @@ object Popper {
    *        Options provided to the [`popper.js`](https://github.com/FezVrasta/popper.js) instance.
    * @param style
    *        React element CSS style
-   * @param theme
-   *        Property spread to root element
    * @param transition
    *        Help supporting a react-transition-group/Transition component.
    * @param additionalProps
@@ -111,7 +108,6 @@ object Popper {
     placement: js.UndefOr[Placement] = js.undefined,
     popperOptions: js.UndefOr[js.Object] = js.undefined,
     style: js.UndefOr[org.rebeam.mui.styles.Style] = js.undefined,
-    theme: js.Object,
     transition: js.UndefOr[Boolean] = js.undefined,
     additionalProps: js.UndefOr[js.Object] = js.undefined
   )(children: VdomNode *) = {
@@ -127,7 +123,6 @@ object Popper {
     if (placement.isDefined) {p.placement = placement.map(v => v.value)}
     if (popperOptions.isDefined) {p.popperOptions = popperOptions}
     if (style.isDefined) {p.style = style.map(v => v.o)}
-    p.theme = theme
     if (transition.isDefined) {p.transition = transition}
 
     additionalProps.foreach {

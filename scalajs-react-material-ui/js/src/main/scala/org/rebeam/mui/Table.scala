@@ -37,7 +37,7 @@ object Table {
   /**
    * 
    * @param children
-   *        The content of the table, normally `TableHeader` and `TableBody`.
+   *        The content of the table, normally `TableHead` and `TableBody`.
    * @param className
    *        Property spread to root element
    * @param classes

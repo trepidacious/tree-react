@@ -23,6 +23,7 @@ object FilledInput {
     var className: js.UndefOr[String] = js.native
     var classes: js.UndefOr[js.Object] = js.native
     var defaultValue: js.UndefOr[js.Any] = js.native
+    var disableUnderline: js.UndefOr[Boolean] = js.native
     var disabled: js.UndefOr[Boolean] = js.native
     var endAdornment: js.UndefOr[japgolly.scalajs.react.raw.React.Node] = js.native
     var error: js.UndefOr[Boolean] = js.native
@@ -69,6 +70,8 @@ object FilledInput {
    *        See [CSS API](#css-api) below for more details.
    * @param defaultValue
    *        The default input value, useful when not controlling the component.
+   * @param disableUnderline
+   *        If `true`, the input will not have an underline.
    * @param disabled
    *        If `true`, the input will be disabled.
    * @param endAdornment
@@ -135,6 +138,7 @@ object FilledInput {
     className: js.UndefOr[String] = js.undefined,
     classes: js.UndefOr[js.Object] = js.undefined,
     defaultValue: js.UndefOr[js.Any] = js.undefined,
+    disableUnderline: js.UndefOr[Boolean] = js.undefined,
     disabled: js.UndefOr[Boolean] = js.undefined,
     endAdornment: js.UndefOr[VdomNode] = js.undefined,
     error: js.UndefOr[Boolean] = js.undefined,
@@ -166,6 +170,7 @@ object FilledInput {
     if (className.isDefined) {p.className = className}
     if (classes.isDefined) {p.classes = classes}
     if (defaultValue.isDefined) {p.defaultValue = defaultValue}
+    if (disableUnderline.isDefined) {p.disableUnderline = disableUnderline}
     if (disabled.isDefined) {p.disabled = disabled}
     if (endAdornment.isDefined) {p.endAdornment = endAdornment.map(v => v.rawNode)}
     if (error.isDefined) {p.error = error}

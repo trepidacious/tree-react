@@ -35,7 +35,7 @@ object Switch {
     var onChange: js.UndefOr[scalajs.js.Function1[ReactEvent, Unit]] = js.native
     var style: js.UndefOr[js.Object] = js.native
     var `type`: js.UndefOr[String] = js.native
-    var value: js.UndefOr[String] = js.native
+    var value: js.UndefOr[js.Any] = js.native
   }
 
   @JSImport("@material-ui/core/Switch", JSImport.Default)
@@ -111,7 +111,7 @@ object Switch {
     onChange: js.UndefOr[ReactEvent => Callback] = js.undefined,
     style: js.UndefOr[org.rebeam.mui.styles.Style] = js.undefined,
     `type`: js.UndefOr[String] = js.undefined,
-    value: js.UndefOr[String] = js.undefined,
+    value: js.UndefOr[js.Any] = js.undefined,
     additionalProps: js.UndefOr[js.Object] = js.undefined
   ) = {
 

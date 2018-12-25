@@ -38,6 +38,7 @@ object Tooltip {
     var enterDelay: js.UndefOr[Double] = js.native
     var enterTouchDelay: js.UndefOr[Double] = js.native
     var id: js.UndefOr[String] = js.native
+    var interactive: js.UndefOr[Boolean] = js.native
     var key: js.UndefOr[String] = js.native
     var leaveDelay: js.UndefOr[Double] = js.native
     var leaveTouchDelay: js.UndefOr[Double] = js.native
@@ -61,7 +62,7 @@ object Tooltip {
    * @param PopperProps
    *        Properties applied to the [`Popper`](/api/popper/) element.
    * @param TransitionComponent
-   *        Transition component.
+   *        The component used for the transition.
    * @param TransitionProps
    *        Properties applied to the `Transition` element.
    * @param children
@@ -83,7 +84,10 @@ object Tooltip {
    * @param id
    *        The relationship between the tooltip and the wrapper component is not clear from the DOM.
    *        This property is used with aria-describedby to solve the accessibility issue.
-   *        If you don't provide this property. It fallback to a random generated id.
+   *        If you don't provide this property. It falls back to a randomly generated id.
+   * @param interactive
+   *        Makes a tooltip interactive, i.e. will not close when the user
+   *        hovers over the tooltip before the `leaveDelay` is expired.
    * @param key
    *        React key
    * @param leaveDelay
@@ -129,6 +133,7 @@ object Tooltip {
     enterDelay: js.UndefOr[Double] = js.undefined,
     enterTouchDelay: js.UndefOr[Double] = js.undefined,
     id: js.UndefOr[String] = js.undefined,
+    interactive: js.UndefOr[Boolean] = js.undefined,
     key: js.UndefOr[String] = js.undefined,
     leaveDelay: js.UndefOr[Double] = js.undefined,
     leaveTouchDelay: js.UndefOr[Double] = js.undefined,
@@ -153,6 +158,7 @@ object Tooltip {
     if (enterDelay.isDefined) {p.enterDelay = enterDelay}
     if (enterTouchDelay.isDefined) {p.enterTouchDelay = enterTouchDelay}
     if (id.isDefined) {p.id = id}
+    if (interactive.isDefined) {p.interactive = interactive}
     if (key.isDefined) {p.key = key}
     if (leaveDelay.isDefined) {p.leaveDelay = leaveDelay}
     if (leaveTouchDelay.isDefined) {p.leaveTouchDelay = leaveTouchDelay}

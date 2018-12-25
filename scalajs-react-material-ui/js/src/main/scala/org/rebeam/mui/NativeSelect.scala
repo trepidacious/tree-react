@@ -44,6 +44,7 @@ object NativeSelect {
     var inputRef: js.UndefOr[js.Any] = js.native
     var key: js.UndefOr[String] = js.native
     var margin: js.UndefOr[String] = js.native
+    var muiFormControl: js.UndefOr[js.Object] = js.native
     var multiline: js.UndefOr[Boolean] = js.native
     var name: js.UndefOr[String] = js.native
     var onChange: js.UndefOr[scalajs.js.Function1[ReactEvent, Unit]] = js.native
@@ -126,6 +127,8 @@ object NativeSelect {
    *        If `dense`, will adjust vertical spacing. This is normally obtained via context from
    *        FormControl.
    *        Passed to Input
+   * @param muiFormControl
+   *        Property spread to root element
    * @param multiline
    *        If `true`, a textarea element will be rendered.
    *        Passed to Input
@@ -193,6 +196,7 @@ object NativeSelect {
     inputRef: js.UndefOr[js.Any] = js.undefined,
     key: js.UndefOr[String] = js.undefined,
     margin: js.UndefOr[Margin] = js.undefined,
+    muiFormControl: js.UndefOr[js.Object] = js.undefined,
     multiline: js.UndefOr[Boolean] = js.undefined,
     name: js.UndefOr[String] = js.undefined,
     onChange: js.UndefOr[ReactEvent => Callback] = js.undefined,
@@ -228,6 +232,7 @@ object NativeSelect {
     if (inputRef.isDefined) {p.inputRef = inputRef}
     if (key.isDefined) {p.key = key}
     if (margin.isDefined) {p.margin = margin.map(v => v.value)}
+    if (muiFormControl.isDefined) {p.muiFormControl = muiFormControl}
     if (multiline.isDefined) {p.multiline = multiline}
     if (name.isDefined) {p.name = name}
     if (onChange.isDefined) {p.onChange = onChange.map(v => (e: ReactEvent) => v(e).runNow())}

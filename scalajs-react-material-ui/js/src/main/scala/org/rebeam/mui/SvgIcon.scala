@@ -38,6 +38,7 @@ object SvgIcon {
     var fontSize: js.UndefOr[String] = js.native
     var key: js.UndefOr[String] = js.native
     var nativeColor: js.UndefOr[String] = js.native
+    var shapeRendering: js.UndefOr[String] = js.native
     var style: js.UndefOr[js.Object] = js.native
     var titleAccess: js.UndefOr[String] = js.native
     var viewBox: js.UndefOr[String] = js.native
@@ -70,6 +71,10 @@ object SvgIcon {
    *        React key
    * @param nativeColor
    *        Applies a color attribute to the SVG element.
+   * @param shapeRendering
+   *        The shape-rendering attribute. The behavior of the different options is described
+   *        [here](https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/shape-rendering).
+   *        If you are having issues with blurry icons you should investigate this property.
    * @param style
    *        React element CSS style
    * @param titleAccess
@@ -98,6 +103,7 @@ object SvgIcon {
     fontSize: js.UndefOr[FontSize] = js.undefined,
     key: js.UndefOr[String] = js.undefined,
     nativeColor: js.UndefOr[String] = js.undefined,
+    shapeRendering: js.UndefOr[String] = js.undefined,
     style: js.UndefOr[org.rebeam.mui.styles.Style] = js.undefined,
     titleAccess: js.UndefOr[String] = js.undefined,
     viewBox: js.UndefOr[String] = js.undefined,
@@ -112,6 +118,7 @@ object SvgIcon {
     if (fontSize.isDefined) {p.fontSize = fontSize.map(v => v.value)}
     if (key.isDefined) {p.key = key}
     if (nativeColor.isDefined) {p.nativeColor = nativeColor}
+    if (shapeRendering.isDefined) {p.shapeRendering = shapeRendering}
     if (style.isDefined) {p.style = style.map(v => v.o)}
     if (titleAccess.isDefined) {p.titleAccess = titleAccess}
     if (viewBox.isDefined) {p.viewBox = viewBox}

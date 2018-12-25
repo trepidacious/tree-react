@@ -110,6 +110,7 @@ object Typography {
    *        A deprecated variant is used from an internal component. Users don't need
    *        a deprecation warning here if they switched to the v2 theme. They already
    *        get the mapping that will be applied in the next major release.
+   *        
    *        internal
    * @param key
    *        React key
@@ -121,6 +122,7 @@ object Typography {
    *        React element CSS style
    * @param variant
    *        Applies the theme typography styles.
+   *        Use `body1` as the default value with the legacy implementation and `body2` with the new one.
    * @param additionalProps
    *        Optional parameter - if specified, this must be a js.Object containing additional props
    *        to pass to the underlying JS component. Each field of additionalProps will be added to the

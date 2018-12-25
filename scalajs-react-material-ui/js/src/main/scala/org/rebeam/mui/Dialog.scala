@@ -17,6 +17,7 @@ object Dialog {
     case object False extends MaxWidth { val value: String = "false" }
     case object Sm extends MaxWidth { val value: String = "sm" }
     case object Md extends MaxWidth { val value: String = "md" }
+    case object Xl extends MaxWidth { val value: String = "xl" }
   }
             
   sealed trait Scroll{ val value: String }
@@ -30,6 +31,7 @@ object Dialog {
   trait Props extends js.Object {
     var BackdropComponent: js.UndefOr[js.Any] = js.native
     var BackdropProps: js.UndefOr[js.Object] = js.native
+    var PaperComponent: js.UndefOr[js.Any] = js.native
     var PaperProps: js.UndefOr[js.Object] = js.native
     var TransitionComponent: js.UndefOr[js.Any] = js.native
     var TransitionProps: js.UndefOr[js.Object] = js.native
@@ -78,10 +80,12 @@ object Dialog {
    *        Passed to Modal
    * @param BackdropProps
    *        Property spread to root element
+   * @param PaperComponent
+   *        The component used to render the body of the dialog.
    * @param PaperProps
    *        Properties applied to the [`Paper`](/api/paper/) element.
    * @param TransitionComponent
-   *        Transition component.
+   *        The component used for the transition.
    * @param TransitionProps
    *        Properties applied to the `Transition` element.
    * @param children
@@ -150,6 +154,7 @@ object Dialog {
    *        Callback fired when the component requests to be closed.
    *        
    *        parameter {object} event The event source of the callback
+   *        parameter {string} reason Can be:`"escapeKeyDown"`, `"backdropClick"`
    * @param onEnter
    *        Callback fired before the dialog enters.
    * @param onEntered
@@ -190,6 +195,7 @@ object Dialog {
   def apply(
     BackdropComponent: js.UndefOr[js.Any] = js.undefined,
     BackdropProps: js.UndefOr[js.Object] = js.undefined,
+    PaperComponent: js.UndefOr[js.Any] = js.undefined,
     PaperProps: js.UndefOr[js.Object] = js.undefined,
     TransitionComponent: js.UndefOr[js.Any] = js.undefined,
     TransitionProps: js.UndefOr[js.Object] = js.undefined,
@@ -229,6 +235,7 @@ object Dialog {
     val p = (new js.Object).asInstanceOf[Props]
     if (BackdropComponent.isDefined) {p.BackdropComponent = BackdropComponent}
     if (BackdropProps.isDefined) {p.BackdropProps = BackdropProps}
+    if (PaperComponent.isDefined) {p.PaperComponent = PaperComponent}
     if (PaperProps.isDefined) {p.PaperProps = PaperProps}
     if (TransitionComponent.isDefined) {p.TransitionComponent = TransitionComponent}
     if (TransitionProps.isDefined) {p.TransitionProps = TransitionProps}

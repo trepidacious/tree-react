@@ -117,7 +117,7 @@ object Tab {
    *        The icon element.
    * @param indicator
    *        Property spread to root element
-   *        For server side rendering consideration, we let the selected tab
+   *        For server-side rendering consideration, we let the selected tab
    *        render the indicator.
    * @param key
    *        React key

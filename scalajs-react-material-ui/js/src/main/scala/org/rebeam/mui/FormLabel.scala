@@ -19,6 +19,7 @@ object FormLabel {
     var filled: js.UndefOr[Boolean] = js.native
     var focused: js.UndefOr[Boolean] = js.native
     var key: js.UndefOr[String] = js.native
+    var muiFormControl: js.UndefOr[js.Object] = js.native
     var required: js.UndefOr[Boolean] = js.native
     var style: js.UndefOr[js.Object] = js.native
   }
@@ -51,6 +52,8 @@ object FormLabel {
    *        If `true`, the input of this label is focused (used by `FormGroup` components).
    * @param key
    *        React key
+   * @param muiFormControl
+   *        Property spread to root element
    * @param required
    *        If `true`, the label will indicate that the input is required.
    * @param style
@@ -73,6 +76,7 @@ object FormLabel {
     filled: js.UndefOr[Boolean] = js.undefined,
     focused: js.UndefOr[Boolean] = js.undefined,
     key: js.UndefOr[String] = js.undefined,
+    muiFormControl: js.UndefOr[js.Object] = js.undefined,
     required: js.UndefOr[Boolean] = js.undefined,
     style: js.UndefOr[org.rebeam.mui.styles.Style] = js.undefined,
     additionalProps: js.UndefOr[js.Object] = js.undefined
@@ -87,6 +91,7 @@ object FormLabel {
     if (filled.isDefined) {p.filled = filled}
     if (focused.isDefined) {p.focused = focused}
     if (key.isDefined) {p.key = key}
+    if (muiFormControl.isDefined) {p.muiFormControl = muiFormControl}
     if (required.isDefined) {p.required = required}
     if (style.isDefined) {p.style = style.map(v => v.o)}
 

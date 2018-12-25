@@ -36,6 +36,7 @@ object InputLabel {
     var focused: js.UndefOr[Boolean] = js.native
     var key: js.UndefOr[String] = js.native
     var margin: js.UndefOr[String] = js.native
+    var muiFormControl: js.UndefOr[js.Object] = js.native
     var required: js.UndefOr[Boolean] = js.native
     var shrink: js.UndefOr[Boolean] = js.native
     var style: js.UndefOr[js.Object] = js.native
@@ -79,6 +80,8 @@ object InputLabel {
    * @param margin
    *        If `dense`, will adjust vertical spacing. This is normally obtained via context from
    *        FormControl.
+   * @param muiFormControl
+   *        Property spread to root element
    * @param required
    *        if `true`, the label will indicate that the input is required.
    * @param shrink
@@ -108,6 +111,7 @@ object InputLabel {
     focused: js.UndefOr[Boolean] = js.undefined,
     key: js.UndefOr[String] = js.undefined,
     margin: js.UndefOr[Margin] = js.undefined,
+    muiFormControl: js.UndefOr[js.Object] = js.undefined,
     required: js.UndefOr[Boolean] = js.undefined,
     shrink: js.UndefOr[Boolean] = js.undefined,
     style: js.UndefOr[org.rebeam.mui.styles.Style] = js.undefined,
@@ -127,6 +131,7 @@ object InputLabel {
     if (focused.isDefined) {p.focused = focused}
     if (key.isDefined) {p.key = key}
     if (margin.isDefined) {p.margin = margin.map(v => v.value)}
+    if (muiFormControl.isDefined) {p.muiFormControl = muiFormControl}
     if (required.isDefined) {p.required = required}
     if (shrink.isDefined) {p.shrink = shrink}
     if (style.isDefined) {p.style = style.map(v => v.o)}

@@ -9,6 +9,14 @@ import japgolly.scalajs.react.vdom.html_<^._
 
 object Divider {
   
+  sealed trait Variant{ val value: String }
+
+  object Variant {
+    case object FullWidth extends Variant { val value: String = "fullWidth" }
+    case object Inset extends Variant { val value: String = "inset" }
+    case object Middle extends Variant { val value: String = "middle" }
+  }
+          
   @js.native
   trait Props extends js.Object {
     var absolute: js.UndefOr[Boolean] = js.native
@@ -19,6 +27,7 @@ object Divider {
     var key: js.UndefOr[String] = js.native
     var light: js.UndefOr[Boolean] = js.native
     var style: js.UndefOr[js.Object] = js.native
+    var variant: js.UndefOr[String] = js.native
   }
 
   @JSImport("@material-ui/core/Divider", JSImport.Default)
@@ -30,7 +39,7 @@ object Divider {
   /**
    * 
    * @param absolute
-   *        
+   *        Absolutely position the element.
    * @param className
    *        Property spread to root element
    * @param classes
@@ -41,12 +50,16 @@ object Divider {
    *        Either a string to use a DOM element or a component.
    * @param inset
    *        If `true`, the divider will be indented.
+   *        __WARNING__: `inset` is deprecated.
+   *        Instead use `variant="inset"`.
    * @param key
    *        React key
    * @param light
    *        If `true`, the divider will have a lighter color.
    * @param style
    *        React element CSS style
+   * @param variant
+   *        The variant to use.
    * @param additionalProps
    *        Optional parameter - if specified, this must be a js.Object containing additional props
    *        to pass to the underlying JS component. Each field of additionalProps will be added to the
@@ -65,6 +78,7 @@ object Divider {
     key: js.UndefOr[String] = js.undefined,
     light: js.UndefOr[Boolean] = js.undefined,
     style: js.UndefOr[org.rebeam.mui.styles.Style] = js.undefined,
+    variant: js.UndefOr[Variant] = js.undefined,
     additionalProps: js.UndefOr[js.Object] = js.undefined
   ) = {
 
@@ -77,6 +91,7 @@ object Divider {
     if (key.isDefined) {p.key = key}
     if (light.isDefined) {p.light = light}
     if (style.isDefined) {p.style = style.map(v => v.o)}
+    if (variant.isDefined) {p.variant = variant.map(v => v.value)}
 
     additionalProps.foreach {
       a => {

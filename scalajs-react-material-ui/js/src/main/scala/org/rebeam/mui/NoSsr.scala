@@ -34,7 +34,7 @@ object NoSsr {
    * @param children
    *        
    * @param defer
-   *        If `true`, the component will not only prevent server side rendering.
+   *        If `true`, the component will not only prevent server-side rendering.
    *        It will also defer the rendering of the children into a different screen frame.
    * @param fallback
    *        The fallback content to display.

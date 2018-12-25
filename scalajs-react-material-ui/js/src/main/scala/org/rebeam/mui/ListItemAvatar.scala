@@ -24,7 +24,8 @@ object ListItemAvatar {
   val jsComponent = JsFnComponent[Props, Children.Varargs](ListItemAvatarJS)
   
   /**
-   * This is a simple wrapper to apply the `dense` mode styles to `Avatar`.
+   * This is a simple wrapper to apply the `dense`
+   * and `align-items="flex-start"` mode styles to `Avatar`.
    * @param children
    *        The content of the component – normally `Avatar`.
    * @param className

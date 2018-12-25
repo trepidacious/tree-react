@@ -25,6 +25,7 @@ object Badge {
     var classes: js.UndefOr[js.Object] = js.native
     var color: js.UndefOr[String] = js.native
     var component: js.UndefOr[js.Any] = js.native
+    var invisible: js.UndefOr[Boolean] = js.native
     var key: js.UndefOr[String] = js.native
     var style: js.UndefOr[js.Object] = js.native
   }
@@ -51,6 +52,8 @@ object Badge {
    * @param component
    *        The component used for the root node.
    *        Either a string to use a DOM element or a component.
+   * @param invisible
+   *        If `true`, the badge will be invisible.
    * @param key
    *        React key
    * @param style
@@ -70,6 +73,7 @@ object Badge {
     classes: js.UndefOr[js.Object] = js.undefined,
     color: js.UndefOr[Color] = js.undefined,
     component: js.UndefOr[js.Any] = js.undefined,
+    invisible: js.UndefOr[Boolean] = js.undefined,
     key: js.UndefOr[String] = js.undefined,
     style: js.UndefOr[org.rebeam.mui.styles.Style] = js.undefined,
     additionalProps: js.UndefOr[js.Object] = js.undefined
@@ -81,6 +85,7 @@ object Badge {
     if (classes.isDefined) {p.classes = classes}
     if (color.isDefined) {p.color = color.map(v => v.value)}
     if (component.isDefined) {p.component = component}
+    if (invisible.isDefined) {p.invisible = invisible}
     if (key.isDefined) {p.key = key}
     if (style.isDefined) {p.style = style.map(v => v.o)}
 

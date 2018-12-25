@@ -31,6 +31,7 @@ object SwipeableDrawer {
     var ModalProps: js.UndefOr[js.Object] = js.native
     var PaperProps: js.UndefOr[js.Object] = js.native
     var SlideProps: js.UndefOr[js.Object] = js.native
+    var SwipeAreaProps: js.UndefOr[js.Object] = js.native
     var anchor: js.UndefOr[String] = js.native
     var className: js.UndefOr[String] = js.native
     var classes: js.UndefOr[js.Object] = js.native
@@ -66,6 +67,8 @@ object SwipeableDrawer {
    * @param SlideProps
    *        Properties applied to the [`Slide`](/api/slide/) element.
    *        Passed to Drawer
+   * @param SwipeAreaProps
+   *        Properties applied to the swipe area element.
    * @param anchor
    *        Property spread to root element
    * @param children
@@ -134,6 +137,7 @@ object SwipeableDrawer {
     ModalProps: js.UndefOr[js.Object] = js.undefined,
     PaperProps: js.UndefOr[js.Object] = js.undefined,
     SlideProps: js.UndefOr[js.Object] = js.undefined,
+    SwipeAreaProps: js.UndefOr[js.Object] = js.undefined,
     anchor: js.UndefOr[Anchor] = js.undefined,
     className: js.UndefOr[String] = js.undefined,
     classes: js.UndefOr[js.Object] = js.undefined,
@@ -159,6 +163,7 @@ object SwipeableDrawer {
     if (ModalProps.isDefined) {p.ModalProps = ModalProps}
     if (PaperProps.isDefined) {p.PaperProps = PaperProps}
     if (SlideProps.isDefined) {p.SlideProps = SlideProps}
+    if (SwipeAreaProps.isDefined) {p.SwipeAreaProps = SwipeAreaProps}
     if (anchor.isDefined) {p.anchor = anchor.map(v => v.value)}
     if (className.isDefined) {p.className = className}
     if (classes.isDefined) {p.classes = classes}

@@ -70,7 +70,7 @@ object AppBar {
    *        React key
    * @param position
    *        The positioning type. The behavior of the different options is described
-   *        [here](https://developer.mozilla.org/en-US/docs/Learn/CSS/CSS_layout/Positioning).
+   *        [in the MDN web docs](https://developer.mozilla.org/en-US/docs/Learn/CSS/CSS_layout/Positioning).
    *        Note: `sticky` is not universally supported and will fall back to `static` when unavailable.
    * @param square
    *        If `true`, rounded corners are disabled.

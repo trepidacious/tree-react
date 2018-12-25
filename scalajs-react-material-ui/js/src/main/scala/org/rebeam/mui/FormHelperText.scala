@@ -34,6 +34,7 @@ object FormHelperText {
     var focused: js.UndefOr[Boolean] = js.native
     var key: js.UndefOr[String] = js.native
     var margin: js.UndefOr[String] = js.native
+    var muiFormControl: js.UndefOr[js.Object] = js.native
     var required: js.UndefOr[Boolean] = js.native
     var style: js.UndefOr[js.Object] = js.native
     var variant: js.UndefOr[String] = js.native
@@ -70,6 +71,8 @@ object FormHelperText {
    * @param margin
    *        If `dense`, will adjust vertical spacing. This is normally obtained via context from
    *        FormControl.
+   * @param muiFormControl
+   *        Property spread to root element
    * @param required
    *        If `true`, the helper text should use required classes key.
    * @param style
@@ -95,6 +98,7 @@ object FormHelperText {
     focused: js.UndefOr[Boolean] = js.undefined,
     key: js.UndefOr[String] = js.undefined,
     margin: js.UndefOr[Margin] = js.undefined,
+    muiFormControl: js.UndefOr[js.Object] = js.undefined,
     required: js.UndefOr[Boolean] = js.undefined,
     style: js.UndefOr[org.rebeam.mui.styles.Style] = js.undefined,
     variant: js.UndefOr[Variant] = js.undefined,
@@ -111,6 +115,7 @@ object FormHelperText {
     if (focused.isDefined) {p.focused = focused}
     if (key.isDefined) {p.key = key}
     if (margin.isDefined) {p.margin = margin.map(v => v.value)}
+    if (muiFormControl.isDefined) {p.muiFormControl = muiFormControl}
     if (required.isDefined) {p.required = required}
     if (style.isDefined) {p.style = style.map(v => v.o)}
     if (variant.isDefined) {p.variant = variant.map(v => v.value)}
