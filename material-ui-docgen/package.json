@@ -1,0 +1,26 @@
+{
+  "name": "material-ui-docgen",
+  "version": "0.0.1",
+  "description": "Run react-docgen on material-ui with handlers for custom prop types",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "plain-docgen": "react-docgen ./node_modules/@material-ui/core/ -o ../scalajs-react-material-ui/jvm/src/main/resources/muiapi.json --pretty"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/trepidacious/tree-react.git"
+  },
+  "keywords": [],
+  "author": "trepidacious",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/trepidacious/tree-react/issues"
+  },
+  "homepage": "https://github.com/trepidacious/tree-react#readme",
+  "dependencies": {
+    "@material-ui/core": "^3.7.1",
+    "@material-ui/icons": "^3.0.1",
+    "react-docgen": "^3.0.0-rc.2"
+  }
+}

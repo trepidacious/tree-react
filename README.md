@@ -71,15 +71,8 @@ Until this is published properly, you will need to clone the project, run `sbt`,
 
 Code generation is not done the right way - .scala files are just generated directly into the js src folder, under package `org.rebeam.mui`, by running `scalajsReactMaterialUIJVM/run` from sbt.
 
-To regenerate the `muiapi.json` data describing the components, check out the material-ui project, then in the mateerial-ui project root, run react-docgen:
-
-```
-npx react-docgen .\packages\material-ui\src\ -o muiapi.json --pretty
-```
-
-You may need to trim some non-component data, for 3.1.2 this was just a `reactHelpers.js` at the end of the file.
-
-Then copy the `muiapi.json` file to resources. 
+To regenerate the `muiapi.json` data describing the components, check out the material-ui project, in a directory named 'material-ui', alongside the tree-react project. The sources here will be used by the API extraction.
+In the material-ui-docgen folder, run `yarn start`. This uses a .js script to run react-docgen on the material-ui core sources, using the same logic as the material-ui API generation to find the correct files, and tweak the output to handle custom propTypes used by material-ui. Relevant code is in the `docs` folder of the material-ui project, in particular `docs/scripts/buildApi.js` and `docs/src/modules/utils/generateMarkdown.js`. Running this successfully will produce a new `muiapi.json` file in the scalajs-react-material-ui jvm resources directory.
 
 ### Notes
 
