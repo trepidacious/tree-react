@@ -160,15 +160,13 @@ For example, `ListItem` is processed as follows:
 1. Support `PropTypes.oneOfType`
 2. Better support and testing of array props
 3. Colors
-5. More testing/demos
-7. ExpansionPanel onChange parameters
-8. Any other missing events from native elements? E.g. onClick on MenuItem is not documented.
-9. Aria properties
-10. id, ref, etc.
-11. Detect `classes` prop and accept an appropriate type?
-12. Consider changing PascalCase prop names to camelCase to be more idiomatic. Consider typing these based on a map from prop names to the Component name of the sub element. This would still allow use of a `js.Object` containing props, in an `additionalProps` field.
-13. Support component methods
-14. Support for withStyles?
+4. More testing/demos
+5. Aria properties
+6. id, ref, etc.
+7. Detect `classes` prop and accept an appropriate type?
+8. Consider changing PascalCase prop names to camelCase to be more idiomatic. Consider typing these based on a map from prop names to the Component name of the sub element. This would still allow use of a `js.Object` containing props, in an `additionalProps` field.
+9. Support component methods
+10. Support for withStyles?
 
 ## scalajs-react-material-icons
 Scalajs react facade for material-ui icons
