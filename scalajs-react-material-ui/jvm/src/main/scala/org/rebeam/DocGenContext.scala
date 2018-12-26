@@ -4,6 +4,7 @@ import ComponentModel._
 
 trait DocGenContext {
   def processComponent(all: Map[String, Component], path: String, c: Component): Option[ComponentData]
+  def preprocessComponents(all: Map[String, Component]): Map[String, Component]
 }
 
 object DocGenContext {
@@ -17,29 +18,53 @@ object DocGenContext {
 
   case class FuncData(scalaType: String, jsType: String, assignment: String)
 
+  /**
+    * Produce a new list of props, starting from existing, and adding any props
+    * in additional where the name of the prop is not already in the list.
+    * @param existing   Existing props
+    * @param additional Additional props
+    * @return           New props list having the existing props, plus any additional
+    *                   props not already present in the existing list.
+    */
+  def addMissingProps(existing: List[(String, Prop)], additional: List[(String, Prop)]): List[(String, Prop)] = {
+    additional.foldLeft(existing.toVector){
+      case (l, additionalNameAndProp) =>
+        if (l.exists{case (name, _) => name == additionalNameAndProp._1}) {
+          l
+        } else {
+          l :+ additionalNameAndProp
+        }
+    }.toList
+  }
+
   object MaterialUI extends DocGenContext {
 
+    // Additional components for use as ancestors.
+    // This includes synthetic components that just provide props where they are missing from the API,
+    // and components coming from outside Material-UI
+    val additionalAncestorComponents: Map[String, Component] = Map(
+      "DOCGEN_Children" -> Component (
+        "DocGen component to add children",
+        "DOCGEN_Children",
+        List(
+          "children" -> Prop(
+            NodeType,
+            false,
+            "React children",
+            None
+          )
+        ),
+        None
+      )
+    )
+
+    // Props that are added to all components, if not already present
+    val defaultProps: List[(String, Prop)] = List(
+      "key" -> Prop(StringType, false, "React key", None),
+      "style" -> Prop(StyleType, false, "React element CSS style", None)
+    )
+
     def extractImportData(pathRaw: String, c: Component): ImportData = {
-
-      //TODO this might be more general, but for now the only special case 
-      //for a public component is MuiThemeProvider
-      // // Get rid of windows paths, split up
-      // List[String] path = pathRaw.replaceAllLiterally("\\", "/").split("/").toList
-
-      // path match {
-      //   // Ingore internal components
-      //   case "packages" :: "material-ui" :: "src" :: "internal" :: _ => None
-
-      //   // Many components are in their own folder
-      //   case "packages" :: "material-ui" :: "src" :: c.displayName :: s"${c.displayName}.js"
-      //     => Some(s"@material-ui/core/${c.displayName}")
-
-      //   // Some components are in another module - e.g. styles for MuitThemeProvider
-      //   case "packages" :: "material-ui" :: "src" :: module :: s"${c.displayName}.js"
-      //     => Some(s"@material-ui/core/$module/${c.displayName}")
-
-      // }
-
       if (c.displayName == "MuiThemeProvider") {
         ImportData(s"@material-ui/core/styles", s""""${c.displayName}"""")
       } else {
@@ -48,6 +73,29 @@ object DocGenContext {
     }
 
     def isFunctional(pathRaw: String, c: Component): Boolean = c.displayName != "MuiThemeProvider"
+
+    override def preprocessComponents(all: Map[String, Component]): Map[String, Component] =
+      all.mapValues(transformComponent)
+
+    def transformComponent(c: Component): Component = {
+      // When ListItem "button" prop is true, API indicates that ListItem uses ButtonBase.
+      // For now, just add the ButtonBase props regardless, but in future we might want to
+      // split ListItem into a button and non-button version with different props
+      if (c.displayName == "ListItem") {
+        c.copy(inheritance = Some(Inheritance("ButtonBase", "https://material-ui.com/api/ButtonBase")))
+
+      // CardContent has no children property, but is clearly used with children in examples
+      } else if (c.displayName == "CardContent") {
+        c.copy(inheritance = Some(Inheritance("DOCGEN_Children", "https://github.com/trepidacious/tree-react")))
+
+      // MuiThemeProvider is named MuiThemeProviderOld in 3.7.1, but should be used as MuiThemeProvider
+      } else if (c.displayName == "MuiThemeProviderOld") {
+        c.copy(displayName = "MuiThemeProvider")
+
+      } else {
+        c
+      }
+    }
 
     def processComponent(all: Map[String, Component], path: String, c: Component): Option[ComponentData] = {
 
@@ -76,148 +124,41 @@ object DocGenContext {
       }
     }
 
+
+
+    /**
+      * Produce a list of inherited props for a component, consisting of all the props in the immediate
+      * inherited ancestor, then any new props in that ancestor's ancestor, and so on until no ancestors
+      * remain. In other words, this gives transitively inherited props, with precedence given to the
+      * prop from the nearest ancestor (where multiple ancestors have props with the same name).
+      * Each component's ancestor is taken from its inheritance field.
+      * @param all    A map from name to component, for all possible ancestors from which we can inherit
+      * @param c      The component whose inherited props we require
+      * @return       The inherited props
+      */
+    def inheritedProps(all: Map[String, Component], c: Component): List[(String, Prop)] = {
+      val inherited: Option[List[(String, Prop)]] = for {
+        inheritance <- c.inheritance
+        ancestor <- all.get(inheritance.component)
+      } yield {
+        println(s"${c.displayName} inherits from ${ancestor.displayName}")
+        addMissingProps(ancestor.props.map{case (name, prop) => (name, prop.copy(description = prop.description + s"\nPassed to ${ancestor.displayName}"))}, inheritedProps(all, ancestor))
+      }
+      inherited.getOrElse(List.empty)
+    }
+
     def propsIncludingInheritance(all: Map[String, Component], c: Component): List[(String, Prop)] = {
 
-      val allPlusDocgen: Map[String, Component] = all ++ Map(
-        "DOCGEN_OnClickBase" -> Component (
-          "DocGen component to add onClick event",
-          "DOCGEN_OnClickBase",
-          List(
-            "onClick" -> Prop(
-              FuncType,
-              false,
-              "ReactMouseEvent on click",
-              None
-            )
-          )
-        ),
-        "DOCGEN_children" -> Component (
-          "DocGen component to add children",
-          "DOCGEN_Children",
-          List(
-            "children" -> Prop(
-              NodeType,
-              false,
-              "React children",
-              None
-            )
-          )
-        )
-      )
+      println(s"${c.displayName} inheritance:")
 
-      def withDefaultMappings(m: Map[String, Prop], d: List[(String, Prop)]): Map[String, Prop] = {
-        d.foldLeft(m){
-          case (c, (name, prop)) =>
-            if (c.isDefinedAt(name)) {
-              c
-            } else {
-              c.updated(name, prop)
-            }
-        }
-      }
+      val allByDisplayName = all.values.map(c => (c.displayName, c)).toMap ++ additionalAncestorComponents
+      val inherited = inheritedProps(allByDisplayName, c)
 
-      def additionalPropsFrom(components: String *): List[(String, Prop)] = {
-        val existingProps = Map(c.props: _*)
+      val propsWithInherited = addMissingProps(c.props, inherited)
 
-        val additionalProps = 
-          components.toList.flatMap(
-            component => 
-              allPlusDocgen.values.find(_.displayName == component)
-                .map(
-                  _.props.map {
-                    case (n, p) => (component, n, p)
-                  }
-                )
-                .getOrElse(Nil)
-          )
+      val propsWithDefaults = addMissingProps(propsWithInherited, defaultProps)
 
-        // TODO - refactor so that we add actual inherited props first, then DOCGEN ones without modifying description, then universal props (currently key).
-
-        val updatedProps = additionalProps
-          .foldLeft(existingProps){
-            case (props, (component, name, additionalProp)) => 
-              if (props.isDefinedAt(name)) {
-                props
-              } else {
-                props.updated(name, additionalProp.copy(description = additionalProp.description + "\nPassed to " + component))
-              } 
-          }
-
-        val updatedPropsWithDefaults = 
-          withDefaultMappings(updatedProps, List(
-            "key" -> Prop(StringType, false, "React key", None),
-            "style" -> Prop(StyleType, false, "React element CSS style", None)
-          ))
-          // if (updatedProps.isDefinedAt("key")) {
-          //   updatedProps 
-          // } else {
-          //   updatedProps.updated("key", Prop(StringType, false, "React key", None))
-          // }
-
-        updatedPropsWithDefaults.toList.sortBy(_._1)
-      }
-
-      c match {
-      
-        case Component(_, "Button", _) => additionalPropsFrom("ButtonBase")
-        case Component(_, "BottomNavigationAction", _) => additionalPropsFrom("ButtonBase")
-        case Component(_, "IconButton", _) => additionalPropsFrom("ButtonBase")
-        case Component(_, "StepButton", _) => additionalPropsFrom("ButtonBase")
-        case Component(_, "ExpansionPanelSummary", _) => additionalPropsFrom("ButtonBase")
-        case Component(_, "Tab", _) => additionalPropsFrom("ButtonBase")
-        case Component(_, "TableSortLabel", _) => additionalPropsFrom("ButtonBase")
-        case Component(_, "CardActionArea", _) => additionalPropsFrom("ButtonBase")
-
-        case Component(_, "AppBar", _) => additionalPropsFrom("Paper")
-        case Component(_, "Card", _) => additionalPropsFrom("Paper", "DOCGEN_Children")
-        case Component(_, "ExpansionPanel", _) => additionalPropsFrom("Paper")
-        case Component(_, "MobileStepper", _) => additionalPropsFrom("Paper")
-        case Component(_, "SnackbarContent", _) => additionalPropsFrom("Paper")
-        case Component(_, "Stepper", _) => additionalPropsFrom("Paper")
-
-        case Component(_, "InputLabel", _) => additionalPropsFrom("FormLabel")
-
-        //Note that this is transitive - Menu is only described as inheriting from
-        //Popover, but Popover inerits from Modal
-        case Component(_, "Menu", _) => additionalPropsFrom("Popover", "Modal")
-
-        case Component(_, "MenuItem", _) => additionalPropsFrom("ListItem", "DOCGEN_OnClickBase")
-
-        case Component(_, "ListItem", _) => additionalPropsFrom("DOCGEN_OnClickBase")
-        
-
-        case Component(_, "MenuList", _) => additionalPropsFrom("List")
-
-        case Component(_, "NativeSelect", _) => additionalPropsFrom("Input")
-        case Component(_, "Select", _) => additionalPropsFrom("Input")
-
-        //TODO from react-event-listener
-        // case Component(_, "ClickAwayListener", _) => additionalPropsFrom("EventListener")
-
-        //TODO from react-transition-group
-        // case Component(_, "Collapse", _) => additionalPropsFrom("Transition")
-        // case Component(_, "Fade", _) => additionalPropsFrom("Transition")
-        // case Component(_, "Grow", _) => additionalPropsFrom("Transition")
-        // case Component(_, "Slide", _) => additionalPropsFrom("Transition")
-        // case Component(_, "Zoom", _) => additionalPropsFrom("Transition")
-
-        case Component(_, "Dialog", _) => additionalPropsFrom("Modal")
-        case Component(_, "Popover", _) => additionalPropsFrom("Modal")
-
-        case Component(_, "DialogContentText", _) => additionalPropsFrom("Typography")
-
-        case Component(_, "RadioGroup", _) => additionalPropsFrom("FormGroup")
-
-        case Component(_, "SwipeableDrawer", _) => additionalPropsFrom("Drawer")
-
-        case Component(_, "TablePagination", _) => additionalPropsFrom("TableCell")
-
-        case Component(_, "TextField", _) => additionalPropsFrom("FormControl")
-
-        case Component(_, "CardContent", _) => additionalPropsFrom("DOCGEN_Children")
-
-        case Component(_, _, props) => additionalPropsFrom()
-      } 
+      propsWithDefaults.sortBy(_._1)
     }
 
     def useProp(c: Component, name: String, prop: Prop): Boolean =
@@ -227,6 +168,7 @@ object DocGenContext {
       //     I think the only exception may be for children, where we probably want to treat this as not having children.
       // } else if (prop.required == false && prop.description.trim.toLowerCase == "@ignore") {
       //   false
+
 
       // Not sure what's up with this one - marked as ignore so get rid of it
       if (c.displayName == "Menu" && name == "theme") {

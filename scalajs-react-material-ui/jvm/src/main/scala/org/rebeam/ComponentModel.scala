@@ -125,10 +125,16 @@ object ComponentModel {
    */
   case object StyleType extends PropType
 
+  case class Inheritance(
+    component: String,
+    pathname: String
+  )
+
   case class Component(
     description: String, 
     displayName: String, 
-    props: List[(String, Prop)]
+    props: List[(String, Prop)],
+    inheritance: Option[Inheritance]
   )
 
   case class Value(

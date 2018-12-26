@@ -34,11 +34,19 @@ object FilledInput {
     var inputRef: js.UndefOr[js.Any] = js.native
     var key: js.UndefOr[String] = js.native
     var margin: js.UndefOr[String] = js.native
+    var muiFormControl: js.UndefOr[js.Object] = js.native
     var multiline: js.UndefOr[Boolean] = js.native
     var name: js.UndefOr[String] = js.native
+    var onBlur: js.UndefOr[scalajs.js.Function1[ReactFocusEvent, Unit]] = js.native
     var onChange: js.UndefOr[scalajs.js.Function1[ReactEvent, Unit]] = js.native
+    var onEmpty: js.UndefOr[scalajs.js.Function0[Unit]] = js.native
+    var onFilled: js.UndefOr[scalajs.js.Function0[Unit]] = js.native
+    var onFocus: js.UndefOr[scalajs.js.Function1[ReactFocusEvent, Unit]] = js.native
+    var onKeyDown: js.UndefOr[scalajs.js.Function1[ReactKeyboardEvent, Unit]] = js.native
+    var onKeyUp: js.UndefOr[scalajs.js.Function1[ReactKeyboardEvent, Unit]] = js.native
     var placeholder: js.UndefOr[String] = js.native
     var readOnly: js.UndefOr[Boolean] = js.native
+    var renderPrefix: js.UndefOr[js.Any] = js.native
     var required: js.UndefOr[Boolean] = js.native
     var rows: js.UndefOr[js.Any] = js.native
     var rowsMax: js.UndefOr[js.Any] = js.native
@@ -95,20 +103,44 @@ object FilledInput {
    * @param margin
    *        If `dense`, will adjust vertical spacing. This is normally obtained via context from
    *        FormControl.
+   * @param muiFormControl
+   *        Property spread to root element
+   *        Passed to InputBase
    * @param multiline
    *        If `true`, a textarea element will be rendered.
    * @param name
    *        Name attribute of the `input` element.
+   * @param onBlur
+   *        Property spread to root element
+   *        Passed to InputBase
    * @param onChange
    *        Callback fired when the value is changed.
    *        
    *        parameter {object} event The event source of the callback.
    *        You can pull out the new value by accessing `event.target.value`.
+   * @param onEmpty
+   *        Property spread to root element
+   *        Passed to InputBase
+   * @param onFilled
+   *        Property spread to root element
+   *        Passed to InputBase
+   * @param onFocus
+   *        Property spread to root element
+   *        Passed to InputBase
+   * @param onKeyDown
+   *        Property spread to root element
+   *        Passed to InputBase
+   * @param onKeyUp
+   *        Property spread to root element
+   *        Passed to InputBase
    * @param placeholder
    *        The short hint displayed in the input before the user enters a value.
    * @param readOnly
    *        It prevents the user from changing the value of the field
    *        (not from interacting with the field).
+   * @param renderPrefix
+   *        Property spread to root element
+   *        Passed to InputBase
    * @param required
    *        If `true`, the input will be required.
    * @param rows
@@ -149,11 +181,19 @@ object FilledInput {
     inputRef: js.UndefOr[js.Any] = js.undefined,
     key: js.UndefOr[String] = js.undefined,
     margin: js.UndefOr[Margin] = js.undefined,
+    muiFormControl: js.UndefOr[js.Object] = js.undefined,
     multiline: js.UndefOr[Boolean] = js.undefined,
     name: js.UndefOr[String] = js.undefined,
+    onBlur: js.UndefOr[ReactFocusEvent => Callback] = js.undefined,
     onChange: js.UndefOr[ReactEvent => Callback] = js.undefined,
+    onEmpty: js.UndefOr[Callback] = js.undefined,
+    onFilled: js.UndefOr[Callback] = js.undefined,
+    onFocus: js.UndefOr[ReactFocusEvent => Callback] = js.undefined,
+    onKeyDown: js.UndefOr[ReactKeyboardEvent => Callback] = js.undefined,
+    onKeyUp: js.UndefOr[ReactKeyboardEvent => Callback] = js.undefined,
     placeholder: js.UndefOr[String] = js.undefined,
     readOnly: js.UndefOr[Boolean] = js.undefined,
+    renderPrefix: js.UndefOr[js.Any] = js.undefined,
     required: js.UndefOr[Boolean] = js.undefined,
     rows: js.UndefOr[js.Any] = js.undefined,
     rowsMax: js.UndefOr[js.Any] = js.undefined,
@@ -181,11 +221,19 @@ object FilledInput {
     if (inputRef.isDefined) {p.inputRef = inputRef}
     if (key.isDefined) {p.key = key}
     if (margin.isDefined) {p.margin = margin.map(v => v.value)}
+    if (muiFormControl.isDefined) {p.muiFormControl = muiFormControl}
     if (multiline.isDefined) {p.multiline = multiline}
     if (name.isDefined) {p.name = name}
+    if (onBlur.isDefined) {p.onBlur = onBlur.map(v => (e: ReactFocusEvent) => v(e).runNow())}
     if (onChange.isDefined) {p.onChange = onChange.map(v => (e: ReactEvent) => v(e).runNow())}
+    if (onEmpty.isDefined) {p.onEmpty = onEmpty.map(v => v.toJsFn)}
+    if (onFilled.isDefined) {p.onFilled = onFilled.map(v => v.toJsFn)}
+    if (onFocus.isDefined) {p.onFocus = onFocus.map(v => (e: ReactFocusEvent) => v(e).runNow())}
+    if (onKeyDown.isDefined) {p.onKeyDown = onKeyDown.map(v => (e: ReactKeyboardEvent) => v(e).runNow())}
+    if (onKeyUp.isDefined) {p.onKeyUp = onKeyUp.map(v => (e: ReactKeyboardEvent) => v(e).runNow())}
     if (placeholder.isDefined) {p.placeholder = placeholder}
     if (readOnly.isDefined) {p.readOnly = readOnly}
+    if (renderPrefix.isDefined) {p.renderPrefix = renderPrefix}
     if (required.isDefined) {p.required = required}
     if (rows.isDefined) {p.rows = rows}
     if (rowsMax.isDefined) {p.rowsMax = rowsMax}

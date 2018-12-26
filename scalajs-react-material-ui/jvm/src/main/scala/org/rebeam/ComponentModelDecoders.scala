@@ -101,13 +101,22 @@ object ComponentModelDecoders {
     customTypeDecoder.map(a => a: PropType)
 
 
+  lazy implicit val inheritanceDecoder: Decoder[Inheritance] = Decoder.instance( c =>
+    for {
+      component <- c.downField("component").as[String]
+      pathname <- c.downField("pathname").as[String]
+    } yield {
+      Inheritance(component, pathname)
+    }
+  )
   lazy implicit val componentDecoder: Decoder[Component] = Decoder.instance( c => 
     for {
       d <- c.downField("description").as[String]
       n <- c.downField("displayName").as[String]
       p <- c.downField("props").as[Map[String, Prop]].map(_.toList.sortBy(_._1))
+      i <- c.downField("inheritance").as[Option[Inheritance]]
     } yield {
-      Component(d, n, p)
+      Component(d, n, p, i)
     }
   )
 

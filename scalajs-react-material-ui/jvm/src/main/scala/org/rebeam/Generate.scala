@@ -28,14 +28,16 @@ object Generate {
 
     val s = scala.io.Source.fromInputStream(getClass.getResourceAsStream("/muiapi.json"), "utf-8").mkString
 
-    val d = decode[Map[String, Component]](s).toOption.get
+    val rawD = decode[Map[String, Component]](s).toOption.get
+
+    val processedD = context.preprocessComponents(rawD)
 
     // d.find(_._2.displayName == "Typography").foreach{
     //   c => component(d, c._2)
     // }
 
-    d.foreach{
-      case (path, c) => component(d, path, c)
+    processedD.foreach{
+      case (path, c) => component(processedD, path, c)
     }
 
   }
