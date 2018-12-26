@@ -82,12 +82,14 @@ object DocGenContext {
       // For now, just add the ButtonBase props regardless, but in future we might want to
       // split ListItem into a button and non-button version with different props
       if (c.displayName == "ListItem") {
-        //Fail if ListItem gets a real ancestor...
+        //Fail if component gets a real ancestor...
         assert(c.inheritance.isEmpty)
         c.copy(inheritance = Some(Inheritance("ButtonBase", "https://material-ui.com/api/ButtonBase")))
 
       // CardContent has no children property, but is clearly used with children in examples
       } else if (c.displayName == "CardContent") {
+        //Fail if component gets a real ancestor...
+        assert(c.inheritance.isEmpty)
         c.copy(inheritance = Some(Inheritance("DOCGEN_Children", "https://github.com/trepidacious/tree-react")))
 
       // MuiThemeProvider is named MuiThemeProviderOld in 3.7.1, but should be used as MuiThemeProvider
