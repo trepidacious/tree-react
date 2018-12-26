@@ -37,25 +37,41 @@ object DocGenContext {
     }.toList
   }
 
+  val childrenProps: List[(String, Prop)] = List(
+    (
+      "children",
+      Prop(
+        NodeType,
+        false,
+        "React children - added by scalajs-react-material-ui, based on component demo from material-ui.com",
+        None
+      )
+    )
+  )
+
+  def addChildrenProp(c: Component): Component = {
+    c.copy(props = addMissingProps(c.props, childrenProps))
+  }
+
   object MaterialUI extends DocGenContext {
 
     // Additional components for use as ancestors.
     // This includes synthetic components that just provide props where they are missing from the API,
     // and components coming from outside Material-UI
     val additionalAncestorComponents: Map[String, Component] = Map(
-      "DOCGEN_Children" -> Component (
-        "DocGen component to add children",
-        "DOCGEN_Children",
-        List(
-          "children" -> Prop(
-            NodeType,
-            false,
-            "React children",
-            None
-          )
-        ),
-        None
-      )
+//      "DOCGEN_Children" -> Component (
+//        "DocGen component to add children",
+//        "DOCGEN_Children",
+//        List(
+//          "children" -> Prop(
+//            NodeType,
+//            false,
+//            "React children",
+//            None
+//          )
+//        ),
+//        None
+//      )
     )
 
     // Props that are added to all components, if not already present
@@ -88,9 +104,7 @@ object DocGenContext {
 
       // CardContent has no children property, but is clearly used with children in examples
       } else if (c.displayName == "CardContent") {
-        //Fail if component gets a real ancestor...
-        assert(c.inheritance.isEmpty)
-        c.copy(inheritance = Some(Inheritance("DOCGEN_Children", "https://github.com/trepidacious/tree-react")))
+        addChildrenProp(c)
 
       // MuiThemeProvider is named MuiThemeProviderOld in 3.7.1, but should be used as MuiThemeProvider
       } else if (c.displayName == "MuiThemeProviderOld") {

@@ -131,18 +131,29 @@ Some components are not correctly detected by react-docgen as having children. T
 
 The fix for this is to process the component appropriately in `preprocessComponent` in `DocGenContext.MaterialUI`. For example in this case we use:
 ```scala
-if (c.displayName == "CardContent") {
-  //Fail if component gets a real ancestor...
-  assert(c.inheritance.isEmpty)
-  c.copy(inheritance = Some(Inheritance("DOCGEN_Children", "https://github.com/trepidacious/tree-react")))
+  // CardContent has no children property, but is clearly used with children in examples
+  if (c.displayName == "CardContent") {
+    addChildrenProp(c)
+  }
 }
 ```
-This detects the `CardComponent`, and adds DOCGEN_Children (from `MaterialUI.additionalAncestorComponents`) as an ancestor, so that `CardContents` inherits a children prop from `DOCGEN_Children`.
-Note that we fail if `CardContents` has an ancestor already. We could also have just added the children component directly to `CardContents`
+This detects the `CardComponent`, and adds a `children` prop directly.
 
 #### Missing props
 
-Some components are missing props because they "inherit" from another component in material-ui - this can be modelled by adding that component to `DocGenContext.MaterialUI` as described above for "Children not detected". Other components simply have a missing prop in the API (e.g. a built-in react prop), and this can be added by making a new `DOCGEN_Foo` component in the `allPlusDocgen` method, and then inheriting from that. 
+Many components "inherit" from another component in material-ui, or outside (e.g. the React `Transition`). This is generally handled automatically by including inheritance information in muiapi.json extracted from annotations in the material-ui source. 
+However if this is missing the inheritance can be inserted manually in `preprocessComponent` in `DocGenContext.MaterialUI`.
+For example, `ListItem` is processed as follows:
+```scala
+  // When ListItem "button" prop is true, API indicates that ListItem uses ButtonBase.
+  // For now, just add the ButtonBase props regardless, but in future we might want to
+  // split ListItem into a button and non-button version with different props
+  if (c.displayName == "ListItem") {
+    //Fail if component gets a real ancestor...
+    assert(c.inheritance.isEmpty)
+    c.copy(inheritance = Some(Inheritance("ButtonBase", "https://material-ui.com/api/ButtonBase")))
+  }
+```
 
 ### Todo
 
@@ -150,7 +161,6 @@ Some components are missing props because they "inherit" from another component 
 2. Better support and testing of array props
 3. Colors
 5. More testing/demos
-6. Check all components are included - see https://github.com/mui-org/material-ui/blob/master/packages/material-ui/src/index.js
 7. ExpansionPanel onChange parameters
 8. Any other missing events from native elements? E.g. onClick on MenuItem is not documented.
 9. Aria properties

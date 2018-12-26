@@ -27,8 +27,7 @@ object CardContent {
   /**
    * 
    * @param children
-   *        React children
-   *        Passed to DOCGEN_Children
+   *        React children - added by scalajs-react-material-ui, based on component demo from material-ui.com
    * @param className
    *        Property spread to root element
    * @param classes
