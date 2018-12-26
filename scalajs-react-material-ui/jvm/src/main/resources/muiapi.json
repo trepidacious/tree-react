@@ -14001,7 +14001,7 @@
   },
   "MuiThemeProvider.js": {
     "description": "This component takes a `theme` property.\r\nIt makes the `theme` available down the React tree thanks to React context.\r\nThis component should preferably be used at **the root of your component tree**.",
-    "displayName": "MuiThemeProvider",
+    "displayName": "MuiThemeProviderOld",
     "methods": [
       {
         "name": "mergeOuterLocalTheme",

@@ -84,7 +84,7 @@ Code generation is not done the right way - .scala files are just generated dire
 To regenerate the `muiapi.json` data describing the components, check out the material-ui project, in a directory named 'material-ui', alongside the tree-react project. The sources here will be used by the API extraction.
 In the material-ui-docgen folder, run `yarn start`. This uses a .js script to run react-docgen on the material-ui core sources, using the same logic as the material-ui API generation to find the correct files, and tweak the output to handle custom propTypes used by material-ui. Relevant code is in the `docs` folder of the material-ui project, in particular `docs/scripts/buildApi.js` and `docs/src/modules/utils/generateMarkdown.js`. Running this successfully will produce a new `muiapi.json` file in the scalajs-react-material-ui jvm resources directory.
 
-Note that at present Material-UI has an odd thing where MuiThemeProvider has been renamed to MuiThemeProviderOld, this has been undone manually in the muiapi.json, will see if there's another way of doing this in future.
+Note that at present Material-UI has an odd thing where MuiThemeProvider has been renamed to MuiThemeProviderOld, this is handled as a special case by code generation.
 
 ### Notes
 
