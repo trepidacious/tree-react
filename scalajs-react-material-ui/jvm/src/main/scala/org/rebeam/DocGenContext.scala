@@ -75,13 +75,15 @@ object DocGenContext {
     def isFunctional(pathRaw: String, c: Component): Boolean = c.displayName != "MuiThemeProvider"
 
     override def preprocessComponents(all: Map[String, Component]): Map[String, Component] =
-      all.mapValues(transformComponent)
+      all.mapValues(preprocessComponent)
 
-    def transformComponent(c: Component): Component = {
+    def preprocessComponent(c: Component): Component = {
       // When ListItem "button" prop is true, API indicates that ListItem uses ButtonBase.
       // For now, just add the ButtonBase props regardless, but in future we might want to
       // split ListItem into a button and non-button version with different props
       if (c.displayName == "ListItem") {
+        //Fail if ListItem gets a real ancestor...
+        assert(c.inheritance.isEmpty)
         c.copy(inheritance = Some(Inheritance("ButtonBase", "https://material-ui.com/api/ButtonBase")))
 
       // CardContent has no children property, but is clearly used with children in examples
@@ -141,16 +143,12 @@ object DocGenContext {
         inheritance <- c.inheritance
         ancestor <- all.get(inheritance.component)
       } yield {
-        println(s"${c.displayName} inherits from ${ancestor.displayName}")
         addMissingProps(ancestor.props.map{case (name, prop) => (name, prop.copy(description = prop.description + s"\nPassed to ${ancestor.displayName}"))}, inheritedProps(all, ancestor))
       }
       inherited.getOrElse(List.empty)
     }
 
     def propsIncludingInheritance(all: Map[String, Component], c: Component): List[(String, Prop)] = {
-
-      println(s"${c.displayName} inheritance:")
-
       val allByDisplayName = all.values.map(c => (c.displayName, c)).toMap ++ additionalAncestorComponents
       val inherited = inheritedProps(allByDisplayName, c)
 
