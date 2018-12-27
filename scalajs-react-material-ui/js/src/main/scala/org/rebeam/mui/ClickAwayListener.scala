@@ -32,6 +32,7 @@ object ClickAwayListener {
     var mouseEvent: js.UndefOr[String] = js.native
     var onClickAway: scalajs.js.Function0[Unit] = js.native
     var style: js.UndefOr[js.Object] = js.native
+    var target: js.Any = js.native
     var touchEvent: js.UndefOr[String] = js.native
   }
 
@@ -54,6 +55,9 @@ object ClickAwayListener {
    *        Callback fired when a "click away" event is detected.
    * @param style
    *        React element CSS style
+   * @param target
+   *        The DOM target to listen to.
+   *        Passed to EventListener
    * @param touchEvent
    *        The touch event to listen to. You can disable the listener by providing `false`.
    * @param additionalProps
@@ -70,6 +74,7 @@ object ClickAwayListener {
     mouseEvent: js.UndefOr[MouseEvent] = js.undefined,
     onClickAway: Callback,
     style: js.UndefOr[org.rebeam.mui.styles.Style] = js.undefined,
+    target: js.Any,
     touchEvent: js.UndefOr[TouchEvent] = js.undefined,
     additionalProps: js.UndefOr[js.Object] = js.undefined
   )(children: VdomNode *) = {
@@ -79,6 +84,7 @@ object ClickAwayListener {
     if (mouseEvent.isDefined) {p.mouseEvent = mouseEvent.map(v => v.value)}
     p.onClickAway = onClickAway.toJsFn
     if (style.isDefined) {p.style = style.map(v => v.o)}
+    p.target = target
     if (touchEvent.isDefined) {p.touchEvent = touchEvent.map(v => v.value)}
 
     additionalProps.foreach {

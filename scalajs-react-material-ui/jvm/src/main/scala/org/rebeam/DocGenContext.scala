@@ -59,6 +59,7 @@ object DocGenContext {
     // This includes synthetic components that just provide props where they are missing from the API,
     // and components coming from outside Material-UI
     val additionalAncestorComponents: Map[String, Component] = Map(
+      //TODO add "Transition" and
 //      "DOCGEN_Children" -> Component (
 //        "DocGen component to add children",
 //        "DOCGEN_Children",
@@ -72,6 +73,102 @@ object DocGenContext {
 //        ),
 //        None
 //      )
+
+      "EventListener" -> Component (
+        "A React component for binding events on the global scope.",
+        "EventListener",
+        List(
+          "children" -> Prop(
+            NodeType,
+            required = false,
+            "You can provide a single child too.",
+            None
+          ),
+          "target" -> Prop(
+            UnionType(Set(ObjectType, StringType)),
+            required = true,
+            "The DOM target to listen to.",
+            None
+          ),
+        ),
+        inheritance = None
+      ),
+
+      "Transition" -> Component (
+        "The Transition component lets you describe a transition from one component state to another over time with a simple declarative API.",
+        "Transition",
+        List(
+          "children" -> Prop(
+            ElementType,  //TODO or a function as described above
+            required = true,
+            "A function child can be used instead of a React element. This function is called with the current transition status ('entering', 'entered', 'exiting', 'exited', 'unmounted'), which can be used to apply context specific props to a component.",
+            None
+          ),
+          "in" -> Prop(
+            BooleanType,
+            required = false,
+            "Show the component; triggers the enter or exit states",
+            Some(Value("false", computed = false))
+          ),
+          "mountOnEnter" -> Prop(
+            BooleanType,
+            required = false,
+            "By default the child component is mounted immediately along with the parent Transition component. If you want to \"lazy mount\" the component on the first in={true} you can set mountOnEnter. After the first enter transition the component will stay mounted, even on \"exited\", unless you also specify unmountOnExit.",
+            Some(Value("false", computed = false))
+          ),
+          "unmountOnExit" -> Prop(
+            BooleanType,
+            required = false,
+            "By default the child component stays mounted after it reaches the 'exited' state. Set unmountOnExit if you'd prefer to unmount the component after it finishes exiting.",
+            Some(Value("false", computed = false))
+          ),
+          "appear" -> Prop(
+            BooleanType,
+            required = false,
+            "Normally a component is not transitioned if it is shown when the <Transition> component mounts. If you want to transition on the first mount set appear to true, and the component will transition in as soon as the <Transition> mounts.\n\nNote: there are no specific \"appear\" states. appear only adds an additional enter transition.",
+            Some(Value("false", computed = false))
+          ),
+          "enter" -> Prop(
+            BooleanType,
+            required = false,
+            "Enable or disable enter transitions.",
+            Some(Value("true", computed = false))
+          ),
+          "exit" -> Prop(
+            BooleanType,
+            required = false,
+            "Enable or disable exit transitions.",
+            Some(Value("true", computed = false))
+          ),
+          "timeout" -> Prop(
+            NumberType, //TODO or enter/exit object
+            required = false,
+            "(Note - only single number supported by facade at present)\nThe duration of the transition, in milliseconds. Required unless addEndListener is provided\n\nYou may specify a single timeout for all transitions like: timeout={500}, or individually like:\n\ntimeout={{\n enter: 300,\n exit: 500,\n}}",
+            None
+          ),
+          "exit" -> Prop(
+            BooleanType,
+            required = false,
+            "Enable or disable exit transitions.",
+            Some(Value("true", computed = false))
+          ),
+          "exit" -> Prop(
+            BooleanType,
+            required = false,
+            "Enable or disable exit transitions.",
+            Some(Value("true", computed = false))
+          ),
+          // TODO:
+          // addEndListener
+          // onEnter
+          // onEntering
+          // onEntered
+          // onExit
+          // onExiting
+          // onExited
+        ),
+        inheritance = None
+      )
     )
 
     // Props that are added to all components, if not already present
@@ -155,13 +252,22 @@ object DocGenContext {
       * @return       The inherited props
       */
     def inheritedProps(all: Map[String, Component], c: Component): List[(String, Prop)] = {
-      val inherited: Option[List[(String, Prop)]] = for {
-        inheritance <- c.inheritance
-        ancestor <- all.get(inheritance.component)
-      } yield {
-        addMissingProps(ancestor.props.map{case (name, prop) => (name, prop.copy(description = prop.description + s"\nPassed to ${ancestor.displayName}"))}, inheritedProps(all, ancestor))
+      (c.inheritance, c.inheritance.flatMap(i => all.get(i.component))) match {
+        case (Some(inheritance), None) =>
+          println(s"WARNING: Missing inherited component ${inheritance.component}, pathname ${inheritance.pathname}, inherited by ${c.displayName}")
+          List.empty
+        case (Some(_), Some(ancestor)) =>
+          addMissingProps(ancestor.props.map{case (name, prop) => (name, prop.copy(description = prop.description + s"\nPassed to ${ancestor.displayName}"))}, inheritedProps(all, ancestor))
+        case _ =>
+          List.empty
       }
-      inherited.getOrElse(List.empty)
+//      val inherited: Option[List[(String, Prop)]] = for {
+//        inheritance <- c.inheritance
+//        ancestor <- all.get(inheritance.component)
+//      } yield {
+//        addMissingProps(ancestor.props.map{case (name, prop) => (name, prop.copy(description = prop.description + s"\nPassed to ${ancestor.displayName}"))}, inheritedProps(all, ancestor))
+//      }
+//      inherited.getOrElse(List.empty)
     }
 
     def propsIncludingInheritance(all: Map[String, Component], c: Component): List[(String, Prop)] = {
