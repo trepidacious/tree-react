@@ -59,21 +59,6 @@ object DocGenContext {
     // This includes synthetic components that just provide props where they are missing from the API,
     // and components coming from outside Material-UI
     val additionalAncestorComponents: Map[String, Component] = Map(
-      //TODO add "Transition" and
-//      "DOCGEN_Children" -> Component (
-//        "DocGen component to add children",
-//        "DOCGEN_Children",
-//        List(
-//          "children" -> Prop(
-//            NodeType,
-//            false,
-//            "React children",
-//            None
-//          )
-//        ),
-//        None
-//      )
-
       "EventListener" -> Component (
         "A React component for binding events on the global scope.",
         "EventListener",
