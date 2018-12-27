@@ -1,6 +1,5 @@
 package org.rebeam
 
-
 import ComponentModel._
 import scala.util.Try
 
@@ -114,10 +113,12 @@ object DocGenGen {
       case NodeType => "VdomNode"
       case EnumType(values) => enumNameString(name)
       case UnionType(types) => {
-        // println(name + " " + UnionType(types))
+//        types.toList.map(
+//          t => propTypeScala(s"${name}_UNION", Prop(t, required = true, "", None))
+//        ).mkString(" | ")
         "js.Any"
       }
-      case ArrayOfType(elementType) => s"Seq[${propTypeScala(name, Prop(elementType, false, "", None))}]" //Not yet tested
+      case ArrayOfType(elementType) => s"Seq[${propTypeScala(name, Prop(elementType, required = true, "", None))}]" //Not yet tested
       case StructuralType(fieldTypes) => "js.Any"
       case CustomType(raw) => "js.Any"
 
@@ -140,8 +141,13 @@ object DocGenGen {
       case ElementType => "japgolly.scalajs.react.raw.React.Element"
       case NodeType => "japgolly.scalajs.react.raw.React.Node"
       case EnumType(values) => "String"
-      case UnionType(types) => "js.Any"
-      case ArrayOfType(elementType) => s"js.Array[${propTypeJS(name, Prop(elementType, false, "", None))}]" //Not yet tested
+      case UnionType(types) => {
+//        types.toList.map(
+//          t => propTypeJS(s"${name}_UNION", Prop(t, required = true, "", None))
+//        ).mkString(" | ")
+        "js.Any"
+      }
+      case ArrayOfType(elementType) => s"js.Array[${propTypeJS(name, Prop(elementType, required = true, "", None))}]" //Not yet tested
       case StructuralType(fieldTypes) => "js.Any"
       case CustomType(raw) => "js.Any"
 
@@ -166,7 +172,7 @@ object DocGenGen {
       case NodeType => Some(n => s"$n.rawNode")
       case EnumType(values) => Some(n => s"$n.value")
       // case UnionType(types) =>
-      case ArrayOfType(elementType) => Some(n => s"$n.map(e => ${propAssignment("e", Prop(elementType, false, "", None))}).toJSArray") //Not yet tested
+      case ArrayOfType(elementType) => Some(n => s"$n.map(e => ${propAssignment("e", Prop(elementType, required = true, "", None))}).toJSArray") //Not yet tested
       // case StructuralType(fieldTypes) =>
       // case CustomType(raw) =>
 
