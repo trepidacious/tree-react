@@ -1,3 +1,8 @@
+body {
+  background-color: #f1f3f4;
+  margin: 0;
+}
+
 #App {
   width: 100%;
   top: 0px;

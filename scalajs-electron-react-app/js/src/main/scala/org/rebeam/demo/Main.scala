@@ -38,9 +38,9 @@ object Main {
       js.Dynamic.literal(
         "palette" -> js.Dynamic.literal(
           // "type" -> "dark"
-          "typography" -> js.Dynamic.literal(
-            "useNextVariants" -> true
-          )
+        ),
+        "typography" -> js.Dynamic.literal(
+          "useNextVariants" -> true
         )
       )
     )
@@ -57,8 +57,6 @@ object Main {
         <.div(
           ^.margin := "20px",
           MultiSelectDemo.component(MultiSelectDemo.Props(MultiSelectDemo.countries)),
-
-//          provider(1234),
 
           DataContextDemo.dataProvider(),
 

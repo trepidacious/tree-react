@@ -5,6 +5,8 @@ const path = require('path')
 
 const net = require('net');
 
+const { default: installExtension, REACT_DEVELOPER_TOOLS } = require('electron-devtools-installer');
+
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow;
@@ -39,6 +41,9 @@ const createWindow = async () => {
   // Open the DevTools.
   if (isDev) {
     mainWindow.webContents.openDevTools()
+    installExtension(REACT_DEVELOPER_TOOLS)
+      .then((name) => console.log(`Added Extension:  ${name}`))
+      .catch((err) => console.log('An error occurred: ', err));
   }
 
   // Emitted when the window is closed.
