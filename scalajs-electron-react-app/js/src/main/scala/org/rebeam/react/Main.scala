@@ -1,4 +1,6 @@
-package org.rebeam
+package org.rebeam.react
+
+import org.rebeam._
 
 import scalajs.js
 import japgolly.scalajs.react._

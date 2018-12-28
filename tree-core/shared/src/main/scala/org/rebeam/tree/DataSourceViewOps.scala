@@ -17,8 +17,8 @@ object DataSourceViewOps {
 
   case class StateData(
       dataSource: DataSource,
-      viewedGuids: Set[Guid],
-      missingGuids: Set[Guid]) {
+      viewedGuids: Set[Guid] = Set.empty,
+      missingGuids: Set[Guid] = Set.empty) {
     def viewed(guid: Guid): StateData = copy(viewedGuids = viewedGuids + guid)
     def missed(guid: Guid): StateData = copy(missingGuids = missingGuids + guid)
   }

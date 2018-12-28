@@ -1,18 +1,19 @@
-package org.rebeam
+package org.rebeam.react
 
-
-
+import cats.Monad
+import cats.implicits._
 import org.rebeam.tree.react.DataContext._
 import japgolly.scalajs.react._
 import japgolly.scalajs.react.extra.Reusability
 import japgolly.scalajs.react.vdom.html_<^._
 import org.rebeam.tree._
+import org.rebeam.tree.react._
 
 object DataContextDemo {
 
-  val id0 = Id(Guid.raw(0,0,0))
-  val id1 = Id(Guid.raw(0,0,1))
-  val id2 = Id(Guid.raw(0,0,2))
+  val id0 = Id[String](Guid.raw(0,0,0))
+  val id1 = Id[String](Guid.raw(0,0,1))
+  val id2 = Id[String](Guid.raw(0,0,2))
   val ids = List(id0, id1, id2)
 
   val initial = MapDataSource.empty
@@ -34,15 +35,15 @@ object DataContextDemo {
 
   implicit def idReusability[A]: Reusability[Id[A]] = Reusability.by_==
 
-  val itemDisplay = {
-    val r = new DataRenderer[Id[Int]] {
-      def apply(a: Id[Int], data: DataSource): DataRenderResult = DataRenderResult(
-        <.pre(s"$a = ${data.get(a)}"),
-        Set(a)
-      )
+  val itemDisplay = new View[Id[String]] {
+    def apply[F[_]: Monad](a: Id[String])(implicit v: ViewOps[F]): F[VdomElement] = {
+      import v._
+      for {
+        data <- get(a)
+      } yield <.pre(s"$a = $data")
     }
-    dataComponent[Id[Int]](r, "itemDisplay")
-  }
+  }.build("itemDisplay")
+
 
   val dataProvider = ScalaComponent.builder[Unit]("dataProvider")
     .initialState(initial)
