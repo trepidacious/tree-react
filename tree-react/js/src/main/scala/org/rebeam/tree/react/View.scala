@@ -24,10 +24,10 @@ object View {
   private val defaultError: DataSourceViewOps.Error => VdomElement = error =>
     <.div(
       ^.`class`:="tree-error",
-      <.span("..."),
+      <.span("\u2026"),
       <.span(
         ^.`class`:="tree-error__tooltip",
-        s"Ids: ${error.missingGuids.mkString(", ")}"
+        s"Missing:\n${error.missingGuids.mkString("\n")}"
       )
     )
 

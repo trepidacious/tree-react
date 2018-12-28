@@ -110,3 +110,33 @@ body {
 .scalajs-electron-react--titlebar-nodrag {
   -webkit-app-region: no-drag;
 }
+
+.tree-error {
+  position: relative;
+  display: inline-block;
+  user-select: none;
+  font-family: monospace;
+  white-space: pre;
+}
+
+.tree-error__tooltip {
+  visibility: hidden;
+  width: 120px;
+  background-color: #555;
+  color: #fff;
+  text-align: center;
+  font-family: monospace;
+  white-space: pre;
+  padding: 6px;
+  margin: 0 10px;
+  border-radius: 3px;
+
+  /* Position the tooltip text - see examples below! */
+  position: absolute;
+  z-index: 1;
+}
+
+/* Show the tooltip text when you mouse over the tooltip container */
+.tree-error:hover .tree-error__tooltip {
+  visibility: visible;
+}
