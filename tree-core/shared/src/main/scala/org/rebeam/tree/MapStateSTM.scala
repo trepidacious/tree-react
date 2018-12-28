@@ -20,11 +20,11 @@ object MapStateSTM {
 
   case class DataRevision[A](data: A, revId: RevId[A], idCodec: IdCodec[A])
 
-  case class StateData(
+  case class StateData (
       nextGuid: Guid,
       map: Map[Guid, DataRevision[_]],
       random: PRandom,
-      context: TransactionContext) extends IdCodecs {
+      context: TransactionContext) extends IdCodecs with DataSource {
     def getDataRevision[A](id: Id[A]): Option[DataRevision[A]] = map.get(id.guid).map(_.asInstanceOf[DataRevision[A]])
     def getData[A](id: Id[A]): Option[A] = getDataRevision(id).map(_.data)
     def updated[A](id: Id[A], a: A, revId: RevId[A])(implicit mCodecA: IdCodec[A]): StateData = {
@@ -33,6 +33,10 @@ object MapStateSTM {
 
     override def codecFor[A](id: Id[A]): Option[IdCodec[A]] =
       getDataRevision(id).map(_.idCodec)
+
+    def get[A](id: Id[A]): Option[A] = getData(id)
+    def getWithRev[A](id: Id[A]): Option[(A, RevId[A])] = getDataRevision(id).map(dr => (dr.data, dr.revId))
+    def revGuid(guid: Guid): Option[Guid] = map.get(guid).map(_.revId.guid)
   }
 
   def emptyState: StateData = StateData(
