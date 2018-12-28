@@ -1,4 +1,4 @@
-package org.rebeam.react
+package org.rebeam.demo
 
 import cats.Monad
 import cats.implicits._
