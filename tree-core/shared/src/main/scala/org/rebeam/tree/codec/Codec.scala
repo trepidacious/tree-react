@@ -46,14 +46,14 @@ object Codec {
     }
   }
 
-  implicit val stringDeltaReader: DeltaCodec[String] = value[String]
-  implicit val booleanDeltaReader: DeltaCodec[Boolean] = value[Boolean]
-  implicit val byteDeltaReader: DeltaCodec[Byte] = value[Byte]
-  implicit val shortDeltaReader: DeltaCodec[Short] = value[Short]
-  implicit val intDeltaReader: DeltaCodec[Int] = value[Int]
-  implicit val longDeltaReader: DeltaCodec[Long] = value[Long]
-  implicit val floatDeltaReader: DeltaCodec[Float] = value[Float]
-  implicit val doubleDeltaReader: DeltaCodec[Double] = value[Double]
+  implicit val stringDeltaCodec: DeltaCodec[String] = value[String]
+  implicit val booleanDeltaCodec: DeltaCodec[Boolean] = value[Boolean]
+  implicit val byteDeltaCodec: DeltaCodec[Byte] = value[Byte]
+  implicit val shortDeltaCodec: DeltaCodec[Short] = value[Short]
+  implicit val intDeltaCodec: DeltaCodec[Int] = value[Int]
+  implicit val longDeltaCodec: DeltaCodec[Long] = value[Long]
+  implicit val floatDeltaCodec: DeltaCodec[Float] = value[Float]
+  implicit val doubleDeltaCodec: DeltaCodec[Double] = value[Double]
 
   def lens[A, B]
     (name: String, lens: Lens[A, B])

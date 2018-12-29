@@ -1,12 +1,12 @@
 package org.rebeam.tree.react
 
-import japgolly.scalajs.react.React.Context
-import japgolly.scalajs.react.{CtorType, _}
+import japgolly.scalajs.react._
 import japgolly.scalajs.react.component.Scala.Component
 import japgolly.scalajs.react.extra.Reusability
 import japgolly.scalajs.react.vdom.html_<^._
 import org.rebeam.tree._
 import org.log4s._
+import org.rebeam.tree.react.ReactData._
 
 object DataComponent {
 
@@ -15,7 +15,7 @@ object DataComponent {
   def apply[A: Reusability](
     r: DataRenderer[A],
     name: String,
-    dataContext: Context[DataSource] = DataContext.default
+    dataContext: DataContext = ReactData.defaultContext
   ): Component[A, Unit, Unit, CtorType.Props] = {
     // Each dataComponent wraps a DataComponentB, and provides it with props that are built from A and the DataContext
     val b = DataComponentB.component(name + "B", r)
@@ -39,7 +39,7 @@ object DataComponent {
 
   private[DataComponent] object DataComponentB {
 
-    case class Props[A](a: A, data: DataSource)
+    case class Props[A](a: A, data: ReactData)
 
     /**
       * This class provides for memoisation of a DataRenderer, working with the expected React lifecycle to
@@ -83,7 +83,7 @@ object DataComponent {
       var lastUsedIds: Set[Guid] = _
 
       def render(p: Props[A]): DataRenderer.Result = {
-        val drr = r(p.a, p.data)
+        val drr = r(p.a, p.data, p.data)
         lastProps = p
         lastUsedIds = drr.usedIds
         logger.trace(s"DataRendererMemo.render($p) gives used ids ${drr.usedIds}")

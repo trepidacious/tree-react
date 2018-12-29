@@ -20,6 +20,17 @@ object PRandom {
     * @param seed the initial seed
     */
   def apply(seed: Long): PRandom = PRandomDefault.from(seed)
+
+  /**
+    * Creates a new PRandom using a Guide as a seed.
+    * This uses the sessionId + sessionTransactionId * 41 + transactionClock * 41 * 41
+    * The PRandom will have the same behaviour as java.util.Random.
+    *
+    * @param seed The initial seed Guid
+    */
+  def apply(seed: Guid): PRandom = apply(
+    seed.sessionId.id + seed.sessionTransactionId.id * 41 + seed.transactionClock.id * 41 * 41
+  )
 }
 
 /**

@@ -43,4 +43,8 @@ object Transaction {
       stm.modifyF(id, (a: A) => delta[F](a)).map(_ => ())
   }
 
+  val doNothing: Transaction = new Transaction {
+    override def apply[F[_] : Monad](implicit stm: STMOps[F]): F[Unit] = stm.pure(())
+  }
+
 }

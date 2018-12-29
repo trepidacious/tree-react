@@ -2,7 +2,6 @@ package org.rebeam.tree
 
 import cats.data.StateT
 import cats.implicits._
-import org.rebeam.tree.Guid._
 import org.rebeam.tree.codec._
 
 /**
@@ -37,10 +36,18 @@ object MapStateSTM {
     def get[A](id: Id[A]): Option[A] = getData(id)
     def getWithRev[A](id: Id[A]): Option[(A, RevId[A])] = getDataRevision(id).map(dr => (dr.data, dr.revId))
     def revGuid(guid: Guid): Option[Guid] = map.get(guid).map(_.revId.guid)
+
+    def nextTransaction: StateData = {
+      val ng = nextGuid.nextTransactionFirstGuid
+      copy(
+        nextGuid = ng,
+        random = PRandom(ng)
+      )
+    }
   }
 
   def emptyState: StateData = StateData(
-    Guid(SessionId(0), SessionTransactionId(0), TransactionClock(0)),
+    Guid.first,
     Map.empty,
     PRandom(0),
     TransactionContext(Moment(0))
@@ -87,7 +94,7 @@ object MapStateSTM {
       StateT[ErrorOr, StateData, Guid](sd => {
         Right(
           (
-            sd.copy(nextGuid = sd.nextGuid.copy(transactionClock = sd.nextGuid.transactionClock.next)),
+            sd.copy(nextGuid = sd.nextGuid.next),
             sd.nextGuid
           )
         )

@@ -22,9 +22,15 @@ import scala.util.matching.Regex
   */
 case class Guid(sessionId: SessionId, sessionTransactionId: SessionTransactionId, transactionClock: TransactionClock) {
   override def toString: String = Guid.toString(this)
+  def nextSessionFirstGuid: Guid = copy(sessionId = sessionId.next, sessionTransactionId = SessionTransactionId(0), transactionClock = TransactionClock(0))
+  def nextTransactionFirstGuid: Guid = copy(sessionTransactionId = sessionTransactionId.next, transactionClock = TransactionClock(0))
+  def next: Guid = copy(transactionClock = transactionClock.next)
 }
 
 object Guid {
+
+  val first: Guid = Guid.raw(0, 0, 0)
+
   /**
     * Identifier for a session on the server, identifies a client's connection to the server.
     * Unique for a given scope (at least a single server).
@@ -33,7 +39,9 @@ object Guid {
     * @param id The identifier value
     */
   @JsonCodec
-  case class SessionId(id: Long) extends AnyVal
+  case class SessionId(id: Long) extends AnyVal {
+    def next: SessionId = SessionId(id + 1)
+  }
 
   /**
     * Identifier for a transaction, unique for a given session but not globally.

@@ -1,7 +1,7 @@
 package org.rebeam.tree.react
 
 import japgolly.scalajs.react.vdom.html_<^.VdomElement
-import org.rebeam.tree.{DataSource, Guid}
+import org.rebeam.tree._
 
 import DataRenderer._
 
@@ -21,10 +21,11 @@ trait DataRenderer[A] {
     * These requirements allow us to memoise the render, so it is only reapplied if the data it uses changes.
     *
     * @param a    The data model ("props") to render
-    * @param data The DataSource to use to look up references
+    * @param data The ReactData to use to look up references and execute transactions
+    * @param tx   The ReactTransactor to use to execute transactions
     * @return     The result of rendering - Vdom, and a set of keys used.
     */
-  def apply(a: A, data: DataSource): Result
+  def apply(a: A, data: ReactData, tx: ReactTransactor): Result
 }
 
 object DataRenderer {
