@@ -12,7 +12,7 @@ import org.rebeam.tree.codec.Codec._
 import org.rebeam.tree.codec._
 import org.rebeam.tree.react._
 
-object DataContextDemo {
+object LocalDataRootDemo {
 
   implicit val StringIdCodec: IdCodec[String] = new IdCodec[String] {
     override def idType: IdType = IdType("String")

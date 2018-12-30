@@ -58,7 +58,9 @@ object Main {
           ^.margin := "20px",
           MultiSelectDemo.component(MultiSelectDemo.Props(MultiSelectDemo.countries)),
 
-          DataContextDemo.dataProvider(()),
+          LocalDataRootDemo.dataProvider(()),
+
+          LocalIndexedDataRootDemo.dataProvider(()),
 
           mui.Button(onClick = (e: ReactMouseEvent) => Callback{
             println(

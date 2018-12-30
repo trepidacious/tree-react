@@ -19,11 +19,22 @@ object MapStateSTM {
 
   case class DataRevision[A](data: A, revId: RevId[A], idCodec: IdCodec[A])
 
+  sealed trait StateDelta[A] {
+    def id: Id[A]
+    def a: A
+  }
+  object StateDelta {
+    case class Put[A](id: Id[A], a: A) extends StateDelta[A]
+    case class Modify[A](id: Id[A], previousA: A, a: A) extends StateDelta[A]
+  }
+
   case class StateData (
       nextGuid: Guid,
       map: Map[Guid, DataRevision[_]],
       random: PRandom,
-      context: TransactionContext) extends IdCodecs with DataSource {
+      context: TransactionContext,
+      deltas: Vector[StateDelta[_]]
+  ) extends IdCodecs with DataSource {
     def getDataRevision[A](id: Id[A]): Option[DataRevision[A]] = map.get(id.guid).map(_.asInstanceOf[DataRevision[A]])
     def getData[A](id: Id[A]): Option[A] = getDataRevision(id).map(_.data)
     def updated[A](id: Id[A], a: A, revId: RevId[A])(implicit mCodecA: IdCodec[A]): StateData = {
@@ -41,7 +52,8 @@ object MapStateSTM {
       val ng = nextGuid.nextTransactionFirstGuid
       copy(
         nextGuid = ng,
-        random = PRandom(ng)
+        random = PRandom(ng),
+        deltas = Vector.empty
       )
     }
   }
@@ -50,7 +62,8 @@ object MapStateSTM {
     Guid.first,
     Map.empty,
     PRandom(0),
-    TransactionContext(Moment(0))
+    TransactionContext(Moment(0)),
+    Vector.empty
   )
 
   type ErrorOr[A] = Either[Error, A]
@@ -79,6 +92,7 @@ object MapStateSTM {
       ds <- getDataState(id)
       newData <- f(ds.data)
       _ <- set[A](id, newData)(ds.idCodec)
+      _ <- StateT.modify[ErrorOr, StateData](sd => sd.copy(deltas = sd.deltas :+ StateDelta.Modify(id, ds.data, newData)))
     } yield newData
 
     def randomInt: MapState[Int] = rand(_.int)
@@ -104,6 +118,7 @@ object MapStateSTM {
       id <- createGuid.map(guid => Id[A](guid))
       a <- create(id)
       _ <- set(id, a)
+      _ <- StateT.modify[ErrorOr, StateData](sd => sd.copy(deltas = sd.deltas :+ StateDelta.Put(id, a)))
     } yield a
 
   }

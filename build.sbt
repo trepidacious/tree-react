@@ -49,8 +49,7 @@ lazy val scalacticVersion           = "3.0.5" // Needed?
 lazy val scalatestVersion           = "3.0.5"
 lazy val scalacheckVersion          = "1.14.0"
 lazy val log4sVersion               = "1.6.1"
-
-
+lazy val kindProjectorVersion       = "0.9.8"
 
 lazy val root = project.in(file(".")).
   aggregate(
@@ -64,6 +63,7 @@ lazy val root = project.in(file(".")).
     treeCoreJS, treeCoreJVM,
     treeReactJS, treeReactJVM,
     scalajsElectronReactAppJS, scalajsElectronReactAppJVM,
+//    treeTestJS, treeTestJVM
   ).settings(
     publish := {},
     publishLocal := {}
@@ -312,6 +312,9 @@ lazy val treeCore = crossProject(JSPlatform, JVMPlatform).in(file("tree-core")).
 
   addCompilerPlugin(
     "org.scalamacros" % "paradise" % "2.1.1" cross CrossVersion.patch
+  ),
+  addCompilerPlugin(
+    "org.spire-math" %% "kind-projector" % kindProjectorVersion cross CrossVersion.binary
   )
 
 ).jvmSettings(
@@ -361,8 +364,11 @@ val scalaJsSrcDir = file("electron-app/scalajs_src")
 lazy val scalajsElectronReactApp = crossProject(JSPlatform, JVMPlatform).in(file("scalajs-electron-react-app")).
   //Settings for all projects
   settings(
-  name := "scalajs-electron-react-app"
+  name := "scalajs-electron-react-app",
 
+  addCompilerPlugin(
+    "org.scalamacros" % "paradise" % "2.1.1" cross CrossVersion.patch
+  )
 ).jvmSettings(
 
 ).jsSettings(
@@ -379,3 +385,54 @@ lazy val scalajsElectronReactApp = crossProject(JSPlatform, JVMPlatform).in(file
 
 lazy val scalajsElectronReactAppJVM = scalajsElectronReactApp.jvm
 lazy val scalajsElectronReactAppJS = scalajsElectronReactApp.js
+
+
+
+////////////////
+// tree-test //
+///////////////
+/*
+lazy val treeTest = crossProject(JSPlatform, JVMPlatform).in(file("tree-test")).
+  //Settings for all projects
+  settings(
+  name := "tree-test",
+
+  //  libraryDependencies += "org.scalactic" %% "scalactic" % "3.0.5",
+  libraryDependencies ++= Seq(
+    "io.circe"                    %%% "circe-core"        % circeVersion,
+    "io.circe"                    %%% "circe-generic"     % circeVersion,
+    "io.circe"                    %%% "circe-parser"      % circeVersion,
+
+    "org.typelevel"               %%% "cats-free"         % catsVersion,
+
+    "com.chuusai"                 %%% "shapeless"         % shapelessVersion,
+
+    "com.github.julien-truffaut"  %%% "monocle-core"      % monocleVersion,
+    "com.github.julien-truffaut"  %%% "monocle-generic"   % monocleVersion,
+    "com.github.julien-truffaut"  %%% "monocle-macro"     % monocleVersion,
+    "com.github.julien-truffaut"  %%% "monocle-state"     % monocleVersion,
+    "com.github.julien-truffaut"  %%% "monocle-refined"   % monocleVersion,
+    "com.github.julien-truffaut"  %%% "monocle-law"       % monocleVersion      % "test",
+
+    "org.scalactic"               %%% "scalactic"         % scalacticVersion    % "test",
+    "org.scalatest"               %%% "scalatest"         % scalatestVersion    % "test",
+    "org.scalacheck"              %%% "scalacheck"        % scalacheckVersion   % "test"
+  ),
+
+  addCompilerPlugin(
+    "org.scalamacros" % "paradise" % "2.1.1" cross CrossVersion.patch
+  ),
+  addCompilerPlugin(
+    "org.spire-math" %% "kind-projector" % kindProjectorVersion cross CrossVersion.binary
+  )
+
+).jvmSettings(
+
+).jsSettings(
+  //Produce a module, so we can use @JSImport.
+  scalaJSLinkerConfig ~= { _.withModuleKind(ModuleKind.CommonJSModule) }
+)
+
+lazy val treeTestJVM = treeTest.jvm
+lazy val treeTestJS = treeTest.js
+*/
