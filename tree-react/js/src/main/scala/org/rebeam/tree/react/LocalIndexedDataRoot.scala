@@ -25,6 +25,8 @@ object LocalIndexedDataRoot {
     override def getWithRev[A](id: Id[A]): Option[(A, RevId[A])] = sd.getWithRev(id)
     override def revGuid(guid: Guid): Option[Guid] = sd.revGuid(guid)
     override def transact(t: Transaction): Callback = tx.transact(t)
+
+    override def toString: String = s"LocalReactData(${sd.map.size} entries)"
   }
 
   //NOTE: This is not pure - gets the time for the transaction

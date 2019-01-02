@@ -131,6 +131,13 @@ object Codec {
     }
   }
 
+  def lensOption[A, B]
+  (name: String, lensToOption: Lens[A, Option[B]])
+  (implicit partialBCodec: DeltaCodec[B]): DeltaCodec[A] = {
+    implicit val optionDelta: DeltaCodec[Option[B]] = option[B]
+    lens(name, lensToOption)
+  }
+
   def prism[A, B]
   (name: String, prism: Prism[A, B])
   (implicit partialBCodec: DeltaCodec[B]): DeltaCodec[A] = new DeltaCodec[A] {

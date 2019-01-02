@@ -21,14 +21,11 @@ object LocalIndexedDataRootDemo {
   @Lenses
   case class TodoItem(id: Id[TodoItem], created: Moment, completed: Option[Moment], text: String)
 
-  // TODO should we make an implicit def to produce DeltaCodec[Option[A]] from DeltaCodec[A] automatically?
   // We can edit a TodoItem by specifying a new value, or using a lens to get to completed or text fields
-  // Note we also need to allow deltas to Option[Moment] type used in completed field
-  implicit val optionMomentDeltaCodec: DeltaCodec[Option[Moment]] = option[Moment]
   implicit val todoItemDeltaCodec: DeltaCodec[TodoItem] =
     value[TodoItem] or
-      lens("completed", TodoItem.completed) or
-      lens("text", TodoItem.text)
+    lensOption("completed", TodoItem.completed) or  // completed is an Optional field, so use lensOption
+    lens("text", TodoItem.text)
 
   @JsonCodec
   case class TodoList(id: Id[TodoList], items: List[Id[TodoItem]])
@@ -117,10 +114,7 @@ object LocalIndexedDataRootDemo {
         ^.onChange ==> onChange
       )
     }
-//    override def apply[F[_] : Monad](a: Cursor[String])(implicit v: ReactViewOps[F], tx: ReactTransactor): F[VdomElement] = {
-////      a.delta()
-//      v.pure[VdomElement](<.pre(a.a))
-//    }
+
   }.build("stringView")
 
   val todoItemView: Component[Id[TodoItem], Unit, Unit, CtorType.Props] = new View[Id[TodoItem]] {

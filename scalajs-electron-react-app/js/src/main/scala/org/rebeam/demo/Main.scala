@@ -24,6 +24,7 @@ object Main {
 
     // Set `org.rebeam` and any children to log only Info or higher
     setLoggerThreshold("org.rebeam", Info)
+//    setLoggerThreshold("org.rebeam", AllThreshold)
   }
 
 
