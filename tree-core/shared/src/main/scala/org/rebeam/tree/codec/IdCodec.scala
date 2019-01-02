@@ -8,7 +8,7 @@ import org.rebeam.tree.codec.Codec.DeltaCodec
   *
   * @param name   The name of the type, must only be associated with one real type in a given STM.
   */
-case class IdType(name: String) extends AnyVal
+case class IdType(name: String)
 
 /**
   * Typeclass covering everything needed to handle a type of data referenced by [[org.rebeam.tree.Id]] in an STM

@@ -13,8 +13,6 @@ object DataSourceViewOps {
     viewedGuids: Set[Guid],
     missingGuids: Set[Guid])
 
-
-
   case class StateData(
       dataSource: DataSource,
       viewedGuids: Set[Guid] = Set.empty,

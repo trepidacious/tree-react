@@ -3,6 +3,8 @@ package org.rebeam.demo
 import cats.Monad
 import cats.implicits._
 import io.circe.{Decoder, Encoder}
+import japgolly.scalajs.react.CtorType
+import japgolly.scalajs.react.component.Scala.Component
 //import japgolly.scalajs.react._
 import japgolly.scalajs.react.extra.Reusability
 import japgolly.scalajs.react.vdom.html_<^._
@@ -21,7 +23,7 @@ object LocalDataRootDemo {
     override def deltaCodec: DeltaCodec[String] = stringDeltaCodec
   }
 
-  val exampleData = new Transaction {
+  val exampleData: Transaction = new Transaction {
     override def apply[F[_] : Monad](implicit stm: STMOps[F]): F[Unit] = {
       import stm._
       for {
@@ -32,7 +34,7 @@ object LocalDataRootDemo {
     }
   }
 
-  def exclaim(id: Id[String]) = new Transaction {
+  def exclaim(id: Id[String]): Transaction = new Transaction {
     override def apply[F[_] : Monad](implicit stm: STMOps[F]): F[Unit] = {
       import stm._
       for {
@@ -43,8 +45,8 @@ object LocalDataRootDemo {
 
   implicit def idReusability[A]: Reusability[Id[A]] = Reusability.by_==
 
-  val itemDisplay = new View[Id[String]] {
-    def apply[F[_]: Monad](a: Id[String], tx: ReactTransactor)(implicit v: ViewOps[F]): F[VdomElement] = {
+  val itemDisplay: Component[Id[String], Unit, Unit, CtorType.Props] = new View[Id[String]] {
+    def apply[F[_]: Monad](a: Id[String])(implicit v: ReactViewOps[F], tx: ReactTransactor): F[VdomElement] = {
       import v._
       for {
         data <- get(a)

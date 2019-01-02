@@ -6,7 +6,7 @@ import Codec._
 import cats.Traverse
 import cats.implicits._
 import monocle.{Lens, Optional, Prism}
-import org.rebeam.tree.Delta
+import org.rebeam.tree.{Delta, Moment}
 import org.rebeam.tree.Delta._
 
 trait Codec[A] {
@@ -54,6 +54,8 @@ object Codec {
   implicit val longDeltaCodec: DeltaCodec[Long] = value[Long]
   implicit val floatDeltaCodec: DeltaCodec[Float] = value[Float]
   implicit val doubleDeltaCodec: DeltaCodec[Double] = value[Double]
+
+  implicit val momentDeltaCodec: DeltaCodec[Moment] = value[Moment]
 
   def lens[A, B]
     (name: String, lens: Lens[A, B])

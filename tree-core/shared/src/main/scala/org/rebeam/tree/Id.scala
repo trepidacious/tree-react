@@ -12,7 +12,7 @@ import scala.util.matching.Regex
   * @param guid The Guid
   * @tparam A Type of the identified item
   */
-case class Id[+A](guid: Guid) extends AnyVal {
+case class Id[+A](guid: Guid) {
   override def toString: String = Id.toString(this)
   def toJson: Json = Json.fromString(toString)
 }

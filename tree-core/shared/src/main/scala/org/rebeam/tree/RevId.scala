@@ -20,7 +20,7 @@ import scala.util.matching.Regex
   * @param guid The Guid
   * @tparam A Type of the item
   */
-case class RevId[+A](guid: Guid) extends AnyVal {
+case class RevId[+A](guid: Guid) {
   override def toString: String = RevId.toString(this)
   def toJson: Json = Json.fromString(toString)
 }

@@ -4,22 +4,31 @@ import cats.Monad
 import cats.implicits._
 import io.circe.generic.JsonCodec
 import org.rebeam.tree.MapStateSTM.StateDelta
-
-//import japgolly.scalajs.react._
-import japgolly.scalajs.react.extra.Reusability
+import japgolly.scalajs.react._
+import japgolly.scalajs.react.component.Scala.Component
 import japgolly.scalajs.react.vdom.html_<^._
+import monocle.macros.Lenses
 import org.rebeam.tree._
-import org.rebeam.tree.codec.Codec.{DeltaCodec, _}
+import org.rebeam.tree.codec.Codec._
 import org.rebeam.tree.codec._
 import org.rebeam.tree.react._
 
 object LocalIndexedDataRootDemo {
 
+  // All data should have a codec
   @JsonCodec
+  // Any data used with DeltaCursor should have lenses
+  @Lenses
   case class TodoItem(id: Id[TodoItem], created: Moment, completed: Option[Moment], text: String)
 
-  // We can edit a TodoItem by specifying a new value
-  implicit val todoItemDeltaCodec: DeltaCodec[TodoItem] = value[TodoItem]
+  // TODO should we make an implicit def to produce DeltaCodec[Option[A]] from DeltaCodec[A] automatically?
+  // We can edit a TodoItem by specifying a new value, or using a lens to get to completed or text fields
+  // Note we also need to allow deltas to Option[Moment] type used in completed field
+  implicit val optionMomentDeltaCodec: DeltaCodec[Option[Moment]] = option[Moment]
+  implicit val todoItemDeltaCodec: DeltaCodec[TodoItem] =
+    value[TodoItem] or
+      lens("completed", TodoItem.completed) or
+      lens("text", TodoItem.text)
 
   @JsonCodec
   case class TodoList(id: Id[TodoList], items: List[Id[TodoItem]])
@@ -65,14 +74,11 @@ object LocalIndexedDataRootDemo {
     }
   }
 
-  //TODO do we just assume that anything in our views is immutable? Would save some typing...
-  // Data is immutable, so we only need to check reusability by reference - data has changed if and only if
-  // we have a new instance.
-  implicit val todoListReusability: Reusability[TodoList] = Reusability.byRef[TodoList]
-  implicit val todoItemReusability: Reusability[TodoItem] = Reusability.byRef[TodoItem]
-
-  val todoListView = new View[TodoList] {
-    def apply[F[_]: Monad](l: TodoList, tx: ReactTransactor)(implicit v: ViewOps[F]): F[VdomElement] = {
+  // This view shows a "monolithic" approach to displaying the list,
+  // where we retrieve all the items using get, and display them in one component.
+  // This will update whenever the TodoList or any item in it changes.
+  val todoListViewMonolithic = new View[TodoList] {
+    def apply[F[_]: Monad](l: TodoList)(implicit v: ReactViewOps[F], tx: ReactTransactor): F[VdomElement] = {
       import v._
 
       // TODO add an implicit method (not sure of best name?) to call traverse(get)
@@ -91,6 +97,34 @@ object LocalIndexedDataRootDemo {
         )
     }
   }.build("todoListView")
+
+  val stringView = new ViewC[String] {
+    override def apply[F[_] : Monad](a: Cursor[String])(implicit v: ReactViewOps[F], tx: ReactTransactor): F[VdomElement] = {
+//      a.delta()
+      v.pure[VdomElement](<.pre(a.a))
+    }
+  }
+
+  val todoItemView: Component[Id[TodoItem], Unit, Unit, CtorType.Props] = new View[Id[TodoItem]] {
+    def apply[F[_]: Monad](id: Id[TodoItem])(implicit v: ReactViewOps[F], tx: ReactTransactor): F[VdomElement] = {
+      // By creating a cursor at the Id, we can enable navigation through the TodoItem
+      v.cursorAt[TodoItem](id).map(
+        cursor => <.li(cursor.a.toString)
+      )
+    }
+  }.build("todoItemView")
+
+  // This component uses a child view for each item in the list, each of these will update only when the TodoItem
+  // referenced by that Id changes.
+  // Note that this does not need to be a View itself since it doesn't actually get the data by id - the child views
+  // can still get data from the Context provided by dataProvider, so this can be a ViewP
+  val todoListView: Component[TodoList, Unit, Unit, CtorType.Props] = new ViewP[TodoList] {
+    override def apply(a: TodoList): VdomNode =
+      <.ol(
+        a.items.toTagMod(id => todoItemView(id))
+      )
+  }.build("todoListView")
+
 
   // This component will manage and render an STM, initialised to the example data
   val dataProvider = LocalIndexedDataRoot.component[Unit, TodoIndex](
