@@ -3,7 +3,7 @@ package org.rebeam.tree.react
 import japgolly.scalajs.react._
 import japgolly.scalajs.react.component.Scala.Component
 import japgolly.scalajs.react.vdom.VdomNode
-import org.rebeam.tree.DeltaCursor
+import org.rebeam.tree.react.ReactData.ReactDataContexts
 
 /**
   * A "pure" View that does not access data context. This provides three things relative to just using ScalaComponent.builder
@@ -20,8 +20,14 @@ trait ViewP[A] {
 }
 
 trait ViewPC[A] {
-  def apply(a: DeltaCursor[A])(implicit tx: ReactTransactor): VdomNode
-  def build(name: String, tx: ReactTransactor)(implicit ir: ImmutableReusability[A]): Component[DeltaCursor[A], Unit, Unit, CtorType.Props] =
-    ScalaComponent.builder[DeltaCursor[A]](name).render_P(a => this.apply(a)(tx)).build
+  def apply(a: Cursor[A])(implicit tx: ReactTransactor): VdomNode
+  def build(name: String, contexts: ReactDataContexts = ReactData.defaultContexts)(implicit ir: ImmutableReusability[A]): Component[Cursor[A], Unit, Unit, CtorType.Props] =
+    ScalaComponent.builder[Cursor[A]](name)
+      .render_P(
+        a => contexts.transactor.consume(
+          tx => this.apply(a)(tx)
+        )
+      )
+      .build
 }
 
