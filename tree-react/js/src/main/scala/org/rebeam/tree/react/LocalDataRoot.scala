@@ -6,9 +6,8 @@ import org.rebeam.tree._
 import org.rebeam.tree.MapStateSTM._
 import japgolly.scalajs.react.vdom.html_<^._
 import org.log4s._
-import org.rebeam.tree.react.ReactData.DataContext
-
 import cats.implicits._
+import org.rebeam.tree.react.ReactData.ReactDataContexts
 
 object LocalDataRoot {
 
@@ -37,7 +36,7 @@ object LocalDataRoot {
     }
   }
 
-  class Backend[A](bs: BackendScope[A, StateData], r: A => VdomElement, dataContext: DataContext) {
+  class Backend[A](bs: BackendScope[A, StateData], r: A => VdomElement, contexts: ReactDataContexts) {
 
     private val tx = new ReactTransactor {
       override def transact(t: Transaction): Callback = {
@@ -60,20 +59,22 @@ object LocalDataRoot {
     }
 
     def render(p: A, s: StateData): VdomElement = {
-      dataContext.provide(LocalReactData(s, tx))(r(p))
+      contexts.transactor.provide(tx)(
+        contexts.data.provide(LocalReactData(s, tx))(r(p))
+      )
     }
   }
 
   def component[A: Reusability](
     r: A => VdomElement)(
     initialTransaction: Transaction = Transaction.doNothing,
-    dataContext: DataContext = ReactData.defaultContext,
+    contexts: ReactDataContexts = ReactData.defaultContexts,
   ) =
     ScalaComponent.builder[A]("LocalDataRoot")
       .initialState(
         runTransaction(emptyState, initialTransaction).getOrElse(emptyState)
       )
-      .backend(scope => new Backend[A](scope, r, dataContext))
+      .backend(scope => new Backend[A](scope, r, contexts))
       .render(s => s.backend.render(s.props, s.state))
       .shouldComponentUpdatePure(
         s => (s.nextState ne s.currentState) ||

@@ -15,16 +15,22 @@ object ReactData {
 
   private val logger = getLogger
 
-  val empty: ReactData = new ReactData {
+  private val emptyData: ReactData = new ReactData {
     override def get[A](id: Id[A]): Option[A] = None
     override def getWithRev[A](id: Id[A]): Option[(A, RevId[A])] = None
     override def revGuid(guid: Guid): Option[Guid] = None
     def transact(t: Transaction): Callback = Callback{logger.warn(s"ReactData.empty discards transaction $t")}
   }
 
-  type DataContext = Context[ReactData]
+  private val emptyTransactor: ReactTransactor = t => Callback.warn(s"ReactData.emptyTransactor discards transaction: $t")
 
-  val defaultContext: Context[ReactData] = React.createContext(empty)
+  private val defaultContext: Context[ReactData] = React.createContext(emptyData)
 
+  private val defaultTransactorContext: Context[ReactTransactor] = React.createContext(emptyTransactor)
+
+  // Move to own class, move defaultContexts to companion as just default
+  case class ReactDataContexts(data: Context[ReactData], transactor: Context[ReactTransactor])
+
+  val defaultContexts: ReactDataContexts = ReactDataContexts(defaultContext, defaultTransactorContext)
 
 }

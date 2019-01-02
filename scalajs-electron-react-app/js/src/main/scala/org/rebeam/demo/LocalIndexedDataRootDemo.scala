@@ -98,18 +98,41 @@ object LocalIndexedDataRootDemo {
     }
   }.build("todoListView")
 
-  val stringView = new ViewC[String] {
-    override def apply[F[_] : Monad](a: Cursor[String])(implicit v: ReactViewOps[F], tx: ReactTransactor): F[VdomElement] = {
-//      a.delta()
-      v.pure[VdomElement](<.pre(a.a))
+  val stringView = new ViewPC[String] {
+    override def apply(a: Cursor[String])(implicit tx: ReactTransactor): VdomNode = {
+
+      // Editing the value is straightforward - just call set on the cursor. The cursor
+      // creates a ValueDelta that will set the String directly to a new value, makes
+      // a Transaction from the delta using the context provided by the cursor, and
+      // then uses the implicit ReactTransactor to convert the Transactor to a Callback
+      // we can give to React.
+      // Note we can use e.target.value directly - set accepts a plain value, not a function,
+      // so we don't have to worry about the event being reused. Of course the Callback produced
+      // will not be used until later.
+      def onChange(e: ReactEventFromInput) = a.set(e.target.value)
+
+      <.input(
+        // Display the data from the cursor
+        ^.value := a.a,
+        ^.onChange ==> onChange
+      )
     }
-  }
+//    override def apply[F[_] : Monad](a: Cursor[String])(implicit v: ReactViewOps[F], tx: ReactTransactor): F[VdomElement] = {
+////      a.delta()
+//      v.pure[VdomElement](<.pre(a.a))
+//    }
+  }.build("stringView")
 
   val todoItemView: Component[Id[TodoItem], Unit, Unit, CtorType.Props] = new View[Id[TodoItem]] {
     def apply[F[_]: Monad](id: Id[TodoItem])(implicit v: ReactViewOps[F], tx: ReactTransactor): F[VdomElement] = {
       // By creating a cursor at the Id, we can enable navigation through the TodoItem
       v.cursorAt[TodoItem](id).map(
-        cursor => <.li(cursor.a.toString)
+        cursor => <.li(
+          cursor.a.toString,
+
+          // Zoom to the item's text, and we can edit it with a general-purpose ViewPC[String]
+          stringView(cursor.zoom(TodoItem.text))
+        )
       )
     }
   }.build("todoItemView")

@@ -8,7 +8,7 @@ import japgolly.scalajs.react.component.Scala.Component
 import japgolly.scalajs.react.extra.Reusability
 import japgolly.scalajs.react.vdom.html_<^._
 import org.rebeam.tree._
-import org.rebeam.tree.react.ReactData.DataContext
+import org.rebeam.tree.react.ReactData.ReactDataContexts
 
 trait ViewFunction[A] {
   def apply[F[_]: Monad](a: A)(implicit v: ReactViewOps[F], tx: ReactTransactor): F[VdomElement]
@@ -91,21 +91,21 @@ object View {
 trait View[A] extends ViewFunction[A] {
   def build(
              name: String,
-             dataContext: DataContext = ReactData.defaultContext,
+             contexts: ReactDataContexts = ReactData.defaultContexts,
              onError: DataError => VdomElement = View.defaultError
            )(implicit ir: ImmutableReusability[A]): Component[A, Unit, Unit, CtorType.Props] = {
     val renderer = new DataRenderer[A] {
       override def apply(a: A, data: ReactData, tx: ReactTransactor): DataRenderer.Result =
         View.Ops.render(View.this, onError, a, data)(tx)
     }
-    DataComponent[A](renderer, name, dataContext)(ir.reusability)
+    DataComponent[A](renderer, name, contexts)(ir.reusability)
   }
 }
 
 trait ViewC[A] extends ViewFunction[Cursor[A]] {
   def build(
              name: String,
-             dataContext: DataContext = ReactData.defaultContext,
+             contexts: ReactDataContexts = ReactData.defaultContexts,
              onError: DataError => VdomElement = View.defaultError
            )(implicit ir: ImmutableReusability[A]): Component[Cursor[A], Unit, Unit, CtorType.Props] = {
 
@@ -120,6 +120,6 @@ trait ViewC[A] extends ViewFunction[Cursor[A]] {
       (dA1, dA2) => ir.reusability.test(dA1.a, dA2.a) && (dA1.deltaCursor == dA2.deltaCursor)
     )
 
-    DataComponent[Cursor[A]](renderer, name, dataContext)(reusability)
+    DataComponent[Cursor[A]](renderer, name, contexts)(reusability)
   }
 }

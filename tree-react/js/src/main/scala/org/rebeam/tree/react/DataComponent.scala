@@ -15,14 +15,14 @@ object DataComponent {
   def apply[A: Reusability](
     r: DataRenderer[A],
     name: String,
-    dataContext: DataContext = ReactData.defaultContext
+    contexts: ReactDataContexts = ReactData.defaultContexts
   ): Component[A, Unit, Unit, CtorType.Props] = {
     // Each dataComponent wraps a DataComponentB, and provides it with props that are built from A and the DataContext
     val b = DataComponentB.component(name + "B", r)
     ScalaComponent.builder[A](name + "A")
       .render_P {
         a => {
-          dataContext.consume(
+          contexts.data.consume(
             data => {
               logger.trace(s">>>dataComponent.render_P, data $data, a = $a")
               b(DataComponentB.Props(a, data))

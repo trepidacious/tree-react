@@ -7,7 +7,7 @@ import japgolly.scalajs.react.vdom.html_<^._
 import org.log4s._
 import org.rebeam.tree.MapStateSTM._
 import org.rebeam.tree._
-import org.rebeam.tree.react.ReactData.DataContext
+import org.rebeam.tree.react.ReactData.ReactDataContexts
 
 object LocalIndexedDataRoot {
 
@@ -43,7 +43,7 @@ object LocalIndexedDataRoot {
 
   }
 
-  class Backend[A, I](bs: BackendScope[A, State[I]], r: (A, I) => VdomElement, dataContext: DataContext, indexer: Indexer[I]) {
+  class Backend[A, I](bs: BackendScope[A, State[I]], r: (A, I) => VdomElement, contexts: ReactDataContexts, indexer: Indexer[I]) {
 
     private val tx = new ReactTransactor {
       override def transact(t: Transaction): Callback = {
@@ -66,7 +66,12 @@ object LocalIndexedDataRoot {
     }
 
     def render(p: A, s: State[I]): VdomElement = {
-      dataContext.provide(LocalReactData(s.sd, tx))(r(p, s.index))
+      //TODO accept a pair of contexts as one "ReactDataContexts" rather than a single DataContext
+      contexts.transactor.provide(tx)(
+        contexts.data.provide(LocalReactData(s.sd, tx))(
+          r(p, s.index)
+        )
+      )
     }
   }
 
@@ -74,14 +79,14 @@ object LocalIndexedDataRoot {
     r: (A, I) => VdomElement)(
     indexer: Indexer[I],
     initialTransaction: Transaction = Transaction.doNothing,
-    dataContext: DataContext = ReactData.defaultContext,
+    contexts: ReactDataContexts = ReactData.defaultContexts,
   ) =
     ScalaComponent.builder[A]("LocalDataRoot")
       .initialState {
         val initialState = State(emptyState, indexer.initial)
         runTransaction(initialState, initialTransaction, indexer).getOrElse(initialState)
       }
-      .backend(scope => new Backend[A, I](scope, r, dataContext, indexer))
+      .backend(scope => new Backend[A, I](scope, r, contexts, indexer))
       .render(s => s.backend.render(s.props, s.state))
       .shouldComponentUpdatePure(
         s => (s.nextState ne s.currentState) ||
