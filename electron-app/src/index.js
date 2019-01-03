@@ -40,10 +40,13 @@ const createWindow = async () => {
 
   // Open the DevTools.
   if (isDev) {
-    mainWindow.webContents.openDevTools()
-    installExtension(REACT_DEVELOPER_TOOLS)
-      .then((name) => console.log(`Added Extension:  ${name}`))
-      .catch((err) => console.log('An error occurred: ', err));
+    // See https://github.com/electron/electron/issues/12438
+    mainWindow.webContents.once('dom-ready', () => {
+      mainWindow.openDevTools()
+      installExtension(REACT_DEVELOPER_TOOLS)
+        .then((name) => console.log(`Added Extension:  ${name}`))
+        .catch((err) => console.log('An error occurred: ', err));
+    })
   }
 
   // Emitted when the window is closed.
@@ -110,7 +113,7 @@ if (!firstInstance) {
   if (isDev) {
     log.info('DEV MODE');
   }
-  log.info(__dirname);
+  log.info('dir name: ' + __dirname);
 
   app.on('ready', function()  {
     if (!isDev) {
