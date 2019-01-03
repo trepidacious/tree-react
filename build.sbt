@@ -62,8 +62,7 @@ lazy val root = project.in(file(".")).
     scalajsGoogleDriveJS, scalajsGoogleDriveJVM,
     treeCoreJS, treeCoreJVM,
     treeReactJS, treeReactJVM,
-    scalajsElectronReactAppJS, scalajsElectronReactAppJVM,
-//    treeTestJS, treeTestJVM
+    scalajsElectronReactAppJS, scalajsElectronReactAppJVM
   ).settings(
     publish := {},
     publishLocal := {}
@@ -385,54 +384,3 @@ lazy val scalajsElectronReactApp = crossProject(JSPlatform, JVMPlatform).in(file
 
 lazy val scalajsElectronReactAppJVM = scalajsElectronReactApp.jvm
 lazy val scalajsElectronReactAppJS = scalajsElectronReactApp.js
-
-
-
-////////////////
-// tree-test //
-///////////////
-/*
-lazy val treeTest = crossProject(JSPlatform, JVMPlatform).in(file("tree-test")).
-  //Settings for all projects
-  settings(
-  name := "tree-test",
-
-  //  libraryDependencies += "org.scalactic" %% "scalactic" % "3.0.5",
-  libraryDependencies ++= Seq(
-    "io.circe"                    %%% "circe-core"        % circeVersion,
-    "io.circe"                    %%% "circe-generic"     % circeVersion,
-    "io.circe"                    %%% "circe-parser"      % circeVersion,
-
-    "org.typelevel"               %%% "cats-free"         % catsVersion,
-
-    "com.chuusai"                 %%% "shapeless"         % shapelessVersion,
-
-    "com.github.julien-truffaut"  %%% "monocle-core"      % monocleVersion,
-    "com.github.julien-truffaut"  %%% "monocle-generic"   % monocleVersion,
-    "com.github.julien-truffaut"  %%% "monocle-macro"     % monocleVersion,
-    "com.github.julien-truffaut"  %%% "monocle-state"     % monocleVersion,
-    "com.github.julien-truffaut"  %%% "monocle-refined"   % monocleVersion,
-    "com.github.julien-truffaut"  %%% "monocle-law"       % monocleVersion      % "test",
-
-    "org.scalactic"               %%% "scalactic"         % scalacticVersion    % "test",
-    "org.scalatest"               %%% "scalatest"         % scalatestVersion    % "test",
-    "org.scalacheck"              %%% "scalacheck"        % scalacheckVersion   % "test"
-  ),
-
-  addCompilerPlugin(
-    "org.scalamacros" % "paradise" % "2.1.1" cross CrossVersion.patch
-  ),
-  addCompilerPlugin(
-    "org.spire-math" %% "kind-projector" % kindProjectorVersion cross CrossVersion.binary
-  )
-
-).jvmSettings(
-
-).jsSettings(
-  //Produce a module, so we can use @JSImport.
-  scalaJSLinkerConfig ~= { _.withModuleKind(ModuleKind.CommonJSModule) }
-)
-
-lazy val treeTestJVM = treeTest.jvm
-lazy val treeTestJS = treeTest.js
-*/
