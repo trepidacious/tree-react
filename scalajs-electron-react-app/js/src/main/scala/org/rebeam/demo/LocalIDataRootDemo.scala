@@ -13,11 +13,10 @@ import org.rebeam.tree.codec.Codec._
 import org.rebeam.tree.codec._
 import org.rebeam.tree.react._
 
-object LocalIndexedDataRootDemo {
-
-  // All data should have a codec
+object LocalDataRootDemo {
+  // All data must have a codec
   @JsonCodec
-  // Any data used with DeltaCursor should have lenses
+  // Any data used with DeltaCursor must have lenses
   @Lenses
   case class TodoItem(id: Id[TodoItem], created: Moment, completed: Option[Moment], text: String)
 
@@ -59,7 +58,7 @@ object LocalIndexedDataRootDemo {
   case class TodoIndex(todoList: Option[TodoList])
 
   // This indexer will just keep the last put or modified TodoList
-  val todoIndexer = new LocalIndexedDataRoot.Indexer[TodoIndex] {
+  val todoIndexer = new LocalDataRoot.Indexer[TodoIndex] {
     def initial: TodoIndex = TodoIndex(None)
     def updated(index: TodoIndex, deltas: Seq[StateDelta[_]]): TodoIndex = {
       deltas.foldRight(index){
@@ -70,6 +69,11 @@ object LocalIndexedDataRootDemo {
       }
     }
   }
+
+  // We need to be able to encode/decode any acceptable transaction on the data.
+  // The simplest case is just to support applying a delta at an id.
+  // If needed, you can define custom Transactions, and provide codecs for them.
+  implicit val transactionCodec = TransactionCodec.deltaAtIdCodec
 
   // This view shows a "monolithic" approach to displaying the list,
   // where we retrieve all the items using get, and display them in one component.
@@ -144,7 +148,7 @@ object LocalIndexedDataRootDemo {
 
 
   // This component will manage and render an STM, initialised to the example data
-  val dataProvider = LocalIndexedDataRoot.component[Unit, TodoIndex](
+  val dataProvider = LocalDataRoot.component[Unit, TodoIndex](
     (_, index) =>
       <.div(
         // When we have an indexed TodoList, display it

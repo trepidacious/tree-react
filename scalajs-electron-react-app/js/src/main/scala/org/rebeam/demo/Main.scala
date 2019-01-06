@@ -61,8 +61,6 @@ object Main {
 
           LocalDataRootDemo.dataProvider(()),
 
-          LocalIndexedDataRootDemo.dataProvider(()),
-
           mui.Button(onClick = (e: ReactMouseEvent) => Callback{
             println(
               ElectronUtils.showOpenDialog(

@@ -192,4 +192,24 @@ object Codec {
   def listIndex[A](implicit dCodecA: DeltaCodec[A]): DeltaCodec[List[A]] = traversableIndex[List, A]
   def vectorIndex[A](implicit dCodecA: DeltaCodec[A]): DeltaCodec[Vector[A]] = traversableIndex[Vector, A]
 
+  def action[M, A <: Delta[M]](name: String)(filter: PartialFunction[Delta[M], A])(implicit encodeA: Encoder[A], decodeA: Decoder[A]): DeltaCodec[M] = new DeltaCodec[M] {
+    val encoder: PartialEncoder[Delta[M]] =
+      (m: Delta[M]) => for {
+        a <- filter.lift(m)
+      } yield Json.obj(
+        "ActionDelta" -> Json.obj(
+          name -> encodeA(a)
+        )
+      )
+
+    val decoder: Decoder[Delta[M]] = Decoder.instance(c =>
+      //Expect an object with a value field, containing an encoded M instance. We
+      //map this to a ValueDelta using that instance (i.e. this provides a delta
+      //replacing the old instance with the decoded instance)
+      c.downField("ActionDelta").downField(name).as[A]
+
+      //Map to Delta[M] for neatness
+    ).map(a => a: Delta[M])
+  }
+
 }
