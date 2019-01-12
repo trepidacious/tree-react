@@ -51,6 +51,17 @@ lazy val scalacheckVersion          = "1.14.0"
 lazy val log4sVersion               = "1.6.1"
 lazy val kindProjectorVersion       = "0.9.8"
 
+lazy val scalajsReactDeps = Seq(
+  libraryDependencies ++= Seq(
+    "com.github.japgolly.scalajs-react" %%% "core" % scalajsReactVersion,
+    "com.github.japgolly.scalajs-react" %%% "extra" % scalajsReactVersion,
+  )
+)
+
+lazy val scalaCSSDeps = Seq(
+  libraryDependencies += "com.github.japgolly.scalacss"      %%% "ext-react" % scalacssVersion
+)
+
 lazy val root = project.in(file(".")).
   aggregate(
     scalajsReactMaterialUIJS, scalajsReactMaterialUIJVM,
@@ -95,10 +106,7 @@ lazy val scalajsReactMaterialUI = crossProject(JSPlatform, JVMPlatform).in(file(
     //Scalajs dependencies that are used on the client only
     resolvers += Resolver.jcenterRepo,
 
-    libraryDependencies ++= Seq(
-      "com.github.japgolly.scalajs-react" %%% "core" % scalajsReactVersion,
-      "com.github.japgolly.scalajs-react" %%% "extra" % scalajsReactVersion
-    ),
+    scalajsReactDeps,
     
     //Produce a module, so we can use @JSImport on material-ui
     scalaJSLinkerConfig ~= { _.withModuleKind(ModuleKind.CommonJSModule) }
@@ -124,10 +132,7 @@ lazy val scalajsReactMaterialIcons = crossProject(JSPlatform, JVMPlatform).in(fi
     //Scalajs dependencies that are used on the client only
     resolvers += Resolver.jcenterRepo,
 
-    libraryDependencies ++= Seq(
-      "com.github.japgolly.scalajs-react" %%% "core" % scalajsReactVersion,
-      "com.github.japgolly.scalajs-react" %%% "extra" % scalajsReactVersion
-    ),
+    scalajsReactDeps,
     
     //Produce a module, so we can use @JSImport.
     scalaJSLinkerConfig ~= { _.withModuleKind(ModuleKind.CommonJSModule) }
@@ -152,11 +157,7 @@ lazy val scalajsReactDownshift = crossProject(JSPlatform, JVMPlatform).in(file("
     //Scalajs dependencies that are used on the client only
     resolvers += Resolver.jcenterRepo,
 
-    //TODO factor this out?
-    libraryDependencies ++= Seq(
-      "com.github.japgolly.scalajs-react" %%% "core" % scalajsReactVersion,
-      "com.github.japgolly.scalajs-react" %%% "extra" % scalajsReactVersion
-    ),
+    scalajsReactDeps,
     
     //Produce a module, so we can use @JSImport.
     scalaJSLinkerConfig ~= { _.withModuleKind(ModuleKind.CommonJSModule) }
@@ -182,12 +183,8 @@ lazy val scalajsReactMaterialUIExtra = crossProject(JSPlatform, JVMPlatform).in(
      //Scalajs dependencies that are used on the client only
      resolvers += Resolver.jcenterRepo,
 
-    //TODO factor this out?
-    libraryDependencies ++= Seq(
-      "com.github.japgolly.scalajs-react" %%% "core" % scalajsReactVersion,
-      "com.github.japgolly.scalajs-react" %%% "extra" % scalajsReactVersion,
-      "com.github.japgolly.scalacss"      %%% "ext-react" % scalacssVersion
-    ),
+    scalajsReactDeps,
+    scalaCSSDeps,
 
     //Produce a module, so we can use @JSImport.
     scalaJSLinkerConfig ~= { _.withModuleKind(ModuleKind.CommonJSModule) }
@@ -341,12 +338,8 @@ lazy val treeReact = crossProject(JSPlatform, JVMPlatform).in(file("tree-react")
 ).jsSettings(
   //Scalajs dependencies that are used on the client only
   resolvers += Resolver.jcenterRepo,
-
-  //TODO factor this out?
-  libraryDependencies ++= Seq(
-    "com.github.japgolly.scalajs-react" %%% "core" % scalajsReactVersion,
-    "com.github.japgolly.scalajs-react" %%% "extra" % scalajsReactVersion
-  ),
+   
+  scalajsReactDeps,
 
   //Produce a module, so we can use @JSImport.
   scalaJSLinkerConfig ~= { _.withModuleKind(ModuleKind.CommonJSModule) }
