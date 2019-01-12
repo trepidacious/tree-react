@@ -8,8 +8,11 @@ import japgolly.scalajs.react.component.Scala.Component
 import japgolly.scalajs.react.vdom.html_<^._
 import org.rebeam.tree._
 import org.rebeam.tree.react._
-
 import TodoData._
+import org.rebeam.mui
+
+import scala.scalajs.js
+import js.JSConverters._
 
 object LocalDataRootDemo {
 
@@ -63,15 +66,16 @@ object LocalDataRootDemo {
       // a Transaction from the delta using the context provided by the cursor, and
       // then uses the implicit ReactTransactor to convert the Transactor to a Callback
       // we can give to React.
+      
       // Note we can use e.target.value directly - set accepts a plain value, not a function,
       // so we don't have to worry about the event being reused. Of course the Callback produced
       // will not be used until later.
       def onChange(e: ReactEventFromInput) = a.set(e.target.value)
 
-      <.input(
+      mui.TextField(
         // Display the data from the cursor
-        ^.value := a.a,
-        ^.onChange ==> onChange
+        value = a.a,
+        onChange = e => onChange(e)
       )
     }
 
@@ -85,7 +89,16 @@ object LocalDataRootDemo {
           cursor.a.toString,
 
           // Zoom to the item's text, and we can edit it with a general-purpose ViewPC[String]
-          stringView(cursor.zoom(TodoItem.text))
+          stringView(cursor.zoom(TodoItem.text)),
+
+          mui.Checkbox(
+            value = cursor.a.completed.map(_.toString).orUndefined,
+            checked = cursor.a.completed.isDefined: js.Any,
+            onChange = (e: ReactEvent) => {
+              val c =e.target.asInstanceOf[js.Dynamic].checked.asInstanceOf[Boolean]
+              cursor.delta(TodoItemCompletion(c))
+            }
+          )
         )
       )
     }

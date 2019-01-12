@@ -16,11 +16,31 @@ object TodoData {
   @Lenses
   case class TodoItem(id: Id[TodoItem], created: Moment, completed: Option[Moment], text: String)
 
+  // Action to set TodoItem completed or uncompleted
+  // This needs a JsonCodec
+  @JsonCodec
+  case class TodoItemCompletion(complete: Boolean) extends Delta[TodoItem] {
+    override def apply[F[_] : Monad](a: TodoItem)(implicit stm: STMOps[F]): F[TodoItem] = {
+      import stm._
+      if (complete) {
+        for {
+          c <- context
+        } yield a.copy(completed = Some(c.moment))
+      } else {
+        pure(a.copy(completed = None))
+      }
+    }
+  }
+
+
   // We can edit a TodoItem by specifying a new value, or using a lens to get to completed or text fields
   implicit val todoItemDeltaCodec: DeltaCodec[TodoItem] =
     value[TodoItem] or
-      lensOption("completed", TodoItem.completed) or  // completed is an Optional field, so use lensOption
-      lens("text", TodoItem.text)
+//      lensOption("completed", TodoItem.completed) or  // completed is an Optional field, so use lensOption
+      lens("text", TodoItem.text) or
+      action[TodoItem, TodoItemCompletion]("completion"){
+        case a:TodoItemCompletion => a
+      }
 
   @JsonCodec
   case class TodoList(id: Id[TodoList], items: List[Id[TodoItem]])
