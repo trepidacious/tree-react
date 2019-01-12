@@ -2,55 +2,16 @@ package org.rebeam.demo
 
 import cats.Monad
 import cats.implicits._
-import io.circe.generic.JsonCodec
 import org.rebeam.tree.MapStateSTM.StateDelta
 import japgolly.scalajs.react._
 import japgolly.scalajs.react.component.Scala.Component
 import japgolly.scalajs.react.vdom.html_<^._
-import monocle.macros.Lenses
 import org.rebeam.tree._
-import org.rebeam.tree.codec.Codec._
-import org.rebeam.tree.codec._
 import org.rebeam.tree.react._
 
+import TodoData._
+
 object LocalDataRootDemo {
-  // All data must have a codec
-  @JsonCodec
-  // Any data used with DeltaCursor must have lenses
-  @Lenses
-  case class TodoItem(id: Id[TodoItem], created: Moment, completed: Option[Moment], text: String)
-
-  // We can edit a TodoItem by specifying a new value, or using a lens to get to completed or text fields
-  implicit val todoItemDeltaCodec: DeltaCodec[TodoItem] =
-    value[TodoItem] or
-    lensOption("completed", TodoItem.completed) or  // completed is an Optional field, so use lensOption
-    lens("text", TodoItem.text)
-
-  @JsonCodec
-  case class TodoList(id: Id[TodoList], items: List[Id[TodoItem]])
-
-  // We can edit a TodoList by specifying a new value
-  implicit val todoListDeltaCodec: DeltaCodec[TodoList] = value[TodoList]
-
-  // Both TodoItem and TodoList can be referenced by Id, so we need IdCodecs
-  implicit val todoItemIdCodec: IdCodec[TodoItem] = IdCodec[TodoItem]("TodoItem")
-  implicit val todoListIdCodec: IdCodec[TodoList] = IdCodec[TodoList]("TodoList")
-
-  // Transaction to build our initial example data
-  val exampleData = new Transaction {
-    override def apply[F[_] : Monad](implicit stm: STMOps[F]): F[Unit] = {
-      import stm._
-      for {
-        itemIds <- (1 to 10).toList.traverse(i =>
-          for {
-            c <- context
-            item <- put[TodoItem](id => TodoItem(id, c.moment, None, s"Todo $i"))
-          } yield item.id
-        )
-        _ <- put[TodoList](TodoList(_, itemIds))
-      } yield ()
-    }
-  }
 
   // Our index is simple - just store the most recently added list.
   // The index lets us access this list by retrieving its Id from the TodoList in the index.
@@ -58,7 +19,7 @@ object LocalDataRootDemo {
   case class TodoIndex(todoList: Option[TodoList])
 
   // This indexer will just keep the last put or modified TodoList
-  val todoIndexer = new LocalDataRoot.Indexer[TodoIndex] {
+  val todoIndexer: LocalDataRoot.Indexer[TodoIndex] = new LocalDataRoot.Indexer[TodoIndex] {
     def initial: TodoIndex = TodoIndex(None)
     def updated(index: TodoIndex, deltas: Seq[StateDelta[_]]): TodoIndex = {
       deltas.foldRight(index){
@@ -70,15 +31,10 @@ object LocalDataRootDemo {
     }
   }
 
-  // We need to be able to encode/decode any acceptable transaction on the data.
-  // The simplest case is just to support applying a delta at an id.
-  // If needed, you can define custom Transactions, and provide codecs for them.
-  implicit val transactionCodec = TransactionCodec.deltaAtIdCodec
-
   // This view shows a "monolithic" approach to displaying the list,
   // where we retrieve all the items using get, and display them in one component.
   // This will update whenever the TodoList or any item in it changes.
-  val todoListViewMonolithic = new View[TodoList] {
+  val todoListViewMonolithic: Component[TodoList, Unit, Unit, CtorType.Props] = new View[TodoList] {
     def apply[F[_]: Monad](l: TodoList)(implicit v: ReactViewOps[F], tx: ReactTransactor): F[VdomElement] = {
       import v._
 
@@ -99,7 +55,7 @@ object LocalDataRootDemo {
     }
   }.build("todoListView")
 
-  val stringView = new ViewPC[String] {
+  val stringView: Component[Cursor[String], Unit, Unit, CtorType.Props] = new ViewPC[String] {
     override def apply(a: Cursor[String])(implicit tx: ReactTransactor): VdomNode = {
 
       // Editing the value is straightforward - just call set on the cursor. The cursor
@@ -156,7 +112,7 @@ object LocalDataRootDemo {
       )
   )(
     todoIndexer,
-    exampleData
+    example
   )
 
 }

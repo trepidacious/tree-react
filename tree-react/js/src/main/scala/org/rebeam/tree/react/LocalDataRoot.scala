@@ -55,13 +55,13 @@ object LocalDataRoot {
           state <- bs.state
 
           // Log the transaction as Json - normally we would send this to a server
-          _ <- Callback{
-            logger.info(
-              transactionCodec
-                .encoder(t)(state.sd)
-                .map(_.toString).getOrElse(s"Could not encode transaction $t")
-            )
-          }
+//          _ <- Callback{
+//            logger.info(
+//              transactionCodec
+//                .encoder(t)(state.sd)
+//                .map(_.toString).getOrElse(s"Could not encode transaction $t")
+//            )
+//          }
 
           // Run the transaction
           s = runTransaction(state, t, indexer)
