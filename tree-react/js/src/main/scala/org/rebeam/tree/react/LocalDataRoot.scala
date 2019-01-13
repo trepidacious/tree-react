@@ -77,9 +77,14 @@ object LocalDataRoot {
       }
     }
 
+    // Note we cache the value of the context, since tx does not change.
+    // This is so that React will receive the same wrapped JS value, and not
+    // trigger an update of everything using this context on each render.
+    // This is not necessary for LocalReactData since this will change.
+    private val txContext = contexts.transactor.provide(tx)
+
     def render(p: A, s: State[I]): VdomElement = {
-      //TODO accept a pair of contexts as one "ReactDataContexts" rather than a single DataContext
-      contexts.transactor.provide(tx)(
+      txContext(
         contexts.data.provide(LocalReactData(s.sd, tx))(
           r(p, s.index)
         )
