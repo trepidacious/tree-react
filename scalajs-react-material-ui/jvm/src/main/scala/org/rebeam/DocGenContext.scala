@@ -323,6 +323,14 @@ object DocGenContext {
       } else if (c.displayName == "TextField" && name == "onFocus") {
         name -> eventProp("ReactFocusEvent")._2.copy(description = "Passed to underlying input element")
 
+      // Special case for Checkbox, which passes an event and a checked state to onChange
+      } else if (c.displayName == "Checkbox" && name == "onChange") {
+        name -> prop.copy(propType = KnownFuncType(
+          s"(ReactEvent, Boolean) => Callback",
+          s"scalajs.js.Function2[ReactEvent, Boolean, Unit]",
+          (n: String) => s"(e: ReactEvent, checked: Boolean) => $n(e, checked).runNow()")
+        )
+
       // Specific TextField events
       } else if (c.displayName == "TextField" && namedFunc("onChange")) {
         eventProp("ReactEventFromInput")

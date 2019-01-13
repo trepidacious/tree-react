@@ -33,7 +33,7 @@ object Checkbox {
     var inputProps: js.UndefOr[js.Object] = js.native
     var inputRef: js.UndefOr[js.Any] = js.native
     var key: js.UndefOr[String] = js.native
-    var onChange: js.UndefOr[scalajs.js.Function1[ReactEvent, Unit]] = js.native
+    var onChange: js.UndefOr[scalajs.js.Function2[ReactEvent, Boolean, Unit]] = js.native
     var style: js.UndefOr[js.Object] = js.native
     var `type`: js.UndefOr[String] = js.native
     var value: js.UndefOr[String] = js.native
@@ -115,7 +115,7 @@ object Checkbox {
     inputProps: js.UndefOr[js.Object] = js.undefined,
     inputRef: js.UndefOr[js.Any] = js.undefined,
     key: js.UndefOr[String] = js.undefined,
-    onChange: js.UndefOr[ReactEvent => Callback] = js.undefined,
+    onChange: js.UndefOr[(ReactEvent, Boolean) => Callback] = js.undefined,
     style: js.UndefOr[org.rebeam.mui.styles.Style] = js.undefined,
     `type`: js.UndefOr[String] = js.undefined,
     value: js.UndefOr[String] = js.undefined,
@@ -137,7 +137,7 @@ object Checkbox {
     if (inputProps.isDefined) {p.inputProps = inputProps}
     if (inputRef.isDefined) {p.inputRef = inputRef}
     if (key.isDefined) {p.key = key}
-    if (onChange.isDefined) {p.onChange = onChange.map(v => (e: ReactEvent) => v(e).runNow())}
+    if (onChange.isDefined) {p.onChange = onChange.map(v => (e: ReactEvent, checked: Boolean) => v(e, checked).runNow())}
     if (style.isDefined) {p.style = style.map(v => v.o)}
     if (`type`.isDefined) {p.`type` = `type`}
     if (value.isDefined) {p.value = value}
