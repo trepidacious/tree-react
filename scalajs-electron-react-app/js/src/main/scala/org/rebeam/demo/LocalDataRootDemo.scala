@@ -6,10 +6,13 @@ import org.rebeam.tree.MapStateSTM.StateDelta
 import japgolly.scalajs.react._
 import japgolly.scalajs.react.component.Scala.Component
 import japgolly.scalajs.react.vdom.html_<^._
+import japgolly.scalajs.react.vdom._
 import org.rebeam.tree._
 import org.rebeam.tree.react._
 import TodoData._
+import org.log4s.getLogger
 import org.rebeam.mui
+import org.rebeam._
 
 import scala.scalajs.js
 import js.JSConverters._
@@ -59,7 +62,11 @@ object LocalDataRootDemo {
   }.build("todoListView")
 
   val stringView: Component[Cursor[String], Unit, Unit, CtorType.Props] = new ViewPC[String] {
+    private val logger = getLogger
+
     override def apply(a: Cursor[String])(implicit tx: ReactTransactor): VdomNode = {
+
+      logger.debug(s"stringView applying from $a, transactor $tx")
 
       // Editing the value is straightforward - just call set on the cursor. The cursor
       // creates a ValueDelta that will set the String directly to a new value, makes
@@ -77,29 +84,68 @@ object LocalDataRootDemo {
         value = a.a,
         onChange = e => onChange(e)
       )
+//      <.input(
+//        ^.value := a.a,
+//        ^.onChange ==> onChange,
+//        ^.margin := "10px"
+//      )
     }
 
   }.build("stringView")
 
   val todoItemView: Component[Id[TodoItem], Unit, Unit, CtorType.Props] = new View[Id[TodoItem]] {
+    private val logger = getLogger
+
     def apply[F[_]: Monad](id: Id[TodoItem])(implicit v: ReactViewOps[F], tx: ReactTransactor): F[VdomElement] = {
+      logger.debug(s"View applying from $id")
       // By creating a cursor at the Id, we can enable navigation through the TodoItem
       v.cursorAt[TodoItem](id).map(
-        cursor => <.li(
-          cursor.a.toString,
+        cursor =>
 
-          // Zoom to the item's text, and we can edit it with a general-purpose ViewPC[String]
-          stringView(cursor.zoom(TodoItem.text)),
+//          mui.ListItem (
+////            key=id.toString
+////            role={undefined} dense button
+//            dense = true,
+////            button = true,
+////            onClick = (e: ReactEvent) =>
+////              cursor.delta(TodoItemCompletion(cursor.a.completed.isEmpty))
+//          )(
+//            mui.Checkbox(
+//              value = cursor.a.completed.map(_.toString).orUndefined,
+//              checked = cursor.a.completed.isDefined: js.Any,
+//              onChange = (e: ReactEvent, checked: Boolean) =>
+//                cursor.delta(TodoItemCompletion(checked))
+//            ),
+//
+//
+////            mui.ListItemText()(stringView(cursor.zoom(TodoItem.text))),
+//
+//            stringView(cursor.zoom(TodoItem.text))
+//
+////            mui.ListItemSecondaryAction()(
+////              mui.IconButton(
+////                //                  aria-label="Comments"
+////              )(
+////                icons.Edit()
+////              )
+////            )
+//          )
 
-          mui.Checkbox(
-            value = cursor.a.completed.map(_.toString).orUndefined,
-            checked = cursor.a.completed.isDefined: js.Any,
-            onChange = (e: ReactEvent) => {
-              val c =e.target.asInstanceOf[js.Dynamic].checked.asInstanceOf[Boolean]
-              cursor.delta(TodoItemCompletion(c))
-            }
+
+            <.li(
+//              ^.margin := "10px",
+//              ^.backgroundColor := "#aaa",
+            mui.Checkbox(
+              value = cursor.a.completed.map(_.toString).orUndefined,
+              checked = cursor.a.completed.isDefined: js.Any,
+              onChange = (e: ReactEvent, checked: Boolean) =>
+                cursor.delta(TodoItemCompletion(checked))
+            ),
+
+            // Zoom to the item's text, and we can edit it with a general-purpose ViewPC[String]
+            stringView(cursor.zoom(TodoItem.text)),
           )
-        )
+
       )
     }
   }.build("todoItemView")
@@ -110,9 +156,16 @@ object LocalDataRootDemo {
   // can still get data from the Context provided by dataProvider, so this can be a ViewP
   val todoListView: Component[TodoList, Unit, Unit, CtorType.Props] = new ViewP[TodoList] {
     override def apply(a: TodoList): VdomNode =
-      <.ol(
-        a.items.toTagMod(id => todoItemView(id))
-      )
+//      mui.List(
+//        dense = true
+//      )(
+//        // TODO make this neater
+//        a.items.map(id => todoItemView.withKey(id.toString)(id): VdomNode): _*
+//      )
+
+    <.ul(
+      a.items.toTagMod(id => todoItemView.withKey(id.toString)(id))
+    )
   }.build("todoListView")
 
 
