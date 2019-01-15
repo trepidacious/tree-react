@@ -71,7 +71,7 @@ object LocalDataRoot {
             // Error - we leave state alone, but log error
             case Left(error) => Callback{logger.warn(s"Failed transaction: $error")}
             // We have a new state
-            case Right(newState) => bs.setState(newState) >> Callback{logger.info(s"Applied transaction: $t")}
+            case Right(newState) => bs.setState(newState)// >> Callback{logger.info(s"Applied transaction: $t")}
           }
         } yield ()
       }
