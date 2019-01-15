@@ -11,14 +11,21 @@ import scala.annotation.tailrec
 
 class OTSpec extends WordSpec with Matchers with Checkers {
 
+  // Initial text
   val input1 = "Hello World!"
+
+  // Operation for "client a" - insert "big wide" and delete the "!"
   val op1a = Operation.empty[Char].retain(6).insert("big wide ".toList).retain(5).delete(1)
   val output1a = "Hello big wide World"
 
+  // Operation for "client b" - add smiley
   val op1b = Operation.empty[Char].retain(12).insert(" :)".toList)
   val output1b = "Hello World! :)"
 
+  // Expected result of combining op1a then op1b, or op1b then op1a
   val output1ab = "Hello big wide World :)"
+
+  // Randomly generated operations
 
   implicit def genRetain[A]: Gen[Retain[A]] =
     Gen.choose(1, 10).map(Retain[A])
@@ -40,6 +47,7 @@ class OTSpec extends WordSpec with Matchers with Checkers {
   implicit val genInt: Gen[Int] = choose(0, Integer.MAX_VALUE)
 
   case class AtomsAndInput[A](atoms: List[Atom[A]], input: List[A])
+
   // Generate a list of atoms, and a list with the correct length to be an
   // input for an operation on those atoms.
   // We produce a list of atoms so we can test building an operation with
