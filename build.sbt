@@ -62,6 +62,14 @@ lazy val scalaCSSDeps = Seq(
   libraryDependencies += "com.github.japgolly.scalacss"      %%% "ext-react" % scalacssVersion
 )
 
+lazy val testDeps = Seq(
+  libraryDependencies ++= Seq(
+    "org.scalactic"               %%% "scalactic"         % scalacticVersion    % "test",
+    "org.scalatest"               %%% "scalatest"         % scalatestVersion    % "test",
+    "org.scalacheck"              %%% "scalacheck"        % scalacheckVersion   % "test"
+  )
+)
+
 lazy val root = project.in(file(".")).
   aggregate(
     scalajsReactMaterialUIJS, scalajsReactMaterialUIJVM,
@@ -72,6 +80,7 @@ lazy val root = project.in(file(".")).
     scalajsElectronReactJS, scalajsElectronReactJVM,
     scalajsGoogleDriveJS, scalajsGoogleDriveJVM,
     treeCoreJS, treeCoreJVM,
+    treeOTJS, treeOTJVM,
     treeReactJS, treeReactJVM,
     scalajsElectronReactAppJS, scalajsElectronReactAppJVM
   ).settings(
@@ -250,13 +259,14 @@ lazy val scalajsGoogleDrive = crossProject(JSPlatform, JVMPlatform).in(file("sca
   settings(
   name := "scalajs-google-drive",
 
-//  libraryDependencies += "org.scalactic" %% "scalactic" % "3.0.5",
+  testDeps,
+
   libraryDependencies ++= Seq(
-    "org.scalatest"               %%% "scalatest"         % scalatestVersion % "test",
     "io.circe"                    %%% "circe-core"        % circeVersion,
     "io.circe"                    %%% "circe-generic"     % circeVersion,
     "io.circe"                    %%% "circe-parser"      % circeVersion,
     "io.circe"                    %%% "circe-generic-extras"      % circeVersion,
+
     "org.typelevel"               %%% "cats-core"         % catsVersion,
     "org.typelevel"               %%% "cats-effect"       % catsEffectVersion,
   ),
@@ -284,7 +294,9 @@ lazy val treeCore = crossProject(JSPlatform, JVMPlatform).in(file("tree-core")).
   settings(
   name := "tree-core",
 
-  //  libraryDependencies += "org.scalactic" %% "scalactic" % "3.0.5",
+  testDeps,
+
+   //  libraryDependencies += "org.scalactic" %% "scalactic" % "3.0.5",
   libraryDependencies ++= Seq(
     "io.circe"                    %%% "circe-core"        % circeVersion,
     "io.circe"                    %%% "circe-generic"     % circeVersion,
@@ -299,16 +311,13 @@ lazy val treeCore = crossProject(JSPlatform, JVMPlatform).in(file("tree-core")).
     "com.github.julien-truffaut"  %%% "monocle-macro"     % monocleVersion,
     "com.github.julien-truffaut"  %%% "monocle-state"     % monocleVersion,
     "com.github.julien-truffaut"  %%% "monocle-refined"   % monocleVersion,
-    "com.github.julien-truffaut"  %%% "monocle-law"       % monocleVersion      % "test",
-
-    "org.scalactic"               %%% "scalactic"         % scalacticVersion    % "test",
-    "org.scalatest"               %%% "scalatest"         % scalatestVersion    % "test",
-    "org.scalacheck"              %%% "scalacheck"        % scalacheckVersion   % "test"
+    "com.github.julien-truffaut"  %%% "monocle-law"       % monocleVersion      % "test"
   ),
 
   addCompilerPlugin(
     "org.scalamacros" % "paradise" % "2.1.1" cross CrossVersion.patch
   ),
+
   addCompilerPlugin(
     "org.spire-math" %% "kind-projector" % kindProjectorVersion cross CrossVersion.binary
   )
@@ -324,9 +333,32 @@ lazy val treeCoreJVM = treeCore.jvm
 lazy val treeCoreJS = treeCore.js
 
 
-  /////////////////
+
+  /////////////
+ // tree-ot //
+/////////////
+lazy val treeOT = crossProject(JSPlatform, JVMPlatform).in(file("tree-ot")).
+  //Settings for all projects
+  settings(
+  name := "tree-ot",
+
+  testDeps,
+
+).jvmSettings(
+
+).jsSettings(
+  //Produce a module, so we can use @JSImport.
+  scalaJSLinkerConfig ~= { _.withModuleKind(ModuleKind.CommonJSModule) }
+)
+
+lazy val treeOTJVM = treeOT.jvm
+lazy val treeOTJS = treeOT.js
+
+
+
+  ////////////////
  // tree-react //
-///////////////
+////////////////
 lazy val treeReact = crossProject(JSPlatform, JVMPlatform).in(file("tree-react")).
   //Settings for all projects
   settings(
@@ -349,8 +381,9 @@ lazy val treeReactJVM = treeReact.jvm
 lazy val treeReactJS = treeReact.js
 
 
-/////////////////////////////////
-// scalajs-electron-react-app //
+
+  ////////////////////////////////
+ // scalajs-electron-react-app //
 ////////////////////////////////
 val scalaJsSrcDir = file("electron-app/scalajs_src")
 lazy val scalajsElectronReactApp = crossProject(JSPlatform, JVMPlatform).in(file("scalajs-electron-react-app")).
