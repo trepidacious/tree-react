@@ -16,6 +16,32 @@ package org.rebeam.tree.ot
   */
 case class ServerState[A](list: List[A], history: List[Operation[A]]) {
 
+  //TODO look at adding logic here to allow for client to send ops at arbitrary point.
+  //The simplest implementation is for a client to send always an operation against a known
+  //revision from the server. This means it can send a new operation when it receives a new
+  //state from the server (including a new revision of an OT list), but must then wait until
+  //it receives another server state back to send another operation. This sets up a ping-pong
+  //network flow. This has no particular disadvantages for the client in question, but means that
+  //each other client only sees that client's OT updates at an interval determined by its latency.
+  //this also complicates implementation of the client, since it must accumulate operations while
+  //waiting to send them, and when it sends them it must transform them locally to come after the
+  //received server state before sending.
+  //This seems to be needed because the client can't provide a revision against which the operations should
+  //be applied until the client receives a new server state - we need the new operations to occur after
+  //the old ones, so we can't use the old server state (without transforming at least). However we could
+  //provide for the client to request that the operations be applied after the previous ones sent by the
+  //client. So we would provide say op1 to be applied against revision 42, and then op2 to be applied
+  //after our previous operation. When the server applies op1, it notes the revision that it was applied at,
+  //say rev 44, and then when it receives the next op, op2, it applies it at rev 44, again noting rev 44 as
+  //the point to apply the next operation from that client. This could be done by requiring a rev for the
+  //first operation from a client, but then allowing this to be omitted for subsequent ones, with this
+  //implying application just after the previous op.
+
+  //To provide this, we will need some handling of additional data for OT transactions, this could be
+  //done by allowing each transaction on an id to "store" and "retrieve" data when it is applied or
+  //about to be applied, on the client and/or server side. This would make it general to similar transactions
+  //rather than specific to current OT implementation.
+
   /**
     * Produce a ServerState that has been updated with an operation applied by a client on the list at specified
     * revision. Note that the client might have been out of date, in which case the operation must be transformed
@@ -101,4 +127,13 @@ case class ServerState[A](list: List[A], history: List[Operation[A]]) {
     )
 
   }
+}
+
+object ServerState {
+  /**
+    * Empty [[ServerState]] with empty list and history
+    * @tparam A The type of list
+    * @return   Empty ServerState
+    */
+  def empty[A]: ServerState[A] = ServerState(List.empty, List.empty)
 }
