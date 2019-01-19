@@ -17,21 +17,21 @@ package org.rebeam.tree.ot
 case class ServerState[A](list: List[A], history: List[Operation[A]]) {
 
   //TODO look at adding logic here to allow for client to send ops at arbitrary point.
-  //The simplest implementation is for a client to send always an operation against a known
+  //The simplest implementation is for a client always to send an operation against a known
   //revision from the server. This means it can send a new operation when it receives a new
   //state from the server (including a new revision of an OT list), but must then wait until
   //it receives another server state back to send another operation. This sets up a ping-pong
   //network flow. This has no particular disadvantages for the client in question, but means that
   //each other client only sees that client's OT updates at an interval determined by its latency.
-  //this also complicates implementation of the client, since it must accumulate operations while
+  //This also complicates implementation of the client, since it must accumulate operations while
   //waiting to send them, and when it sends them it must transform them locally to come after the
-  //received server state before sending.
-  //This seems to be needed because the client can't provide a revision against which the operations should
-  //be applied until the client receives a new server state - we need the new operations to occur after
-  //the old ones, so we can't use the old server state (without transforming at least). However we could
-  //provide for the client to request that the operations be applied after the previous ones sent by the
+  //server state it receives just before sending.
+  //This seems to be needed because the client can't provide a revision against which the next operation should
+  //be applied until it receives a new server state - we need the new operation to occur after
+  //the previous one, so we can't use the old server state (without transforming at least - is there a way of doing this?).
+  //However we could provide for the client to request that a new operation be applied after the previous operation sent by the
   //client. So we would provide say op1 to be applied against revision 42, and then op2 to be applied
-  //after our previous operation. When the server applies op1, it notes the revision that it was applied at,
+  //after our previous operation, op2. When the server applies op1, it notes the revision that it was applied at,
   //say rev 44, and then when it receives the next op, op2, it applies it at rev 44, again noting rev 44 as
   //the point to apply the next operation from that client. This could be done by requiring a rev for the
   //first operation from a client, but then allowing this to be omitted for subsequent ones, with this
@@ -118,7 +118,7 @@ case class ServerState[A](list: List[A], history: List[Operation[A]]) {
 
     // New state and the new op that produced it
     (
-      // Apply the op to out list, and add it to our history
+      // Apply the op to our list, and add it to our history
       ServerState(postClientOp(list), history :+ postClientOp),
 
       // We have added postClientOp at the end of history with size n, so
