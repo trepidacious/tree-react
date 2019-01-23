@@ -79,16 +79,17 @@ object LocalDataRootDemo {
       // will not be used until later.
       def onChange(e: ReactEventFromInput) = a.set(e.target.value)
 
-      mui.TextField(
-        // Display the data from the cursor
-        value = a.a,
-        onChange = e => onChange(e)
-      )
-//      <.input(
-//        ^.value := a.a,
-//        ^.onChange ==> onChange,
-//        ^.margin := "10px"
+//      mui.TextField(
+//        // Display the data from the cursor
+//        value = a.a,
+//        onChange = e => onChange(e)
 //      )
+
+      <.input(
+        ^.value := a.a,
+        ^.onChange ==> onChange,
+        ^.margin := "10px"
+      )
     }
 
   }.build("stringView")
@@ -132,7 +133,7 @@ object LocalDataRootDemo {
 //          )
 
 
-            <.li(
+          <.li(
 //              ^.margin := "10px",
 //              ^.backgroundColor := "#aaa",
             mui.Checkbox(
@@ -163,9 +164,9 @@ object LocalDataRootDemo {
 //        a.items.map(id => todoItemView.withKey(id.toString)(id): VdomNode): _*
 //      )
 
-    <.ul(
-      a.items.toTagMod(id => todoItemView.withKey(id.toString)(id))
-    )
+      <.ul(
+        a.items.toTagMod(id => todoItemView.withKey(id.toString)(id))
+      )
   }.build("todoListView")
 
 

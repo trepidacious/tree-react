@@ -59,7 +59,6 @@ class ServerStateSpec extends WordSpec with Matchers with Checkers {
       val(s3, opA1s) = s2.updated(OpRev(opA1, 1)) // Note this is still at Rev 1, even though server is at rev 2
 
       assert(s3.list == "y12x34".toList)
-
     }
 
   }
