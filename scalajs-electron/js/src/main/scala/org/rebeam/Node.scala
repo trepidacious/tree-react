@@ -26,10 +26,11 @@ object Node {
   /**
     * Get the contents of a file at a path relative to the main directory of the electron application
     * (normally `src`, but can be the root of the project - see `package.json`, `main` field).
+    * Decodes contents of file as a plain utf8 string.
     * @param path The relative path - no leading `/`. So for files in the main directory, just the file name,
     *             often you will want something like `../someOtherDir/file.txt`.
     */
-  def relativePathAsString(path: String): IO[String] = fileAsString(s"$dirName/$path")
+  def relativePathAsUTF8String(path: String): IO[String] = fileAsUTF8String(s"$dirName/$path")
 
   /**
     * Get the contents of a file at a given filename, as a Buffer, using IO
@@ -46,6 +47,12 @@ object Node {
     })
   }
 
-  def fileAsString(filename: String): IO[String] = fileAsBuffer(filename).map(_.toString)
+  /**
+    * Get the contents of a file at a given filename, as a String, using IO
+    * Decodes contents of file as a plain utf8 string.
+    * @param filename The filename to open.
+    * @return         The file contents as a Buffer
+    */
+  def fileAsUTF8String(filename: String): IO[String] = fileAsBuffer(filename).map(_.toString)
 
 }
