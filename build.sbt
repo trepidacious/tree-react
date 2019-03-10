@@ -350,7 +350,6 @@ lazy val treeReactJS = treeReact.js
   //////////////////
  // electron-app //
 //////////////////
-val scalaJsSrcDir = file("electron-app/scalajs_src")
 lazy val electronApp = crossProject(JSPlatform, JVMPlatform).in(file("electron-app")).
   //Settings for all projects
   settings(
@@ -363,13 +362,17 @@ lazy val electronApp = crossProject(JSPlatform, JVMPlatform).in(file("electron-a
 
 ).jsSettings(
 
-  //Output scalajs and js dependencies to source folder for electron-app project
+//  Alternative approach - output all scalajs and js dependencies to source folder for electron-app project
+//  artifactPath below is preferred, since it only moves the non-test files, and omits dependencies, which we don't use.
 //  crossTarget in (Compile, fullOptJS) := scalaJsSrcDir,
 //  crossTarget in (Compile, fastOptJS) := scalaJsSrcDir,
 //  crossTarget in (Compile, packageJSDependencies) := scalaJsSrcDir,
 
-  artifactPath in (Compile, fastOptJS) := scalaJsSrcDir / "fastOpt.js",
-  artifactPath in (Compile, fullOptJS) := scalaJsSrcDir / "fullOpt.js",
+  // Move just the required artifacts to scalajs_src for electron project to use. This allows us to include that
+  // directory in the electron app, and include only the minimal required files. Note the baseDirectory for the
+  // js project is "js" in the root project directory, hence the "..". 
+  artifactPath in (Compile, fastOptJS) := baseDirectory.value / ".." / "scalajs_src" / "fastOpt.js",
+  artifactPath in (Compile, fullOptJS) := baseDirectory.value / ".." / "scalajs_src" / "fullOpt.js",
 
   //Produce a module, so we can use @JSImport.
   scalaJSLinkerConfig ~= { _.withModuleKind(ModuleKind.CommonJSModule) }
