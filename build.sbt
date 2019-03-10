@@ -78,11 +78,10 @@ lazy val root = project.in(file(".")).
     scalajsReactMaterialUIExtraJS, scalajsReactMaterialUIExtraJVM,
     scalajsElectronJS, scalajsElectronJVM,
     scalajsElectronReactJS, scalajsElectronReactJVM,
-    scalajsGoogleDriveJS, scalajsGoogleDriveJVM,
     treeCoreJS, treeCoreJVM,
     treeOTJS, treeOTJVM,
     treeReactJS, treeReactJVM,
-    scalajsElectronReactAppJS, scalajsElectronReactAppJVM
+    electronAppJS, electronAppJVM
   ).settings(
     publish := {},
     publishLocal := {}
@@ -251,40 +250,6 @@ lazy val scalajsElectronReactJVM = scalajsElectronReact.jvm
 lazy val scalajsElectronReactJS = scalajsElectronReact.js
 
 
-  //////////////////////////
- // scalajs-google-drive //
-/////////////////////////
-lazy val scalajsGoogleDrive = crossProject(JSPlatform, JVMPlatform).in(file("scalajs-google-drive")).
-  //Settings for all projects
-  settings(
-  name := "scalajs-google-drive",
-
-  testDeps,
-
-  libraryDependencies ++= Seq(
-    "io.circe"                    %%% "circe-core"        % circeVersion,
-    "io.circe"                    %%% "circe-generic"     % circeVersion,
-    "io.circe"                    %%% "circe-parser"      % circeVersion,
-    "io.circe"                    %%% "circe-generic-extras"      % circeVersion,
-
-    "org.typelevel"               %%% "cats-core"         % catsVersion,
-    "org.typelevel"               %%% "cats-effect"       % catsEffectVersion,
-  ),
-
-  addCompilerPlugin(
-    "org.scalamacros" % "paradise" % "2.1.1" cross CrossVersion.patch
-  )
-
-).jvmSettings(
-
-).jsSettings(
-  //Produce a module, so we can use @JSImport.
-  scalaJSLinkerConfig ~= { _.withModuleKind(ModuleKind.CommonJSModule) }
-)
-
-lazy val scalajsGoogleDriveJVM = scalajsGoogleDrive.jvm
-lazy val scalajsGoogleDriveJS = scalajsGoogleDrive.js
-
 
   ////////////////
  // tree-core //
@@ -382,14 +347,14 @@ lazy val treeReactJS = treeReact.js
 
 
 
-  ////////////////////////////////
- // scalajs-electron-react-app //
-////////////////////////////////
+  //////////////////
+ // electron-app //
+//////////////////
 val scalaJsSrcDir = file("electron-app/scalajs_src")
-lazy val scalajsElectronReactApp = crossProject(JSPlatform, JVMPlatform).in(file("scalajs-electron-react-app")).
+lazy val electronApp = crossProject(JSPlatform, JVMPlatform).in(file("electron-app")).
   //Settings for all projects
   settings(
-  name := "scalajs-electron-react-app",
+  name := "electron-app",
 
   addCompilerPlugin(
     "org.scalamacros" % "paradise" % "2.1.1" cross CrossVersion.patch
@@ -399,14 +364,17 @@ lazy val scalajsElectronReactApp = crossProject(JSPlatform, JVMPlatform).in(file
 ).jsSettings(
 
   //Output scalajs and js dependencies to source folder for electron-app project
-  crossTarget in (Compile, fullOptJS) := scalaJsSrcDir,
-  crossTarget in (Compile, fastOptJS) := scalaJsSrcDir,
-  crossTarget in (Compile, packageJSDependencies) := scalaJsSrcDir,
+//  crossTarget in (Compile, fullOptJS) := scalaJsSrcDir,
+//  crossTarget in (Compile, fastOptJS) := scalaJsSrcDir,
+//  crossTarget in (Compile, packageJSDependencies) := scalaJsSrcDir,
+
+  artifactPath in (Compile, fastOptJS) := scalaJsSrcDir / "fastOpt.js",
+  artifactPath in (Compile, fullOptJS) := scalaJsSrcDir / "fullOpt.js",
 
   //Produce a module, so we can use @JSImport.
   scalaJSLinkerConfig ~= { _.withModuleKind(ModuleKind.CommonJSModule) }
 
 ).dependsOn(scalajsElectron, scalajsElectronReact, scalajsReactMaterialUIExtra, treeReact)
 
-lazy val scalajsElectronReactAppJVM = scalajsElectronReactApp.jvm
-lazy val scalajsElectronReactAppJS = scalajsElectronReactApp.js
+lazy val electronAppJVM = electronApp.jvm
+lazy val electronAppJS = electronApp.js

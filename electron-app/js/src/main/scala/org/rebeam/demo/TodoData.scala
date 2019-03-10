@@ -35,6 +35,7 @@ object TodoData {
 
   // We can edit a TodoItem by specifying a new value, or using a lens to get to completed or text fields
   implicit val todoItemDeltaCodec: DeltaCodec[TodoItem] =
+
     value[TodoItem] or
 //      lensOption("completed", TodoItem.completed) or  // completed is an Optional field, so use lensOption
       lens("text", TodoItem.text) or

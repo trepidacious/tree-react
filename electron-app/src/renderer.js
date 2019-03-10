@@ -1,2 +1,2 @@
-  var scalajs = require('../scalajs_src/scalajs-electron-react-app-fastopt.js');
+  var scalajs = require('../scalajs_src/fastopt.js');
   scalajs.Main.main();
