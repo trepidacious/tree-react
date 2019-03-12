@@ -13,6 +13,8 @@ package org.rebeam.tree.ot
   *                 Note that we must always have all operations, starting from revision
   *                 0 and using consecutive revision indices, so only operations are stored,
   *                 and each has a revision index equal to its index in the history.
+  *                 TODO we can actually store a partial history if we reject operations
+  *                 that were originally applied before the start of the partial history.
   */
 case class ServerState[A](list: List[A], history: List[Operation[A]]) {
 
@@ -124,6 +126,7 @@ case class ServerState[A](list: List[A], history: List[Operation[A]]) {
       // We have added postClientOp at the end of history with size n, so
       // it is the nth element (zero based)
       OpRev(postClientOp, history.size)
+
     )
 
   }
