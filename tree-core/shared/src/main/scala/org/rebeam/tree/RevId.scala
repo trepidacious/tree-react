@@ -15,7 +15,7 @@ import scala.util.matching.Regex
   * Note that RevIds are assigned by the transaction context, and so like Ids, they are generated on
   * the client then regenerated as the same value on the server. Since clients generate transactions
   * concurrently, there is no ordering to RevIds. Transactions only receive a serial ordering when
-  * they are executed by the server, producing an incrementing ServerRevId.
+  * they are executed by a store (server), producing an incrementing StoreRevId.
   *
   * @param guid The Guid
   * @tparam A Type of the item
