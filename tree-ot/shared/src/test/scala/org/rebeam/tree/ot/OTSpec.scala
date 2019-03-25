@@ -501,5 +501,61 @@ class OTSpec extends WordSpec with Matchers with Checkers {
       )
     }
 
+    "transform cursor for insertion and deletion" in {
+      // Initial text
+      val s = "Hello World!".toList
+
+      // Operation to insert XYZ after "c"
+      val op = Operation.empty[Char].retain(6).insert("big wide ".toList).retain(5).delete(1)
+
+      // Check operation is as expected
+      assert(op(s).mkString === "Hello big wide World")
+
+      // Check cursor transformations are as expected
+      // Cursor positions before deletion - i.e. cursorIndex 0 is before first letter, a:
+      // 0 H 1 e 2 l 3 l 4 o 5 _ 6 W 7 o 8 r 9 l 10 d 11 ! 12
+      //
+      // If we are not the editor:
+      // Cursor indices 0 to 6 are unaltered.
+      // 7 to 11 are shifted 9 to the right.
+      // 12 shifts to same position as 11 (so ends up at 11 + 9 = 20)
+      assertCursorTransform(op, Some(false))(
+        0 -> 0,
+        1 -> 1,
+        2 -> 2,
+        3 -> 3,
+        4 -> 4,
+        5 -> 5,
+        6 -> 6,
+        7 -> 16,
+        8 -> 17,
+        9 -> 18,
+        10 -> 19,
+        11 -> 20,
+        12 -> 20
+      )
+
+      // If we are the editor:
+      // Cursor indices 0 to 5 are unaltered.
+      // 6 to 11 are shifted 9 to the right.
+      // 12 shifts to same position as 11 (so ends up at 11 + 9 = 20)
+      assertCursorTransform(op, Some(true))(
+        0 -> 0,
+        1 -> 1,
+        2 -> 2,
+        3 -> 3,
+        4 -> 4,
+        5 -> 5,
+        6 -> 15,
+        7 -> 16,
+        8 -> 17,
+        9 -> 18,
+        10 -> 19,
+        11 -> 20,
+        12 -> 20
+      )
+
+    }
+
   }
 }
