@@ -164,6 +164,16 @@ class OTSpec extends WordSpec with Matchers with Checkers {
     }
   }
 
+  private final def assertCursorTransform[A](op: Operation[A], isEditor: Option[Boolean] = None)(results: (Int, Int)*): Unit = {
+    val isEditorCases: List[Boolean] = isEditor.map(List(_)).getOrElse(List(true, false))
+    for {
+      e <- isEditorCases
+      (from, to) <- results
+    } {
+      assert(op.transformCursor(from, isEditor = e) === to, s"$op should move cursor from $from to $to when it ${if(e) "is" else "is not"} the editor")
+    }
+  }
+
   "Atoms" should {
     "give correct insertion deltas" in {
       val i = Insert(List(1,2,3))
@@ -357,6 +367,138 @@ class OTSpec extends WordSpec with Matchers with Checkers {
       assert(!Operation.empty[Int].delete(1).isIdentity)
       assert(!Operation.empty[Int].retain(100).delete(100).isIdentity)
       assert(!Operation.empty[Int].insert(List(1, 2)).delete(100).isIdentity)
+    }
+
+    "transform cursor for deletion" in {
+      // Initial text
+      val s = "abcde".toList
+
+      // Operation to delete "d"
+      val deleteD = Operation.empty[Char].retain(3).delete(1).retain(1)
+
+      // Check operation is as expected
+      assert(deleteD(s).mkString === "abce")
+
+      // Check cursor transformations are as expected
+      // Cursor positions before deletion - i.e. cursorIndex 0 is before first letter, a:
+      // 0 a 1 b 2 c 3 d 4 e 5
+      // After deleting "d" we should have:
+      // 0 a 1 b 2 c 3,4 e 5
+      // 0   1   2    3    4<- new cursor index
+      // i.e. if the cursor was just before or after d, it is now before e
+      assertCursorTransform(deleteD)(
+        0 -> 0,
+        1 -> 1,
+        2 -> 2,
+        3 -> 3,
+        4 -> 3,
+        5 -> 4
+      )
+    }
+
+    "transform cursor for multiple deletion" in {
+      // Initial text
+      val s = "abcde".toList
+
+      // Operation to delete "bcd"
+      val deleteD = Operation.empty[Char].retain(1).delete(3).retain(1)
+
+      // Check operation is as expected
+      assert(deleteD(s).mkString === "ae")
+
+      // Check cursor transformations are as expected
+      // Cursor positions before deletion - i.e. cursorIndex 0 is before first letter, a:
+      // 0 a 1 b 2 c 3 d 4 e 5
+      // After deleting "bcd" we should have:
+      // 0 a 1,2,3,4 e 5
+      // 0      1      2  <- new cursor index
+      // i.e. if the cursor was just before or after d, it is now before e
+      assertCursorTransform(deleteD)(
+        0 -> 0,
+        1 -> 1,
+        2 -> 1,
+        3 -> 1,
+        4 -> 1,
+        5 -> 2
+      )
+    }
+
+    "transform cursor for insertion" in {
+      // Initial text
+      val s = "abcde".toList
+
+      // Operation to insert X after "c"
+      val op = Operation.empty[Char].retain(3).insert("X".toList).retain(2)
+
+      // Check operation is as expected
+      assert(op(s).mkString === "abcXde")
+
+      // Check cursor transformations are as expected
+      // Cursor positions before deletion - i.e. cursorIndex 0 is before first letter, a:
+      // 0 a 1 b 2 c 3 d 4 e 5
+      // Cursor indices 0, 1, 2 are unaltered.
+      // If we are the editor, cursor index 3 (just after c) and later will increase by 1
+      // 0 a 1 b 2 c   X 3 d 4 e 5
+      // 0   1   2   3   4   5   6  <- new cursor index
+      assertCursorTransform(op, Some(true))(
+        0 -> 0,
+        1 -> 1,
+        2 -> 2,
+        3 -> 4,
+        4 -> 5,
+        5 -> 6
+      )
+
+      // If we are not the editor, cursor index 4 and later will increase by 1
+      // 0 a 1 b 2 c 3 X   d 4 e 5
+      // 0   1   2   3   4   5   6  <- new cursor index
+      assertCursorTransform(op, Some(false))(
+        0 -> 0,
+        1 -> 1,
+        2 -> 2,
+        3 -> 3,
+        4 -> 5,
+        5 -> 6
+      )
+    }
+
+    "transform cursor for multiple insertion" in {
+      // Initial text
+      val s = "abcde".toList
+
+      // Operation to insert XYZ after "c"
+      val op = Operation.empty[Char].retain(3).insert("XYZ".toList).retain(2)
+
+      // Check operation is as expected
+      assert(op(s).mkString === "abcXYZde")
+
+      // Check cursor transformations are as expected
+      // Cursor positions before deletion - i.e. cursorIndex 0 is before first letter, a:
+      // 0 a 1 b 2 c 3 d 4 e 5
+      // Cursor indices 0, 1, 2 are unaltered.
+      // If we are the editor, cursor index 3 (just after c) and later will increase by 3
+      // 0 a 1 b 2 c   X   Y   Z 3 d 4 e 5
+      // 0   1   2   3   4   5   6   7   8 <- new cursor index
+      assertCursorTransform(op, Some(true))(
+        0 -> 0,
+        1 -> 1,
+        2 -> 2,
+        3 -> 6,
+        4 -> 7,
+        5 -> 8
+      )
+
+      // If we are not the editor, cursor index 4 and later will increase by 3
+      // 0 a 1 b 2 c 3 X   Y   Z   d 4 e 5
+      // 0   1   2   3   4   5   6   7   8 <- new cursor index
+      assertCursorTransform(op, Some(false))(
+        0 -> 0,
+        1 -> 1,
+        2 -> 2,
+        3 -> 3,
+        4 -> 7,
+        5 -> 8
+      )
     }
 
   }

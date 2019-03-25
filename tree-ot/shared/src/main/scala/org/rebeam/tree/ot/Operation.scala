@@ -9,10 +9,10 @@ import scala.annotation.tailrec
   * by ensuring that:
   *   1.  Consecutive atoms of the same type are merged (Atom(m) + Atom(n) = Atom(m+n), where
   *       m and n are the count for Retain and Delete, and the inserted elements for Insert)
-  *   2.  Any (Delete, Insert) pair is swapped to (Insert, Delete), which has the same effect.
+  *   2.  Any (Delete, Insert) pair is swapped to the (Insert, Delete) pair with the same effect.
   *
   * When 1 and 2 are applied recursively, we can see that we will only be left with operations
-  * that consist of a sequence made up of a pattern of subsequences in two classes - either
+  * that consist of a sequence made up of consecutive subsequences in two classes - either
   * just [Retain] (call this R), or one of [Insert], [Delete] or [Insert, Delete] (call this O).
   * We require that the classes alternate - so we can have [R], [ROROR], [OROR] etc.
   * The Atoms could probably be encoded differently - most obviously by combining insert and delete,
@@ -240,6 +240,59 @@ case class Operation[A](atoms: List[Atom[A]]) {
     * @return  This operation transformed so it can be applied after b.
     */
   def after(b: Operation[A]): Operation[A] = Operation.transform(this, b)._1
+
+  def transformCursor(cursorIndex: Int, isEditor: Boolean): Int =
+    transformCursorRec(cursorIndex, isEditor, atoms, opIndex = 0)
+
+  //opIndex tracks the point at which the first atom in atoms will be applied
+  @tailrec
+  private def transformCursorRec(cursorIndex: Int, isEditor: Boolean, atoms: List[Atom[A]], opIndex: Int): Int = atoms match {
+    case Retain(n)  :: rest =>
+      val nextOpIndex = opIndex + n
+      // We are past the cursor - ignore remaining atoms
+      if (nextOpIndex > cursorIndex) {
+        cursorIndex
+      // Move to next atom, with the next op index
+      } else {
+        transformCursorRec(cursorIndex, isEditor, rest, nextOpIndex)
+      }
+
+    case Insert(as) :: rest =>
+      val size = as.size
+      val nextOpIndex = opIndex + size
+      // Shouldn't happen, but ignore insert after cursorIndex
+      if (opIndex > cursorIndex) {
+        cursorIndex
+
+      // Insert at or before the cursor
+      } else {
+        // Insertion before the cursor moves cursor right.
+        // Insertion at the cursor only moves cursor if this cursor
+        // is the editor. Otherwise we let the other cursor add text
+        // after the cursor we are handling.
+        val nextCursorIndex = if (isEditor || opIndex < cursorIndex) {
+          cursorIndex + size
+        } else {
+          cursorIndex
+        }
+        transformCursorRec(nextCursorIndex, isEditor, rest, nextOpIndex)
+      }
+
+    case Delete(n)  :: rest =>
+      // Shouldn't happen, but ignore delete at or after cursorIndex
+      if (opIndex >= cursorIndex) {
+        cursorIndex
+
+      // Deletion starting before the cursor will affect cursorIndex
+      } else {
+        // Note that we can't move the cursor back before the opIndex - this
+        // corresponds to when the cursor is inside the deleted range.
+        val nextCursorIndex = cursorIndex - Math.min(n, cursorIndex - opIndex)
+        transformCursorRec(nextCursorIndex, isEditor, rest, opIndex)
+      }
+
+    case Nil => cursorIndex
+  }
 
 }
 
