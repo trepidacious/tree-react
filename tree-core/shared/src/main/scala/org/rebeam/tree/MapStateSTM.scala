@@ -66,7 +66,10 @@ object MapStateSTM {
     Vector.empty
   )
 
+  // An Error or an A
   type ErrorOr[A] = Either[Error, A]
+
+  // A State using StateData, or an Error
   type MapState[A] = StateT[ErrorOr, StateData, A]
 
   private def rand[A](rf: PRandom => (PRandom, A)): MapState[A] =

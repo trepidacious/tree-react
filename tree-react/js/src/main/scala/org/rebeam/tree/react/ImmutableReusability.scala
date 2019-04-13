@@ -28,6 +28,19 @@ import japgolly.scalajs.react.extra.Reusability
 sealed trait ImmutableReusability[A] {
   def test(a1: A, a2: A): Boolean
   def reusability[AA <: A]: Reusability[AA] = Reusability((a1, a2) => test(a1, a2))
+  
+  /**
+    * Create a Reusability for Cursor[AA], for some subtype AA of A
+    * This will compare the model value using reusability[AA], and the DeltaCursor
+    * by equality (since DeltaCursors may be be recreated without changing contents,
+    * during a render)
+    *
+    * @tparam AA  The subtype in the Cursor
+    * @return     A Reusability for the Cursor
+    */
+  def cursorReusability[AA <: A]: Reusability[Cursor[AA]] = Reusability[Cursor[AA]](
+    (dA1, dA2) => reusability.test(dA1.a, dA2.a) && (dA1.deltaCursor == dA2.deltaCursor)
+  )
 }
 
 object ImmutableReusability {

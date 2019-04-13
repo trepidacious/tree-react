@@ -99,39 +99,42 @@ object DataComponent {
       )
 
       def shouldComponentUpdate(currentProps: Props[A], nextProps: Props[A]): Boolean =
-      // This shouldn't happen, since we should have render called before SCU, but if it happens
-      // just permit the update to get our first memoised render.
+        // This shouldn't happen, since we should have render called before SCU, but if it happens
+        // just permit the update to get our first memoised render.
         if (lastProps == null || lastUsedIds == null) {
           logger.trace("DataRendererMemo.shouldComponentUpdate - UPDATE: first render")
           true
 
-          // If the current props are not the ones we saw last, then cache is invalid, so just allow another render.
-          // We do not expect this to happen, based on lifecycle in the DataRendererMemo scaladoc, but if something
-          // unexpected happens it's safer to just update, this will refresh the cache when render is called.
+        // If the current props are not the ones we saw last, then cache is invalid, so just allow another render.
+        // We do not expect this to happen, based on lifecycle in the DataRendererMemo scaladoc, but if something
+        // unexpected happens it's safer to just update, this will refresh the cache when render is called.
         } else if (lastProps ne currentProps) {
           logger.trace(
             s"DataRendererMemo.shouldComponentUpdate - UPDATE: lastProps $lastProps ne currentProps $currentProps"
           )
           true
 
-          // If the instance of A in the props has changed, we should update
+        // If the instance of A in the props has changed, we should update
         } else if (!implicitly[Reusability[A]].test(currentProps.a, nextProps.a)) {
           logger.trace(
             s"DataRendererMemo.shouldComponentUpdate - UPDATE: props not reusable, ($currentProps.a -> $nextProps.a)"
           )
           true
 
-          // If any values used in the memoised render have changed in the new data, can't reuse
+        // If any values used in the memoised render have changed in the new data, can't reuse
         } else if (valuesChanged(lastUsedIds, currentProps.data, nextProps.data)) {
           logger.trace("DataRendererMemo.shouldComponentUpdate - UPDATE: new data value revision(s)")
           true
 
-          // Data and props will produce the same result from renderer. Note we update lastProps to
-          // nextProps - we have established that they produce the same result from the DataRenderer,
-          // but note above that we require lastProps eq currentProps, so we need to update to allow the
-          // next call to SCU to work, since nexProps may have different data contents (that are still
-          // equivalent for our DataRenderer). This assumes that React will set the component's props
-          // to nextProps, so we will see this as currentProps on the next call.
+        // Data and props will produce the same result from renderer. Note we update lastProps to
+        // nextProps - we have established that they produce the same result from the DataRenderer,
+        // but note above that we require lastProps eq currentProps, so we need to update to allow the
+        // next call to SCU to work, since nexProps may have different data contents (that are still
+        // equivalent for our DataRenderer). This assumes that React will set the component's props
+        // to nextProps, so we will see this as currentProps on the next call. If this is not the case
+        // we will detect it this as `lastProps ne currentProps` when we are next called, and will return
+        // true for safety
+
         } else {
           logger.trace(
             s"DataRendererMemo.shouldComponentUpdate - skip: updating lastProps from $lastProps to nextProps $nextProps"

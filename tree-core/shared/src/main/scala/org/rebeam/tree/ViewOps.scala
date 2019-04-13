@@ -2,6 +2,10 @@ package org.rebeam.tree
 
 import cats.Monad
 
+/**
+  * Provides ops to get the data at an Id
+  * @tparam F The Monad used for ops
+  */
 abstract class ViewOps[F[_]: Monad] {
 
   /**
@@ -20,7 +24,7 @@ abstract class ViewOps[F[_]: Monad] {
 
   /**
     * Get data at an [[Id]].
-    * This wil return F[None] if the data is not
+    * This will return F[None] if the data is not
     * available. The data will be retrieved
     * if possible, and the view will be
     * re-displayed. If the id is not

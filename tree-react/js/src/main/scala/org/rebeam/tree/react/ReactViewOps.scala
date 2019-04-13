@@ -4,6 +4,10 @@ import cats.Monad
 import cats.implicits._
 import org.rebeam.tree.{DeltaCursor, Id, ViewOps}
 
+/**
+  * ViewOps (allowing getting the value at an Id) providing an additional op to make a cursor at a given Id
+  * @tparam F The Monad used for ops
+  */
 abstract class ReactViewOps[F[_]: Monad] extends ViewOps[F] {
 
   /**

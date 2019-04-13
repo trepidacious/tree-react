@@ -5,17 +5,16 @@ import cats.data.StateT
 import cats.implicits._
 import japgolly.scalajs.react._
 import japgolly.scalajs.react.component.Scala.Component
-import japgolly.scalajs.react.extra.Reusability
 import japgolly.scalajs.react.vdom.html_<^._
 import org.rebeam.tree._
 import org.rebeam.tree.react.ReactData.ReactDataContexts
 
-trait ViewFunction[A] {
-  def apply[F[_]: Monad](a: A)(implicit v: ReactViewOps[F], tx: ReactTransactor): F[VdomElement]
-}
-
 object View {
 
+  /**
+    * Ops provides an implementation of ReactViewOps for ViewFunctions to use to
+    * render. This is based on a DataSource
+    */
   object Ops {
 
     case class StateData(
@@ -88,6 +87,25 @@ object View {
     )
 }
 
+/**
+  * A ViewFunction can render an A to a VdomElement within some monad F, using
+  * ReactViewOps (to get values from Ids and create Cursors) and a ReactTransactor (to
+  * convert Transactions to Callbacks for React)
+  * @tparam A The type of data viewed
+  */
+trait ViewFunction[A] {
+  def apply[F[_]: Monad](a: A)(implicit v: ReactViewOps[F], tx: ReactTransactor): F[VdomElement]
+}
+
+/**
+  * A ViewFunction with a build method producing a React Component (based on apply).
+  * Always views an immutable data type A, which has ImmutableReusability, and which
+  * is used to produce a suitable Reusability for the Component.
+  *
+  * Extend this trait and implement apply to create a View, then call
+  * build on this View to produce a Component.
+  * @tparam A The type of data viewed
+  */
 trait View[A] extends ViewFunction[A] {
   def build(
              name: String,
@@ -102,6 +120,15 @@ trait View[A] extends ViewFunction[A] {
   }
 }
 
+/**
+  * A ViewFunction with a build method producing a React Component (based on apply).
+  * Always views a Cursor containing an immutable data type A, which has ImmutableReusability,
+  * and which is used to produce a suitable Reusability for the Component.
+  *
+  * Extend this trait and implement apply to create a View, then call
+  * build on this View to produce a Component.
+  * @tparam A The type of data in the viewed Cursor
+  */
 trait ViewC[A] extends ViewFunction[Cursor[A]] {
   def build(
              name: String,
@@ -113,13 +140,6 @@ trait ViewC[A] extends ViewFunction[Cursor[A]] {
       override def apply(a: Cursor[A], data: ReactData, tx: ReactTransactor): DataRenderer.Result =
       View.Ops.render(ViewC.this, onError, a, data)(tx)
     }
-
-    //Compare the model value using ir.reusability, and the DeltaCursor by equality (since DeltaCursors may be
-    //be recreated without changing contents, during a render)
-    val reusability = Reusability[Cursor[A]](
-      (dA1, dA2) => ir.reusability.test(dA1.a, dA2.a) && (dA1.deltaCursor == dA2.deltaCursor)
-    )
-
-    DataComponent[Cursor[A]](renderer, name, contexts)(reusability)
+    DataComponent[Cursor[A]](renderer, name, contexts)(ir.cursorReusability)
   }
 }
