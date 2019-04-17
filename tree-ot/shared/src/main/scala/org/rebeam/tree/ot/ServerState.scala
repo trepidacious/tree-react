@@ -55,15 +55,15 @@ case class ServerState[A](list: List[A], history: List[Operation[A]]) {
   def updated(clientOpRev: OpRev[A]): (ServerState[A], OpRev[A]) = {
     val rev = clientOpRev.rev
     val clientOp = clientOpRev.op
-    require(rev >= 0, "Revision index must be >= 0")
+    require(rev.i >= 0, "Revision index must be >= 0")
     // Each operation in history operates on the document revision matching its index
     // in history, and produces that document revision + 1. Hence `<=`
-    require(rev <= history.size, s"Revision index ($rev) must be <= most recent revision (${history.size})")
+    require(rev.i <= history.size, s"Revision index ($rev) must be <= most recent revision (${history.size})")
 
     // The client op is at given rev, so operates on a document with this many
     // ops from history applied already. We drop these from history, leaving
     // only ops that the server applied AFTER this document state.
-    val postOps = history.drop(rev)
+    val postOps = history.drop(rev.i)
 
     // We want to know what op will change the current list to reach the same
     // result that would be achieved by taking the client revision of the list,
@@ -125,7 +125,7 @@ case class ServerState[A](list: List[A], history: List[Operation[A]]) {
 
       // We have added postClientOp at the end of history with size n, so
       // it is the nth element (zero based)
-      OpRev(postClientOp, history.size)
+      OpRev(postClientOp, Rev(history.size))
 
     )
 

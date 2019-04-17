@@ -22,8 +22,10 @@ class RendererSketchSpec extends WordSpec with Matchers with Checkers {
       1 to 2 foreach {
         _ =>
           val (state, result) = runView(renderBob, initialStateData(dataSource))
-          println(result)
+//          println(result)
       }
+
+      //TODO continue
 
     }
   }

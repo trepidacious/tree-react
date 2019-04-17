@@ -17,4 +17,4 @@ package org.rebeam.tree.ot
   *             rev + 1.
   * @tparam A   The type of element in the list operated on
   */
-case class OpRev[A](op: Operation[A], rev: Int)
+case class OpRev[A](op: Operation[A], rev: Rev)

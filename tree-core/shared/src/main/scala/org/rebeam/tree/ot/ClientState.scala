@@ -1,3 +1,6 @@
+import org.rebeam.tree.TransactionId
+import org.rebeam.tree.ot._
+
 //package org.rebeam.tree.ot
 //
 ///**
@@ -120,4 +123,70 @@
 //
 //
 
+//Extension to cursors - keep a client rev id in the ClientState, completely separate to server rev id, and increment it each time
+//client state is updated in any way, as well as keeping the data needed to transform a cursor on the previous client rev id
+//to the current one. Cursors will initialise by just picking a cursor position against the first client rev they see (
+//normally 0) and storing the cursor position and first client rev seen. Then each time they see a new client state they ask to be updated from the
+//stored client rev - if this was the previous client rev it will succeed, if it fails (due to missing a client state in the sequence) they will just reset the
+//cursor. This then works properly if each cursor sees each client rev (which should be the case) and resets
+//cursor (with a warning?) if something unexpected happens and a client state is missed.
+//In React the client rev and cursor position will be stored in component state, and the check will detect if something
+//unexpected happens, and a component is not updated with each client state in sequence, as it should be.
+//In future, we could provide for updates from older client revs by storing more history, if this is needed, e.g.
+//if React starts skipping updates for some reason.
+//The data stored in ClientState to allow transforming a cursor is just the final operation that got us from the previous
+//client state to this one.
 
+case class ServerState[A](a: List[A], rev: Rev)
+
+case class ClientState[A](serverState: ServerState[A], localA: List[A], pendingOp: Option[Operation[A]], buffer: Option[Operation[A]]) {
+
+  private def bufferWithOp(op: Operation[A]): Operation[A] = buffer.map(_.compose(op)).getOrElse(op)
+
+  /**
+    * Update the client state with a new client operation
+    * @param op The operation
+    * @return   The new state, and an OpRev to send to the server, if needed
+    */
+  def withClientOp(op: Operation[A]): (ClientState[A], Option[OpRev[A]]) = pendingOp match {
+
+    // No pending operation - we can add the new op to the buffer and send the buffer immediately, against
+    // the current server revision
+    case None =>
+      val opRev = OpRev(bufferWithOp(op), serverState.rev)
+      val newState = copy(
+        pendingOp = Some(opRev.op),
+        buffer = None,
+        localA = op(localA)
+      )
+      (newState, Some(opRev))
+
+    // We have a pending op already - we need to add the new op to the buffer and then keep waiting for a server update
+    case Some(_) =>
+      val newState = copy(
+        buffer = Some(bufferWithOp(op)),
+        localA = op(localA)
+      )
+      (newState, None)
+
+  }
+
+  def withServerUpdate(tid: TransactionId, opRev: OpRev[A]): (ClientState[A], Option[OpRev[A]]) = pendingOp match {
+    // If our pending operation is being applied
+    case Some(PendingOp(_, pendingTid)) if pendingTid == tid =>
+      // We need to rebase our buffer, by moving it before the pending buffer, then past the operation the server
+      // just sent (our transformed
+      val newState = copy(
+        serverState = ServerState(opRev.op.apply(serverState.a), opRev.rev),
+        pendingOp = None,
+        buffer = None
+      )
+
+
+    // Someone else's op is being applied
+    case _ =>
+
+
+  }
+
+}

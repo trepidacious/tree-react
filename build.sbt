@@ -292,7 +292,7 @@ lazy val treeCore = crossProject(JSPlatform, JVMPlatform).in(file("tree-core")).
 ).jsSettings(
   //Produce a module, so we can use @JSImport.
   scalaJSLinkerConfig ~= { _.withModuleKind(ModuleKind.CommonJSModule) }
-)
+).dependsOn(treeOT)
 
 lazy val treeCoreJVM = treeCore.jvm
 lazy val treeCoreJS = treeCore.js

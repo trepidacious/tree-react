@@ -104,6 +104,7 @@ object DataComponent {
         if (lastProps == null || lastUsedIds == null) {
           logger.trace("DataRendererMemo.shouldComponentUpdate - UPDATE: first render")
           true
+          
 
         // If the current props are not the ones we saw last, then cache is invalid, so just allow another render.
         // We do not expect this to happen, based on lifecycle in the DataRendererMemo scaladoc, but if something

@@ -11,7 +11,7 @@ import scala.util.matching.Regex
   * General-purpose identifier, unique within a given scope (at least a single server)
   *
   * Guids are always generated in a Transaction, and take their indices from that
-  * Transaction, plus an incrementing transactionGuid within that transaction.
+  * Transaction, plus an incrementing transactionClock within that transaction.
   *
   * This is a generic identifier without an association with an item of data, or type of data, and as
   * such is just a unique token. Use IdOf to associate to a particular data type.
@@ -53,16 +53,6 @@ object Guid {
   case class SessionTransactionId(id: Long) extends AnyVal {
     def next: SessionTransactionId = SessionTransactionId(id + 1)
   }
-
-  /**
-    * Identifier for a transaction, unique for a given scope (at least a single server).
-    * Consists of a SessionId and SessionTransactionId within that Session.
-    *
-    * @param sessionId Session id
-    * @param sessionTransactionId Id of transaction within the Session
-    */
-  @JsonCodec
-  case class TransactionId(sessionId: SessionId, sessionTransactionId: SessionTransactionId)
 
   /**
     * Identifier for a guid within a Transaction, unique for that Transaction but not globally.

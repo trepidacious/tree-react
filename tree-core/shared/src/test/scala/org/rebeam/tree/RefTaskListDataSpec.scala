@@ -30,12 +30,14 @@ class RefTaskListDataSpec extends WordSpec with Matchers with Checkers {
     "create expected data" in {
       val (s1, taskList) = taskListResult
 
-      println(s1)
-      println(taskList)
+//      println(s1)
+//      println(taskList)
 
       val (s2, printed) = runS(printTaskList[MapState](taskList), s1)
 
-      println(printed)
+//      println(printed)
+
+      //TODO complete
 
 //      assert(taskList == TaskList(taskListId, "Task List", List(Task("task 1", done = false), Task("task 2", done = true))))
 //      assert(s1.getDataRevision(taskListId).contains(DataRevision(taskList, guid(0, 0, 1), taskListIdCodec)))
