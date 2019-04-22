@@ -55,7 +55,9 @@ case class ServerState[A](list: List[A], history: List[Operation[A]]) {
   def updated(clientOpRev: OpRev[A]): (ServerState[A], OpRev[A]) = {
     val rev = clientOpRev.rev
     val clientOp = clientOpRev.op
+
     require(rev.i >= 0, "Revision index must be >= 0")
+
     // Each operation in history operates on the document revision matching its index
     // in history, and produces that document revision + 1. Hence `<=`
     require(rev.i <= history.size, s"Revision index ($rev) must be <= most recent revision (${history.size})")
@@ -83,9 +85,9 @@ case class ServerState[A](list: List[A], history: List[Operation[A]]) {
     // an op based on a server (post) op.
     //
     //    *
-    //  /c \p0.after(c)
-    // l    \p1.after(p1.after(c))
-    //  \p0  \p2.after(p2.after(p1.after(c))
+    //  /c \p0.serverAfter(c)
+    // l    \p1.serverAfter(c.clientAfter(p0))
+    //  \p0  \p2.serverAfter(c.clientAfter(p0).serverAfter(p1))
     //   \p1  n
     //    \p2/c.after(p0).after(p1).after(p2)
     //      *
@@ -103,24 +105,62 @@ case class ServerState[A](list: List[A], history: List[Operation[A]]) {
     //
     // After just p0 has been applied, this would just be c.after(p0):
     //
-    //    *
+    //    x
     //  /c \p0.after(c)
     // l    l0
     //  \p0/c.after(p0)
-    //    *
+    //    y
     //
-    // This gets us to l0, we have moved one step closer to n.
+    // This is just the basic definition of "after", actually we are using both
+    // outputs of Operation.transform here, and the relationship that if we have
+    // (ap, bp) = transform(a, b) then bp(a(s)) = ap(b(s)) for any state s.
     //
-    // For the next step we need another diamond, but this time l is replaced by
-    // l0, c is replaced by c.after(p0), and p0 is replaced by p1. This yields
-    // c.after(p0).after(p1) in the lower right transformation. We can continue
-    // until we reach n, with c.after(p0).after(p1).after(p2) as stated.
+    // This first step gets us to l0, i.e. the solution if we have only a single
+    // operation p0 on the server that we need to move the client op "past", and
+    // we have moved one step closer to n.
     //
-    val postClientOp = postOps.foldLeft(clientOp){case (op, postOp) => op.after(postOp)}
+    // For the next step we need another diamond, but using the bottom right
+    // "side" of the first diamond as the top left side of our new diamond.
+    // This means that:
+    // Where we had l, we will instead have y (the bottom of the first diamond).
+    // Where we had c, we will have c.after(p0).
+    // Where we had p0, we will have p1.
+    //
+    //    l0
+    //  /cap0 \p1.after(c.after(p0))
+    // y       l1
+    //  \p1   /(c.after(p0)).after(p1)
+    //    y
+    //
+    // Note we have stretched out the diagram a little to fit the text, and shortened
+    // c.after(p0) to "cap0" in the top left.
+    // Following the transformation rule, we can fill out the top right, since we need
+    // to transform p1 to be after cap0. We can fill out the bottom right since we need
+    // cap0 to be after p1 (we've added unnecessary brackets to make this more obvious -
+    // this is equivalent to just c.after(p0).after(p1).
+    //
+    // We can clearly continue this to ln, and the pattern is that the bottom right side,
+    // i.e. the operation needed to apply the client operation c after the sequence of
+    // server operations p0, p1 ... pn, is c.after(p0).after(p1)...after(pn), and the
+    // top right operation is a little more confusing - it is:
+    // pn.after(c.after(p0).after(p1)...after(pn-1))
+    // So it's the last server operation, after the result of transforming the client operation
+    // to be after all the other server operations except the last (i.e. p0 to pn-1).
+    //
+    // Note that this both tells us how to transform a client operation to be after multiple
+    // other operations (on the bottom leg, as used on the server) and also tells us how
+    // to transform a sequence of operations to be after a single operation - essentially
+    // inserting an operation into a previously known sequence of operations. This is what
+    // is required on the client side, to adapt buffered operations to a newly inserted server
+    // operation (from a different client).
+    // In general this allows us to make arbitrary insertions/appends to an existing sequence of \
+    // operations.
+    //
+    val postClientOp = postOps.foldLeft(clientOp){case (op, postOp) => op.clientAfter(postOp)}
 
     // New state and the new op that produced it
     (
-      // Apply the op to our list, and add it to our history
+      // Apply the op to our list data, and add it to our history
       ServerState(postClientOp(list), history :+ postClientOp),
 
       // We have added postClientOp at the end of history with size n, so

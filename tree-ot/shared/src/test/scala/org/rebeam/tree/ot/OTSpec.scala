@@ -237,6 +237,27 @@ class OTSpec extends WordSpec with Matchers with Checkers {
       assert(bp(output1a.toList) == output1ab.toList)
     }
 
+    "transform and apply insertion at the same point to give same results, with left operation given priority" in {
+      val a = Operation.empty[Char].retain(3).insert(List('a')).retain(3)
+      val b = Operation.empty[Char].retain(3).insert(List('b')).retain(3)
+
+      val (ap, bp) = Operation.transform(a, b)
+
+      val l = "123456".toList
+
+      assert(ap(b(l)) == bp(a(l)))
+      assert(ap(b(l)) == bp(a(l)))
+
+      //Note that a gets priority over b, since it is on left of transform
+      assert(ap(b(l)) == "123ab456".toList)
+
+      //Note that b now gets priority over a, since it is on left of transform
+      val (bp2, ap2) = Operation.transform(b, a)
+      assert(ap2(b(l)) == bp2(a(l)))
+      assert(ap2(b(l)) == bp2(a(l)))
+      assert(ap2(b(l)) == "123ba456".toList)
+    }
+
     "coalesce retains" in {
       assert(
         Operation.empty[Int].retain(1).retain(100).atoms

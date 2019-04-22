@@ -230,16 +230,70 @@ case class Operation[A](atoms: List[Atom[A]]) {
   }
 
   /**
-    * This is just the first element in the pair returned by Operation.transform(this, b).
-    * So if we call this `a`, we have:
+    * This is just the first element in the pair returned by `Operation.transform(this, clientOp)`.
     *
-    * a.after(b)(b(s)) == b.after(a)(a(s)) for any input list s. This is useful for transforming
-    * on the server.
+    * This is intended for use to transform server operations - this means that operations performed
+    * on the server are always given priority, for example when breaking ties arising from the two
+    * operations inserting at the same location (the server insertion will be placed just before the
+    * client insertion in the resulting list).
     *
-    * @param b The operation we wish to apply before this one.
-    * @return  This operation transformed so it can be applied after b.
+    * So if we call this operation `serverOp`, we have:
+    *
+    * serverOp.serverAfter(clientOp)(clientOp(s)) == clientOp.clientAfter(serverOp)(serverOp(s))
+    * for any input list `s`.
+    *
+    * @param clientOp   The operation we wish to apply before this one, taken to be a client operation.
+    * @return           This operation transformed so it can be applied after `clientOp`.
     */
-  def after(b: Operation[A]): Operation[A] = Operation.transform(this, b)._1
+  def serverAfter(clientOp: Operation[A]): Operation[A] = Operation.transform(this, clientOp)._1
+
+  /**
+    * As for serverAfter, but accepting an optional operation, treating None as no operation.
+    * @param clientOp   The operation we wish to apply before this one, taken to be a client operation, or none
+    *                   to leave this operation unaltered.
+    * @return           This operation transformed so it can be applied after `clientOp`.
+    */
+  def serverAfterOptional(clientOp: Option[Operation[A]]): Operation[A] = clientOp match {
+    case None => this
+    case Some(c) => serverAfter(c)
+  }
+
+  /**
+    * This is just the second element in the pair returned by `Operation.transform(serverOp, this)`.
+    * So if we call this operation `clientOp`, we have:
+    *
+    * This is intended for use to transform client operations - this means that operations performed
+    * on the server are always given priority, for example when breaking ties arising from the two
+    * operations inserting at the same location (the server insertion will be placed just before the
+    * client insertion in the resulting list).
+    *
+    * clientOp.clientAfter(serverOp)(serverOp(s)) == serverOp.serverAfter(clientOp)(clientOp(s))
+    * for any input list s.
+    *
+    * @param serverOp   The operation we wish to apply before this one.
+    * @return           This operation transformed so it can be applied after b.
+    */
+  def clientAfter(serverOp: Operation[A]): Operation[A] = Operation.transform(serverOp, this)._2
+
+  /**
+    * This is just the second element in the pair returned by `Operation.transform(serverOp, this)`.
+    * So if we call this operation `clientOp`, we have:
+    *
+    * This is intended for use to transform client operations - this means that operations performed
+    * on the server are always given priority, for example when breaking ties arising from the two
+    * operations inserting at the same location (the server insertion will be placed just before the
+    * client insertion in the resulting list).
+    *
+    * clientOp.clientAfter(serverOp)(serverOp(s)) == serverOp.serverAfter(clientOp)(clientOp(s))
+    * for any input list s.
+    *
+    * @param serverOp   The operation we wish to apply before this one.
+    * @return           This operation transformed so it can be applied after b.
+    */
+  def clientAfterOptional(serverOp: Option[Operation[A]]): Operation[A] = serverOp match {
+    case None => this
+    case Some(s) => clientAfter(s)
+  }
 
   def transformCursor(cursorIndex: Int, isEditor: Boolean): Int =
     transformCursorRec(cursorIndex, isEditor, atoms, opIndex = 0)
