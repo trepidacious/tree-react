@@ -308,7 +308,10 @@ lazy val treeOT = crossProject(JSPlatform, JVMPlatform).in(file("tree-ot")).
   name := "tree-ot",
 
   testDeps,
-
+   
+  libraryDependencies ++= Seq(
+    "org.typelevel"               %%% "cats-free"         % catsVersion,
+  ),
 ).jvmSettings(
 
 ).jsSettings(

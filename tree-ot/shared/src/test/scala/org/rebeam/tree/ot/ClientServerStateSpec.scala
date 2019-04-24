@@ -1,8 +1,58 @@
 package org.rebeam.tree.ot
 
+import cats.data.State
 import org.rebeam.tree.ot.Atom._
 import org.scalatest._
 import org.scalatest.prop.Checkers
+
+import scala.collection.immutable.Queue
+
+object ClientServerStateSpec {
+
+  sealed trait ServerMessage
+  case class ServerRemoteOp(op: Operation[Char]) extends ServerMessage
+  case object ServerConfirmation extends ServerMessage
+
+  case class ClientComms(fromServer: Queue[ServerMessage], toServer: Queue[OpRev[Char]]) {
+    def queueFromServer(msg: ServerMessage): ClientComms = copy(fromServer = fromServer.enqueue(msg))
+    def queueToServer(op: OpRev[Char]): ClientComms = copy(toServer = toServer.enqueue(op))
+
+    def dequeueFromServer: Option[(ServerMessage, ClientComms)] =
+      fromServer.dequeueOption.map{ case (msg, queue) => (msg, copy(fromServer = queue)) }
+
+    def dequeueToServer: Option[(OpRev[Char], ClientComms)] =
+      toServer.dequeueOption.map{ case (op, queue) => (op, copy(toServer = queue)) }
+  }
+
+  case class ClientAndComms(client: ClientState[Char], comms: ClientComms)
+
+  case class Network(server: ServerState[Char], clients: List[ClientAndComms])
+
+  type NetworkState[A] = State[Network, A]
+
+  def clientEdit(i: Int, op: Operation[Char]): NetworkState[Unit] = State.modify( s => {
+    val clientAndComms = s.clients(i)
+    val client = clientAndComms.client
+    val comms = clientAndComms.comms
+    val (newClient, clientOp) = client.withClientOp(op)
+    val newClientAndComms = clientAndComms.copy(
+      client = newClient,
+      comms = clientOp.fold(comms)(comms.queueToServer)
+    )
+    s.copy(clients = s.clients.updated(i, newClientAndComms))
+  })
+
+  def clientSend(i: Int): NetworkState[Boolean] = State.apply( s => {
+    val clientAndComms = s.clients(i)
+    val client = clientAndComms.client
+    val comms = clientAndComms.comms
+
+    
+
+    (s, false)
+  })
+
+}
 
 /**
   * Test ClientState and ServerState together
