@@ -1,5 +1,7 @@
 package org.rebeam.tree.ot
 
+import org.rebeam.tree.ot.ServerMessage.{ServerConfirmation, ServerRemoteOp}
+
 //Extension to cursors - keep a client rev id in the org.rebeam.tree.ot.ClientState, completely separate to server rev id, and increment it each time
 //client state is updated in any way, as well as keeping the data needed to transform a cursor on the previous client rev id
 //to the current one. Cursors will initialise by just picking a cursor position against the first client rev they see (
@@ -87,12 +89,17 @@ case class ClientState[A](server: ListRev[A], local: List[A], pendingOp: Option[
 
   }
 
+  def withServerMessage(msg: ServerMessage[A]): (ClientState[A], Option[OpRev[A]]) = msg match {
+    case ServerConfirmation() => withServerConfirmation
+    case ServerRemoteOp(op) => (withServerRemoteOp(op), None)
+  }
+
   /**
     * Produce a new client state and optionally an OpRev to send to the server, based on the
     * server confirming the application of our pending operation
     * @return New client state and optional OpRev to send to the server
     */
-  def withServerPendingConfirmation: (ClientState[A], Option[OpRev[A]]) = pendingOp match {
+  def withServerConfirmation: (ClientState[A], Option[OpRev[A]]) = pendingOp match {
     case Some(op) =>
 
       // Server has confirmed our pending op. We have been keeping it up to date against server

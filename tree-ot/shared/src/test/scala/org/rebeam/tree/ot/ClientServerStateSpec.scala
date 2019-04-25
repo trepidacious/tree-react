@@ -1,63 +1,131 @@
 package org.rebeam.tree.ot
 
-import cats.data.State
 import org.rebeam.tree.ot.Atom._
 import org.scalatest._
 import org.scalatest.prop.Checkers
+import NetworkModel._
 
 import scala.collection.immutable.Queue
-
-object ClientServerStateSpec {
-
-  sealed trait ServerMessage
-  case class ServerRemoteOp(op: Operation[Char]) extends ServerMessage
-  case object ServerConfirmation extends ServerMessage
-
-  case class ClientComms(fromServer: Queue[ServerMessage], toServer: Queue[OpRev[Char]]) {
-    def queueFromServer(msg: ServerMessage): ClientComms = copy(fromServer = fromServer.enqueue(msg))
-    def queueToServer(op: OpRev[Char]): ClientComms = copy(toServer = toServer.enqueue(op))
-
-    def dequeueFromServer: Option[(ServerMessage, ClientComms)] =
-      fromServer.dequeueOption.map{ case (msg, queue) => (msg, copy(fromServer = queue)) }
-
-    def dequeueToServer: Option[(OpRev[Char], ClientComms)] =
-      toServer.dequeueOption.map{ case (op, queue) => (op, copy(toServer = queue)) }
-  }
-
-  case class ClientAndComms(client: ClientState[Char], comms: ClientComms)
-
-  case class Network(server: ServerState[Char], clients: List[ClientAndComms])
-
-  type NetworkState[A] = State[Network, A]
-
-  def clientEdit(i: Int, op: Operation[Char]): NetworkState[Unit] = State.modify( s => {
-    val clientAndComms = s.clients(i)
-    val client = clientAndComms.client
-    val comms = clientAndComms.comms
-    val (newClient, clientOp) = client.withClientOp(op)
-    val newClientAndComms = clientAndComms.copy(
-      client = newClient,
-      comms = clientOp.fold(comms)(comms.queueToServer)
-    )
-    s.copy(clients = s.clients.updated(i, newClientAndComms))
-  })
-
-  def clientSend(i: Int): NetworkState[Boolean] = State.apply( s => {
-    val clientAndComms = s.clients(i)
-    val client = clientAndComms.client
-    val comms = clientAndComms.comms
-
-    
-
-    (s, false)
-  })
-
-}
 
 /**
   * Test ClientState and ServerState together
   */
 class ClientServerStateSpec extends WordSpec with Matchers with Checkers {
+
+  "Client and Server network model" should {
+
+    "have no messages left after editing then purging" in {
+      //Initial data state
+      val l0 = "Hello".toList
+
+      //Initial network state
+      val n0 = Network(l0, 2)
+
+      //Make some edits, leaving some network traffic in both directions on each client
+      val fill: NetworkState[Unit] = for {
+
+        //Client 0 edits (from initial revision to "Hello World!")
+        _ <- ClientOps.editAndSend(0, Retain(5), Insert(" World!".toList))
+
+        //Client 1 edits (from initial revision to "Helloo")
+        _ <- ClientOps.editAndSend(1, Retain(5), Insert("o".toList))
+
+        //Server responds to first client
+        _ <- ServerOps.receiveAndReply(0)
+
+        //Client 0 edits again (Add another !")
+        _ <- ClientOps.editAndSend(0, Retain(12), Insert("!".toList))
+
+        //Client 1 edits (Add another "O")
+        _ <- ClientOps.editAndSend(1, Retain(6), Insert("O".toList))
+
+      } yield ()
+
+      // Run the test and get our "full" network state
+      val n1 = fill.run(n0).value._1
+
+      //Check we have traffic
+      //Each client has one message - reply from server to client 0's message
+      assert (n1.clients(0).fromServer.size == 1)
+      assert (n1.clients(1).fromServer.size == 1)
+
+      //Client 0 has had a message processed
+      assert (n1.clients(0).toServer.isEmpty)
+      //Client 1's message is still waiting
+      assert (n1.clients(1).toServer.size == 1)
+
+      //Purge the traffic
+      val n2 = NetworkOps.purgeAllMessages.run(n1).value._1
+
+      //Check traffic is empty and data is correct
+      val l2 = "Hello World!!oO".toList
+      val revisionCount2 = 4
+
+      // Check server has correct final list and revision count
+      assert(n2.server.list == l2)
+      assert(n2.server.history.size == revisionCount2)
+
+      // Check network clients have expected list on server and locally, with no waiting or buffered ops, and
+      // no pending network activity
+      val c2 = NetworkClient(ClientState(ListRev(l2, Rev(revisionCount2)), l2, None, None), Queue.empty, Queue.empty)
+      assert(n2.clients.forall(_ == c2))
+
+    }
+
+    "run a simple set of edits" in {
+      //Initial data state
+      val l0 = "Hello".toList
+
+      //Initial network state
+      val n0 = Network(l0, 2)
+
+      //Run our tests
+      val test: NetworkState[Unit] = for {
+
+        //Client 0 edits (from initial revision to "Hello World!")
+        _ <- ClientOps.editAndSend(0, Retain(5), Insert(" World!".toList))
+
+        //Client 1 edits (from initial revision to "Helloo")
+        _ <- ClientOps.editAndSend(1, Retain(5), Insert("o".toList))
+
+        //Server processes Client 1's edit first (and notifies both clients)
+        _ <- ServerOps.receiveAndReply(1)
+
+        //Client 1 receives confirmation of its own edit
+        _ <- ClientOps.receiveAndReply(1)
+
+        //Client 0 receives remote operation from Client 1, updates its waiting op
+        _ <- ClientOps.receiveAndReply(0)
+
+        //Server processes Client 1's edit (and notifies both clients)
+        _ <- ServerOps.receiveAndReply(0)
+
+        //Client 0 receives confirmation
+        _ <- ClientOps.receiveAndReply(0)
+
+        //Client 1 receives confirmation
+        _ <- ClientOps.receiveAndReply(1)
+
+      } yield ()
+
+      // Run the test and get our final network state
+      val n1 = test.run(n0).value._1
+
+      // Check contents of network
+      val l1 = "Helloo World!".toList
+      val revisionCount = 2
+
+      // Check server has correct final list and revision count
+      assert(n1.server.list == l1)
+      assert(n1.server.history.size == revisionCount)
+
+      // Check network clients have expected list on server and locally, with no waiting or buffered ops, and
+      // no pending network activity
+      val c1 = NetworkClient(ClientState(ListRev(l1, Rev(revisionCount)), l1, None, None), Queue.empty, Queue.empty)
+      assert(n1.clients.forall(_ == c1))
+
+    }
+  }
 
   "Client and Server state" should {
 
@@ -117,7 +185,7 @@ class ClientServerStateSpec extends WordSpec with Matchers with Checkers {
       assert(server1.history == List(revOpB0.get.op))
 
       //Client B receives confirmation - it has no buffered op so no message for server
-      val (clientB2, revOpB2) = clientB1.withServerPendingConfirmation
+      val (clientB2, revOpB2) = clientB1.withServerConfirmation
       assert(revOpB2.isEmpty)
 
       //Client B has correct data after confirmation
@@ -146,7 +214,7 @@ class ClientServerStateSpec extends WordSpec with Matchers with Checkers {
       assert(server2.history == List(revOpB0.get.op, p1.op))
 
       //Client A receives confirmation, no op to send
-      val (clientA3, revOpA3) = clientA2.withServerPendingConfirmation
+      val (clientA3, revOpA3) = clientA2.withServerConfirmation
       assert(revOpA3.isEmpty)
 
       //Client A has correct data after confirmation, and no pending or buffer ops

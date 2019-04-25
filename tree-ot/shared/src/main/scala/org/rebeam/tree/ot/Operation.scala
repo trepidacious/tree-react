@@ -359,6 +359,8 @@ object Operation {
     case (op, atom) => op.andThen(atom)
   }
 
+//  def fromAtoms[A](atoms: Atom[A]*): Operation[A] = fromAtoms(atoms.toList)
+
   private implicit class ListOps[A](list: List[A]) {
     def next: List[A] = list.drop(1)
     def withHead(a: A): List[A] = list.updated(0, a)
