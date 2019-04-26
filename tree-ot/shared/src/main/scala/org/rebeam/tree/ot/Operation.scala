@@ -241,16 +241,32 @@ case class Operation[A](atoms: List[Atom[A]], priority: Long = 0) {
     Operation.composeRec(this.atoms, b.atoms, Operation.empty(priority))
   }
 
-  def after(other: Operation[A]): Operation[A] = if (priority > other.priority) {
-    Operation.transform(this, other)._1
-  } else if (priority < other.priority) {
-    Operation.transform(other, this)._2
+  /**
+    * Compose this operation (a) with another (b), to produce a new operation c that will achieve the same result as
+    * applying a then b.
+    *
+    * This means that:
+    *
+    * b(a(s)) == (a.compose(b))(s)
+    *
+    * for any input list s
+    *
+    * The result will inherit the priority of this operation
+    *
+    * This can only be applied to an operation b with a different priority to this operation, to allow breaking ties.
+    *
+    * @param b  Another operation
+    * @return   An operation equivalent to this operation, then operation b
+    */
+  def after(b: Operation[A]): Operation[A] = if (priority > b.priority) {
+    Operation.transform(this, b)._1
+  } else if (priority < b.priority) {
+    Operation.transform(b, this)._2
   } else {
-    throw new IllegalArgumentException("Operation.after requires operations to have different priorities")
+    sys.error("Operation.after requires operations to have different priorities")
   }
 
-
-    /**
+  /**
     * This is just the first element in the pair returned by `Operation.transform(this, clientOp)`.
     *
     * This is intended for use to transform server operations - this means that operations performed
