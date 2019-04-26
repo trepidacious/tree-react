@@ -22,9 +22,19 @@ import scala.annotation.tailrec
   * invariants.
   *
   * @param atoms        The atoms to be applied to the list, in order
+  * @param priority     The priority of the operation. When operations are transformed, this is used as
+  *                     a tie-breaker for insertions at the same position. The higher priority is inserted
+  *                     first. We use this approach so that if the priority is an incrementing client identifier,
+  *                     more-recently connected clients will take priority over older ones.
+  *                     If the priorities of both operations are the same, the tie will be broken according to
+  *                     whether the operation is an authoritative server operation in the server's history, in which
+  *                     case it takes priority, or a client operation. Transformations are always between a server
+  *                     and a client operation.
+  *                     Defaults to 0, allowing for use of just server/client priority.
+  *
   * @tparam A           The operation will modify lists of this element type
   */
-case class Operation[A](atoms: List[Atom[A]]) {
+case class Operation[A](atoms: List[Atom[A]], priority: Int = 0) {
 
   import Atom._
 
