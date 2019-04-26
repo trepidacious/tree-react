@@ -27,13 +27,15 @@ class ClientServerStateSpec extends WordSpec with Matchers with Checkers {
         //Client 0 edits (from initial revision to "Hello World!")
         _ <- ClientOps.editAndSend(0, Retain(5), Insert(" World!".toList))
 
-        //Client 1 edits (from initial revision to "Helloo")
+        //Client 1 edits (from initial revision to "Helloo"). This client has the higher index and so priority, and
+        //so will insert before client 0, even though client 0's message will be processed first. This is why we
+        //end up with "HellooO World!!" rather than "Hello World!!oO"
         _ <- ClientOps.editAndSend(1, Retain(5), Insert("o".toList))
 
-        //Server responds to first client
+        //Server responds to first client first
         _ <- ServerOps.receiveAndReply(0)
 
-        //Client 0 edits again (Add another !")
+        //Client 0 edits again
         _ <- ClientOps.editAndSend(0, Retain(12), Insert("!".toList))
 
         //Client 1 edits (Add another "O")
@@ -58,7 +60,7 @@ class ClientServerStateSpec extends WordSpec with Matchers with Checkers {
       val n2 = NetworkOps.purgeAllMessages.run(n1).value._1
 
       //Check traffic is empty and data is correct
-      val l2 = "Hello World!!oO".toList
+      val l2 = "HellooO World!!".toList
       val revisionCount2 = 4
 
       // Check server has correct final list and revision count
@@ -69,7 +71,6 @@ class ClientServerStateSpec extends WordSpec with Matchers with Checkers {
       // no pending network activity
       val c2 = NetworkClient(ClientState(ListRev(l2, Rev(revisionCount2)), l2, None, None), Queue.empty, Queue.empty)
       assert(n2.clients.forall(_ == c2))
-
     }
 
     "run a simple set of edits" in {

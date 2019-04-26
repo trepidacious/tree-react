@@ -15,11 +15,11 @@ class OTSpec extends WordSpec with Matchers with Checkers {
   val input1 = "Hello World!"
 
   // Operation for "client a" - insert "big wide" and delete the "!"
-  val op1a = Operation.empty[Char].retain(6).insert("big wide ".toList).retain(5).delete(1)
+  val op1a: Operation[Char] = Operation.empty[Char]().retain(6).insert("big wide ".toList).retain(5).delete(1)
   val output1a = "Hello big wide World"
 
   // Operation for "client b" - add smiley
-  val op1b = Operation.empty[Char].retain(12).insert(" :)".toList)
+  val op1b: Operation[Char] = Operation.empty[Char]().retain(12).insert(" :)".toList)
   val output1b = "Hello World! :)"
 
   // Expected result of combining op1a then op1b, or op1b then op1a
@@ -77,7 +77,7 @@ class OTSpec extends WordSpec with Matchers with Checkers {
     atomsAndPositions <- containerOfN[List, AtomAndPosition[A]](atomCount, genInsertOrDeleteAndPosition)
 
   // Start from an operation just retaining everything (note we may have an empty input, so retainIfPositive)
-  } yield atomsAndPositions.foldLeft(Operation.empty[A].retainIfPositive(n)){
+  } yield atomsAndPositions.foldLeft(Operation.empty[A]().retainIfPositive(n)){
     case (op, atomAndPos) =>
       // We will compose a new operation with current one (op), we want
       // to perform the operation we have at a valid position in the
@@ -87,7 +87,7 @@ class OTSpec extends WordSpec with Matchers with Checkers {
           // Insert can happen from 0 to length of input, inclusive (at pos = length, we are appending to end)
           val pos = atomAndPos.pos % (op.outputSize + 1)
           // We can have retain of 0 elements in either call - so use retainIfPositive
-          val newOp = Operation.empty[A].retainIfPositive(pos).insert(l).retainIfPositive(op.outputSize - pos)
+          val newOp = Operation.empty[A]().retainIfPositive(pos).insert(l).retainIfPositive(op.outputSize - pos)
           op.compose(newOp)
 
         case Delete(d) if op.outputSize > 0 =>
@@ -97,7 +97,7 @@ class OTSpec extends WordSpec with Matchers with Checkers {
           // Can only delete what is left
           val d2 = Math.min(d, op.outputSize - pos)
           // We can have retain of 0 elements in either call - so use retainIfPositive
-          val newOp = Operation.empty[A].retainIfPositive(pos).delete(d2).retainIfPositive(op.outputSize - pos - d2)
+          val newOp = Operation.empty[A]().retainIfPositive(pos).delete(d2).retainIfPositive(op.outputSize - pos - d2)
           op.compose(newOp)
 
         // We don't generate retains, so just ignore
@@ -238,8 +238,8 @@ class OTSpec extends WordSpec with Matchers with Checkers {
     }
 
     "transform and apply insertion at the same point to give same results, with left operation given priority" in {
-      val a = Operation.empty[Char].retain(3).insert(List('a')).retain(3)
-      val b = Operation.empty[Char].retain(3).insert(List('b')).retain(3)
+      val a = Operation.empty[Char]().retain(3).insert(List('a')).retain(3)
+      val b = Operation.empty[Char]().retain(3).insert(List('b')).retain(3)
 
       val (ap, bp) = Operation.transform(a, b)
 
@@ -260,22 +260,22 @@ class OTSpec extends WordSpec with Matchers with Checkers {
 
     "coalesce retains" in {
       assert(
-        Operation.empty[Int].retain(1).retain(100).atoms
-          == Operation.empty[Int].retain(101).atoms
+        Operation.empty[Int]().retain(1).retain(100).atoms
+          == Operation.empty[Int]().retain(101).atoms
       )
     }
 
     "coalesce deletes" in {
       assert(
-        Operation.empty[Int].delete(1).delete(100).atoms
-          == Operation.empty[Int].delete(101).atoms
+        Operation.empty[Int]().delete(1).delete(100).atoms
+          == Operation.empty[Int]().delete(101).atoms
       )
     }
 
     "coalesce inserts" in {
       assert(
-        Operation.empty[Int].insert(List(1)).insert(List(2,3,4)).atoms
-          == Operation.empty[Int].insert(List(1,2,3,4)).atoms
+        Operation.empty[Int]().insert(List(1)).insert(List(2,3,4)).atoms
+          == Operation.empty[Int]().insert(List(1,2,3,4)).atoms
       )
     }
 
@@ -351,43 +351,43 @@ class OTSpec extends WordSpec with Matchers with Checkers {
     }
 
     "require positive retain count" in {
-      assertThrows[IllegalArgumentException](Operation.empty[Int].retain(-1))
-      assertThrows[IllegalArgumentException](Operation.empty[Int].retain(0))
-      Operation.empty[Int].retain(1)
+      assertThrows[IllegalArgumentException](Operation.empty[Int]().retain(-1))
+      assertThrows[IllegalArgumentException](Operation.empty[Int]().retain(0))
+      Operation.empty[Int]().retain(1)
     }
 
     "require non-negative retainIfPositive count" in {
-      assertThrows[IllegalArgumentException](Operation.empty[Int].retainIfPositive(-1))
-      Operation.empty[Int].retainIfPositive(0)
-      Operation.empty[Int].retainIfPositive(1)
+      assertThrows[IllegalArgumentException](Operation.empty[Int]().retainIfPositive(-1))
+      Operation.empty[Int]().retainIfPositive(0)
+      Operation.empty[Int]().retainIfPositive(1)
     }
 
     "require non empty insert size" in {
-      assertThrows[IllegalArgumentException](Operation.empty[Int].insert(List.empty[Int]))
-      Operation.empty[Int].insert(List(1))
+      assertThrows[IllegalArgumentException](Operation.empty[Int]().insert(List.empty[Int]))
+      Operation.empty[Int]().insert(List(1))
     }
 
     "require positive delete count" in {
-      assertThrows[IllegalArgumentException](Operation.empty[Int].delete(-1))
-      assertThrows[IllegalArgumentException](Operation.empty[Int].delete(0))
-      Operation.empty[Int].delete(1)
+      assertThrows[IllegalArgumentException](Operation.empty[Int]().delete(-1))
+      assertThrows[IllegalArgumentException](Operation.empty[Int]().delete(0))
+      Operation.empty[Int]().delete(1)
     }
 
     "be identity with no atoms" in {
-      assert(Operation.empty[Int].isIdentity)
+      assert(Operation.empty[Int]().isIdentity)
     }
 
     "be identity with only retains" in {
-      assert(Operation.empty[Int].retain(3).isIdentity)
-      assert(Operation.empty[Int].retain(100).retain(1000).isIdentity)
+      assert(Operation.empty[Int]().retain(3).isIdentity)
+      assert(Operation.empty[Int]().retain(100).retain(1000).isIdentity)
     }
 
     "not be identity with non-retain atoms" in {
-      assert(!Operation.empty[Int].insert(List(1)).isIdentity)
-      assert(!Operation.empty[Int].retain(100).insert(List(1, 2)).isIdentity)
-      assert(!Operation.empty[Int].delete(1).isIdentity)
-      assert(!Operation.empty[Int].retain(100).delete(100).isIdentity)
-      assert(!Operation.empty[Int].insert(List(1, 2)).delete(100).isIdentity)
+      assert(!Operation.empty[Int]().insert(List(1)).isIdentity)
+      assert(!Operation.empty[Int]().retain(100).insert(List(1, 2)).isIdentity)
+      assert(!Operation.empty[Int]().delete(1).isIdentity)
+      assert(!Operation.empty[Int]().retain(100).delete(100).isIdentity)
+      assert(!Operation.empty[Int]().insert(List(1, 2)).delete(100).isIdentity)
     }
 
     "transform cursor for deletion" in {
@@ -395,7 +395,7 @@ class OTSpec extends WordSpec with Matchers with Checkers {
       val s = "abcde".toList
 
       // Operation to delete "d"
-      val deleteD = Operation.empty[Char].retain(3).delete(1).retain(1)
+      val deleteD = Operation.empty[Char]().retain(3).delete(1).retain(1)
 
       // Check operation is as expected
       assert(deleteD(s).mkString === "abce")
@@ -422,7 +422,7 @@ class OTSpec extends WordSpec with Matchers with Checkers {
       val s = "abcde".toList
 
       // Operation to delete "bcd"
-      val deleteD = Operation.empty[Char].retain(1).delete(3).retain(1)
+      val deleteD = Operation.empty[Char]().retain(1).delete(3).retain(1)
 
       // Check operation is as expected
       assert(deleteD(s).mkString === "ae")
@@ -449,7 +449,7 @@ class OTSpec extends WordSpec with Matchers with Checkers {
       val s = "abcde".toList
 
       // Operation to insert X after "c"
-      val op = Operation.empty[Char].retain(3).insert("X".toList).retain(2)
+      val op = Operation.empty[Char]().retain(3).insert("X".toList).retain(2)
 
       // Check operation is as expected
       assert(op(s).mkString === "abcXde")
@@ -488,7 +488,7 @@ class OTSpec extends WordSpec with Matchers with Checkers {
       val s = "abcde".toList
 
       // Operation to insert XYZ after "c"
-      val op = Operation.empty[Char].retain(3).insert("XYZ".toList).retain(2)
+      val op = Operation.empty[Char]().retain(3).insert("XYZ".toList).retain(2)
 
       // Check operation is as expected
       assert(op(s).mkString === "abcXYZde")
@@ -527,7 +527,7 @@ class OTSpec extends WordSpec with Matchers with Checkers {
       val s = "Hello World!".toList
 
       // Operation to insert XYZ after "c"
-      val op = Operation.empty[Char].retain(6).insert("big wide ".toList).retain(5).delete(1)
+      val op = Operation.empty[Char]().retain(6).insert("big wide ".toList).retain(5).delete(1)
 
       // Check operation is as expected
       assert(op(s).mkString === "Hello big wide World")

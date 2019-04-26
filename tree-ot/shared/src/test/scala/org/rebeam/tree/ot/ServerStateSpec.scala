@@ -54,7 +54,6 @@ class ServerStateSpec extends WordSpec with Matchers with Checkers {
       val s0 = ServerState.empty[Char]
       val op0 = Operation.fromAtoms(List(Atom.Insert("1234".toList)))
       val (s1, op0s) = s0.updated(OpRev(op0, Rev(0)))
-      println(s"$s0 + $op0 => $s1, using $op0s")
 
       // Check the server result is as expected, to rev 0
       assert(s1.list == "1234".toList)

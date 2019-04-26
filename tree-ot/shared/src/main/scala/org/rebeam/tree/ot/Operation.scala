@@ -34,7 +34,7 @@ import scala.annotation.tailrec
   *
   * @tparam A           The operation will modify lists of this element type
   */
-case class Operation[A](atoms: List[Atom[A]], priority: Int = 0) {
+case class Operation[A](atoms: List[Atom[A]], priority: Long = 0) {
 
   import Atom._
 
@@ -189,7 +189,7 @@ case class Operation[A](atoms: List[Atom[A]], priority: Int = 0) {
     require(input.size == inputSize, s"inverse input size ${input.size} != operation input size $inputSize")
 
     val (remainingInput, inverse) =
-      atoms.foldLeft((input, Operation.empty[A])) {
+      atoms.foldLeft((input, Operation.empty[A](priority))) {
 
         // i is remaining input, o is our output - the inverse, a is the current atom
         case ((i, o), a) => a match {
@@ -227,6 +227,8 @@ case class Operation[A](atoms: List[Atom[A]], priority: Int = 0) {
     *
     * for any input list s
     *
+    * The result will inherit the priority of this operation
+    *
     * @param b  Another operation
     * @return   An operation equivalent to this operation, then operation b
     */
@@ -236,10 +238,19 @@ case class Operation[A](atoms: List[Atom[A]], priority: Int = 0) {
     //a's output size must match b's expected input size
     require(a.outputSize == b.inputSize, s"compose on mismatched output size ${a.outputSize} and input size ${b.inputSize}")
 
-    Operation.composeRec(this.atoms, b.atoms, Operation.empty)
+    Operation.composeRec(this.atoms, b.atoms, Operation.empty(priority))
   }
 
-  /**
+  def after(other: Operation[A]): Operation[A] = if (priority > other.priority) {
+    Operation.transform(this, other)._1
+  } else if (priority < other.priority) {
+    Operation.transform(other, this)._2
+  } else {
+    throw new IllegalArgumentException("Operation.after requires operations to have different priorities")
+  }
+
+
+    /**
     * This is just the first element in the pair returned by `Operation.transform(this, clientOp)`.
     *
     * This is intended for use to transform server operations - this means that operations performed
@@ -255,7 +266,13 @@ case class Operation[A](atoms: List[Atom[A]], priority: Int = 0) {
     * @param clientOp   The operation we wish to apply before this one, taken to be a client operation.
     * @return           This operation transformed so it can be applied after `clientOp`.
     */
-  def serverAfter(clientOp: Operation[A]): Operation[A] = Operation.transform(this, clientOp)._1
+  def serverAfter(clientOp: Operation[A]): Operation[A] = {
+    if (priority != clientOp.priority) {
+      after(clientOp)
+    } else {
+      Operation.transform(this, clientOp)._1
+    }
+  }
 
   /**
     * As for serverAfter, but accepting an optional operation, treating None as no operation.
@@ -283,7 +300,13 @@ case class Operation[A](atoms: List[Atom[A]], priority: Int = 0) {
     * @param serverOp   The operation we wish to apply before this one.
     * @return           This operation transformed so it can be applied after b.
     */
-  def clientAfter(serverOp: Operation[A]): Operation[A] = Operation.transform(serverOp, this)._2
+  def clientAfter(serverOp: Operation[A]): Operation[A] = {
+    if (priority != serverOp.priority) {
+      after(serverOp)
+    } else {
+      Operation.transform(serverOp, this)._2
+    }
+  }
 
   /**
     * This is just the second element in the pair returned by `Operation.transform(serverOp, this)`.
@@ -363,9 +386,9 @@ case class Operation[A](atoms: List[Atom[A]], priority: Int = 0) {
 object Operation {
   import Atom._
 
-  def empty[A]: Operation[A] = Operation(Nil)
+  def empty[A](priority: Long = 0): Operation[A] = Operation(Nil, priority)
 
-  def fromAtoms[A](atoms: List[Atom[A]]): Operation[A] = atoms.foldLeft(Operation.empty[A]){
+  def fromAtoms[A](atoms: List[Atom[A]], priority: Long = 0): Operation[A] = atoms.foldLeft(Operation.empty[A](priority)){
     case (op, atom) => op.andThen(atom)
   }
 
@@ -402,11 +425,11 @@ object Operation {
     */
   def transform[A](a: Operation[A], b: Operation[A]): (Operation[A], Operation[A]) = {
     require(a.inputSize == b.inputSize, "transform requires operations to have same input size")
-    transformRec(a.atoms, b.atoms, Operation.empty, Operation.empty)
+    transformRec(a.atoms, b.atoms, Operation.empty(a.priority), Operation.empty(b.priority))
   }
 
   @tailrec
-  def transformRec[A](as1: List[Atom[A]], as2: List[Atom[A]], p1: Operation[A], p2: Operation[A]): (Operation[A], Operation[A]) =
+  private def transformRec[A](as1: List[Atom[A]], as2: List[Atom[A]], p1: Operation[A], p2: Operation[A]): (Operation[A], Operation[A]) =
 
     // At each recursion, we look at what operation 1 and 2 do, and append operations to p1 that will achieve the same
     // effect as operation 1, on the results of operation 2. In the same way we append to p2 operations that will achieve

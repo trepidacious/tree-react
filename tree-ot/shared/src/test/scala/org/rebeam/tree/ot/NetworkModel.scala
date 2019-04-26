@@ -84,7 +84,7 @@ object NetworkModel {
       * @param atoms The atoms to build an operation to perform on the client
       * @return   NetworkState for the action, returning any resulting OpRev (which has already been queued for the server)
       */
-    def editAndSend(i: Int, atoms: Atom[Char]*): NetworkState[Option[OpRev[Char]]] = editAndSend(i, Operation.fromAtoms(atoms.toList))
+    def editAndSend(i: Int, atoms: Atom[Char]*): NetworkState[Option[OpRev[Char]]] = editAndSend(i, Operation.fromAtoms(atoms.toList, i))
 
     /**
       * Receive a message from the server (remove it from the queue)
