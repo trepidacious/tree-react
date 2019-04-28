@@ -3,9 +3,8 @@ package org.rebeam.tree.ot
 import org.scalatest._
 import org.scalatest.prop.Checkers
 import Atom._
-import org.scalacheck.Gen._
-import org.scalacheck.Gen
 import org.scalacheck.Prop._
+import org.rebeam.tree.ot.OTGen._
 
 import scala.annotation.tailrec
 
@@ -24,109 +23,6 @@ class OTSpec extends WordSpec with Matchers with Checkers {
 
   // Expected result of combining op1a then op1b, or op1b then op1a
   val output1ab = "Hello big wide World :)"
-
-  // Randomly generated operations
-
-  implicit def genRetain[A]: Gen[Retain[A]] =
-    Gen.choose(1, 10).map(Retain[A])
-
-  implicit def genDelete[A]: Gen[Delete[A]] =
-    Gen.choose(1, 10).map(Delete[A])
-
-  implicit def genInsert[A: Gen]: Gen[Insert[A]] =
-    Gen.choose(1, 10).flatMap(
-      n => containerOfN[List, A](n, implicitly[Gen[A]])
-    ).map(l => Insert(l))
-
-  implicit def genAtom[A: Gen]: Gen[Atom[A]] =
-    Gen.oneOf[Atom[A]](genRetain[A], genDelete[A], genInsert[A])
-
-  implicit def genInsertOrDelete[A: Gen]: Gen[Atom[A]] =
-    Gen.oneOf[Atom[A]](genDelete[A], genInsert[A])
-
-  implicit val genInt: Gen[Int] = choose(0, Integer.MAX_VALUE)
-
-  case class AtomsAndInput[A](atoms: List[Atom[A]], input: List[A])
-
-  // Generate a list of atoms, and a list with the correct length to be an
-  // input for an operation on those atoms.
-  // We produce a list of atoms so we can test building an operation with
-  // those atoms against the atoms themselves
-  implicit def genAtomListAndInput[A: Gen]: Gen[AtomsAndInput[A]] = for {
-    n <- Gen.choose(1, 100)
-    atoms <- containerOfN[List, Atom[A]](n, genAtom[A])
-    inputSize = atoms.foldLeft(0){case (sum, atom) => sum + atom.inputLengthDelta}
-    elements <- containerOfN[List, A](inputSize, implicitly[Gen[A]])
-  } yield AtomsAndInput(atoms, elements)
-
-  case class AtomAndPosition[A](atom: Atom[A], pos: Int)
-  implicit def genInsertOrDeleteAndPosition[A: Gen]: Gen[AtomAndPosition[A]] = for {
-    atom <- genInsertOrDelete
-    pos <- genInt
-  } yield AtomAndPosition(atom, pos)
-
-  // Generate an operation on an input length n. This is formed by starting with a retain
-  // of all elements, and then folding in from 1 to n/2 + 1 insert or delete operations
-  // at random positions.
-  private def genOperationN[A: Gen](n: Int): Gen[Operation[A]] = for {
-    // Choose a number of inserts and deletes
-    atomCount <- Gen.choose(1, n/2 + 1)
-
-    // Now generate the atoms and positions - note we will wrap the position to lie in the
-    // input at each stage
-    atomsAndPositions <- containerOfN[List, AtomAndPosition[A]](atomCount, genInsertOrDeleteAndPosition)
-
-  // Start from an operation just retaining everything (note we may have an empty input, so retainIfPositive)
-  } yield atomsAndPositions.foldLeft(Operation.empty[A]().retainIfPositive(n)){
-    case (op, atomAndPos) =>
-      // We will compose a new operation with current one (op), we want
-      // to perform the operation we have at a valid position in the
-      // output of the current operation
-      atomAndPos.atom match {
-        case Insert(l) =>
-          // Insert can happen from 0 to length of input, inclusive (at pos = length, we are appending to end)
-          val pos = atomAndPos.pos % (op.outputSize + 1)
-          // We can have retain of 0 elements in either call - so use retainIfPositive
-          val newOp = Operation.empty[A]().retainIfPositive(pos).insert(l).retainIfPositive(op.outputSize - pos)
-          op.compose(newOp)
-
-        case Delete(d) if op.outputSize > 0 =>
-          // Delete can happen from 0 to length of input - 1, inclusive (i.e. we need at least one input
-          // element left to delete) - we will truncate delete length as necessary
-          val pos = atomAndPos.pos % op.outputSize
-          // Can only delete what is left
-          val d2 = Math.min(d, op.outputSize - pos)
-          // We can have retain of 0 elements in either call - so use retainIfPositive
-          val newOp = Operation.empty[A]().retainIfPositive(pos).delete(d2).retainIfPositive(op.outputSize - pos - d2)
-          op.compose(newOp)
-
-        // We don't generate retains, so just ignore
-        case _ => op
-      }
-  }
-
-  // A pair of operations and an input, where we can apply either operation to the input
-  case class OperationPairAndInput[A](a: Operation[A], b: Operation[A], input: List[A])
-
-  implicit def genOperationPairAndInput[A: Gen]: Gen[OperationPairAndInput[A]] = for {
-    n <- Gen.choose(1, 100)
-    input <- containerOfN[List, A](n, implicitly[Gen[A]])
-    a <- genOperationN(n)
-    b <- genOperationN(n)
-  } yield OperationPairAndInput(a, b, input)
-
-
-  // A pair of operations and an input, where we can apply a then b to the input
-  case class OperationComposePairAndInput[A](a: Operation[A], b: Operation[A], input: List[A])
-
-  implicit def genOperationComposePairAndInput[A: Gen]: Gen[OperationComposePairAndInput[A]] = for {
-    n <- Gen.choose(1, 100)
-    input <- containerOfN[List, A](n, implicitly[Gen[A]])
-    a <- genOperationN(n)
-    b <- genOperationN(a.outputSize)
-  } yield OperationComposePairAndInput(a, b, input)
-
-
 
   @tailrec
   private final def isRORORec[A](atoms: List[Atom[A]]): Boolean = {

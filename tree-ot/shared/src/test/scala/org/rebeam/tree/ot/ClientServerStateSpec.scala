@@ -4,6 +4,8 @@ import org.rebeam.tree.ot.Atom._
 import org.scalatest._
 import org.scalatest.prop.Checkers
 import NetworkModel._
+import org.scalacheck.Prop._
+import OTGen._
 
 import scala.collection.immutable.Queue
 
@@ -13,6 +15,44 @@ import scala.collection.immutable.Queue
 class ClientServerStateSpec extends WordSpec with Matchers with Checkers {
 
   "Client and Server network model" should {
+
+    "run arbitrary network sequence to produce matching server and client results" in {
+      val clients = 5
+      val operations = 1000
+      val maxAtomCount = 5
+      check (
+        forAll(genNetworkStateSequence(clients, operations, maxAtomCount)) {
+          s: NetworkState[Unit] => {
+            //Initial data state
+            val l0 = "Hello".toList
+
+            //Initial network state
+            val n0 = Network(l0, clients)
+
+//            println(s"${l0.mkString} >>>")
+            val n1 = s.run(n0).value._1
+
+            val serverList = n1.server.list
+            val serverRev = Rev(n1.server.history.size)
+
+//            println(s">>> ${serverList.mkString}")
+//            println()
+
+            n1.clients.forall( c =>
+              c.toServer.isEmpty &&
+              c.fromServer.isEmpty &&
+              c.state.pendingOp.isEmpty &&
+              c.state.buffer.isEmpty &&
+              c.state.local == serverList &&
+              c.state.server.a == serverList &&
+              c.state.server.rev == serverRev
+            )
+
+          }
+        },
+          MinSuccessful(10)
+        )
+    }
 
     "have no messages left after editing then purging" in {
       //Initial data state

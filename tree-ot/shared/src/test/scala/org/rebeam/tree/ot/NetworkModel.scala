@@ -21,6 +21,31 @@ object NetworkModel {
   case class Network(server: ServerState[Char], clients: List[NetworkClient]) {
     def updatedClient(i: Int, c: NetworkClient): Network = copy(clients = clients.updated(i, c))
     def updatedServer(s: ServerState[Char]): Network = copy(server = s)
+
+    def purgeFirst: NetworkState[Boolean] = purgeFrom(0)
+
+    def purgeFrom(i: Int, fromServerFirst: Boolean = true): NetworkState[Boolean] = {
+      val rotatedClients: List[NetworkClient] = if (i == 0) {
+        clients
+      } else {
+        val r = i % clients.size
+        clients.drop(r) ++ clients.take(r)
+      }
+
+      val firstClientWithMessage = rotatedClients.indexWhere(c => c.fromServer.nonEmpty || c.toServer.nonEmpty)
+      if (firstClientWithMessage > -1) {
+        val c = clients(firstClientWithMessage)
+        val fromServer = c.fromServer.nonEmpty
+        val toServer = c.toServer.nonEmpty
+        if ((fromServer && !toServer) || (fromServer && toServer && fromServerFirst)) {
+          ClientOps.receiveAndReply(firstClientWithMessage).map(_ => true)
+        } else {
+          ServerOps.receiveAndReply(firstClientWithMessage).map(_ => true)
+        }
+      } else {
+        State.pure(false)
+      }
+    }
   }
 
   object Network{
@@ -44,7 +69,7 @@ object NetworkModel {
       * @param op The operation to perform on the client
       * @return   NetworkState for the action, returning any resulting OpRev
       */
-    private[ClientOps] def edit(i: Int, op: Operation[Char]): NetworkState[Option[OpRev[Char]]] = State.apply( s => {
+    def edit(i: Int, op: Operation[Char]): NetworkState[Option[OpRev[Char]]] = State.apply( s => {
       val client = s.clients(i)
       val clientState = client.state
       val (newState, clientOp) = clientState.withClientOp(op)
@@ -61,7 +86,7 @@ object NetworkModel {
       * @param op The operation to add to the queue (optional)
       * @return   NetworkState for the action
       */
-    private[ClientOps] def send(i: Int, op: Option[OpRev[Char]]): NetworkState[Unit] = State.modify( s => {
+    def send(i: Int, op: Option[OpRev[Char]]): NetworkState[Unit] = State.modify( s => {
       val client = s.clients(i)
       val newClient = op.fold(client)(client.queueToServer)
       s.updatedClient(i, newClient)
@@ -77,6 +102,7 @@ object NetworkModel {
       opRev <- edit(i, op)
       _ <- send(i, opRev)
     } yield opRev
+
 
     /**
       * Perform a client operation, and queue any resulting message for the server
@@ -189,6 +215,7 @@ object NetworkModel {
       )(
         msg => {
           val (newState, serverMessage) = s.server.updated(msg)
+//          println(newState.list.mkString)
           (s.updatedServer(newState), Some(serverMessage))
         }
       )
@@ -210,24 +237,23 @@ object NetworkModel {
 
   object NetworkOps {
 
-    def purgeFirst(n: Network): NetworkState[Boolean] = {
-      val firstFromServer = n.clients.indexWhere(_.fromServer.nonEmpty)
-      val firstToServer = n.clients.indexWhere(_.toServer.nonEmpty)
-      if (firstFromServer > -1) {
-        ClientOps.receiveAndReply(firstFromServer).map(_ => true)
-      } else if (firstToServer > -1) {
-        ServerOps.receiveAndReply(firstToServer).map(_ => true)
-      } else {
-        State.pure(false)
-      }
-    }
-
-    def purgeFirstMessage: NetworkState[Boolean] = for {
+    /**
+      * Purge a single message (if there is one), starting from a given client, and then checking round-robin.
+      * @param i                The first client index to check for messages to purge
+      * @param fromServerFirst  If true, messages from server to client will be purged first, otherwise client to server
+      *                         messages will be purged first.
+      * @return
+      */
+    def purgeFrom(i: Int, fromServerFirst: Boolean = true): NetworkState[Boolean] = for {
       n <- State.get[Network]
-      done <- purgeFirst(n)
+      done <- n.purgeFrom(i, fromServerFirst)
     } yield done
 
-    def purgeAllMessages: NetworkState[Unit] = purgeFirstMessage.flatMap(b =>
+    /**
+      * Purge all messages, in order of increasing client index, handling server messages before clients
+      * @return NetworkState purging all messages
+      */
+    def purgeAllMessages: NetworkState[Unit] = purgeFrom(0).flatMap(b =>
       if (b) {
         purgeAllMessages
       } else {
