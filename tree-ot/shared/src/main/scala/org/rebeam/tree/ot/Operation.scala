@@ -240,7 +240,10 @@ case class Operation[A](atoms: List[Atom[A]], priority: Long = 0) {
     //a's output size must match b's expected input size
     require(a.outputSize == b.inputSize, s"compose on mismatched output size ${a.outputSize} and input size ${b.inputSize}")
 
-    Operation.composeRec(this.atoms, b.atoms, Operation.empty(priority))
+//    Operation.composeRec(this.atoms, b.atoms, Operation.empty(priority))
+
+    // Use builder for efficiency
+    Operation.composeRec(this.atoms, b.atoms, OperationBuilder.empty).build.copy(priority = priority)
   }
 
   /**
@@ -520,8 +523,8 @@ object Operation {
 //  def fromAtoms[A](atoms: Atom[A]*): Operation[A] = fromAtoms(atoms.toList)
 
   private implicit class ListOps[A](list: List[A]) {
-    def next: List[A] = list.drop(1)
-    def withHead(a: A): List[A] = list.updated(0, a)
+    def next: List[A] = list.tail //list.drop(1)
+    def withHead(a: A): List[A] = a :: list.tail //list.updated(0, a)
   }
 
   /**
@@ -553,9 +556,12 @@ object Operation {
     //We use builder here for efficiency
     val (builderA, builderB) = transformRec(a.atoms, b.atoms, OperationBuilder.empty, OperationBuilder.empty)
     (builderA.build.copy(priority = a.priority), builderB.build.copy(priority = b.priority))
+
+//    transformRec(a.atoms, b.atoms, Operation.empty(a.priority), Operation.empty(b.priority))
   }
 
   @tailrec
+//  private def transformRec[A](as1: List[Atom[A]], as2: List[Atom[A]], p1: Operation[A], p2: Operation[A]): (Operation[A], Operation[A]) =
   private def transformRec[A](as1: List[Atom[A]], as2: List[Atom[A]], p1: OperationBuilder[A], p2: OperationBuilder[A]): (OperationBuilder[A], OperationBuilder[A]) =
 
     // At each recursion, we look at what operation 1 and 2 do, and append operations to p1 that will achieve the same
@@ -655,7 +661,7 @@ object Operation {
 
 
   @tailrec
-  private def composeRec[A](as1: List[Atom[A]], as2: List[Atom[A]], c: Operation[A]): Operation[A] =
+  private def composeRec[A](as1: List[Atom[A]], as2: List[Atom[A]], c: OperationBuilder[A]): OperationBuilder[A] =
     (as1.headOption, as2.headOption) match {
 
       // Note use of drop(1) throughout - we don't use tail since this
