@@ -90,7 +90,7 @@ object OTGen {
       * @param n  The length of input list of the operation
       * @return   An operation based on atoms and positions. Note this is always the same for a given value of n
       */
-    def operation(n: Int): Operation[A] = atomsAndPositions.foldLeft(Operation.empty[A]().retainIfPositive(n)) {
+    def operation(n: Int): Operation[A] = atomsAndPositions.foldLeft(OperationBuilder[A].retainIfPositive(n).build) {
       case (op, atomAndPos) =>
         // We will compose a new operation with current one (op), we want
         // to perform the operation we have at a valid position in the
@@ -100,7 +100,7 @@ object OTGen {
             // Insert can happen from 0 to length of input, inclusive (at pos = length, we are appending to end)
             val pos = atomAndPos.pos % (op.outputSize + 1)
             // We can have retain of 0 elements in either call - so use retainIfPositive
-            val newOp = Operation.empty[A]().retainIfPositive(pos).insert(l).retainIfPositive(op.outputSize - pos)
+            val newOp = OperationBuilder[A].retainIfPositive(pos).insert(l).retainIfPositive(op.outputSize - pos).build
             op.compose(newOp)
 
           case Delete(d) if op.outputSize > 0 =>
@@ -110,7 +110,7 @@ object OTGen {
             // Can only delete what is left
             val d2 = Math.min(d, op.outputSize - pos)
             // We can have retain of 0 elements in either call - so use retainIfPositive
-            val newOp = Operation.empty[A]().retainIfPositive(pos).delete(d2).retainIfPositive(op.outputSize - pos - d2)
+            val newOp = OperationBuilder[A].retainIfPositive(pos).delete(d2).retainIfPositive(op.outputSize - pos - d2).build
             op.compose(newOp)
 
           // We don't generate retains, so just ignore

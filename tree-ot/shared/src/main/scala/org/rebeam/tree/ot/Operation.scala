@@ -40,9 +40,6 @@ case class Operation[A](atoms: List[Atom[A]], priority: Long = 0) {
 
   import Atom._
 
-  private def append(a: Atom[A]): Operation[A] = copy(atoms = atoms :+ a)
-  private def dropLast(n: Int): Operation[A] = copy(atoms = atoms.dropRight(n))
-
   /**
     * The operation can be applied to input lists of exactly this size
     */
@@ -60,95 +57,6 @@ case class Operation[A](atoms: List[Atom[A]], priority: Long = 0) {
   def isIdentity: Boolean = !atoms.exists {
     case Retain(_) => false
     case _ => true
-  }
-
-  /**
-    * Retain n elements
-    * @param n  The number of elements to retain
-    * @return   A new Operation with additional elements retained
-    */
-  def retain(n: Int): Operation[A] = {
-    require(n > 0, "must retain > 0 elements")
-    atoms.lastOption match {
-      // If we have a Retain as last operation already, just merge that Retain with the new one,
-      // otherwise append a new Retain.
-      // We can't merge or swap with either insert or delete.
-      case Some(Retain(m))  =>  dropLast(1).append(Retain(m + n))
-      case _                =>  append(Retain(n))
-    }
-  }
-
-  /**
-    * Retain n elements if n is positive, return same operation if n is zero.
-    * @param n The number of elements to retain, or 0 to do nothing
-    * @return  Operation with retain
-    */
-  def retainIfPositive(n: Int): Operation[A] = {
-    require(n >= 0, "must retainIfPositive >= 0 elements")
-
-    if (n > 0) {
-      retain(n)
-    } else {
-      this
-    }
-  }
-
-  def insert(l: List[A]): Operation[A] = {
-    require(l.nonEmpty, "cannot insert empty list")
-    // First, note that all inserts leave base length unaltered, and add the length of the
-    // insert to target length.
-    // Look at the last two atoms, if there are any.
-    (atoms.lift(atoms.size - 2), atoms.lastOption) match {
-
-      // Last atom is Insert. We know we can't have last two elements as Delete, Insert since
-      // we will never build this sequence, so just merge the Insert to make a new valid sequence
-      case (_, Some(Insert(m))) =>
-        dropLast(1).append(Insert(m ++ l))
-
-      // We have an Insert, Delete pair, we can merge with the insert
-      case (Some(Insert(m)), Some(Delete(d))) =>
-        dropLast(2).append(Insert(m ++ l)).append(Delete(d))
-
-      // We have last element delete, and we have already excluded case where we have Insert, Delete, so
-      // we need to replace the Delete with our new insert, then append the delete to the end to
-      // form a valid Insert, Delete pair
-      case (_, Some(Delete(d))) =>
-        dropLast(1).append(Insert(l)).append(Delete(d))
-
-      // We have now excluded all sequences ending with an Insert or Delete, so there is nothing we can swap
-      // or merge with - just append a new Insert
-      case _ =>
-        append(Insert(l))
-    }
-  }
-
-  def delete(n: Int): Operation[A] = {
-    require(n > 0, "must delete > 0 elements")
-    atoms.lastOption match {
-
-      // If we have a Delete as last operation already, merge with it.
-      // We require an additional n characters in input string to do this,
-      // target length is not affected
-      case Some(Delete(m)) =>
-        dropLast(1).append(Delete(m + n))
-
-      // Otherwise add new delete - we can't merge with a Delete, and if we have an Insert then we know
-      // it is not preceded by a Delete, so we add the Delete to make an Insert, Delete pair.
-      case _ =>
-        append(Delete(n))
-    }
-  }
-
-  /**
-    * Produce a new operation with this operation's effects, then another atom, which may
-    * be merged/swapped with existing atoms in this operation.
-    * @param atom The atom to run after this operation
-    * @return     A new operation with the additional atom
-    */
-  def andThen(atom: Atom[A]): Operation[A] = atom match {
-    case Insert(l) => insert(l)
-    case Retain(n) => retain(n)
-    case Delete(n) => delete(n)
   }
 
   /**
@@ -247,21 +155,14 @@ case class Operation[A](atoms: List[Atom[A]], priority: Long = 0) {
   }
 
   /**
-    * Compose this operation (a) with another (b), to produce a new operation c that will achieve the same result as
-    * applying a then b.
+    * This transforms this operation against operation b, using transform. If this operation has a higher
+    * priority than b it is transformed as the left-hand operation (with higher priority, to insert first in
+    * the case of a tie), if it is lower priority it is transformed as the right hand operation.
     *
-    * This means that:
+    * This operation must have different priority to b, otherwise a sys.error is raised.
     *
-    * b(a(s)) == (a.compose(b))(s)
-    *
-    * for any input list s
-    *
-    * The result will inherit the priority of this operation
-    *
-    * This can only be applied to an operation b with a different priority to this operation, to allow breaking ties.
-    *
-    * @param b  Another operation
-    * @return   An operation equivalent to this operation, then operation b
+    * @param b   The operation we wish to apply before this one
+    * @return    This operation transformed so it can be applied after `b`.
     */
   def after(b: Operation[A]): Operation[A] = if (priority > b.priority) {
     Operation.transform(this, b)._1
@@ -355,7 +256,7 @@ case class Operation[A](atoms: List[Atom[A]], priority: Long = 0) {
   //opIndex tracks the point at which the first atom in atoms will be applied
   @tailrec
   private def transformCursorRec(cursorIndex: Int, isEditor: Boolean, atoms: List[Atom[A]], opIndex: Int): Int = atoms match {
-    case Retain(n)  :: rest =>
+    case Retain(n) :: rest =>
       val nextOpIndex = opIndex + n
       // We are past the cursor - ignore remaining atoms
       if (nextOpIndex > cursorIndex) {
@@ -386,7 +287,7 @@ case class Operation[A](atoms: List[Atom[A]], priority: Long = 0) {
         transformCursorRec(nextCursorIndex, isEditor, rest, nextOpIndex)
       }
 
-    case Delete(n)  :: rest =>
+    case Delete(n) :: rest =>
       // Shouldn't happen, but ignore delete at or after cursorIndex
       if (opIndex >= cursorIndex) {
         cursorIndex
@@ -506,6 +407,7 @@ case class OperationBuilder[A](reverseAtoms: List[Atom[A]]) extends AnyVal {
 }
 
 object OperationBuilder {
+  def apply[A]: OperationBuilder[A] = OperationBuilder(Nil)
   def empty[A]: OperationBuilder[A] = OperationBuilder(Nil)
   def fromOp[A](op: Operation[A]): OperationBuilder[A] = OperationBuilder(op.atoms.reverse)
 }
@@ -516,9 +418,9 @@ object Operation {
 
   def empty[A](priority: Long = 0): Operation[A] = Operation(Nil, priority)
 
-  def fromAtoms[A](atoms: List[Atom[A]], priority: Long = 0): Operation[A] = atoms.foldLeft(Operation.empty[A](priority)){
+  def fromAtoms[A](atoms: List[Atom[A]], priority: Long = 0): Operation[A] = atoms.foldLeft(OperationBuilder.empty[A]){
     case (op, atom) => op.andThen(atom)
-  }
+  }.build.copy(priority = priority)
 
 //  def fromAtoms[A](atoms: Atom[A]*): Operation[A] = fromAtoms(atoms.toList)
 
