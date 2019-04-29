@@ -191,7 +191,7 @@ case class Operation[A](atoms: List[Atom[A]], priority: Long = 0) {
     require(input.size == inputSize, s"inverse input size ${input.size} != operation input size $inputSize")
 
     val (remainingInput, inverse) =
-      atoms.foldLeft((input, Operation.empty[A](priority))) {
+      atoms.foldLeft((input, OperationBuilder.empty[A])) {
 
         // i is remaining input, o is our output - the inverse, a is the current atom
         case ((i, o), a) => a match {
@@ -216,7 +216,7 @@ case class Operation[A](atoms: List[Atom[A]], priority: Long = 0) {
     // Require that operation has used the entire input
     require(remainingInput.isEmpty, "input not empty after operation inverted")
 
-    inverse
+    inverse.build.copy(priority = priority)
   }
 
   /**
