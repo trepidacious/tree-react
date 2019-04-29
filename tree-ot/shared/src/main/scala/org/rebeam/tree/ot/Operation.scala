@@ -314,10 +314,10 @@ object Operation {
 
 //  def fromAtoms[A](atoms: Atom[A]*): Operation[A] = fromAtoms(atoms.toList)
 
-  private implicit class ListOps[A](list: List[A]) {
-    def next: List[A] = list.tail //list.drop(1)
-    def withHead(a: A): List[A] = a :: list.tail //list.updated(0, a)
-  }
+//  private implicit class ListOps[A](list: List[A]) {
+//    def next: List[A] = list.tail //list.drop(1)
+//    def withHead(a: A): List[A] = a :: list.tail //list.updated(0, a)
+//  }
 
   /**
     * This is the basis of operational transform. We take two concurrent operations
@@ -373,9 +373,9 @@ object Operation {
       // If either operation's atom is an insert, perform the insert on the respective prime operation,
       // and retain the already-inserted elements on the other prime operation. Handle insert in operation 1 first.
       case (Some(Insert(l1)), _) =>
-        transformRec(as1.next, as2, p1.insert(l1), p2.retain(l1.size))
+        transformRec(as1.tail, as2, p1.insert(l1), p2.retain(l1.size))
       case (_, Some(Insert(l2))) =>
-        transformRec(as1, as2.next, p1.retain(l2.size), p2.insert(l2))
+        transformRec(as1, as2.tail, p1.retain(l2.size), p2.insert(l2))
 
       // ERR1 Need operation 1 atom
       case (None, _) =>
@@ -389,15 +389,15 @@ object Operation {
       case (Some(Retain(n1)), Some(Retain(n2))) =>
         // Operation 1 retains more - split this retain, and append operation 2's smaller retain to prime operations
         if (n1 > n2) {
-          transformRec(as1.withHead(Retain(n1 - n2)), as2.next, p1.retain(n2), p2.retain(n2))
+          transformRec(Retain[A](n1 - n2) :: as1.tail, as2.tail, p1.retain(n2), p2.retain(n2))
 
         // Same length - just append
         } else if (n1 == n2) {
-          transformRec(as1.next, as2.next, p1.retain(n1), p2.retain(n1))
+          transformRec(as1.tail, as2.tail, p1.retain(n1), p2.retain(n1))
 
         // Operation 2 retains more - split this retain, and append operation 1's smaller retain to prime operations
         } else {
-          transformRec(as1.next, as2.withHead(Retain(n2 - n1)), p1.retain(n1), p2.retain(n1))
+          transformRec(as1.tail, Retain[A](n2 - n1) :: as2.tail, p1.retain(n1), p2.retain(n1))
         }
 
       // Both operations delete
@@ -405,48 +405,48 @@ object Operation {
         // Both operations delete the first n2 elements, this needs no additional prime atoms since both operations
         // already do the same thing. But we will need to deal with the extra elements deleted by operation 1.
         if (n1 > n2) {
-          transformRec(as1.withHead(Delete(n1 - n2)), as2.next, p1, p2)
+          transformRec(Delete[A](n1 - n2) :: as1.tail, as2.tail, p1, p2)
 
         // Both operations delete the same characters - nothing to do in prime operations, each operation already
         // achieves the same thing
         } else if (n1 == n2) {
-          transformRec(as1.next, as2.next, p1, p2)
+          transformRec(as1.tail, as2.tail, p1, p2)
 
         // Reverse of first case, longer delete on operation 2
         // Split into shared delete of n1, with remainder delete of n2 - n1
         } else {
-          transformRec(as1.next, as2.withHead(Delete(n2 - n1)), p1, p2)
+          transformRec(as1.tail, Delete[A](n2 - n1) :: as2.tail, p1, p2)
         }
 
       // Delete and retain
       case (Some(Delete(n1)), Some(Retain(n2))) =>
         // operation 1 deletes more elements than operation 2 retains, so we need to split delete
         if (n1 > n2) {
-          transformRec(as1.withHead(Delete(n1 - n2)), as2.next, p1.delete(n2), p2)
+          transformRec(Delete[A](n1 - n2) :: as1.tail, as2.tail, p1.delete(n2), p2)
 
         // Operation 1 deletes exactly the elements retained by operation 2, so do the delete and ignore the retain
         } else if (n1 == n2) {
-          transformRec(as1.next, as2.next, p1.delete(n1), p2)
+          transformRec(as1.tail, as2.tail, p1.delete(n1), p2)
 
         // Operation 1 deletes fewer elements than operation 2 retains - so do the delete on p1, and then retain
         // fewer elements on p2
         } else {
-          transformRec(as1.next, as2.withHead(Retain(n2 - n1)), p1.delete(n1), p2)
+          transformRec(as1.tail, Retain[A](n2 - n1) :: as2.tail, p1.delete(n1), p2)
         }
 
       // Retain and delete, mirror image of delete and retain
       case (Some(Retain(n1)), Some(Delete(n2))) =>
         // operation 1 retains more elements than operation 2 deletes, so we need to split the retain
         if (n1 > n2) {
-          transformRec(as1.withHead(Retain(n1 - n2)), as2.next, p1, p2.delete(n2))
+          transformRec(Retain[A](n1 - n2) :: as1.tail, as2.tail, p1, p2.delete(n2))
 
         // Operation 1 retains the elements deleted by operation 2, so do the delete and ignore the retain
         } else if (n1 == n2) {
-          transformRec(as1.next, as2.next, p1, p2.delete(n2))
+          transformRec(as1.tail, as2.tail, p1, p2.delete(n2))
 
         // Operation 2 deletes more elements than retained by operation 1, so split the delete
         } else {
-          transformRec(as1.next, as2.withHead(Delete(n2 - n1)), p1, p2.delete(n1))
+          transformRec(as1.tail, Delete[A](n2 - n1) :: as2.tail, p1, p2.delete(n1))
         }
 
     }
@@ -465,11 +465,11 @@ object Operation {
 
       // CASE1 Operation 1 wants to delete
       case (Some(Delete(n1)), _) =>
-        composeRec(as1.next, as2, c.delete(n1))
+        composeRec(as1.tail, as2, c.delete(n1))
 
       // CASE2 Operation 2 wants to insert
       case (_, Some(Insert(l2))) =>
-        composeRec(as1, as2.next, c.insert(l2))
+        composeRec(as1, as2.tail, c.insert(l2))
 
       // ERR1 Need operation 1 atom
       case (None, _) =>
@@ -484,16 +484,16 @@ object Operation {
         // Operation 1 wants to retain more, so perform operation 2's retain first, and update
         // operation 1's retain to just do the remainder of the elements
         if (n1 > n2) {
-          composeRec(as1.withHead(Retain(n1 - n2)), as2.next, c.retain(n2))
+          composeRec(Retain[A](n1 - n2) :: as1.tail, as2.tail, c.retain(n2))
 
         // Both operations want to retain same number of elements, so we can just do this to satisfy both.
         } else if (n1 == n2) {
-          composeRec(as1.next, as2.next, c.retain(n1))
+          composeRec(as1.tail, as2.tail, c.retain(n1))
 
         // Operation 2 wants to retain more, handle as per first case above but using operation 1's retain
         // first, then the remainder of operation 2's
         } else {
-          composeRec(as1.next, as2.withHead(Retain(n2 - n1)), c.retain(n1)) //Note n1 not n2!
+          composeRec(as1.tail, Retain[A](n2 - n1) :: as2.tail, c.retain(n1)) //Note n1 not n2!
         }
 
       // CASE4 Operation 1 insert, and Operation 2 delete
@@ -502,16 +502,16 @@ object Operation {
         // current cursor. Then at the same cursor, operation 2 will delete part of that insertion. This
         // is equivalent to just inserting the elements that are not deleted
         if (l1.size > n2) {
-          composeRec(as1.withHead(Insert(l1.drop(n2))), as2.next, c)
+          composeRec(Insert[A](l1.drop(n2)) :: as1.tail, as2.tail, c)
 
         // Operation 2 deletes exactly the elements inserted by operation 1
         } else if (l1.size == n2) {
-          composeRec(as1.next, as2.next, c)
+          composeRec(as1.tail, as2.tail, c)
 
         // Operation 2 deletes all the elements inserted by operation 1, then some more. Equivalent to just
         // omitting the insert, and deleting correspondingly less elements
         } else {
-          composeRec(as1.next, as2.withHead(Delete(n2 - l1.size)), c)
+          composeRec(as1.tail, Delete[A](n2 - l1.size) :: as2.tail, c)
         }
 
       // CASE5 Operation 1 insert, operation 2 retain
@@ -519,17 +519,17 @@ object Operation {
         // If we are inserting more than will be retained, then we will break up the insert - we need
         // to insert the elements operation2 will then retain, and postpone inserting the rest
         if (l1.size > n2) {
-          composeRec(as1.withHead(Insert(l1.drop(n2))), as2.next, c.insert(l1.take(n2)))
+          composeRec(Insert(l1.drop(n2)) :: as1.tail, as2.tail, c.insert(l1.take(n2)))
 
         // Operation 2 wants to retain exactly the inserted elements, so we can just do the insert, and this
         // will also handle the retain
         } else if (l1.size == n2) {
-          composeRec(as1.next, as2.next, c.insert(l1))
+          composeRec(as1.tail, as2.tail, c.insert(l1))
 
         // We are inserting less than will be retained. Do the insertion, and then we need to retain the
         // remainder of the count requested by operation 2
         } else {
-          composeRec(as1.next, as2.withHead(Retain(n2 - l1.size)), c.insert(l1))
+          composeRec(as1.tail, Retain[A](n2 - l1.size) :: as2.tail, c.insert(l1))
         }
 
       // CASE6 Operation 1 retain, operation 2 delete
@@ -538,15 +538,15 @@ object Operation {
         // Operation 1 wants to retain more elements than operation 2 deletes. Perform the delete,
         // then retain less characters to account for this
         if (n1 > n2) {
-          composeRec(as1.withHead(Retain(n1 - n2)), as2.next, c.delete(n2))
+          composeRec(Retain[A](n1 - n2) :: as1.tail, as2.tail, c.delete(n2))
 
         // Operation 1 retains exactly the deleted elements - just delete them, this achieves the retain
         } else if (n1 == n2) {
-          composeRec(as1.next, as2.next, c.delete(n2))
+          composeRec(as1.tail, as2.tail, c.delete(n2))
 
         // Operation 1 retains less elements than are deleted. We need to split the delete.
         } else {
-          composeRec(as1.next, as2.withHead(Delete(n2 - n1)), c.delete(n1)) //Note n1 not n2!
+          composeRec(as1.tail, Delete[A](n2 - n1) :: as2.tail, c.delete(n1)) //Note n1 not n2!
         }
     }
 
