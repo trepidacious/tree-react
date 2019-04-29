@@ -29,14 +29,10 @@ class ClientServerStateSpec extends WordSpec with Matchers with Checkers {
             //Initial network state
             val n0 = Network(l0, clients)
 
-//            println(s"${l0.mkString} >>>")
             val n1 = s.run(n0).value._1
 
             val serverList = n1.server.list
             val serverRev = Rev(n1.server.history.size)
-
-//            println(s">>> ${serverList.mkString}")
-//            println()
 
             n1.clients.forall( c =>
               c.toServer.isEmpty &&

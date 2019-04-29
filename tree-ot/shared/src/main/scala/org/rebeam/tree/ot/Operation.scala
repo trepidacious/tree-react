@@ -91,13 +91,11 @@ case class Operation[A](atoms: List[Atom[A]], priority: Long = 0) {
           // Copy (prepend in reverse order) n elements from input to output, checking we have enough
           case Retain(n) =>
             require(i.size >= n, s"only ${i.size} elements in input on retain($n)")
-//            (i.drop(n), o ++ i.take(n))
             prependReverse(i, o, n)
 
           // Append (actually prepend in reverse order) elements from inserted list to output
           case Insert(l) =>
             (i, prependAllReverse(l, o))
-//            (i, o ++ l)
 
           // Discard n elements from input, checking we have enough
           case Delete(n) =>
