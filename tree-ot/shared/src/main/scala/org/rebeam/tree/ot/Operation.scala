@@ -65,20 +65,39 @@ case class Operation[A](atoms: List[Atom[A]], priority: Long = 0) {
   def apply(input: List[A]): List[A] = {
     require(input.size == inputSize, s"can only apply to correct input size $inputSize, received ${input.size}")
 
+    @tailrec
+    def prependReverse(i: List[A], o: List[A], n: Int): (List[A], List[A]) =
+      if (n == 0) {
+        (i, o)
+      } else {
+        prependReverse(i.tail, i.head :: o, n - 1)
+      }
+
+    @tailrec
+    def prependAllReverse(i: List[A], o: List[A]): List[A] =
+      if (i.isEmpty) {
+        o
+      } else {
+        prependAllReverse(i.tail, i.head :: o)
+      }
+
+    // Note we build the output reversed so we can prepend, then reverse before returning
     val (remainingInput, output) =
       atoms.foldLeft((input, List.empty[A])) {
 
-        // i is remaining input, o is our output, a is the current atom
+        // i is remaining input, o is our output (in reverse order), a is the current atom
         case ((i, o), a) => a match {
 
-          // Copy n elements from input to output, checking we have enough
+          // Copy (prepend in reverse order) n elements from input to output, checking we have enough
           case Retain(n) =>
             require(i.size >= n, s"only ${i.size} elements in input on retain($n)")
-            (i.drop(n), o ++ i.take(n))
+//            (i.drop(n), o ++ i.take(n))
+            prependReverse(i, o, n)
 
-          // Append elements to output
+          // Append (actually prepend in reverse order) elements from inserted list to output
           case Insert(l) =>
-            (i, o ++ l)
+            (i, prependAllReverse(l, o))
+//            (i, o ++ l)
 
           // Discard n elements from input, checking we have enough
           case Delete(n) =>
@@ -90,7 +109,8 @@ case class Operation[A](atoms: List[Atom[A]], priority: Long = 0) {
     // Require that operation has used the entire input
     require(remainingInput.isEmpty, "input not empty after operation")
 
-    output
+    //output
+    output.reverse
   }
 
   def inverse(input: List[A]): Operation[A] = {
@@ -313,11 +333,6 @@ object Operation {
   }.build.copy(priority = priority)
 
 //  def fromAtoms[A](atoms: Atom[A]*): Operation[A] = fromAtoms(atoms.toList)
-
-//  private implicit class ListOps[A](list: List[A]) {
-//    def next: List[A] = list.tail //list.drop(1)
-//    def withHead(a: A): List[A] = a :: list.tail //list.updated(0, a)
-//  }
 
   /**
     * This is the basis of operational transform. We take two concurrent operations

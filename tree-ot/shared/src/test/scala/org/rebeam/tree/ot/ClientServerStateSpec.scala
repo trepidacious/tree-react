@@ -50,7 +50,7 @@ class ClientServerStateSpec extends WordSpec with Matchers with Checkers {
 
           }
         },
-          MinSuccessful(10)
+          MinSuccessful(100)
         )
     }
 
