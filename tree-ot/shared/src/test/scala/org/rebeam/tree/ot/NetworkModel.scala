@@ -198,9 +198,8 @@ object NetworkModel {
         //No message
         (s, None: Option[OpRev[Char]])
       ){
-        case (clientMessage, newClient) => {
+        case (clientMessage, newClient) =>
           (s.updatedClient(i, newClient), Some(clientMessage))
-        }
       }
     })
 
