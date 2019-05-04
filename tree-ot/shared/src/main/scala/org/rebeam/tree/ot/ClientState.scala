@@ -33,6 +33,14 @@ case class ListRev[A](a: List[A], rev: Rev) {
 }
 
 /**
+  * Represents an update to the local data state of the client, by applying an operation
+  * @param op             The operation that was applied
+  * @param ownOperation   True if the operation originally came from this client, false if it came from a remove client.
+  * @tparam A             The type of list element
+  */
+case class LocalUpdate[A](op: Operation[A], ownOperation: Boolean)
+
+/**
   * The state needed on each client to allow for operations to be applied optimistically (and immediately) locally,
   * but then transformed and sent appropriately based on updates to the server.
   * @param server       The most recent known server state, as data and a revision
@@ -50,7 +58,8 @@ case class ListRev[A](a: List[A], rev: Rev) {
   *                     data on the previous state change to allow updating from the previous clientRev to the
   *                     current one, and so when a cursor is updated we must check it was up to date with the
   *                     previous clientRev to get a valid result - otherwise it must be reset.
-  * @param previousOp   The previous operation applied to the client local state for clientRev - 1 to produce
+  * @param previousLocalUpdate
+  *                     The previous update applied to the client local state for clientRev - 1 to produce
   *                     the current local state.
   *                     This is None for clientRev 0, since we have no previous operation. It is also None after
   *                     updating for a ServerConfirmation, since this does not affect the local state.
@@ -58,7 +67,7 @@ case class ListRev[A](a: List[A], rev: Rev) {
   *                     one against clientRev.
   * @tparam A           The type of element in edited list
   */
-case class ClientState[A](server: ListRev[A], local: List[A], pendingOp: Option[Operation[A]], buffer: Option[Operation[A]], clientRev: Int = 0, previousOp: Option[Operation[A]]) {
+case class ClientState[A](server: ListRev[A], local: List[A], pendingOp: Option[Operation[A]], buffer: Option[Operation[A]], clientRev: Int = 0, previousLocalUpdate: Option[LocalUpdate[A]]) {
 
   /**
     * Allow us to apply and compose an optional operation - None is treated as an empty operation (does nothing)
@@ -87,7 +96,7 @@ case class ClientState[A](server: ListRev[A], local: List[A], pendingOp: Option[
         buffer = None,
         local = op(local),
         clientRev = clientRev + 1,
-        previousOp = Some(op)
+        previousLocalUpdate = Some(LocalUpdate(op, ownOperation = true))
       )
       (newState, Some(opRev))
 
@@ -97,7 +106,7 @@ case class ClientState[A](server: ListRev[A], local: List[A], pendingOp: Option[
         buffer = Some(buffer.compose(op)),
         local = op(local),
         clientRev = clientRev + 1,
-        previousOp = Some(op)
+        previousLocalUpdate = Some(LocalUpdate(op, ownOperation = true))
       )
       (newState, None)
 
@@ -129,7 +138,7 @@ case class ClientState[A](server: ListRev[A], local: List[A], pendingOp: Option[
           // We send any buffer to the client, and it becomes our pending op
           pendingOp = buffer, buffer = None,
           clientRev = clientRev + 1,
-          previousOp = None
+          previousLocalUpdate = None
         ),
 
         // Send any buffer against the new server revision
@@ -174,7 +183,7 @@ case class ClientState[A](server: ListRev[A], local: List[A], pendingOp: Option[
       pendingOp = newPending,
       buffer = newBuffer,
       clientRev = clientRev + 1,
-      previousOp = Some(newPreviousOp)
+      previousLocalUpdate = Some(LocalUpdate(newPreviousOp, ownOperation = false))
     )
   }
 
