@@ -46,9 +46,19 @@ case class ListRev[A](a: List[A], rev: Rev) {
   *                     pendingOp is ready to be applied directly. When there is no pending operation, this is None.
   * @param buffer       Optional operation containing all the edits that have been made subsequently to the pendingOp,
   *                     combined together into a single operation. This is (slightly counterintuitively)
+  * @param clientRev    The client revision. This changes every time the client state changes. The client state stores
+  *                     data on the previous state change to allow updating from the previous clientRev to the
+  *                     current one, and so when a cursor is updated we must check it was up to date with the
+  *                     previous clientRev to get a valid result - otherwise it must be reset.
+  * @param previousOp   The previous operation applied to the client local state for clientRev - 1 to produce
+  *                     the current local state.
+  *                     This is None for clientRev 0, since we have no previous operation. It is also None after
+  *                     updating for a ServerConfirmation, since this does not affect the local state.
+  *                     Updated for each clientRev, and used for example to update a cursor against ClientRev - 1 to
+  *                     one against clientRev.
   * @tparam A           The type of element in edited list
   */
-case class ClientState[A](server: ListRev[A], local: List[A], pendingOp: Option[Operation[A]], buffer: Option[Operation[A]]) {
+case class ClientState[A](server: ListRev[A], local: List[A], pendingOp: Option[Operation[A]], buffer: Option[Operation[A]], clientRev: Int = 0, previousOp: Option[Operation[A]]) {
 
   /**
     * Allow us to apply and compose an optional operation - None is treated as an empty operation (does nothing)
@@ -75,7 +85,9 @@ case class ClientState[A](server: ListRev[A], local: List[A], pendingOp: Option[
       val newState = copy(
         pendingOp = Some(opRev.op),
         buffer = None,
-        local = op(local)
+        local = op(local),
+        clientRev = clientRev + 1,
+        previousOp = Some(op)
       )
       (newState, Some(opRev))
 
@@ -83,7 +95,9 @@ case class ClientState[A](server: ListRev[A], local: List[A], pendingOp: Option[
     case Some(_) =>
       val newState = copy(
         buffer = Some(buffer.compose(op)),
-        local = op(local)
+        local = op(local),
+        clientRev = clientRev + 1,
+        previousOp = Some(op)
       )
       (newState, None)
 
@@ -113,7 +127,9 @@ case class ClientState[A](server: ListRev[A], local: List[A], pendingOp: Option[
         copy(
           server = newServerState,
           // We send any buffer to the client, and it becomes our pending op
-          pendingOp = buffer, buffer = None
+          pendingOp = buffer, buffer = None,
+          clientRev = clientRev + 1,
+          previousOp = None
         ),
 
         // Send any buffer against the new server revision
@@ -125,6 +141,8 @@ case class ClientState[A](server: ListRev[A], local: List[A], pendingOp: Option[
 
   /**
     * Produce a new client state based on the server sending a remote operation
+    *
+    *
     * @param op   The operation from the server
     * @return     New client state
     */
@@ -144,15 +162,20 @@ case class ClientState[A](server: ListRev[A], local: List[A], pendingOp: Option[
     // op then the updated buffered op
     val newLocal = newBuffer(newPending(newServerState.a))
 
+    // Produce an operation that takes previous local state and produces
+    // the new local state. This is the previousOp
+    val newPreviousOp = op.serverAfterOptional(pendingOp).serverAfterOptional(buffer)
+
     // Update our state. Note we can't send our buffer until we receive a confirmation
     // and so clear the pending op
     copy(
       server = newServerState,
       local = newLocal,
       pendingOp = newPending,
-      buffer = newBuffer
+      buffer = newBuffer,
+      clientRev = clientRev + 1,
+      previousOp = Some(newPreviousOp)
     )
   }
 
 }
-
