@@ -1,16 +1,56 @@
 package org.rebeam.tree.ot
 
 import cats.data.State
+import org.rebeam.tree.ot.Atom._
 import org.rebeam.tree.ot.NetworkModel._
 import org.scalatest._
 import org.scalatest.prop.Checkers
 
 /**
-  * Test ClientState and ServerState together
+  * Test CursorState using network model
   */
 class ClientServerCursorStateSpec extends WordSpec with Matchers with Checkers {
 
   "CursorState" should {
+
+    "move cursor in deleted region to beginning of region" in {
+      //Initial data state - we will delete "Hel<lo Wor>ld!!"
+      val l0 = "Hello World!!".toList
+
+      //Initial network state
+      val n0 = Network(l0, 6)
+
+      //Make some edits, leaving some network traffic in both directions on each client
+      val test = for {
+
+        // Move cursors to before, start of, two positions within, end of and after deleted region
+        _ <- CursorOps.moveCursor(0, 0)
+        _ <- CursorOps.moveCursor(1, 3)
+        _ <- CursorOps.moveCursor(2, 5)
+        _ <- CursorOps.moveCursor(3, 6)
+        _ <- CursorOps.moveCursor(4, 9)
+        _ <- CursorOps.moveCursor(5, 10)
+
+        // Client 0 deletes some text
+        _ <- ClientOps.editAndSend(0, Retain(3), Delete(6), Retain(4))
+        _ <- NetworkOps.purgeAllMessages
+
+      } yield ()
+
+      // Run the test and get our final network state
+      val n1 = test.run(n0).value._1
+
+      //Check the states are as expected
+      assert(n1.server.list == "Helld!!".toList)
+      assert(n1.clients.map(_.cursorState.cursorIndex) == List(
+        0,          // Stays at beginning
+        3, 3, 3, 3, // All cursors in or at edge of deleted region move to
+                    // beginning of deleted region
+        4           // This cursor was one character after end of deleted region,
+                    // so moves to beginning of deleted region plus 1
+      ))
+
+    }
 
     "update cursor during multi-client concurrent edits" in {
       //Initial data state
