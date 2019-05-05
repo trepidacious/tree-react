@@ -35,7 +35,7 @@ case class ListRev[A](a: List[A], rev: Rev) {
 /**
   * Represents an update to the local data state of the client, by applying an operation
   * @param op             The operation that was applied
-  * @param ownOperation   True if the operation originally came from this client, false if it came from a remove client.
+  * @param ownOperation   True if the operation originally came from this client, false if it came from a remote client.
   * @tparam A             The type of list element
   */
 case class LocalUpdate[A](op: Operation[A], ownOperation: Boolean)
@@ -67,7 +67,7 @@ case class LocalUpdate[A](op: Operation[A], ownOperation: Boolean)
   *                     one against clientRev.
   * @tparam A           The type of element in edited list
   */
-case class ClientState[A](server: ListRev[A], local: List[A], pendingOp: Option[Operation[A]], buffer: Option[Operation[A]], clientRev: Int = 0, previousLocalUpdate: Option[LocalUpdate[A]]) {
+case class ClientState[A](server: ListRev[A], local: List[A], pendingOp: Option[Operation[A]] = None, buffer: Option[Operation[A]] = None, clientRev: Int = 0, previousLocalUpdate: Option[LocalUpdate[A]] = None) {
 
   /**
     * Allow us to apply and compose an optional operation - None is treated as an empty operation (does nothing)
