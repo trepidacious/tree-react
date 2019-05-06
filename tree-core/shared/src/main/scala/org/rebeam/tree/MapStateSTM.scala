@@ -3,6 +3,7 @@ package org.rebeam.tree
 import cats.data.StateT
 import cats.implicits._
 import org.rebeam.tree.codec._
+//import org.rebeam.tree.ot.ClientState
 
 /**
   * Implementation of STM using a Map and PRandom as State
@@ -31,6 +32,7 @@ object MapStateSTM {
   case class StateData (
       nextGuid: Guid,
       map: Map[Guid, DataRevision[_]],
+//      otMap: Map[Guid, ClientState[_]],
       random: PRandom,
       context: TransactionContext,
       deltas: Vector[StateDelta[_]]

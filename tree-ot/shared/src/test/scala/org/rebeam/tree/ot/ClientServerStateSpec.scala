@@ -7,8 +7,6 @@ import NetworkModel._
 import org.scalacheck.Prop._
 import OTGen._
 
-import scala.collection.immutable.Queue
-
 /**
   * Test ClientState and ServerState together
   */
@@ -105,8 +103,16 @@ class ClientServerStateSpec extends WordSpec with Matchers with Checkers {
 
       // Check network clients have expected list on server and locally, with no waiting or buffered ops, and
       // no pending network activity
-      val c2 = NetworkClient(ClientState(ListRev(l2, Rev(revisionCount2)), l2, None, None), Queue.empty, Queue.empty)
-      assert(n2.clients.forall(_ == c2))
+      assert(n2.clients.forall(
+        nc =>
+          nc.state.local == l2 &&
+            nc.state.server == ListRev(l2, Rev(revisionCount2)) &&
+            nc.state.pendingOp.isEmpty &&
+            nc.state.buffer.isEmpty &&
+            nc.toServer.isEmpty &&
+            nc.fromServer.isEmpty
+      ))
+
     }
 
     "run a simple set of edits" in {
@@ -158,8 +164,15 @@ class ClientServerStateSpec extends WordSpec with Matchers with Checkers {
 
       // Check network clients have expected list on server and locally, with no waiting or buffered ops, and
       // no pending network activity
-      val c1 = NetworkClient(ClientState(ListRev(l1, Rev(revisionCount)), l1, None, None), Queue.empty, Queue.empty)
-      assert(n1.clients.forall(_ == c1))
+      assert(n1.clients.forall(
+        nc =>
+          nc.state.local == l1 &&
+          nc.state.server == ListRev(l1, Rev(revisionCount)) &&
+          nc.state.pendingOp.isEmpty &&
+          nc.state.buffer.isEmpty &&
+          nc.toServer.isEmpty &&
+          nc.fromServer.isEmpty
+      ))
 
     }
   }

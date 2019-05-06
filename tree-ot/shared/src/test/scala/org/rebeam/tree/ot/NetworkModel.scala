@@ -7,7 +7,7 @@ import scala.collection.immutable.Queue
 
 object NetworkModel {
 
-  case class NetworkClient(state: ClientState[Char], fromServer: Queue[ServerMessage[Char]], toServer: Queue[OpRev[Char]]) {
+  case class NetworkClient(state: ClientState[Char], fromServer: Queue[ServerMessage[Char]], toServer: Queue[OpRev[Char]], cursorState: CursorState[Char]) {
     def queueFromServer(msg: ServerMessage[Char]): NetworkClient = copy(fromServer = fromServer.enqueue(msg))
     def queueToServer(op: OpRev[Char]): NetworkClient = copy(toServer = toServer.enqueue(op))
 
@@ -54,7 +54,9 @@ object NetworkModel {
 
       //Server
       val server = ServerState[Char](list, Nil)
-      val client = NetworkClient(ClientState(server = listRev, local = list, pendingOp = None, buffer = None), Queue.empty, Queue.empty)
+      val clientState = ClientState(server = listRev, local = list)
+      val cursorState = CursorState(clientState)
+      val client = NetworkClient(clientState, Queue.empty, Queue.empty, cursorState)
 
       Network(server, List.fill(clientCount)(client))
     }
@@ -73,7 +75,8 @@ object NetworkModel {
       val client = s.clients(i)
       val clientState = client.state
       val (newState, clientOp) = clientState.withClientOp(op)
-      val newClient = client.copy(state = newState)
+      val newCursorState = client.cursorState.update(newState)
+      val newClient = client.copy(state = newState, cursorState = newCursorState)
       (
         s.updatedClient(i, newClient),
         clientOp
@@ -124,9 +127,8 @@ object NetworkModel {
         //No message
         (s, None: Option[ServerMessage[Char]])
       ){
-        case (serverMessage, newClient) => {
+        case (serverMessage, newClient) =>
           (s.updatedClient(i, newClient), Some(serverMessage))
-        }
       }
     })
 
@@ -143,7 +145,8 @@ object NetworkModel {
       )(
         msg => {
           val (newState, optionalOpRev) = client.state.withServerMessage(msg)
-          (s.updatedClient(i, client.copy(state = newState)), optionalOpRev)
+          val newCursorState = client.cursorState.update(newState)
+          (s.updatedClient(i, client.copy(state = newState, cursorState = newCursorState)), optionalOpRev)
         }
       )
 
@@ -161,6 +164,34 @@ object NetworkModel {
       _ <- send(i, reply)
     } yield reply
 
+  }
+
+  object CursorOps {
+    def insertAndSend(i: Int, s: String): NetworkState[Unit] = for {
+      n <- State.get[Network]
+      cursorIndex = n.clients(i).cursorState.cursorIndex
+      size = n.clients(i).state.local.size
+      _ <- ClientOps.editAndSend(i, OperationBuilder[Char].retainIfPositive(cursorIndex).insert(s.toList).retainIfPositive(size - cursorIndex).build)
+    } yield ()
+
+    def deleteAndSend(i: Int, deleteCount: Int): NetworkState[Unit] = for {
+      n <- State.get[Network]
+      cursorIndex = n.clients(i).cursorState.cursorIndex
+      size = n.clients(i).state.local.size
+      actualDeleteCount = Math.min(Math.max(0, deleteCount), size - cursorIndex)
+      _ <- ClientOps.editAndSend(i, OperationBuilder[Char].retainIfPositive(cursorIndex).delete(actualDeleteCount).retainIfPositive(size - cursorIndex - actualDeleteCount).build)
+    } yield ()
+
+    def moveCursor(i: Int, offset: Int): NetworkState[Int] = State.apply(
+      n => {
+        val c = n.clients(i)
+        val cursorState = c.cursorState
+        val cursorIndex = cursorState.cursorIndex
+        val size = c.state.local.size
+        val newCursorIndex = Math.min(Math.max(0, cursorIndex + offset), size)
+        (n.updatedClient(i, c.copy(cursorState = c.cursorState.copy(cursorIndex = newCursorIndex))), newCursorIndex)
+      }
+    )
   }
 
   object ServerOps {
