@@ -1,6 +1,7 @@
 package org.rebeam.tree
 
 import cats.Monad
+//import org.rebeam.tree.ot.ClientState
 
 /**
   * Provides ops to get the data at an Id
@@ -38,6 +39,24 @@ abstract class ViewOps[F[_]: Monad] {
 
   // For convenience, could use Monad directly
   def pure[A](a: A): F[A] = implicitly[Monad[F]].pure(a)
+
+  /**
+    * Get [[List]] data at an [[Id]].
+    * This expects the list to have operational transformation
+    * support, and so will also return a [[ClientState]] allowing
+    * for cursor updates etc.
+    * This will cause the ViewOps to fail
+    * if the data and ClientState is not available.
+    * The data will be retrieved if possible, and the
+    * view will be re-displayed. If the id
+    * is not retrievable, the view will stay
+    * failed.
+    * @param id   The data's [[Id]]
+    * @tparam A   Type of data
+    * @return     The data and [[ClientState]] at specified [[Id]]
+    */
+//  def getList[A](id: Id[List[A]]): F[(List[A], ClientState[A])]
+
 }
 
 
