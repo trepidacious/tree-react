@@ -3,7 +3,7 @@ package org.rebeam.tree
 import cats.data.StateT
 import cats.implicits._
 import org.rebeam.tree.codec._
-//import org.rebeam.tree.ot.ClientState
+import org.rebeam.tree.ot.ClientState
 
 /**
   * Implementation of STM using a Map and PRandom as State
@@ -32,13 +32,16 @@ object MapStateSTM {
   case class StateData (
       nextGuid: Guid,
       map: Map[Guid, DataRevision[_]],
-//      otMap: Map[Guid, ClientState[_]],
+      otMap: Map[Guid, ClientState[_]],
       random: PRandom,
       context: TransactionContext,
       deltas: Vector[StateDelta[_]]
   ) extends IdCodecs with DataSource {
+
     def getDataRevision[A](id: Id[A]): Option[DataRevision[A]] = map.get(id.guid).map(_.asInstanceOf[DataRevision[A]])
+
     def getData[A](id: Id[A]): Option[A] = getDataRevision(id).map(_.data)
+
     def updated[A](id: Id[A], a: A, revId: RevId[A])(implicit mCodecA: IdCodec[A]): StateData = {
       copy(map = map.updated(id.guid, DataRevision(a, revId, mCodecA)))
     }
@@ -47,7 +50,9 @@ object MapStateSTM {
       getDataRevision(id).map(_.idCodec)
 
     def get[A](id: Id[A]): Option[A] = getData(id)
+
     def getWithRev[A](id: Id[A]): Option[(A, RevId[A])] = getDataRevision(id).map(dr => (dr.data, dr.revId))
+
     def revGuid(guid: Guid): Option[Guid] = map.get(guid).map(_.revId.guid)
 
     def nextTransaction: StateData = {
@@ -62,6 +67,7 @@ object MapStateSTM {
 
   def emptyState: StateData = StateData(
     Guid.first,
+    Map.empty,
     Map.empty,
     PRandom(0),
     TransactionContext(Moment(0)),
@@ -125,6 +131,14 @@ object MapStateSTM {
       _ <- set(id, a)
       _ <- StateT.modify[ErrorOr, StateData](sd => sd.copy(deltas = sd.deltas :+ StateDelta.Put(id, a)))
     } yield a
+
+    def putListF[A](create: Id[List[A]] => MapState[List[A]])(implicit idCodec: IdCodec[A]): MapState[List[A]] = for {
+      id <- createGuid.map(guid => Id[List[A]](guid))
+      a <- create(id)
+      _ <- set(id, a)
+//      _ <- StateT.modify[ErrorOr, StateData](sd => sd.copy(deltas = sd.deltas :+ StateDelta.Put(id, a)))
+    } yield a
+
 
   }
 }

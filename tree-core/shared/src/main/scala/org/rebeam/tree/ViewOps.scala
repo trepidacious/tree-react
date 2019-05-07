@@ -1,7 +1,7 @@
 package org.rebeam.tree
 
 import cats.Monad
-//import org.rebeam.tree.ot.ClientState
+import org.rebeam.tree.ot.ClientState
 
 /**
   * Provides ops to get the data at an Id
@@ -55,7 +55,7 @@ abstract class ViewOps[F[_]: Monad] {
     * @tparam A   Type of data
     * @return     The data and [[ClientState]] at specified [[Id]]
     */
-//  def getList[A](id: Id[List[A]]): F[(List[A], ClientState[A])]
+  def getList[A](id: Id[List[A]]): F[(List[A], ClientState[A])]
 
 }
 

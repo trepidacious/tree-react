@@ -69,7 +69,7 @@ abstract class STMOps[F[_]: Monad] extends TransactionOps {
     * @tparam A       The type of data in the List
     * @return         The created List
     */
-//  def putListF[A](create: Id[List[A]] => F[List[A]])(implicit idCodec: IdCodec[A]): F[List[A]]
+  def putListF[A](create: Id[List[A]] => F[List[A]])(implicit idCodec: IdCodec[A]): F[List[A]]
 
   /**
     * Put a new List value into the STM, with operational transformation
@@ -83,7 +83,7 @@ abstract class STMOps[F[_]: Monad] extends TransactionOps {
     * @tparam A       The type of data in the List
     * @return         The created List
     */
-//  def putList[A](create: Id[List[A]] => List[A])(implicit idCodec: IdCodec[A]): F[List[A]] = putListF(create.andThen(pure))
+  def putList[A](create: Id[List[A]] => List[A])(implicit idCodec: IdCodec[A]): F[List[A]] = putListF(create.andThen(pure))
 
 
 }
