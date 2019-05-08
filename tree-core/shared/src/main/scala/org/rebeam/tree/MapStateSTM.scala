@@ -135,7 +135,7 @@ object MapStateSTM {
     def putListF[A](create: Id[List[A]] => MapState[List[A]])(implicit idCodec: IdCodec[A]): MapState[List[A]] = for {
       id <- createGuid.map(guid => Id[List[A]](guid))
       a <- create(id)
-      _ <- set(id, a)
+      _ <- set(id, a)(IdCodec.otList(idCodec))
 //      _ <- StateT.modify[ErrorOr, StateData](sd => sd.copy(deltas = sd.deltas :+ StateDelta.Put(id, a)))
     } yield a
 

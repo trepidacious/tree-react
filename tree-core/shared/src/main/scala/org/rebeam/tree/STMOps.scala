@@ -2,6 +2,7 @@ package org.rebeam.tree
 
 import cats.Monad
 import org.rebeam.tree.codec.IdCodec
+import org.rebeam.tree.ot.Operation
 
 abstract class STMOps[F[_]: Monad] extends TransactionOps {
 
@@ -85,6 +86,7 @@ abstract class STMOps[F[_]: Monad] extends TransactionOps {
     */
   def putList[A](create: Id[List[A]] => List[A])(implicit idCodec: IdCodec[A]): F[List[A]] = putListF(create.andThen(pure))
 
+  def listOperation[A](id: Id[List[A]], op: Operation[A]): F[A] = ???
 
 }
 
