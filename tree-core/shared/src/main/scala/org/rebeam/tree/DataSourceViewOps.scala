@@ -2,6 +2,7 @@ package org.rebeam.tree
 
 import cats.data.StateT
 import cats.implicits._
+import org.rebeam.tree.ot.CursorUpdate
 
 /**
   * Implementation of ViewOps using a DataSource
@@ -45,6 +46,29 @@ object DataSourceViewOps {
     def getOption[A](id: Id[A]): S[Option[A]] =
       StateT[ErrorOr, StateData, Option[A]](sd => {
         sd.dataSource.get(id).fold[ErrorOr[(StateData, Option[A])]](
+          Right((sd.missed(id.guid).viewed(id.guid), None))
+        )(
+          a => Right((sd.viewed(id.guid), Some(a)))
+        )
+      })
+
+    def getList[A](id: Id[List[A]]): S[(List[A], CursorUpdate[A])] =
+      StateT[ErrorOr, StateData, (List[A], CursorUpdate[A])](sd => {
+        //Get data as an option, map this to an Option[(StateData, A)] by adding a new state
+        //updated to record viewing the id, then convert to an ErrorOr with appropriate
+        //Error on missing data. This is the S => F[S, A] required by StateT.
+        sd.dataSource.getList(id)
+          .map((sd.viewed(id.guid), _))
+          .toRight(Error(
+            id.guid,
+            sd.viewedGuids + id.guid,
+            sd.missingGuids + id.guid
+          ))
+      })
+
+    def getListOption[A](id: Id[List[A]]): S[Option[(List[A], CursorUpdate[A])]] =
+      StateT[ErrorOr, StateData, Option[(List[A], CursorUpdate[A])]](sd => {
+        sd.dataSource.getList(id).fold[ErrorOr[(StateData, Option[(List[A], CursorUpdate[A])])]](
           Right((sd.missed(id.guid).viewed(id.guid), None))
         )(
           a => Right((sd.viewed(id.guid), Some(a)))

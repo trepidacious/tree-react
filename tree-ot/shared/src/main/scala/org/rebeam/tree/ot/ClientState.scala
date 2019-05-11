@@ -41,6 +41,15 @@ case class ListRev[A](a: List[A], rev: Rev) {
 case class LocalUpdate[A](op: Operation[A], ownOperation: Boolean)
 
 /**
+  * The data needed to update a cursor for a single update to the state of an OT list
+  * @tparam A The type of data in the list
+  */
+trait CursorUpdate[A]{
+  def clientRev: Int
+  def previousLocalUpdate: Option[LocalUpdate[A]]
+}
+
+/**
   * The state needed on each client to allow for operations to be applied optimistically (and immediately) locally,
   * but then transformed and sent appropriately based on updates to the server.
   * @param server       The most recent known server state, as data and a revision
@@ -67,7 +76,7 @@ case class LocalUpdate[A](op: Operation[A], ownOperation: Boolean)
   *                     one against clientRev.
   * @tparam A           The type of element in edited list
   */
-case class ClientState[A](server: ListRev[A], local: List[A], pendingOp: Option[Operation[A]] = None, buffer: Option[Operation[A]] = None, clientRev: Int = 0, previousLocalUpdate: Option[LocalUpdate[A]] = None) {
+case class ClientState[A](server: ListRev[A], local: List[A], pendingOp: Option[Operation[A]] = None, buffer: Option[Operation[A]] = None, clientRev: Int = 0, previousLocalUpdate: Option[LocalUpdate[A]] = None) extends CursorUpdate[A] {
 
   /**
     * Allow us to apply and compose an optional operation - None is treated as an empty operation (does nothing)

@@ -7,6 +7,7 @@ import japgolly.scalajs.react._
 import japgolly.scalajs.react.component.Scala.Component
 import japgolly.scalajs.react.vdom.html_<^._
 import org.rebeam.tree._
+import org.rebeam.tree.ot.CursorUpdate
 import org.rebeam.tree.react.ReactData.ReactDataContexts
 
 object View {
@@ -55,7 +56,28 @@ object View {
             a => Right((sd.viewed(id.guid), Some(a)))
           )
         })
+      def getList[A](id: Id[List[A]]): S[(List[A], CursorUpdate[A])] =
+        StateT[ErrorOr, StateData, (List[A], CursorUpdate[A])](sd => {
+          //Get data as an option, map this to an Option[(StateData, A)] by adding a new state
+          //updated to record viewing the id, then convert to an ErrorOr with appropriate
+          //Error on missing data. This is the S => F[S, A] required by StateT.
+          sd.dataSource.getList(id)
+            .map((sd.viewed(id.guid), _))
+            .toRight(DataError(
+              id.guid,
+              sd.viewedGuids + id.guid,
+              sd.missingGuids + id.guid
+            ))
+        })
 
+      def getListOption[A](id: Id[List[A]]): S[Option[(List[A], CursorUpdate[A])]] =
+        StateT[ErrorOr, StateData, Option[(List[A], CursorUpdate[A])]](sd => {
+          sd.dataSource.getList(id).fold[ErrorOr[(StateData, Option[(List[A], CursorUpdate[A])])]](
+            Right((sd.missed(id.guid).viewed(id.guid), None))
+          )(
+            a => Right((sd.viewed(id.guid), Some(a)))
+          )
+        })
     }
 
     def render[A](

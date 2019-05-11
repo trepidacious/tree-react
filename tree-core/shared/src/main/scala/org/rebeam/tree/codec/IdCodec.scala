@@ -31,7 +31,7 @@ object IdCodec {
     IdType(s"List[${aCodec.idType.name}]"),
     Encoder.encodeList(aCodec.encoder),
     Decoder.decodeList(aCodec.decoder),
-    OTCodecs.otDeltaCodec(aCodec.encoder, aCodec.decoder)
+    OTCodecs.otDeltaCodec
   )
 }
 

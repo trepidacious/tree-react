@@ -86,7 +86,15 @@ abstract class STMOps[F[_]: Monad] extends TransactionOps {
     */
   def putList[A](create: Id[List[A]] => List[A])(implicit idCodec: IdCodec[A]): F[List[A]] = putListF(create.andThen(pure))
 
-  def listOperation[A](id: Id[List[A]], op: Operation[A]): F[A] = ???
+  /**
+    * Apply an OT operation to the list at an Id. Will only succeed if the
+    * list was put with putList or putListF (enabling operational transformation support)
+    * @param id   The id of the list
+    * @param op   The operation to apply
+    * @tparam A   The type of data in the list
+    * @return     The new list contents
+    */
+  def listOperation[A](id: Id[List[A]], op: Operation[A]): F[List[A]]
 
 }
 
