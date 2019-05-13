@@ -98,9 +98,10 @@ case class OperationBuilder[A](reverseAtoms: List[Atom[A]]) extends AnyVal {
 
   /**
     * Build an operation from current state
+    * @param priority The operation priority
     * @return A new Operation containing the atoms from this builder
     */
-  def build: Operation[A] = Operation(reverseAtoms.reverse)
+  def build(priority: Int = 0): Operation[A] = Operation(reverseAtoms.reverse, priority)
 
 }
 object OperationBuilder {

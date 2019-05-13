@@ -10,12 +10,21 @@ import japgolly.scalajs.react.vdom._
 import org.rebeam.tree._
 import org.rebeam.tree.react._
 import TodoData._
+import io.scalajs.nodejs.console
 import org.log4s.getLogger
 import org.rebeam.mui
 import org.rebeam._
 
 import scala.scalajs.js
 import js.JSConverters._
+import scala.scalajs.js.annotation.JSGlobal
+
+@js.native
+@JSGlobal
+class InputEvent extends js.Object {
+  def dataTransfer: js.Any = js.native
+  def getTargetRanges(): js.Any = js.native
+}
 
 object LocalDataRootDemo {
 
@@ -68,6 +77,8 @@ object LocalDataRootDemo {
 
       logger.debug(s"stringView applying from $a, transactor $tx")
 
+
+
       // Editing the value is straightforward - just call set on the cursor. The cursor
       // creates a ValueDelta that will set the String directly to a new value, makes
       // a Transaction from the delta using the context provided by the cursor, and
@@ -77,7 +88,13 @@ object LocalDataRootDemo {
       // Note we can use e.target.value directly - set accepts a plain value, not a function,
       // so we don't have to worry about the event being reused. Of course the Callback produced
       // will not be used until later.
-      def onChange(e: ReactEventFromInput) = a.set(e.target.value)
+      def onChange(e: ReactEventFromInput) = {
+        console.log(e.nativeEvent)
+        console.log(e.nativeEvent.asInstanceOf[InputEvent].dataTransfer)
+        console.log(e.nativeEvent.asInstanceOf[InputEvent].getTargetRanges())
+
+        a.set(e.target.value)
+      }
 
 //      mui.TextField(
 //        // Display the data from the cursor
