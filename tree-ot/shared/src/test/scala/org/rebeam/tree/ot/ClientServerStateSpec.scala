@@ -197,7 +197,7 @@ class ClientServerStateSpec extends WordSpec with Matchers with Checkers {
 
       //First client edits. We are simulating a long lag, so this doesn't make it to the
       //server yet...
-      val opA0 = Operation[Char](List(Retain(5), Insert(" World!".toList)))
+      val opA0 = Operation[Char](List(Retain(5), Insert(" World!".toList)), priority = 0)
       val (clientA1, revOpA0) = clientA0.withClientOp(opA0)
 
       //This should produce the expected operation against revision 0
@@ -213,7 +213,7 @@ class ClientServerStateSpec extends WordSpec with Matchers with Checkers {
       val clientB0 = ClientState(server = lr0, local = l0, pendingOp = None, buffer = None)
 
       //Second client edits - produces new client state and operation for server
-      val opB0 = Operation[Char](List(Retain(5), Insert("o".toList)))
+      val opB0 = Operation[Char](List(Retain(5), Insert("o".toList)), priority = 1)
       val (clientB1, revOpB0) = clientB0.withClientOp(opB0)
 
       // Client B produces expected op

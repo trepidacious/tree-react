@@ -34,7 +34,7 @@ import scala.annotation.tailrec
   *
   * @tparam A           The operation will modify lists of this element type
   */
-case class Operation[A](atoms: List[Atom[A]], priority: Long = 0) {
+case class Operation[A](atoms: List[Atom[A]], priority: Long) {
 
   import Atom._
 
@@ -140,7 +140,7 @@ case class Operation[A](atoms: List[Atom[A]], priority: Long = 0) {
     // Require that operation has used the entire input
     require(remainingInput.isEmpty, "input not empty after operation inverted")
 
-    inverse.build.copy(priority = priority)
+    inverse.build(priority)
   }
 
   /**
@@ -167,7 +167,7 @@ case class Operation[A](atoms: List[Atom[A]], priority: Long = 0) {
 //    Operation.composeRec(this.atoms, b.atoms, Operation.empty(priority))
 
     // Use builder for efficiency
-    Operation.composeRec(this.atoms, b.atoms, OperationBuilder.empty).build.copy(priority = priority)
+    Operation.composeRec(this.atoms, b.atoms, OperationBuilder.empty).build(priority)
   }
 
   /**
@@ -324,11 +324,11 @@ case class Operation[A](atoms: List[Atom[A]], priority: Long = 0) {
 object Operation {
   import Atom._
 
-  def empty[A](priority: Long = 0): Operation[A] = Operation(Nil, priority)
+  def empty[A](priority: Long): Operation[A] = Operation(Nil, priority)
 
-  def fromAtoms[A](atoms: List[Atom[A]], priority: Long = 0): Operation[A] = atoms.foldLeft(OperationBuilder.empty[A]){
+  def fromAtoms[A](atoms: List[Atom[A]], priority: Long): Operation[A] = atoms.foldLeft(OperationBuilder.empty[A]){
     case (op, atom) => op.andThen(atom)
-  }.build.copy(priority = priority)
+  }.build(priority)
 
 //  def fromAtoms[A](atoms: Atom[A]*): Operation[A] = fromAtoms(atoms.toList)
 
@@ -360,7 +360,7 @@ object Operation {
     require(a.inputSize == b.inputSize, "transform requires operations to have same input size")
     //We use builder here for efficiency
     val (builderA, builderB) = transformRec(a.atoms, b.atoms, OperationBuilder.empty, OperationBuilder.empty)
-    (builderA.build.copy(priority = a.priority), builderB.build.copy(priority = b.priority))
+    (builderA.build(a.priority), builderB.build(b.priority))
 
 //    transformRec(a.atoms, b.atoms, Operation.empty(a.priority), Operation.empty(b.priority))
   }

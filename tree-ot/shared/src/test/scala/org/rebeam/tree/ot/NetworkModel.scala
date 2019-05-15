@@ -171,7 +171,7 @@ object NetworkModel {
       n <- State.get[Network]
       cursorIndex = n.clients(i).cursorState.cursorIndex
       size = n.clients(i).state.local.size
-      _ <- ClientOps.editAndSend(i, OperationBuilder[Char].retainIfPositive(cursorIndex).insert(s.toList).retainIfPositive(size - cursorIndex).build)
+      _ <- ClientOps.editAndSend(i, OperationBuilder[Char].retainIfPositive(cursorIndex).insert(s.toList).retainIfPositive(size - cursorIndex).build(i))
     } yield ()
 
     def deleteAndSend(i: Int, deleteCount: Int): NetworkState[Unit] = for {
@@ -179,7 +179,7 @@ object NetworkModel {
       cursorIndex = n.clients(i).cursorState.cursorIndex
       size = n.clients(i).state.local.size
       actualDeleteCount = Math.min(Math.max(0, deleteCount), size - cursorIndex)
-      _ <- ClientOps.editAndSend(i, OperationBuilder[Char].retainIfPositive(cursorIndex).delete(actualDeleteCount).retainIfPositive(size - cursorIndex - actualDeleteCount).build)
+      _ <- ClientOps.editAndSend(i, OperationBuilder[Char].retainIfPositive(cursorIndex).delete(actualDeleteCount).retainIfPositive(size - cursorIndex - actualDeleteCount).build(i))
     } yield ()
 
     def moveCursor(i: Int, offset: Int): NetworkState[Int] = State.apply(
