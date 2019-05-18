@@ -22,9 +22,9 @@ object Diff {
     * @tparam A   The type of element
     * @return     An operation producing the change
     */
-  def apply[A](o: List[A], n: List[A], priority: Int = 0): Operation[A] = {
+  def apply[A](o: List[A], n: List[A]): Operation[A] = {
     if (o eq n) {
-      OperationBuilder[A].retain(o.size).build(priority)
+      OperationBuilder[A].retain(o.size).build
     } else {
 
       val ol = o.length
@@ -34,25 +34,26 @@ object Diff {
 
       val e = prefixLength(o.reverse, n.reverse, Math.min(ol, nl) - s)
 
+      // Retain common start
       val o1 = OperationBuilder[A].retain(s)
 
       // If o contains non-common elements, delete them
       val o2 = if (ol != s + e) {
         o1.delete(ol - s - e)
-//        ctx.remove(commonStart, o.length - commonStart - commonEnd)
       } else o1
 
-      //Previous operation will transform o to just the common elements. If
-      //n is just the common elements we are done, otherwise we need anything
-      //extra from n into our list
+      // Previous operation will transform o to just the common elements. If
+      // n is just the common elements we are done, otherwise we need anything
+      // extra from n into our list
       val o3 = if (nl != s + e) {
-        o2.insert(n.slice(s, nl - e)) //FIXME check indices for scala slice
-//        ctx.insert(commonStart, n.slice(commonStart, n.length - commonEnd))
+        // The new part of n is everything between the common start and common end
+        o2.insert(n.slice(s, nl - e))
       } else {
         o2
       }
 
-      o3.build(priority)
+      // Finally, retain the common end
+      o3.retainIfPositive(e).build
     }
   }
 }

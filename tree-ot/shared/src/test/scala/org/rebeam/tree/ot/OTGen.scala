@@ -54,7 +54,7 @@ object OTGen {
   // Generate an operation on an input length n. This is formed by starting with a retain
   // of all elements, and then folding in from 1 to n/2 + 1 insert or delete operations
   // at random positions.
-  private def genOperationN[A: Gen](n: Int, priority: Int): Gen[Operation[A]] = genPotentialOperationN[A](n/2 + 1, priority).map(po => po.operation(n))
+  private def genOperationN[A: Gen](n: Int): Gen[Operation[A]] = genPotentialOperationN[A](n/2 + 1).map(po => po.operation(n))
 
   // A pair of operations and an input, where we can apply either operation to the input
   case class OperationPairAndInput[A](a: Operation[A], b: Operation[A], input: List[A])
@@ -84,13 +84,13 @@ object OTGen {
     *                           used modulo the length of the list the atoms are applied to).
     * @tparam A                 The type of element
     */
-  case class PotentialOperation[A](atomsAndPositions: List[AtomAndPosition[A]], priority: Int) {
+  case class PotentialOperation[A](atomsAndPositions: List[AtomAndPosition[A]]) {
     /**
       * Generate an operation to be applied to a list of length n
       * @param n  The length of input list of the operation
       * @return   An operation based on atoms and positions. Note this is always the same for a given value of n
       */
-    def operation(n: Int): Operation[A] = atomsAndPositions.foldLeft(OperationBuilder[A].retainIfPositive(n).build(priority)) {
+    def operation(n: Int): Operation[A] = atomsAndPositions.foldLeft(OperationBuilder[A].retainIfPositive(n).build) {
       case (op, atomAndPos) =>
         // We will compose a new operation with current one (op), we want
         // to perform the operation we have at a valid position in the
@@ -100,7 +100,7 @@ object OTGen {
             // Insert can happen from 0 to length of input, inclusive (at pos = length, we are appending to end)
             val pos = atomAndPos.pos % (op.outputSize + 1)
             // We can have retain of 0 elements in either call - so use retainIfPositive
-            val newOp = OperationBuilder[A].retainIfPositive(pos).insert(l).retainIfPositive(op.outputSize - pos).build(priority)
+            val newOp = OperationBuilder[A].retainIfPositive(pos).insert(l).retainIfPositive(op.outputSize - pos).build
             op.compose(newOp)
 
           case Delete(d) if op.outputSize > 0 =>
@@ -110,7 +110,7 @@ object OTGen {
             // Can only delete what is left
             val d2 = Math.min(d, op.outputSize - pos)
             // We can have retain of 0 elements in either call - so use retainIfPositive
-            val newOp = OperationBuilder[A].retainIfPositive(pos).delete(d2).retainIfPositive(op.outputSize - pos - d2).build(priority)
+            val newOp = OperationBuilder[A].retainIfPositive(pos).delete(d2).retainIfPositive(op.outputSize - pos - d2).build
             op.compose(newOp)
 
           // We don't generate retains, so just ignore
@@ -120,7 +120,7 @@ object OTGen {
   }
 
   // Generate a potential operation with between 1 and n operations, each a random insert or delete.
-  private def genPotentialOperationN[A: Gen](n: Int, priority: Int): Gen[PotentialOperation[A]] = for {
+  private def genPotentialOperationN[A: Gen](n: Int): Gen[PotentialOperation[A]] = for {
     // Choose a number of inserts and deletes
     atomCount <- Gen.choose(1, n)
 
@@ -129,7 +129,7 @@ object OTGen {
     atomsAndPositions <- containerOfN[List, AtomAndPosition[A]](atomCount, genInsertOrDeleteAndPosition)
 
     // Start from an operation just retaining everything (note we may have an empty input, so retainIfPositive)
-  } yield PotentialOperation(atomsAndPositions, priority)
+  } yield PotentialOperation(atomsAndPositions)
 
   /**
     * Network state to perform a client operation, and queue any resulting message for the server

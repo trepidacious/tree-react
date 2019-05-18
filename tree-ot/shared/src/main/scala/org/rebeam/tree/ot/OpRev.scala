@@ -1,7 +1,7 @@
 package org.rebeam.tree.ot
 
 /**
-  * An operation with a revision index
+  * An operation with a priority and revision index
   * Conceptually all documents (lists) in OT system are created as an empty
   * list with no operations applied.
   * Documents are then edited by applying a sequence of operations,
@@ -12,9 +12,12 @@ package org.rebeam.tree.ot
   * rev 0 is always the empty list, rev1 is given by applying the first op with
   * rev 0, and so on.
   * @param op   The operation
+  * @param priority The priority of the operation, for breaking ties on transformation
   * @param rev  The revision of the operation, which is also the document revision
   *             to which this operation must be applied, yielding document revision
   *             rev + 1.
   * @tparam A   The type of element in the list operated on
   */
-case class OpRev[A](op: Operation[A], rev: Rev)
+case class OpRev[A](op: Operation[A], priority: Long, rev: Rev) {
+  def toPriorityOperation = PriorityOperation(op, priority)
+}

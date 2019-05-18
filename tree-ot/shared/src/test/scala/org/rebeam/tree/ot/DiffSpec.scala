@@ -19,7 +19,7 @@ class DiffSpec extends WordSpec with Matchers with Checkers {
     "find a simple insert" in {
       val o = "Hello World"
       val n = "Hello! World"
-      assertDiff(o, n, OperationBuilder[Char].retain(5).insert("!".toList).build(priority = 0))
+      assertDiff(o, n, OperationBuilder[Char].retain(5).insert("!".toList).retain(6).build)
     }
   }
 }

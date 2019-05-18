@@ -262,7 +262,7 @@ class OTSpec extends WordSpec with Matchers with Checkers {
     }
 
     "be identity with no atoms" in {
-      assert(Operation.empty[Int]().isIdentity)
+      assert(Operation.empty[Int].isIdentity)
     }
 
     "be identity with only retains" in {

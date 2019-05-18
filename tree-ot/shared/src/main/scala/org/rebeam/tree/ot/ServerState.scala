@@ -10,13 +10,16 @@ package org.rebeam.tree.ot
   *                 Note that this is redundant - we can recover it by applying history
   *                 to the empty list, but stored here for efficiency.
   * @param history  A list of all operations that have been applied, in application order
-  *                 Note that we must always have all operations, starting from revision
+  *                 We also store the priority of each operation, for use when transforming
+  *                 client operations against them.
+  *                 We currently store all operations, starting from revision
   *                 0 and using consecutive revision indices, so only operations are stored,
   *                 and each has a revision index equal to its index in the history.
   *                 TODO we can actually store a partial history if we reject operations
-  *                 that were originally applied before the start of the partial history.
+  *                 that were originally applied before the start of the partial history, and store
+  *                 the revision index of the data on which the first stored operation was applied.
   */
-case class ServerState[A](list: List[A], history: List[Operation[A]]) {
+case class ServerState[A](list: List[A], history: List[PriorityOperation[A]]) {
 
   //TODO look at adding logic here to allow for client to send ops at arbitrary point.
   //The simplest implementation is for a client always to send an operation against a known
@@ -54,6 +57,7 @@ case class ServerState[A](list: List[A], history: List[Operation[A]]) {
     */
   def updated(clientOpRev: OpRev[A]): (ServerState[A], OpRev[A]) = {
     val rev = clientOpRev.rev
+    val clientPriority = clientOpRev.priority
     val clientOp = clientOpRev.op
 
     require(rev.i >= 0, "Revision index must be >= 0")
@@ -85,9 +89,9 @@ case class ServerState[A](list: List[A], history: List[Operation[A]]) {
     // an op based on a server (post) op.
     //
     //    *
-    //  /c \p0.serverAfter(c)
-    // l    \p1.serverAfter(c.clientAfter(p0))
-    //  \p0  \p2.serverAfter(c.clientAfter(p0).serverAfter(p1))
+    //  /c \p0.after(c)
+    // l    \p1.after(c.after(p0))
+    //  \p0  \p2.after(c.after(p0).after(p1))
     //   \p1  n
     //    \p2/c.after(p0).after(p1).after(p2)
     //      *
@@ -155,18 +159,23 @@ case class ServerState[A](list: List[A], history: List[Operation[A]]) {
     // operation (from a different client).
     // In general this allows us to make arbitrary insertions/appends to an existing sequence of \
     // operations.
-    //
-    val postClientOp = postOps.foldLeft(clientOp){case (op, postOp) => op.clientAfter(postOp)}
+    val postClientOp = postOps.foldLeft(clientOp){
+      case (op, postOp) => {
+        // Note we are transforming the client operation using after, so we compare client
+        // priority to the postOp priority
+        val clientIsHigherPriority = clientPriority > postOp.priority
+        op.after(clientIsHigherPriority, postOp.op)
+      }
+    }
 
     // New state and the new op that produced it
     (
       // Apply the op to our list data, and add it to our history
-      ServerState(postClientOp(list), history :+ postClientOp),
+      ServerState(postClientOp(list), history :+ PriorityOperation(postClientOp, clientPriority)),
 
       // We have added postClientOp at the end of history with size n, so
       // it is the nth element (zero based)
-      OpRev(postClientOp, Rev(history.size))
-
+      OpRev(postClientOp, clientPriority, Rev(history.size))
     )
 
   }
