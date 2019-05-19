@@ -10,10 +10,10 @@ import japgolly.scalajs.react.vdom._
 import org.rebeam.tree._
 import org.rebeam.tree.react._
 import TodoData._
-import io.scalajs.nodejs.console
 import org.log4s.getLogger
 import org.rebeam.mui
 import org.rebeam._
+import org.rebeam.tree.ot.Diff
 
 import scala.scalajs.js
 import js.JSConverters._
@@ -89,10 +89,10 @@ object LocalDataRootDemo {
       // so we don't have to worry about the event being reused. Of course the Callback produced
       // will not be used until later.
       def onChange(e: ReactEventFromInput) = {
-        console.log(e.nativeEvent)
-        console.log(e.nativeEvent.asInstanceOf[InputEvent].dataTransfer)
-        console.log(e.nativeEvent.asInstanceOf[InputEvent].getTargetRanges())
-
+        val o = a.a
+        val n = e.target.value
+        val d = Diff(o.toList, n.toList)
+        println(s"'$o' -> '$n' by $d")
         a.set(e.target.value)
       }
 
@@ -110,6 +110,45 @@ object LocalDataRootDemo {
     }
 
   }.build("stringView")
+
+//  val stringOTView: Component[Cursor[Ref[List[Char]]], Unit, Unit, CtorType.Props] = new ViewPC[Ref[List[Char]]] {
+//    private val logger = getLogger
+//
+//    override def apply(a: Cursor[Ref[List[Char]]])(implicit tx: ReactTransactor): VdomNode = {
+//
+//      logger.debug(s"stringOTView applying from $a, transactor $tx")
+//
+//      // Editing the value is straightforward - just call set on the cursor. The cursor
+//      // creates a ValueDelta that will set the String directly to a new value, makes
+//      // a Transaction from the delta using the context provided by the cursor, and
+//      // then uses the implicit ReactTransactor to convert the Transactor to a Callback
+//      // we can give to React.
+//
+//      // Note we can use e.target.value directly - set accepts a plain value, not a function,
+//      // so we don't have to worry about the event being reused. Of course the Callback produced
+//      // will not be used until later.
+//      def onChange(e: ReactEventFromInput) = {
+//        val o = a.a
+//        val n = e.target.value.toList
+//        val d = Diff(o, n)
+//        println(s"'$o' -> '$n' by $d")
+//        a.tr
+//      }
+//
+//      //      mui.TextField(
+//      //        // Display the data from the cursor
+//      //        value = a.a,
+//      //        onChange = e => onChange(e)
+//      //      )
+//
+//      <.input(
+//        ^.value := a.a,
+//        ^.onChange ==> onChange,
+//        ^.margin := "10px"
+//      )
+//    }
+//
+//  }.build("stringView")
 
   val todoItemView: Component[Id[TodoItem], Unit, Unit, CtorType.Props] = new View[Id[TodoItem]] {
     private val logger = getLogger

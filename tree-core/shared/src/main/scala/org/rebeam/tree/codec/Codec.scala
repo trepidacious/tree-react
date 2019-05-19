@@ -46,6 +46,11 @@ object Codec {
     }
   }
 
+  def empty[A]: DeltaCodec[A] = new DeltaCodec[A]{
+    val encoder: PartialEncoder[Delta[A]] = _ => None
+    val decoder: Decoder[Delta[A]] = Decoder.failedWithMessage("Empty delta codec")
+  }
+
   implicit val stringDeltaCodec: DeltaCodec[String] = value[String]
   implicit val booleanDeltaCodec: DeltaCodec[Boolean] = value[Boolean]
   implicit val byteDeltaCodec: DeltaCodec[Byte] = value[Byte]
