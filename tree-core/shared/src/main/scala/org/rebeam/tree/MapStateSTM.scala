@@ -3,7 +3,7 @@ package org.rebeam.tree
 import cats.data.StateT
 import cats.implicits._
 import org.rebeam.tree.codec._
-import org.rebeam.tree.ot.{ClientState, CursorUpdate, Operation}
+import org.rebeam.tree.ot.{ClientState, CursorUpdate, OTList, Operation}
 
 /**
   * Implementation of STM using a Map and PRandom as State, intended for client-side operation
@@ -15,6 +15,10 @@ object MapStateSTM {
   }
 
   case class IdNotFoundError[A](id: Id[A]) extends Error {
+    def message: String = toString
+  }
+
+  case class OTListStateNotFoundError[A](list: OTList[A]) extends Error {
     def message: String = toString
   }
 
@@ -40,7 +44,7 @@ object MapStateSTM {
 
     def getDataRevision[A](id: Id[A]): Option[DataRevision[A]] = map.get(id.guid).map(_.asInstanceOf[DataRevision[A]])
 
-    def getClientState[A](id: Id[List[A]]): Option[ClientState[A]] = otMap.get(id.guid).map(_.asInstanceOf[ClientState[A]])
+    def getClientState[A](list: OTList[A]): Option[ClientState[A]] = otMap.get(list.guid).map(_.asInstanceOf[ClientState[A]])
 
     def getData[A](id: Id[A]): Option[A] = getDataRevision(id).map(_.data)
 
@@ -57,10 +61,7 @@ object MapStateSTM {
 
     def revGuid(guid: Guid): Option[Guid] = map.get(guid).map(_.revId.guid)
 
-    def getList[A](id: Id[List[A]]): Option[(List[A], CursorUpdate[A])] = for {
-      list <- getData(id)
-      clientState <- getClientState(id)
-    } yield (list, clientState)
+    def getOTListCursorUpdate[A](list: OTList[A]): Option[CursorUpdate[A]] = getClientState(list)
 
     def nextTransaction: StateData = {
       val ng = nextGuid.nextTransactionFirstGuid
@@ -101,8 +102,8 @@ object MapStateSTM {
     private def getDataState[A](id: Id[A]): MapState[DataRevision[A]] =
       StateT.inspectF[ErrorOr, StateData, DataRevision[A]](_.getDataRevision(id).toRight(IdNotFoundError(id)))
 
-    private def getClientState[A](id: Id[List[A]]): MapState[ClientState[A]] =
-      StateT.inspectF[ErrorOr, StateData, ClientState[A]](_.getClientState(id).toRight(IdNotFoundError(id)))
+    private def getClientState[A](list: OTList[A]): MapState[ClientState[A]] =
+      StateT.inspectF[ErrorOr, StateData, ClientState[A]](_.getClientState(list).toRight(OTListStateNotFoundError(list)))
 
     private def set[A](id: Id[A], a: A)(implicit idCodec: IdCodec[A]): MapState[Unit] = for {
       revGuid <- createGuid
@@ -142,26 +143,21 @@ object MapStateSTM {
       _ <- StateT.modify[ErrorOr, StateData](sd => sd.copy(deltas = sd.deltas :+ StateDelta.Put(id, a)))
     } yield a
 
-    def putListF[A](create: Id[List[A]] => MapState[List[A]])(implicit idCodec: IdCodec[A]): MapState[List[A]] = for {
-      id <- createGuid.map(guid => Id[List[A]](guid))
-      a <- create(id)
-      _ <- set(id, a)(IdCodec.otList(idCodec))
-//      _ <- StateT.modify[ErrorOr, StateData](sd => sd.copy(deltas = sd.deltas :+ StateDelta.Put(id, a)))
-    } yield a
+    def createOTListF[A](create: MapState[List[A]])(implicit idCodec: IdCodec[A]): MapState[OTList[A]] = for {
+      id <- createGuid
+      a <- create
+    } yield OTList(a, id)
 
-    def listOperation[A](id: Id[List[A]], op: Operation[A]): MapState[List[A]] = for {
-      ds <- getDataState(id)
-      cs <- getClientState(id)
+    def otListOperation[A](list: OTList[A], op: Operation[A]): MapState[OTList[A]] = for {
+      cs <- getClientState(list)
       newCs = cs.withClientOp(op)._1.withServerConfirmation._1
       newData = newCs.local
-      _ <- set[List[A]](id, newData)(ds.idCodec)
       _ <- StateT.modify[ErrorOr, StateData](sd =>
         sd.copy(
-          otMap = sd.otMap.updated(id.guid, newCs),
-          deltas = sd.deltas :+ StateDelta.Modify(id, ds.data, newData)
+          otMap = sd.otMap.updated(list.guid, newCs),
         )
       )
-    } yield newData
+    } yield list.copy(list = newData)
 
   }
 }

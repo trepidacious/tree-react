@@ -8,6 +8,8 @@ import monocle.macros.Lenses
 import org.rebeam.tree._
 import org.rebeam.tree.codec.Codec._
 import org.rebeam.tree.codec._
+import org.rebeam.tree.ot.OTList
+import org.rebeam.tree.ot.OTCodecs._
 
 object TodoData {
 
@@ -45,7 +47,7 @@ object TodoData {
       }
 
   @JsonCodec
-  case class TodoList(id: Id[TodoList], items: List[Id[TodoItem]], name: List[Char])
+  case class TodoList(id: Id[TodoList], items: List[Id[TodoItem]], name: OTList[Char])
 
   // We can edit a TodoList by specifying a new value
   implicit val todoListDeltaCodec: DeltaCodec[TodoList] = value[TodoList]
@@ -54,7 +56,7 @@ object TodoData {
   implicit val todoItemIdCodec: IdCodec[TodoItem] = IdCodec[TodoItem]("TodoItem")
   implicit val todoListIdCodec: IdCodec[TodoList] = IdCodec[TodoList]("TodoList")
 
-  implicit val charIdCodec: IdCodec[Char] = IdCodecBasic[Char]apply(IdType("Char"), implicitly[Encoder[Char]], implicitly[Decoder[Char]], Codec.empty)
+  implicit val charIdCodec: IdCodec[Char] = IdCodecBasic[Char](IdType("Char"), implicitly[Encoder[Char]], implicitly[Decoder[Char]], Codec.empty)
 
   // Transaction to build our initial example data
   object example extends Transaction {
@@ -67,7 +69,7 @@ object TodoData {
             item <- put[TodoItem](id => TodoItem(id, c.moment, None, s"Todo $i"))
           } yield item.id
         )
-        name <- putList(_ => "Todo List".toList)
+        name <- createOTList("Todo List".toList)
         _ <- put[TodoList](TodoList(_, itemIds, name))
       } yield ()
     }
