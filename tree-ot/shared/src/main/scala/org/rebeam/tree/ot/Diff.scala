@@ -35,7 +35,8 @@ object Diff {
       val e = prefixLength(o.reverse, n.reverse, Math.min(ol, nl) - s)
 
       // Retain common start
-      val o1 = OperationBuilder[A].retain(s)
+      
+      val o1 = OperationBuilder[A].retainIfPositive(s)
 
       // If o contains non-common elements, delete them
       val o2 = if (ol != s + e) {
