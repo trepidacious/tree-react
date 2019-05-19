@@ -22,19 +22,9 @@ import scala.annotation.tailrec
   * invariants.
   *
   * @param atoms        The atoms to be applied to the list, in order
-  * @param priority     The priority of the operation. When operations are transformed, this is used as
-  *                     a tie-breaker for insertions at the same position. The higher priority is inserted
-  *                     first. We use this approach so that if the priority is an incrementing client identifier,
-  *                     more-recently connected clients will take priority over older ones.
-  *                     If the priorities of both operations are the same, the tie will be broken according to
-  *                     whether the operation is an authoritative server operation in the server's history, in which
-  *                     case it takes priority, or a client operation. Transformations are always between a server
-  *                     and a client operation.
-  *                     Defaults to 0, allowing for use of just server/client priority.
-  *
   * @tparam A           The operation will modify lists of this element type
   */
-case class Operation[A](atoms: List[Atom[A]], priority: Long = 0) {
+case class Operation[A](atoms: List[Atom[A]]) {
 
   import Atom._
 
@@ -140,7 +130,7 @@ case class Operation[A](atoms: List[Atom[A]], priority: Long = 0) {
     // Require that operation has used the entire input
     require(remainingInput.isEmpty, "input not empty after operation inverted")
 
-    inverse.build.copy(priority = priority)
+    inverse.build
   }
 
   /**
@@ -167,7 +157,7 @@ case class Operation[A](atoms: List[Atom[A]], priority: Long = 0) {
 //    Operation.composeRec(this.atoms, b.atoms, Operation.empty(priority))
 
     // Use builder for efficiency
-    Operation.composeRec(this.atoms, b.atoms, OperationBuilder.empty).build.copy(priority = priority)
+    Operation.composeRec(this.atoms, b.atoms, OperationBuilder.empty).build
   }
 
   /**
@@ -178,92 +168,32 @@ case class Operation[A](atoms: List[Atom[A]], priority: Long = 0) {
     * This operation must have different priority to b, otherwise a sys.error is raised.
     *
     * @param b   The operation we wish to apply before this one
+    * @param thisOpIsHigherPriority True if this operation is higher priority than b, false if b is higher priority
+    *                               This is used to break ties when both operations insert at the same location -
+    *                               the operation with the higher priority will insert first in the resulting
+    *                               list.
     * @return    This operation transformed so it can be applied after `b`.
     */
-  def after(b: Operation[A]): Operation[A] = if (priority > b.priority) {
+  def after(thisOpIsHigherPriority: Boolean, b: Operation[A]): Operation[A] = if (thisOpIsHigherPriority) {
     Operation.transform(this, b)._1
-  } else if (priority < b.priority) {
-    Operation.transform(b, this)._2
   } else {
-    sys.error("Operation.after requires operations to have different priorities")
-  }
-
-  /**
-    * This is just the first element in the pair returned by `Operation.transform(this, clientOp)`.
-    *
-    * This is intended for use to transform server operations - this means that operations performed
-    * on the server are always given priority, for example when breaking ties arising from the two
-    * operations inserting at the same location (the server insertion will be placed just before the
-    * client insertion in the resulting list).
-    *
-    * So if we call this operation `serverOp`, we have:
-    *
-    * serverOp.serverAfter(clientOp)(clientOp(s)) == clientOp.clientAfter(serverOp)(serverOp(s))
-    * for any input list `s`.
-    *
-    * @param clientOp   The operation we wish to apply before this one, taken to be a client operation.
-    * @return           This operation transformed so it can be applied after `clientOp`.
-    */
-  def serverAfter(clientOp: Operation[A]): Operation[A] = {
-    if (priority != clientOp.priority) {
-      after(clientOp)
-    } else {
-      Operation.transform(this, clientOp)._1
-    }
+    Operation.transform(b, this)._2
   }
 
   /**
     * As for serverAfter, but accepting an optional operation, treating None as no operation.
-    * @param clientOp   The operation we wish to apply before this one, taken to be a client operation, or none
-    *                   to leave this operation unaltered.
-    * @return           This operation transformed so it can be applied after `clientOp`.
+    * @param b   The operation we wish to apply before this one, or none
+    *            to leave this operation unaltered.
+    * @param thisOpIsHigherPriority True if this operation is higher priority than b, false if b is higher priority
+    *                               This is used to break ties when both operations insert at the same location -
+    *                               the operation with the higher priority will insert first in the resulting
+    *                               list.
+    *
+    * @return           This operation transformed so it can be applied after `b`.
     */
-  def serverAfterOptional(clientOp: Option[Operation[A]]): Operation[A] = clientOp match {
+  def afterOptional(thisOpIsHigherPriority: Boolean, b: Option[Operation[A]]): Operation[A] = b match {
     case None => this
-    case Some(c) => serverAfter(c)
-  }
-
-  /**
-    * This is just the second element in the pair returned by `Operation.transform(serverOp, this)`.
-    * So if we call this operation `clientOp`, we have:
-    *
-    * This is intended for use to transform client operations - this means that operations performed
-    * on the server are always given priority, for example when breaking ties arising from the two
-    * operations inserting at the same location (the server insertion will be placed just before the
-    * client insertion in the resulting list).
-    *
-    * clientOp.clientAfter(serverOp)(serverOp(s)) == serverOp.serverAfter(clientOp)(clientOp(s))
-    * for any input list s.
-    *
-    * @param serverOp   The operation we wish to apply before this one.
-    * @return           This operation transformed so it can be applied after b.
-    */
-  def clientAfter(serverOp: Operation[A]): Operation[A] = {
-    if (priority != serverOp.priority) {
-      after(serverOp)
-    } else {
-      Operation.transform(serverOp, this)._2
-    }
-  }
-
-  /**
-    * This is just the second element in the pair returned by `Operation.transform(serverOp, this)`.
-    * So if we call this operation `clientOp`, we have:
-    *
-    * This is intended for use to transform client operations - this means that operations performed
-    * on the server are always given priority, for example when breaking ties arising from the two
-    * operations inserting at the same location (the server insertion will be placed just before the
-    * client insertion in the resulting list).
-    *
-    * clientOp.clientAfter(serverOp)(serverOp(s)) == serverOp.serverAfter(clientOp)(clientOp(s))
-    * for any input list s.
-    *
-    * @param serverOp   The operation we wish to apply before this one.
-    * @return           This operation transformed so it can be applied after b.
-    */
-  def clientAfterOptional(serverOp: Option[Operation[A]]): Operation[A] = serverOp match {
-    case None => this
-    case Some(s) => clientAfter(s)
+    case Some(c) => after(thisOpIsHigherPriority, c)
   }
 
   def transformCursor(cursorIndex: Int, isEditor: Boolean): Int =
@@ -324,11 +254,11 @@ case class Operation[A](atoms: List[Atom[A]], priority: Long = 0) {
 object Operation {
   import Atom._
 
-  def empty[A](priority: Long = 0): Operation[A] = Operation(Nil, priority)
+  def empty[A]: Operation[A] = Operation(Nil)
 
-  def fromAtoms[A](atoms: List[Atom[A]], priority: Long = 0): Operation[A] = atoms.foldLeft(OperationBuilder.empty[A]){
+  def fromAtoms[A](atoms: List[Atom[A]]): Operation[A] = atoms.foldLeft(OperationBuilder.empty[A]){
     case (op, atom) => op.andThen(atom)
-  }.build.copy(priority = priority)
+  }.build
 
 //  def fromAtoms[A](atoms: Atom[A]*): Operation[A] = fromAtoms(atoms.toList)
 
@@ -360,7 +290,7 @@ object Operation {
     require(a.inputSize == b.inputSize, "transform requires operations to have same input size")
     //We use builder here for efficiency
     val (builderA, builderB) = transformRec(a.atoms, b.atoms, OperationBuilder.empty, OperationBuilder.empty)
-    (builderA.build.copy(priority = a.priority), builderB.build.copy(priority = b.priority))
+    (builderA.build, builderB.build)
 
 //    transformRec(a.atoms, b.atoms, Operation.empty(a.priority), Operation.empty(b.priority))
   }

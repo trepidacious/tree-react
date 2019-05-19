@@ -4,6 +4,7 @@ import japgolly.scalajs.react.{Callback, React}
 import japgolly.scalajs.react.React.Context
 import org.log4s.getLogger
 import org.rebeam.tree._
+import org.rebeam.tree.ot.CursorUpdate
 
 trait ReactTransactor {
   def transact(t: Transaction): Callback
@@ -19,6 +20,7 @@ object ReactData {
     override def get[A](id: Id[A]): Option[A] = None
     override def getWithRev[A](id: Id[A]): Option[(A, RevId[A])] = None
     override def revGuid(guid: Guid): Option[Guid] = None
+    override def getList[A](id: Id[List[A]]): Option[(List[A], CursorUpdate[A])] = None
     def transact(t: Transaction): Callback = Callback{logger.warn(s"ReactData.empty discards transaction $t")}
   }
 

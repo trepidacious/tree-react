@@ -54,11 +54,16 @@ object NetworkModel {
 
       //Server
       val server = ServerState[Char](list, Nil)
-      val clientState = ClientState(server = listRev, local = list)
-      val cursorState = CursorState(clientState)
-      val client = NetworkClient(clientState, Queue.empty, Queue.empty, cursorState)
 
-      Network(server, List.fill(clientCount)(client))
+      val clients = (0 until clientCount).toList.map(
+        i => {
+          val clientState = ClientState(priority = i, server = listRev, local = list)
+          val cursorState = CursorState(clientState)
+          NetworkClient(clientState, Queue.empty, Queue.empty, cursorState)
+        }
+      )
+
+      Network(server, clients)
     }
   }
 
@@ -113,7 +118,7 @@ object NetworkModel {
       * @param atoms The atoms to build an operation to perform on the client
       * @return   NetworkState for the action, returning any resulting OpRev (which has already been queued for the server)
       */
-    def editAndSend(i: Int, atoms: Atom[Char]*): NetworkState[Option[OpRev[Char]]] = editAndSend(i, Operation.fromAtoms(atoms.toList, i))
+    def editAndSend(i: Int, atoms: Atom[Char]*): NetworkState[Option[OpRev[Char]]] = editAndSend(i, Operation.fromAtoms[Char](atoms.toList))
 
     /**
       * Receive a message from the server (remove it from the queue)
@@ -197,19 +202,17 @@ object NetworkModel {
   object ServerOps {
     /**
       * Add a message from the server to all client queues.
-      * @param confirmClientIndex The client at this index will receive the operation as a ServerConfirmation, the others
-      *                           will receive the op in a ServerRemoteOp
       * @param optionalOp         The operation to send
       * @return                   NetworkState for the action
       */
-    private[ServerOps] def send(confirmClientIndex: Int, optionalOp: Option[OpRev[Char]]): NetworkState[Unit] = State.modify( s => {
+    private[ServerOps] def send(optionalOp: Option[OpRev[Char]]): NetworkState[Unit] = State.modify( s => {
       optionalOp.fold(
         s
       )(
         op => {
           val newClients = s.clients.zipWithIndex.map{
             case (client, i) =>
-              val msg: ServerMessage[Char] = if (i == confirmClientIndex) ServerConfirmation() else ServerRemoteOp(op.op)
+              val msg: ServerMessage[Char] = if (i == op.priority) ServerConfirmation() else ServerRemoteOp(op.toPriorityOperation)
               client.queueFromServer(msg)
           }
           s.copy(clients = newClients)
@@ -260,7 +263,7 @@ object NetworkModel {
     def receiveAndReply(i: Int): NetworkState[Option[OpRev[Char]]] = for {
       msg <- receive(i)
       reply <- process(i, msg)
-      _ <- send(i, reply)
+      _ <- send(reply)
     } yield reply
 
   }

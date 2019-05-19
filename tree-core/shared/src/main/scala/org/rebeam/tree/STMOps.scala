@@ -2,6 +2,7 @@ package org.rebeam.tree
 
 import cats.Monad
 import org.rebeam.tree.codec.IdCodec
+import org.rebeam.tree.ot.Operation
 
 abstract class STMOps[F[_]: Monad] extends TransactionOps {
 
@@ -69,7 +70,7 @@ abstract class STMOps[F[_]: Monad] extends TransactionOps {
     * @tparam A       The type of data in the List
     * @return         The created List
     */
-//  def putListF[A](create: Id[List[A]] => F[List[A]])(implicit idCodec: IdCodec[A]): F[List[A]]
+  def putListF[A](create: Id[List[A]] => F[List[A]])(implicit idCodec: IdCodec[A]): F[List[A]]
 
   /**
     * Put a new List value into the STM, with operational transformation
@@ -83,8 +84,17 @@ abstract class STMOps[F[_]: Monad] extends TransactionOps {
     * @tparam A       The type of data in the List
     * @return         The created List
     */
-//  def putList[A](create: Id[List[A]] => List[A])(implicit idCodec: IdCodec[A]): F[List[A]] = putListF(create.andThen(pure))
+  def putList[A](create: Id[List[A]] => List[A])(implicit idCodec: IdCodec[A]): F[List[A]] = putListF(create.andThen(pure))
 
+  /**
+    * Apply an OT operation to the list at an Id. Will only succeed if the
+    * list was put with putList or putListF (enabling operational transformation support)
+    * @param id   The id of the list
+    * @param op   The operation to apply
+    * @tparam A   The type of data in the list
+    * @return     The new list contents
+    */
+  def listOperation[A](id: Id[List[A]], op: Operation[A]): F[List[A]]
 
 }
 

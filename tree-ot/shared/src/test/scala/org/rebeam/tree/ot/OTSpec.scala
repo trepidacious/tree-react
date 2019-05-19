@@ -213,37 +213,29 @@ class OTSpec extends WordSpec with Matchers with Checkers {
     }
 
     "always compose so that a.compose(b)(i) == b(a(i)) for input i" in {
-      try {
-        check(
-          forAll(genOperationComposePairAndInput[Int]) {
+      check(
+        forAll(genOperationComposePairAndInput[Int]) {
 
-            p => p.a.compose(p.b)(p.input) == p.b(p.a(p.input))
+          p => p.a.compose(p.b)(p.input) == p.b(p.a(p.input))
 
-          }, MinSuccessful(10000)
-        )
-      } catch {
-        case e: Throwable => e.printStackTrace()
-      }
+        }, MinSuccessful(10000)
+      )
     }
 
     "always transform pair (a, b) to (ap, bp) such that bp(a(i)) == ap(b(i)) for input i" in {
-      try {
-        check(
-          forAll(genOperationPairAndInput[Int]) {
-            p =>
-              // Transform the pair
-              val a = p.a
-              val b = p.b
-              val (ap, bp) = Operation.transform(a, b)
-              val input = p.input
+      check(
+        forAll(genOperationPairAndInput[Int]) {
+          p =>
+            // Transform the pair
+            val a = p.a
+            val b = p.b
+            val (ap, bp) = Operation.transform(a, b)
+            val input = p.input
 
-              bp(a(input)) == ap(b(input))
+            bp(a(input)) == ap(b(input))
 
-          }, MinSuccessful(10000)
-        )
-      } catch {
-        case e: Throwable => e.printStackTrace()
-      }
+        }, MinSuccessful(10000)
+      )
     }
 
     "require positive retain count" in {
@@ -270,7 +262,7 @@ class OTSpec extends WordSpec with Matchers with Checkers {
     }
 
     "be identity with no atoms" in {
-      assert(Operation.empty[Int]().isIdentity)
+      assert(Operation.empty[Int].isIdentity)
     }
 
     "be identity with only retains" in {

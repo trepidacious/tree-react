@@ -41,8 +41,18 @@ case class ListRev[A](a: List[A], rev: Rev) {
 case class LocalUpdate[A](op: Operation[A], ownOperation: Boolean)
 
 /**
+  * The data needed to update a cursor for a single update to the state of an OT list
+  * @tparam A The type of data in the list
+  */
+trait CursorUpdate[A]{
+  def clientRev: Int
+  def previousLocalUpdate: Option[LocalUpdate[A]]
+}
+
+/**
   * The state needed on each client to allow for operations to be applied optimistically (and immediately) locally,
   * but then transformed and sent appropriately based on updates to the server.
+  * @param priority     Our own priority as a client
   * @param server       The most recent known server state, as data and a revision
   * @param local        The current, optimistic state of the data locally, based on the server state with local edits
   *                     applied immediately.
@@ -67,7 +77,7 @@ case class LocalUpdate[A](op: Operation[A], ownOperation: Boolean)
   *                     one against clientRev.
   * @tparam A           The type of element in edited list
   */
-case class ClientState[A](server: ListRev[A], local: List[A], pendingOp: Option[Operation[A]] = None, buffer: Option[Operation[A]] = None, clientRev: Int = 0, previousLocalUpdate: Option[LocalUpdate[A]] = None) {
+case class ClientState[A](priority: Long, server: ListRev[A], local: List[A], pendingOp: Option[Operation[A]] = None, buffer: Option[Operation[A]] = None, clientRev: Int = 0, previousLocalUpdate: Option[LocalUpdate[A]] = None) extends CursorUpdate[A] {
 
   /**
     * Allow us to apply and compose an optional operation - None is treated as an empty operation (does nothing)
@@ -90,7 +100,7 @@ case class ClientState[A](server: ListRev[A], local: List[A], pendingOp: Option[
     // No pending operation - we can add the new op to the buffer and send the buffer immediately, against
     // the current server revision
     case None =>
-      val opRev = OpRev(buffer.compose(op), server.rev)
+      val opRev = OpRev(buffer.compose(op), priority, server.rev)
       val newState = copy(
         pendingOp = Some(opRev.op),
         buffer = None,
@@ -142,7 +152,7 @@ case class ClientState[A](server: ListRev[A], local: List[A], pendingOp: Option[
         ),
 
         // Send any buffer against the new server revision
-        buffer.map(b => OpRev(b, newServerState.rev))
+        buffer.map(b => OpRev(b, priority, newServerState.rev))
       )
 
     case None => throw new RuntimeException("Server pending confirmation with no pending op")
@@ -151,19 +161,27 @@ case class ClientState[A](server: ListRev[A], local: List[A], pendingOp: Option[
   /**
     * Produce a new client state based on the server sending a remote operation
     *
-    *
-    * @param op   The operation from the server
+    * @param pop   The operation and priority from the server
     * @return     New client state
     */
-  def withServerRemoteOp(op: Operation[A]): ClientState[A] = {
+  def withServerRemoteOp(pop: PriorityOperation[A]): ClientState[A] = {
+
+    val op = pop.op
+
+    // p indicates whether the client operation is higher priority than the remote
+    // operation, and is passed to `after` as a tie-breaker.
+    // Therefore we use `p` where we are calling `after` on an operation of this client (pending or buffer),
+    // and `!p` where we are calling after on the remote operation (op).
+    val p = priority > pop.priority
 
     // We need to move the pending op (if any) to apply after the remote op,
     // treating it as a client-side operation
-    val newPending = pendingOp.map(_.clientAfter(op))
+    val newPending = pendingOp.map(_.after(p, op))
 
     // Now we update the buffered op to be after the new server op AND after the
     // pending op.
-    val newBuffer = buffer.map(b => b.clientAfter(op.serverAfterOptional(pendingOp)))
+    val opAfterPending = op.afterOptional(!p, pendingOp)
+    val newBuffer = buffer.map(b => b.after(p, opAfterPending))
 
     val newServerState = server.withOp(op)
 
@@ -173,7 +191,7 @@ case class ClientState[A](server: ListRev[A], local: List[A], pendingOp: Option[
 
     // Produce an operation that takes previous local state and produces
     // the new local state. This is the previousOp
-    val newPreviousOp = op.serverAfterOptional(pendingOp).serverAfterOptional(buffer)
+    val newPreviousOp = opAfterPending.afterOptional(!p, buffer)
 
     // Update our state. Note we can't send our buffer until we receive a confirmation
     // and so clear the pending op

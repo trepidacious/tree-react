@@ -193,15 +193,15 @@ class ClientServerStateSpec extends WordSpec with Matchers with Checkers {
       val server0 = ServerState(l0, Nil)
 
       //First client - starts up to date with server
-      val clientA0 = ClientState(server = lr0, local = l0, pendingOp = None, buffer = None)
+      val clientA0 = ClientState(priority = 0, server = lr0, local = l0, pendingOp = None, buffer = None)
 
       //First client edits. We are simulating a long lag, so this doesn't make it to the
       //server yet...
       val opA0 = Operation[Char](List(Retain(5), Insert(" World!".toList)))
       val (clientA1, revOpA0) = clientA0.withClientOp(opA0)
 
-      //This should produce the expected operation against revision 0
-      assert(revOpA0.contains(OpRev(opA0, Rev(0))))
+      //This should produce the expected operation against revision 0, priority 0
+      assert(revOpA0.contains(OpRev(opA0, 0, Rev(0))))
 
       //Client A optimistically assumes its operation will succeed
       assert(clientA1.local == "Hello World!".toList)
@@ -210,14 +210,14 @@ class ClientServerStateSpec extends WordSpec with Matchers with Checkers {
       assert(clientA1.pendingOp.contains(opA0))
 
       //Second client - starts up to date with server
-      val clientB0 = ClientState(server = lr0, local = l0, pendingOp = None, buffer = None)
+      val clientB0 = ClientState(server = lr0, priority = 1, local = l0, pendingOp = None, buffer = None)
 
       //Second client edits - produces new client state and operation for server
       val opB0 = Operation[Char](List(Retain(5), Insert("o".toList)))
       val (clientB1, revOpB0) = clientB0.withClientOp(opB0)
 
-      // Client B produces expected op
-      assert(revOpB0.contains(OpRev(opB0, Rev(0))))
+      // Client B produces expected op, with priority 1
+      assert(revOpB0.contains(OpRev(opB0, 1, Rev(0))))
 
       //Client B optimistically assumes its operation will succeed
       assert(clientB1.local == "Helloo".toList)
@@ -232,7 +232,7 @@ class ClientServerStateSpec extends WordSpec with Matchers with Checkers {
       assert(server1.list == "Helloo".toList)
 
       //Server has added the op to history
-      assert(server1.history == List(revOpB0.get.op))
+      assert(server1.history == List(revOpB0.get.toPriorityOperation))
 
       //Client B receives confirmation - it has no buffered op so no message for server
       val (clientB2, revOpB2) = clientB1.withServerConfirmation
@@ -242,7 +242,7 @@ class ClientServerStateSpec extends WordSpec with Matchers with Checkers {
       assert(clientB2.local == "Helloo".toList)
 
       //Client A receives client B's remote operation from server
-      val clientA2 = clientA1.withServerRemoteOp(revOpB0.get.op)
+      val clientA2 = clientA1.withServerRemoteOp(revOpB0.get.toPriorityOperation)
 
       //Client A updates server and local state
       assert(clientA2.local == "Helloo World!".toList)
@@ -261,7 +261,7 @@ class ClientServerStateSpec extends WordSpec with Matchers with Checkers {
       assert(server2.list == "Helloo World!".toList)
 
       //Server has added the op to history
-      assert(server2.history == List(revOpB0.get.op, p1.op))
+      assert(server2.history == List(revOpB0.get.toPriorityOperation, p1.toPriorityOperation))
 
       //Client A receives confirmation, no op to send
       val (clientA3, revOpA3) = clientA2.withServerConfirmation
@@ -274,7 +274,7 @@ class ClientServerStateSpec extends WordSpec with Matchers with Checkers {
       assert(clientA3.buffer.isEmpty)
 
       //Server sends remote op from Client A to Client B
-      val clientB3 = clientB2.withServerRemoteOp(p1.op)
+      val clientB3 = clientB2.withServerRemoteOp(p1.toPriorityOperation)
       //Client B3 has correct data after confirmation, and no pending or buffer ops
       assert(clientB3.local == "Helloo World!".toList)
       assert(clientB3.server == ListRev("Helloo World!".toList, Rev(2)))
