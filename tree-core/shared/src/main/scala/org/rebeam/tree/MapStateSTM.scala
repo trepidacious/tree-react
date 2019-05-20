@@ -3,7 +3,7 @@ package org.rebeam.tree
 import cats.data.StateT
 import cats.implicits._
 import org.rebeam.tree.codec._
-import org.rebeam.tree.ot.{ClientState, CursorUpdate, OTList, Operation}
+import org.rebeam.tree.ot.{ClientState, CursorUpdate, ListRev, OTList, Operation, Rev}
 
 /**
   * Implementation of STM using a Map and PRandom as State, intended for client-side operation
@@ -146,6 +146,13 @@ object MapStateSTM {
     def createOTListF[A](create: MapState[List[A]])(implicit idCodec: IdCodec[A]): MapState[OTList[A]] = for {
       id <- createGuid
       a <- create
+      // Local data root handles a single client only - priority 0, starts up to date with server rev 0
+      newCs = ClientState(priority = 0, server = ListRev(a, Rev(0)), local = a, pendingOp = None, buffer = None, previousLocalUpdate = None)
+      _ <- StateT.modify[ErrorOr, StateData](sd =>
+        sd.copy(
+          otMap = sd.otMap.updated(id, newCs),
+        )
+      )
     } yield OTList(a, id)
 
     def otListOperation[A](list: OTList[A], op: Operation[A]): MapState[OTList[A]] = for {
@@ -157,7 +164,10 @@ object MapStateSTM {
           otMap = sd.otMap.updated(list.guid, newCs),
         )
       )
-    } yield list.copy(list = newData)
+    } yield {
+      println(s"Applied $op to get $newData")
+      list.copy(list = newData)
+    }
 
   }
 }

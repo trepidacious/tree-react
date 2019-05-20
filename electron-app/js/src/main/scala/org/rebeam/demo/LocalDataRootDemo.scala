@@ -13,7 +13,7 @@ import TodoData._
 import org.log4s.getLogger
 import org.rebeam.mui
 import org.rebeam._
-import org.rebeam.tree.ot.Diff
+import org.rebeam.tree.ot.{Diff, OTList}
 
 import scala.scalajs.js
 import js.JSConverters._
@@ -46,29 +46,29 @@ object LocalDataRootDemo {
     }
   }
 
-  // This view shows a "monolithic" approach to displaying the list,
-  // where we retrieve all the items using get, and display them in one component.
-  // This will update whenever the TodoList or any item in it changes.
-  val todoListViewMonolithic: Component[TodoList, Unit, Unit, CtorType.Props] = new View[TodoList] {
-    def apply[F[_]: Monad](l: TodoList)(implicit v: ReactViewOps[F], tx: ReactTransactor): F[VdomElement] = {
-      import v._
-
-      // TODO add an implicit method (not sure of best name?) to call traverse(get)
-      // l.items is a List[Id[TodoItem]]. get(id) gives an F[TodoItem], so l.items.map(get) would give a
-      // List[F[TodoItem]]. Therefore instead of map we can call traverse, and get the result "inside-out", as
-      // an F[List[TodoItem]]
-      l.items.traverse(get)
-        // We can then map this F[List[TodoItem]] to an F[VdomElement], using the normal approaches we would use
-        // from a List to a VdomElement in scalajs-react - in this case toTagMod to produce a TagMod containing
-        // a <li> for each TodoItem.
-        .map(
-          items =>
-            <.ol(
-              items.toTagMod(item => <.li(item.toString))
-            )
-        )
-    }
-  }.build("todoListView")
+//  // This view shows a "monolithic" approach to displaying the list,
+//  // where we retrieve all the items using get, and display them in one component.
+//  // This will update whenever the TodoList or any item in it changes.
+//  val todoListViewMonolithic: Component[TodoList, Unit, Unit, CtorType.Props] = new View[TodoList] {
+//    def apply[F[_]: Monad](l: TodoList)(implicit v: ReactViewOps[F], tx: ReactTransactor): F[VdomElement] = {
+//      import v._
+//
+//      // TODO add an implicit method (not sure of best name?) to call traverse(get)
+//      // l.items is a List[Id[TodoItem]]. get(id) gives an F[TodoItem], so l.items.map(get) would give a
+//      // List[F[TodoItem]]. Therefore instead of map we can call traverse, and get the result "inside-out", as
+//      // an F[List[TodoItem]]
+//      l.items.traverse(get)
+//        // We can then map this F[List[TodoItem]] to an F[VdomElement], using the normal approaches we would use
+//        // from a List to a VdomElement in scalajs-react - in this case toTagMod to produce a TagMod containing
+//        // a <li> for each TodoItem.
+//        .map(
+//          items =>
+//            <.ol(
+//              items.toTagMod(item => <.li(item.toString))
+//            )
+//        )
+//    }
+//  }.build("todoListView")
 
   val stringView: Component[Cursor[String], Unit, Unit, CtorType.Props] = new ViewPC[String] {
     private val logger = getLogger
@@ -111,44 +111,47 @@ object LocalDataRootDemo {
 
   }.build("stringView")
 
-//  val stringOTView: Component[Cursor[Ref[List[Char]]], Unit, Unit, CtorType.Props] = new ViewPC[Ref[List[Char]]] {
-//    private val logger = getLogger
-//
-//    override def apply(a: Cursor[Ref[List[Char]]])(implicit tx: ReactTransactor): VdomNode = {
-//
-//      logger.debug(s"stringOTView applying from $a, transactor $tx")
-//
-//      // Editing the value is straightforward - just call set on the cursor. The cursor
-//      // creates a ValueDelta that will set the String directly to a new value, makes
-//      // a Transaction from the delta using the context provided by the cursor, and
-//      // then uses the implicit ReactTransactor to convert the Transactor to a Callback
-//      // we can give to React.
-//
-//      // Note we can use e.target.value directly - set accepts a plain value, not a function,
-//      // so we don't have to worry about the event being reused. Of course the Callback produced
-//      // will not be used until later.
-//      def onChange(e: ReactEventFromInput) = {
-//        val o = a.a
-//        val n = e.target.value.toList
-//        val d = Diff(o, n)
-//        println(s"'$o' -> '$n' by $d")
-//        a.tr
-//      }
-//
-//      //      mui.TextField(
-//      //        // Display the data from the cursor
-//      //        value = a.a,
-//      //        onChange = e => onChange(e)
-//      //      )
-//
-//      <.input(
-//        ^.value := a.a,
-//        ^.onChange ==> onChange,
-//        ^.margin := "10px"
-//      )
-//    }
-//
-//  }.build("stringView")
+  val stringOTView: Component[OTList[Char], Unit, Unit, CtorType.Props] = new ViewPT[OTList[Char]] {
+    private val logger = getLogger
+
+    override def apply(a: OTList[Char])(implicit tx: ReactTransactor): VdomNode = {
+
+      logger.debug(s"stringOTView applying from $a, transactor $tx")
+
+      // Editing the value is straightforward - just call set on the cursor. The cursor
+      // creates a ValueDelta that will set the String directly to a new value, makes
+      // a Transaction from the delta using the context provided by the cursor, and
+      // then uses the implicit ReactTransactor to convert the Transactor to a Callback
+      // we can give to React.
+
+      // Note we can use e.target.value directly - set accepts a plain value, not a function,
+      // so we don't have to worry about the event being reused. Of course the Callback produced
+      // will not be used until later.
+      def onChange(e: ReactEventFromInput) = {
+        val o = a.list
+        val n = e.target.value.toList
+        val d = Diff(o, n)
+        println(s"'$o' -> '$n' by $d")
+        //TODO make this a serialisable transaction
+        tx.transact(new Transaction {
+          override def apply[F[_] : Monad](implicit stm: STMOps[F]): F[Unit] = stm.otListOperation(a, d).map(_ => ())
+        })
+      }
+
+      //      mui.TextField(
+      //        // Display the data from the cursor
+      //        value = a.a,
+      //        onChange = e => onChange(e)
+      //      )
+
+      <.input(
+        ^.value := a.list.mkString,
+        ^.onChange ==> onChange,
+        ^.margin := "10px"
+      )
+    }
+
+  }.build("stringView")
 
   val todoItemView: Component[Id[TodoItem], Unit, Unit, CtorType.Props] = new View[Id[TodoItem]] {
     private val logger = getLogger
@@ -212,16 +215,20 @@ object LocalDataRootDemo {
   // Note that this does not need to be a View itself since it doesn't actually get the data by id - the child views
   // can still get data from the Context provided by dataProvider, so this can be a ViewP
   val todoListView: Component[TodoList, Unit, Unit, CtorType.Props] = new ViewP[TodoList] {
-    override def apply(a: TodoList): VdomNode =
-//      mui.List(
-//        dense = true
-//      )(
-//        // TODO make this neater
-//        a.items.map(id => todoItemView.withKey(id.toString)(id): VdomNode): _*
-//      )
 
-      <.ul(
-        a.items.toTagMod(id => todoItemView.withKey(id.toString)(id))
+    override def apply(a: TodoList): VdomNode =
+  //      mui.List(
+  //        dense = true
+  //      )(
+  //        // TODO make this neater
+  //        a.items.map(id => todoItemView.withKey(id.toString)(id): VdomNode): _*
+  //      )
+      <.div(
+        stringOTView(a.name),
+        stringOTView(a.name),
+        <.ul(
+          a.items.toTagMod(id => todoItemView.withKey(id.toString)(id))
+        )
       )
   }.build("todoListView")
 
