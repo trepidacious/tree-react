@@ -3,6 +3,7 @@ package org.rebeam.tree
 import cats.{Monad, Traverse}
 import cats.implicits._
 import monocle.{Lens, Optional, Prism}
+import org.rebeam.tree.ot.{OTList, Operation}
 
 /**
   * A Delta will take a data value, and produce a new data
@@ -72,10 +73,14 @@ object Delta {
       }
   }
 
-  def transform[F[_] : Traverse, A](oldList: F[A], modify: A => A, predicate: Int => Boolean): F[A] = {
-    oldList.mapWithIndex {
-      case (a, i) if predicate(i) => modify(a)
-      case (a, i) => a
-    }
+  case class OTListDelta[A](op: Operation[A]) extends Delta[OTList[A]] {
+    override def apply[F[_] : Monad](a: OTList[A])(implicit stm: STMOps[F]): F[OTList[A]] = stm.otListOperation(a, op)
   }
+
+//  def transform[F[_] : Traverse, A](oldList: F[A], modify: A => A, predicate: Int => Boolean): F[A] = {
+//    oldList.mapWithIndex {
+//      case (a, i) if predicate(i) => modify(a)
+//      case (a, i) => a
+//    }
+//  }
 }

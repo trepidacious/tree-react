@@ -47,10 +47,13 @@ object TodoData {
       }
 
   @JsonCodec
+  @Lenses
   case class TodoList(id: Id[TodoList], items: List[Id[TodoItem]], name: OTList[Char])
 
-  // We can edit a TodoList by specifying a new value
-  implicit val todoListDeltaCodec: DeltaCodec[TodoList] = value[TodoList]
+  implicit val otListCharCodec: DeltaCodec[OTList[Char]] = otList[Char]
+
+  // We can edit a TodoList by specifying a new value, or editing items
+  implicit val todoListDeltaCodec: DeltaCodec[TodoList] = value[TodoList] or lens("name", TodoList.name)
 
   // Both TodoItem and TodoList can be referenced by Id, so we need IdCodecs
   implicit val todoItemIdCodec: IdCodec[TodoItem] = IdCodec[TodoItem]("TodoItem")

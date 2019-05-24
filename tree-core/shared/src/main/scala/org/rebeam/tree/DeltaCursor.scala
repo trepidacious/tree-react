@@ -3,6 +3,7 @@ package org.rebeam.tree
 import cats.Traverse
 import monocle.{Lens, Optional, Prism}
 import org.rebeam.tree.Delta._
+import org.rebeam.tree.ot.{OTList, Operation}
 
 /**
   * A DeltaCursor provides a location in which to apply a Delta. This allows us to convert
@@ -122,15 +123,14 @@ object DeltaCursor {
     def transact(delta: Delta[A]): Transaction = parent.transact(OptionDelta(delta))
   }
 
-//  /**
-//    * Operates on an indexed element of a Seq in a parent DeltaCursor
-//    * @param parent   The parent cursor
-//    * @param index    The index
-//    * @tparam A       Data type in seq
-//    */
-//  case class SeqIndexCursor[A](parent: DeltaCursor[Seq[A]], index: Int) extends DeltaCursor[A] {
-//    def transact(delta: Delta[A]): Transaction = parent.transact(SeqIndexDelta(index, delta))
-//  }
+  /**
+    * Convenience method to zoom into contents of an Option
+    * @param cursor Cursor to an Option
+    * @tparam A     Type of value in Option
+    */
+  implicit class CursorAtOption[A](cursor: DeltaCursor[Option[A]]) {
+    def zoomSome: DeltaCursor[A] = OptionCursor(cursor)
+  }
 
   /**
     * Operates on an indexed element of a Traversable in a parent DeltaCursor
@@ -145,24 +145,6 @@ object DeltaCursor {
   }
 
   /**
-    * Convenience method to zoom into contents of an Option
-    * @param cursor Cursor to an Option
-    * @tparam A     Type of value in Option
-    */
-  implicit class CursorAtOption[A](cursor: DeltaCursor[Option[A]]) {
-    def zoomSome: DeltaCursor[A] = OptionCursor(cursor)
-  }
-
-//  /**
-//    * Convenience method to zoom into contents of a Seq using an index
-//    * @param cursor Cursor to a Seq
-//    * @tparam A     Type of value in Seq
-//    */
-//  implicit class CursorAtSeq[A](cursor: DeltaCursor[Seq[A]]) {
-//    def zoomIndex(index: Int): DeltaCursor[A] = SeqIndexCursor(cursor, index)
-//  }
-
-  /**
     * Convenience method to zoom into contents of a Seq using an index
     * @param cursor Cursor to a Seq
     * @tparam A     Type of value in Seq
@@ -170,4 +152,38 @@ object DeltaCursor {
   implicit class CursorAtTraversable[T[_]: Traverse, A](cursor: DeltaCursor[T[A]]) {
     def zoomIndex(index: Int): DeltaCursor[A] = TraversableIndexCursor[T, A](cursor, index)
   }
+
+  /**
+    * Convenience method to operate on an OTList
+    * @param cursor Cursor to an OTList
+    * @tparam A     Type of value in OTList
+    */
+  implicit class CursorAtOTList[A](cursor: DeltaCursor[OTList[A]]) {
+    /**
+      * Produce a [[Transaction]] applying an Operation to the value at the cursor
+      * using an OTListDelta
+      * @param op  The Operation to apply
+      * @return   The transaction
+      */
+    def operate(op: Operation[A]): Transaction = cursor.transact(OTListDelta(op))
+  }
+
+  //  /**
+  //    * Operates on an indexed element of a Seq in a parent DeltaCursor
+  //    * @param parent   The parent cursor
+  //    * @param index    The index
+  //    * @tparam A       Data type in seq
+  //    */
+  //  case class SeqIndexCursor[A](parent: DeltaCursor[Seq[A]], index: Int) extends DeltaCursor[A] {
+  //    def transact(delta: Delta[A]): Transaction = parent.transact(SeqIndexDelta(index, delta))
+  //  }
+
+  //  /**
+  //    * Convenience method to zoom into contents of a Seq using an index
+  //    * @param cursor Cursor to a Seq
+  //    * @tparam A     Type of value in Seq
+  //    */
+  //  implicit class CursorAtSeq[A](cursor: DeltaCursor[Seq[A]]) {
+  //    def zoomIndex(index: Int): DeltaCursor[A] = SeqIndexCursor(cursor, index)
+  //  }
 }

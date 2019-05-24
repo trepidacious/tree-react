@@ -6,13 +6,14 @@ import org.rebeam.tree.MapStateSTM.StateDelta
 import japgolly.scalajs.react._
 import japgolly.scalajs.react.component.Scala.Component
 import japgolly.scalajs.react.vdom.html_<^._
-import japgolly.scalajs.react.vdom._
+import japgolly.scalajs.react.vdom.{html_<^, _}
 import org.rebeam.tree._
 import org.rebeam.tree.react._
 import TodoData._
 import org.log4s.getLogger
 import org.rebeam.mui
 import org.rebeam._
+import org.rebeam.tree.Delta.OTListDelta
 import org.rebeam.tree.ot.{Diff, OTList}
 
 import scala.scalajs.js
@@ -111,12 +112,11 @@ object LocalDataRootDemo {
 
   }.build("stringView")
 
-  val stringOTView: Component[OTList[Char], Unit, Unit, CtorType.Props] = new ViewPT[OTList[Char]] {
+  val stringOTView: Component[Cursor[OTList[Char]], Unit, Unit, CtorType.Props] = new ViewPC[OTList[Char]] {
     private val logger = getLogger
 
-    override def apply(a: OTList[Char])(implicit tx: ReactTransactor): VdomNode = {
-
-      logger.debug(s"stringOTView applying from $a, transactor $tx")
+    override def apply(c: Cursor[OTList[Char]])(implicit tx: ReactTransactor): VdomNode = {
+      logger.debug(s"stringOTView applying from ${c.a}, transactor $tx")
 
       // Editing the value is straightforward - just call set on the cursor. The cursor
       // creates a ValueDelta that will set the String directly to a new value, makes
@@ -128,14 +128,11 @@ object LocalDataRootDemo {
       // so we don't have to worry about the event being reused. Of course the Callback produced
       // will not be used until later.
       def onChange(e: ReactEventFromInput) = {
-        val o = a.list
+        val o = c.a.list
         val n = e.target.value.toList
         val d = Diff(o, n)
         println(s"'$o' -> '$n' by $d")
-        //TODO make this a serialisable transaction
-        tx.transact(new Transaction {
-          override def apply[F[_] : Monad](implicit stm: STMOps[F]): F[Unit] = stm.otListOperation(a, d).map(_ => ())
-        })
+        c.delta(OTListDelta(d))
       }
 
       //      mui.TextField(
@@ -145,7 +142,7 @@ object LocalDataRootDemo {
       //      )
 
       <.input(
-        ^.value := a.list.mkString,
+        ^.value := c.a.list.mkString,
         ^.onChange ==> onChange,
         ^.margin := "10px"
       )
@@ -214,22 +211,35 @@ object LocalDataRootDemo {
   // referenced by that Id changes.
   // Note that this does not need to be a View itself since it doesn't actually get the data by id - the child views
   // can still get data from the Context provided by dataProvider, so this can be a ViewP
-  val todoListView: Component[TodoList, Unit, Unit, CtorType.Props] = new ViewP[TodoList] {
+  val todoListView: Component[TodoList, Unit, Unit, CtorType.Props] = new View[TodoList] {
 
-    override def apply(a: TodoList): VdomNode =
-  //      mui.List(
-  //        dense = true
-  //      )(
-  //        // TODO make this neater
-  //        a.items.map(id => todoItemView.withKey(id.toString)(id): VdomNode): _*
-  //      )
+    override def apply[F[_] : Monad](a: TodoList)(implicit v: ReactViewOps[F], tx: ReactTransactor): F[html_<^.VdomElement] = for {
+      cName <- v.cursorAt(a.id)
+    } yield {
       <.div(
-        stringOTView(a.name),
-        stringOTView(a.name),
+        stringOTView(cName.zoom(TodoList.name)),
+        stringOTView(cName.zoom(TodoList.name)),
         <.ul(
           a.items.toTagMod(id => todoItemView.withKey(id.toString)(id))
         )
       )
+    }
+//    override def apply(a: Cursor[TodoList])(implicit tx: ReactTransactor): VdomNode = ???
+
+//    override def apply(a: TodoList): VdomNode =
+//  //      mui.List(
+//  //        dense = true
+//  //      )(
+//  //        // TODO make this neater
+//  //        a.items.map(id => todoItemView.withKey(id.toString)(id): VdomNode): _*
+//  //      )
+//      <.div(
+//        stringOTView(a.name),
+//        stringOTView(a.name),
+//        <.ul(
+//          a.items.toTagMod(id => todoItemView.withKey(id.toString)(id))
+//        )
+//      )
   }.build("todoListView")
 
 
