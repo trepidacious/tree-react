@@ -118,15 +118,9 @@ object LocalDataRootDemo {
     override def apply(c: Cursor[OTList[Char]])(implicit tx: ReactTransactor): VdomNode = {
       logger.debug(s"stringOTView applying from ${c.a}, transactor $tx")
 
-      // Editing the value is straightforward - just call set on the cursor. The cursor
-      // creates a ValueDelta that will set the String directly to a new value, makes
-      // a Transaction from the delta using the context provided by the cursor, and
-      // then uses the implicit ReactTransactor to convert the Transactor to a Callback
-      // we can give to React.
 
-      // Note we can use e.target.value directly - set accepts a plain value, not a function,
-      // so we don't have to worry about the event being reused. Of course the Callback produced
-      // will not be used until later.
+      // Diff the old and new contents of the input, as an operation,
+      // and then apply this as an OTListDelta using the cursor
       def onChange(e: ReactEventFromInput) = {
         val o = c.a.list
         val n = e.target.value.toList
@@ -134,13 +128,7 @@ object LocalDataRootDemo {
         println(s"'$o' -> '$n' by $d")
         c.delta(OTListDelta(d))
       }
-
-      //      mui.TextField(
-      //        // Display the data from the cursor
-      //        value = a.a,
-      //        onChange = e => onChange(e)
-      //      )
-
+      
       <.input(
         ^.value := c.a.list.mkString,
         ^.onChange ==> onChange,
