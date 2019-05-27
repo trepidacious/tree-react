@@ -36,11 +36,16 @@ object LocalDataRoot {
 
   //NOTE: This is not pure - gets the time for the transaction
   def runTransaction[I](state: State[I], t: Transaction, indexer: Indexer[I]): ErrorOr[State[I]] = {
-    // Update the time to now
-    val sdWithTime = state.sd.copy(context = TransactionContext(Moment(System.currentTimeMillis)))
+    // Update the context - use current time and transactionId based on the nextGuid (which will be used to run the transaction)
+    val sdWithContext = state.sd.copy(
+      context = TransactionContext(
+        Moment(System.currentTimeMillis),
+        state.sd.nextGuid.transactionId
+      )
+    )
 
-    // Run the transaction on stateWithTime
-    val sdNew = t[MapState].run(sdWithTime)
+    // Run the transaction on sdWithContext
+    val sdNew = t[MapState].run(sdWithContext)
 
     // Map to a new State, updating the StateData to next transaction, and the indexer with deltas
     sdNew.map{

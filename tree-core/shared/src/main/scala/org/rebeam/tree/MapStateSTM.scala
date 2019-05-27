@@ -78,7 +78,7 @@ object MapStateSTM {
     Map.empty,
     Map.empty,
     PRandom(0),
-    TransactionContext(Moment(0)),
+    TransactionContext(Moment(0), Guid.first.transactionId),
     Vector.empty
   )
 
@@ -126,7 +126,7 @@ object MapStateSTM {
 
     def context: MapState[TransactionContext] = StateT.inspect(_.context)
 
-    private def createGuid: MapState[Guid] =
+    def createGuid: MapState[Guid] =
       StateT[ErrorOr, StateData, Guid](sd => {
         Right(
           (

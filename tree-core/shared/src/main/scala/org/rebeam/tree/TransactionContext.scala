@@ -13,6 +13,11 @@ import io.circe.generic.JsonCodec
   *  value is returned back to the client when the delta
   *  is applied on the server, so the client can rerun
   *  with the correct moment.)
+  *
+  * @param transactionId  The id of this transaction
   */
 @JsonCodec
-case class TransactionContext(moment: Moment)
+case class TransactionContext(
+  moment: Moment,
+  transactionId: TransactionId
+)

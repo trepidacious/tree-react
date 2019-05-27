@@ -59,6 +59,12 @@ abstract class STMOps[F[_]: Monad] extends TransactionOps {
   def modify[A](id: Id[A], f: A => A): F[A] = modifyF(id, f.andThen(pure))
 
   /**
+    * Create a new Guid for general-purpose use (e.g. for Logoot)
+    * @return   The new Guid
+    */
+  def createGuid: F[Guid]
+
+  /**
     * Put a new List value into the STM, with operational transformation
     * support.
     * This will create a new Id, and this is used to create the data to add to the

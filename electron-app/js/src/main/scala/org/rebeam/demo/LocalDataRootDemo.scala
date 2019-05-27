@@ -128,7 +128,7 @@ object LocalDataRootDemo {
         println(s"'$o' -> '$n' by $d")
         c.delta(OTListDelta(d))
       }
-      
+
       <.input(
         ^.value := c.a.list.mkString,
         ^.onChange ==> onChange,
