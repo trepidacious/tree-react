@@ -2,7 +2,7 @@ package org.rebeam.tree
 
 import cats.Monad
 import org.rebeam.tree.codec.IdCodec
-import org.rebeam.tree.ot.{OTList, Operation}
+//import org.rebeam.tree.ot.{OTList, Operation}
 
 abstract class STMOps[F[_]: Monad] extends TransactionOps {
 
@@ -64,42 +64,42 @@ abstract class STMOps[F[_]: Monad] extends TransactionOps {
     */
   def createGuid: F[Guid]
 
-  /**
-    * Put a new List value into the STM, with operational transformation
-    * support.
-    * This will create a new Id, and this is used to create the data to add to the
-    * STM (in case the data includes the Id).
-    *
-    * @param create   Function to create data as an `F[List[A]]`
-    * @param idCodec  Used to encode/decode data
-    *                 and deltas
-    * @tparam A       The type of data in the List
-    * @return         The created List
-    */
-  def createOTListF[A](create: F[List[A]])(implicit idCodec: IdCodec[A]): F[OTList[A]]
-
-  /**
-    * Put a new List value into the STM, with operational transformation
-    * support.
-    * This will create a new Id, and this is used to create the data to add to the
-    * STM (in case the data includes the Id).
-    *
-    * @param create   Function to create data from Id, as a `List[A]`
-    * @param idCodec  Used to encode/decode data
-    *                 and deltas
-    * @tparam A       The type of data in the List
-    * @return         The created List
-    */
-  def createOTList[A](create: List[A])(implicit idCodec: IdCodec[A]): F[OTList[A]] = createOTListF(pure(create))
-
-  /**
-    * Apply an OT operation to an OTlist.
-    * @param list The OTList
-    * @param op   The operation to apply
-    * @tparam A   The type of data in the list
-    * @return     The new list contents
-    */
-  def otListOperation[A](list: OTList[A], op: Operation[A]): F[OTList[A]]
+//  /**
+//    * Put a new List value into the STM, with operational transformation
+//    * support.
+//    * This will create a new Id, and this is used to create the data to add to the
+//    * STM (in case the data includes the Id).
+//    *
+//    * @param create   Function to create data as an `F[List[A]]`
+//    * @param idCodec  Used to encode/decode data
+//    *                 and deltas
+//    * @tparam A       The type of data in the List
+//    * @return         The created List
+//    */
+//  def createOTListF[A](create: F[List[A]])(implicit idCodec: IdCodec[A]): F[OTList[A]]
+//
+//  /**
+//    * Put a new List value into the STM, with operational transformation
+//    * support.
+//    * This will create a new Id, and this is used to create the data to add to the
+//    * STM (in case the data includes the Id).
+//    *
+//    * @param create   Function to create data from Id, as a `List[A]`
+//    * @param idCodec  Used to encode/decode data
+//    *                 and deltas
+//    * @tparam A       The type of data in the List
+//    * @return         The created List
+//    */
+//  def createOTList[A](create: List[A])(implicit idCodec: IdCodec[A]): F[OTList[A]] = createOTListF(pure(create))
+//
+//  /**
+//    * Apply an OT operation to an OTlist.
+//    * @param list The OTList
+//    * @param op   The operation to apply
+//    * @tparam A   The type of data in the list
+//    * @return     The new list contents
+//    */
+//  def otListOperation[A](list: OTList[A], op: Operation[A]): F[OTList[A]]
 
 }
 

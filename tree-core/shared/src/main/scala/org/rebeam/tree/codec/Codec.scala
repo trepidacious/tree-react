@@ -8,7 +8,7 @@ import cats.implicits._
 import monocle.{Lens, Optional, Prism}
 import org.rebeam.tree.{Delta, Moment}
 import org.rebeam.tree.Delta._
-import org.rebeam.tree.ot.{OTCodecs, OTList, Operation}
+//import org.rebeam.tree.ot.{OTCodecs, OTList, Operation}
 
 trait Codec[A] {
   def encoder: PartialEncoder[A]
@@ -218,25 +218,25 @@ object Codec {
     ).map(a => a: Delta[M])
   }
 
-  def otList[A](implicit encoderA: Encoder[A], decoderA: Decoder[A]): DeltaCodec[OTList[A]] = new DeltaCodec[OTList[A]] {
-    import OTCodecs._
-    val encoder: PartialEncoder[Delta[OTList[A]]] = {
-      case OTListDelta(op) =>
-        //Note we know that op is a Operation[A] since OTListDelta is a Delta[OTList[A]]
-        Some(Json.obj(
-          "OTListDelta" -> Json.obj(
-            "op" -> op.asInstanceOf[Operation[A]].asJson
-          )
-        ))
-      case _ => None
-    }
-
-    val decoder: Decoder[Delta[OTList[A]]] = Decoder.instance { c =>
-      val o = c.downField("OTListDelta")
-      for {
-        delta <- o.downField("op").as[Operation[A]]
-      } yield OTListDelta[A](delta)
-    }
-  }
+//  def otList[A](implicit encoderA: Encoder[A], decoderA: Decoder[A]): DeltaCodec[OTList[A]] = new DeltaCodec[OTList[A]] {
+//    import OTCodecs._
+//    val encoder: PartialEncoder[Delta[OTList[A]]] = {
+//      case OTListDelta(op) =>
+//        //Note we know that op is a Operation[A] since OTListDelta is a Delta[OTList[A]]
+//        Some(Json.obj(
+//          "OTListDelta" -> Json.obj(
+//            "op" -> op.asInstanceOf[Operation[A]].asJson
+//          )
+//        ))
+//      case _ => None
+//    }
+//
+//    val decoder: Decoder[Delta[OTList[A]]] = Decoder.instance { c =>
+//      val o = c.downField("OTListDelta")
+//      for {
+//        delta <- o.downField("op").as[Operation[A]]
+//      } yield OTListDelta[A](delta)
+//    }
+//  }
 
 }

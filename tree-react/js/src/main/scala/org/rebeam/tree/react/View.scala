@@ -7,7 +7,7 @@ import japgolly.scalajs.react._
 import japgolly.scalajs.react.component.Scala.Component
 import japgolly.scalajs.react.vdom.html_<^._
 import org.rebeam.tree._
-import org.rebeam.tree.ot.{CursorUpdate, OTList}
+//import org.rebeam.tree.ot.{CursorUpdate, OTList}
 import org.rebeam.tree.react.ReactData.ReactDataContexts
 
 object View {
@@ -56,10 +56,10 @@ object View {
             a => Right((sd.viewed(id.guid), Some(a)))
           )
         })
-      def getOTListCursorUpdate[A](list: OTList[A]): S[Option[CursorUpdate[A]]] =
-        StateT[ErrorOr, StateData, Option[CursorUpdate[A]]](sd => {
-          Right((sd, sd.dataSource.getOTListCursorUpdate(list)))
-        })
+//      def getOTListCursorUpdate[A](list: OTList[A]): S[Option[CursorUpdate[A]]] =
+//        StateT[ErrorOr, StateData, Option[CursorUpdate[A]]](sd => {
+//          Right((sd, sd.dataSource.getOTListCursorUpdate(list)))
+//        })
     }
 
     def render[A](

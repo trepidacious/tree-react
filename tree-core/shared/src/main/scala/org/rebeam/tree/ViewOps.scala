@@ -1,7 +1,7 @@
 package org.rebeam.tree
 
 import cats.Monad
-import org.rebeam.tree.ot.{CursorUpdate, OTList}
+//import org.rebeam.tree.ot.{CursorUpdate, OTList}
 
 /**
   * Provides ops to get the data at an Id
@@ -40,13 +40,13 @@ abstract class ViewOps[F[_]: Monad] {
   // For convenience, could use Monad directly
   def pure[A](a: A): F[A] = implicitly[Monad[F]].pure(a)
 
-  /**
-    * Get any available cursor update for an OTList
-    * @param list The list
-    * @tparam A   Type of data in list
-    * @return     The [[CursorUpdate]] for the list, if any is needed
-    */
-  def getOTListCursorUpdate[A](list: OTList[A]): F[Option[CursorUpdate[A]]]
+//  /**
+//    * Get any available cursor update for an OTList
+//    * @param list The list
+//    * @tparam A   Type of data in list
+//    * @return     The [[CursorUpdate]] for the list, if any is needed
+//    */
+//  def getOTListCursorUpdate[A](list: OTList[A]): F[Option[CursorUpdate[A]]]
 
 }
 

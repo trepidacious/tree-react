@@ -3,7 +3,7 @@ package org.rebeam.tree
 import cats.Traverse
 import monocle.{Lens, Optional, Prism}
 import org.rebeam.tree.Delta._
-import org.rebeam.tree.ot.{OTList, Operation}
+//import org.rebeam.tree.ot.{OTList, Operation}
 
 /**
   * A DeltaCursor provides a location in which to apply a Delta. This allows us to convert
@@ -153,20 +153,20 @@ object DeltaCursor {
     def zoomIndex(index: Int): DeltaCursor[A] = TraversableIndexCursor[T, A](cursor, index)
   }
 
-  /**
-    * Convenience method to operate on an OTList
-    * @param cursor Cursor to an OTList
-    * @tparam A     Type of value in OTList
-    */
-  implicit class CursorAtOTList[A](cursor: DeltaCursor[OTList[A]]) {
-    /**
-      * Produce a [[Transaction]] applying an Operation to the value at the cursor
-      * using an OTListDelta
-      * @param op  The Operation to apply
-      * @return   The transaction
-      */
-    def operate(op: Operation[A]): Transaction = cursor.transact(OTListDelta(op))
-  }
+//  /**
+//    * Convenience method to operate on an OTList
+//    * @param cursor Cursor to an OTList
+//    * @tparam A     Type of value in OTList
+//    */
+//  implicit class CursorAtOTList[A](cursor: DeltaCursor[OTList[A]]) {
+//    /**
+//      * Produce a [[Transaction]] applying an Operation to the value at the cursor
+//      * using an OTListDelta
+//      * @param op  The Operation to apply
+//      * @return   The transaction
+//      */
+//    def operate(op: Operation[A]): Transaction = cursor.transact(OTListDelta(op))
+//  }
 
   //  /**
   //    * Operates on an indexed element of a Seq in a parent DeltaCursor
