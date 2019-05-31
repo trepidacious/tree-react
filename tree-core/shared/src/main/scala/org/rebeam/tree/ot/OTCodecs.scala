@@ -12,6 +12,8 @@ object OTCodecs {
   implicit def atomDecoder[A: Decoder]: Decoder[Atom[A]] = deriveDecoder[Atom[A]]
   implicit def operationEncoder[A: Encoder]: Encoder[Operation[A]] = deriveEncoder[Operation[A]]
   implicit def operationDecoder[A: Decoder]: Decoder[Operation[A]] = deriveDecoder[Operation[A]]
+  implicit def otListEncoder[A: Encoder]: Encoder[OTList[A]] = deriveEncoder[OTList[A]]
+  implicit def otListDecoder[A: Decoder]: Decoder[OTList[A]] = deriveDecoder[OTList[A]]
 
   def otDeltaCodec[A]: DeltaCodec[List[A]] = new DeltaCodec[List[A]] {
 

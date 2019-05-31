@@ -1,6 +1,6 @@
 package org.rebeam.tree
 
-import org.rebeam.tree.ot.{ClientState, CursorUpdate}
+import org.rebeam.tree.ot.{ClientState, CursorUpdate, OTList}
 
 case class MapDataSource(map: Map[Guid, (Any, RevId[_])], otMap: Map[Guid, ClientState[_]]) extends DataSource {
 
@@ -9,18 +9,13 @@ case class MapDataSource(map: Map[Guid, (Any, RevId[_])], otMap: Map[Guid, Clien
 
   override def revGuid(guid: Guid): Option[Guid] = map.get(guid).map(_._2.guid)
 
-  def getClientState[A](id: Id[List[A]]): Option[ClientState[A]] = otMap.get(id.guid).map(_.asInstanceOf[ClientState[A]])
-
   def put[A](id: Id[A], a: A, r: RevId[A]): MapDataSource =
     copy(map = map.updated(id.guid, (a, r)))
 
   def modify[A](id: Id[A], f: A=>A, r: RevId[A]): MapDataSource =
     copy(map = get(id).fold(map)(a => map.updated(id.guid, (f(a), r))))
 
-  def getList[A](id: Id[List[A]]): Option[(List[A], CursorUpdate[A])] = for {
-    list <- get(id)
-    clientState <- getClientState(id)
-  } yield (list, clientState)
+  def getOTListCursorUpdate[A](list: OTList[A]): Option[CursorUpdate[A]] = otMap.get(list.guid).map(_.asInstanceOf[ClientState[A]])
 }
 
 object MapDataSource {

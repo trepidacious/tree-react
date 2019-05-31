@@ -21,6 +21,8 @@ import scala.util.matching.Regex
   * @param transactionClock        Id of the Guid within the Transaction
   */
 case class Guid(sessionId: SessionId, sessionTransactionId: SessionTransactionId, transactionClock: TransactionClock) {
+  lazy val transactionId: TransactionId = TransactionId(sessionId, sessionTransactionId)
+
   override def toString: String = Guid.toString(this)
   def nextSessionFirstGuid: Guid = copy(sessionId = sessionId.next, sessionTransactionId = SessionTransactionId(0), transactionClock = TransactionClock(0))
   def nextTransactionFirstGuid: Guid = copy(sessionTransactionId = sessionTransactionId.next, transactionClock = TransactionClock(0))

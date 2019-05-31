@@ -8,7 +8,7 @@ import org.log4s._
 import org.rebeam.tree.MapStateSTM._
 import org.rebeam.tree._
 import org.rebeam.tree.codec.TransactionCodec
-import org.rebeam.tree.ot.CursorUpdate
+import org.rebeam.tree.ot.{CursorUpdate, OTList}
 import org.rebeam.tree.react.ReactData.ReactDataContexts
 
 object LocalDataRoot {
@@ -26,7 +26,8 @@ object LocalDataRoot {
     override def get[A](id: Id[A]): Option[A] = sd.get(id)
     override def getWithRev[A](id: Id[A]): Option[(A, RevId[A])] = sd.getWithRev(id)
 
-    override def getList[A](id: Id[List[A]]): Option[(List[A], CursorUpdate[A])] = sd.getList(id)
+    override def getOTListCursorUpdate[A](list: OTList[A]): Option[CursorUpdate[A]] = sd.getOTListCursorUpdate(list)
+
     override def revGuid(guid: Guid): Option[Guid] = sd.revGuid(guid)
     override def transact(t: Transaction): Callback = tx.transact(t)
 
@@ -35,11 +36,16 @@ object LocalDataRoot {
 
   //NOTE: This is not pure - gets the time for the transaction
   def runTransaction[I](state: State[I], t: Transaction, indexer: Indexer[I]): ErrorOr[State[I]] = {
-    // Update the time to now
-    val sdWithTime = state.sd.copy(context = TransactionContext(Moment(System.currentTimeMillis)))
+    // Update the context - use current time and transactionId based on the nextGuid (which will be used to run the transaction)
+    val sdWithContext = state.sd.copy(
+      context = TransactionContext(
+        Moment(System.currentTimeMillis),
+        state.sd.nextGuid.transactionId
+      )
+    )
 
-    // Run the transaction on stateWithTime
-    val sdNew = t[MapState].run(sdWithTime)
+    // Run the transaction on sdWithContext
+    val sdNew = t[MapState].run(sdWithContext)
 
     // Map to a new State, updating the StateData to next transaction, and the indexer with deltas
     sdNew.map{

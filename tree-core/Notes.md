@@ -114,3 +114,9 @@ Practically, it is probably best to use references only where needed for:
 2. Segmenting data to allow viewing part of a large graph. In the forum example, including every possible linked data item for a post (e.g. every post of every user who comments) could generate a very large data set, potentially the entire forum. Using references allows for only the immediately visible parts of a data structure to be sent to a client. When a ref is followed by a renderer, it can be retrieved in the background.
 3. Making transactions preserve user intent. Using a `List[Ref[A]]` rather than a `List[A]` allows transactions to be "anchored" to a Ref, rather than (for example) to an index in the list. If the list is reordered on the server, before the transaction is applied, the same data will be edited. This could also be implemented by use of some "find" function to locate the correct data, using the contents of the list elements, however this may be less efficient, or may require introducing another, ad-hoc Id to find the item.
 4. Efficiency - the use of Ids and revisions allows us to quickly establish whether a value may have changed, without relying on equality.
+
+## TODO
+
+1. Actual server-client implementation. Start from a client and server state and functions (with in-client simulated network if practical), and then a websocket transport layer.
+2. Add OT support for re-running transactions - the first time they are run on the client, record the Rev of each OTList used for the first operation. Then use this as the origin Rev of each operation. May need to track this for multiple operations on the same OTList in one transaction, to transform each subsequent
+3. Add Id checking in transactions - when run on the client for the first time, record the generated Ids and types, and then preserve this on both the client and the server - if the generated Ids or types change then at least warn about the transaction. Possibly reject on the server.

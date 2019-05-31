@@ -1,7 +1,7 @@
 package org.rebeam.tree
 
 import cats.Monad
-import org.rebeam.tree.ot.CursorUpdate
+import org.rebeam.tree.ot.{CursorUpdate, OTList}
 
 /**
   * Provides ops to get the data at an Id
@@ -41,37 +41,13 @@ abstract class ViewOps[F[_]: Monad] {
   def pure[A](a: A): F[A] = implicitly[Monad[F]].pure(a)
 
   /**
-    * Get [[List]] data at an [[Id]].
-    * This expects the list to have operational transformation
-    * support, and so will also return a [[CursorUpdate]] allowing
-    * views to update cursors into the list.
-    * This will cause the ViewOps to fail
-    * if the data and ClientState is not available.
-    * The data will be retrieved if possible, and the
-    * view will be re-displayed. If the id
-    * is not retrievable, the view will stay
-    * failed.
-    * @param id   The data's [[Id]]
-    * @tparam A   Type of data
-    * @return     The data and [[CursorUpdate]] at specified [[Id]]
+    * Get any available cursor update for an OTList
+    * @param list The list
+    * @tparam A   Type of data in list
+    * @return     The [[CursorUpdate]] for the list, if any is needed
     */
-  def getList[A](id: Id[List[A]]): F[(List[A], CursorUpdate[A])]
+  def getOTListCursorUpdate[A](list: OTList[A]): F[Option[CursorUpdate[A]]]
 
-  /**
-    * Get [[List]] data at an [[Id]].
-    * This expects the list to have operational transformation
-    * support, and so will also return a [[CursorUpdate]] allowing
-    * views to update cursors into the list.
-    * This will return F[None] if the data is not
-    * available. The data will be retrieved
-    * if possible, and the view will be
-    * re-displayed. If the id is not
-    * retrievable, the view will not be redisplayed.
-    * @param id   The data's [[Id]]
-    * @tparam A   Type of data
-    * @return     The data and [[CursorUpdate]] at specified [[Id]]
-    */
-  def getListOption[A](id: Id[List[A]]): F[Option[(List[A], CursorUpdate[A])]]
 }
 
 

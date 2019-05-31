@@ -2,7 +2,7 @@ package org.rebeam.tree
 
 import cats.Monad
 import org.rebeam.tree.codec.IdCodec
-import org.rebeam.tree.ot.Operation
+import org.rebeam.tree.ot.{OTList, Operation}
 
 abstract class STMOps[F[_]: Monad] extends TransactionOps {
 
@@ -59,18 +59,24 @@ abstract class STMOps[F[_]: Monad] extends TransactionOps {
   def modify[A](id: Id[A], f: A => A): F[A] = modifyF(id, f.andThen(pure))
 
   /**
+    * Create a new Guid for general-purpose use (e.g. for Logoot)
+    * @return   The new Guid
+    */
+  def createGuid: F[Guid]
+
+  /**
     * Put a new List value into the STM, with operational transformation
     * support.
     * This will create a new Id, and this is used to create the data to add to the
     * STM (in case the data includes the Id).
     *
-    * @param create   Function to create data from Id, as an `F[List[A]]`
+    * @param create   Function to create data as an `F[List[A]]`
     * @param idCodec  Used to encode/decode data
     *                 and deltas
     * @tparam A       The type of data in the List
     * @return         The created List
     */
-  def putListF[A](create: Id[List[A]] => F[List[A]])(implicit idCodec: IdCodec[A]): F[List[A]]
+  def createOTListF[A](create: F[List[A]])(implicit idCodec: IdCodec[A]): F[OTList[A]]
 
   /**
     * Put a new List value into the STM, with operational transformation
@@ -84,17 +90,16 @@ abstract class STMOps[F[_]: Monad] extends TransactionOps {
     * @tparam A       The type of data in the List
     * @return         The created List
     */
-  def putList[A](create: Id[List[A]] => List[A])(implicit idCodec: IdCodec[A]): F[List[A]] = putListF(create.andThen(pure))
+  def createOTList[A](create: List[A])(implicit idCodec: IdCodec[A]): F[OTList[A]] = createOTListF(pure(create))
 
   /**
-    * Apply an OT operation to the list at an Id. Will only succeed if the
-    * list was put with putList or putListF (enabling operational transformation support)
-    * @param id   The id of the list
+    * Apply an OT operation to an OTlist.
+    * @param list The OTList
     * @param op   The operation to apply
     * @tparam A   The type of data in the list
     * @return     The new list contents
     */
-  def listOperation[A](id: Id[List[A]], op: Operation[A]): F[List[A]]
+  def otListOperation[A](list: OTList[A], op: Operation[A]): F[OTList[A]]
 
 }
 
