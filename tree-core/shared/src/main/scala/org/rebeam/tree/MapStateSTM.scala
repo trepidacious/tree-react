@@ -3,7 +3,7 @@ package org.rebeam.tree
 import cats.data.StateT
 import cats.implicits._
 import org.rebeam.tree.codec._
-import org.rebeam.tree.ot.{ClientState, CursorUpdate, ListRev, OTList, Operation, Rev}
+//import org.rebeam.tree.ot.{ClientState, CursorUpdate, ListRev, OTList, Operation, Rev}
 
 /**
   * Implementation of STM using a Map and PRandom as State, intended for client-side operation
@@ -18,9 +18,9 @@ object MapStateSTM {
     def message: String = toString
   }
 
-  case class OTListStateNotFoundError[A](list: OTList[A]) extends Error {
-    def message: String = toString
-  }
+//  case class OTListStateNotFoundError[A](list: OTList[A]) extends Error {
+//    def message: String = toString
+//  }
 
   case class DataRevision[A](data: A, revId: RevId[A], idCodec: IdCodec[A])
 
@@ -36,7 +36,7 @@ object MapStateSTM {
   case class StateData (
       nextGuid: Guid,
       map: Map[Guid, DataRevision[_]],
-      otMap: Map[Guid, ClientState[_]],
+//      otMap: Map[Guid, ClientState[_]],
       random: PRandom,
       context: TransactionContext,
       deltas: Vector[StateDelta[_]]
@@ -44,7 +44,7 @@ object MapStateSTM {
 
     def getDataRevision[A](id: Id[A]): Option[DataRevision[A]] = map.get(id.guid).map(_.asInstanceOf[DataRevision[A]])
 
-    def getClientState[A](list: OTList[A]): Option[ClientState[A]] = otMap.get(list.guid).map(_.asInstanceOf[ClientState[A]])
+//    def getClientState[A](list: OTList[A]): Option[ClientState[A]] = otMap.get(list.guid).map(_.asInstanceOf[ClientState[A]])
 
     def getData[A](id: Id[A]): Option[A] = getDataRevision(id).map(_.data)
 
@@ -61,7 +61,7 @@ object MapStateSTM {
 
     def revGuid(guid: Guid): Option[Guid] = map.get(guid).map(_.revId.guid)
 
-    def getOTListCursorUpdate[A](list: OTList[A]): Option[CursorUpdate[A]] = getClientState(list)
+//    def getOTListCursorUpdate[A](list: OTList[A]): Option[CursorUpdate[A]] = getClientState(list)
 
     def nextTransaction: StateData = {
       val ng = nextGuid.nextTransactionFirstGuid
@@ -76,7 +76,7 @@ object MapStateSTM {
   def emptyState: StateData = StateData(
     Guid.first,
     Map.empty,
-    Map.empty,
+//    Map.empty,
     PRandom(0),
     TransactionContext(Moment(0), Guid.first.transactionId),
     Vector.empty
@@ -102,8 +102,8 @@ object MapStateSTM {
     private def getDataState[A](id: Id[A]): MapState[DataRevision[A]] =
       StateT.inspectF[ErrorOr, StateData, DataRevision[A]](_.getDataRevision(id).toRight(IdNotFoundError(id)))
 
-    private def getClientState[A](list: OTList[A]): MapState[ClientState[A]] =
-      StateT.inspectF[ErrorOr, StateData, ClientState[A]](_.getClientState(list).toRight(OTListStateNotFoundError(list)))
+//    private def getClientState[A](list: OTList[A]): MapState[ClientState[A]] =
+//      StateT.inspectF[ErrorOr, StateData, ClientState[A]](_.getClientState(list).toRight(OTListStateNotFoundError(list)))
 
     private def set[A](id: Id[A], a: A)(implicit idCodec: IdCodec[A]): MapState[Unit] = for {
       revGuid <- createGuid
@@ -143,31 +143,31 @@ object MapStateSTM {
       _ <- StateT.modify[ErrorOr, StateData](sd => sd.copy(deltas = sd.deltas :+ StateDelta.Put(id, a)))
     } yield a
 
-    def createOTListF[A](create: MapState[List[A]])(implicit idCodec: IdCodec[A]): MapState[OTList[A]] = for {
-      id <- createGuid
-      a <- create
-      // Local data root handles a single client only - priority 0, starts up to date with server rev 0
-      newCs = ClientState(priority = 0, server = ListRev(a, Rev(0)), local = a, pendingOp = None, buffer = None, previousLocalUpdate = None)
-      _ <- StateT.modify[ErrorOr, StateData](sd =>
-        sd.copy(
-          otMap = sd.otMap.updated(id, newCs),
-        )
-      )
-    } yield OTList(a, id)
-
-    def otListOperation[A](list: OTList[A], op: Operation[A]): MapState[OTList[A]] = for {
-      cs <- getClientState(list)
-      newCs = cs.withClientOp(op)._1.withServerConfirmation._1
-      newData = newCs.local
-      _ <- StateT.modify[ErrorOr, StateData](sd =>
-        sd.copy(
-          otMap = sd.otMap.updated(list.guid, newCs),
-        )
-      )
-    } yield {
-      println(s"Applied $op to get $newData")
-      list.copy(list = newData)
-    }
+//    def createOTListF[A](create: MapState[List[A]])(implicit idCodec: IdCodec[A]): MapState[OTList[A]] = for {
+//      id <- createGuid
+//      a <- create
+//      // Local data root handles a single client only - priority 0, starts up to date with server rev 0
+//      newCs = ClientState(priority = 0, server = ListRev(a, Rev(0)), local = a, pendingOp = None, buffer = None, previousLocalUpdate = None)
+//      _ <- StateT.modify[ErrorOr, StateData](sd =>
+//        sd.copy(
+//          otMap = sd.otMap.updated(id, newCs),
+//        )
+//      )
+//    } yield OTList(a, id)
+//
+//    def otListOperation[A](list: OTList[A], op: Operation[A]): MapState[OTList[A]] = for {
+//      cs <- getClientState(list)
+//      newCs = cs.withClientOp(op)._1.withServerConfirmation._1
+//      newData = newCs.local
+//      _ <- StateT.modify[ErrorOr, StateData](sd =>
+//        sd.copy(
+//          otMap = sd.otMap.updated(list.guid, newCs),
+//        )
+//      )
+//    } yield {
+//      println(s"Applied $op to get $newData")
+//      list.copy(list = newData)
+//    }
 
   }
 }

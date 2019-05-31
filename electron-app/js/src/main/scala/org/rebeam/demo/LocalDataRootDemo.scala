@@ -13,8 +13,8 @@ import TodoData._
 import org.log4s.getLogger
 import org.rebeam.mui
 import org.rebeam._
-import org.rebeam.tree.Delta.OTListDelta
-import org.rebeam.tree.ot.{Diff, OTList}
+//import org.rebeam.tree.Delta.OTListDelta
+//import org.rebeam.tree.ot.{Diff, OTList}
 
 import scala.scalajs.js
 import js.JSConverters._
@@ -89,13 +89,7 @@ object LocalDataRootDemo {
       // Note we can use e.target.value directly - set accepts a plain value, not a function,
       // so we don't have to worry about the event being reused. Of course the Callback produced
       // will not be used until later.
-      def onChange(e: ReactEventFromInput) = {
-        val o = a.a
-        val n = e.target.value
-        val d = Diff(o.toList, n.toList)
-        println(s"'$o' -> '$n' by $d")
-        a.set(e.target.value)
-      }
+      def onChange(e: ReactEventFromInput): Callback = a.set(e.target.value)
 
 //      mui.TextField(
 //        // Display the data from the cursor
@@ -112,31 +106,31 @@ object LocalDataRootDemo {
 
   }.build("stringView")
 
-  val stringOTView: Component[Cursor[OTList[Char]], Unit, Unit, CtorType.Props] = new ViewPC[OTList[Char]] {
-    private val logger = getLogger
-
-    override def apply(c: Cursor[OTList[Char]])(implicit tx: ReactTransactor): VdomNode = {
-      logger.debug(s"stringOTView applying from ${c.a}, transactor $tx")
-
-
-      // Diff the old and new contents of the input, as an operation,
-      // and then apply this as an OTListDelta using the cursor
-      def onChange(e: ReactEventFromInput) = {
-        val o = c.a.list
-        val n = e.target.value.toList
-        val d = Diff(o, n)
-        println(s"'$o' -> '$n' by $d")
-        c.delta(OTListDelta(d))
-      }
-
-      <.input(
-        ^.value := c.a.list.mkString,
-        ^.onChange ==> onChange,
-        ^.margin := "10px"
-      )
-    }
-
-  }.build("stringView")
+//  val stringOTView: Component[Cursor[OTList[Char]], Unit, Unit, CtorType.Props] = new ViewPC[OTList[Char]] {
+//    private val logger = getLogger
+//
+//    override def apply(c: Cursor[OTList[Char]])(implicit tx: ReactTransactor): VdomNode = {
+//      logger.debug(s"stringOTView applying from ${c.a}, transactor $tx")
+//
+//
+//      // Diff the old and new contents of the input, as an operation,
+//      // and then apply this as an OTListDelta using the cursor
+//      def onChange(e: ReactEventFromInput) = {
+//        val o = c.a.list
+//        val n = e.target.value.toList
+//        val d = Diff(o, n)
+//        println(s"'$o' -> '$n' by $d")
+//        c.delta(OTListDelta(d))
+//      }
+//
+//      <.input(
+//        ^.value := c.a.list.mkString,
+//        ^.onChange ==> onChange,
+//        ^.margin := "10px"
+//      )
+//    }
+//
+//  }.build("stringView")
 
   val todoItemView: Component[Id[TodoItem], Unit, Unit, CtorType.Props] = new View[Id[TodoItem]] {
     private val logger = getLogger
@@ -205,8 +199,8 @@ object LocalDataRootDemo {
       cName <- v.cursorAt(a.id)
     } yield {
       <.div(
-        stringOTView(cName.zoom(TodoList.name)),
-        stringOTView(cName.zoom(TodoList.name)),
+//        stringOTView(cName.zoom(TodoList.name)),
+//        stringOTView(cName.zoom(TodoList.name)),
         <.ul(
           a.items.toTagMod(id => todoItemView.withKey(id.toString)(id))
         )

@@ -8,7 +8,7 @@ import org.log4s._
 import org.rebeam.tree.MapStateSTM._
 import org.rebeam.tree._
 import org.rebeam.tree.codec.TransactionCodec
-import org.rebeam.tree.ot.{CursorUpdate, OTList}
+//import org.rebeam.tree.ot.{CursorUpdate, OTList}
 import org.rebeam.tree.react.ReactData.ReactDataContexts
 
 object LocalDataRoot {
@@ -26,7 +26,7 @@ object LocalDataRoot {
     override def get[A](id: Id[A]): Option[A] = sd.get(id)
     override def getWithRev[A](id: Id[A]): Option[(A, RevId[A])] = sd.getWithRev(id)
 
-    override def getOTListCursorUpdate[A](list: OTList[A]): Option[CursorUpdate[A]] = sd.getOTListCursorUpdate(list)
+//    override def getOTListCursorUpdate[A](list: OTList[A]): Option[CursorUpdate[A]] = sd.getOTListCursorUpdate(list)
 
     override def revGuid(guid: Guid): Option[Guid] = sd.revGuid(guid)
     override def transact(t: Transaction): Callback = tx.transact(t)
