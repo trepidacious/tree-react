@@ -13,11 +13,11 @@ import japgolly.scalajs.react.extra.Reusability
   * 1. We can tolerate a low rate of "false-inequality" where we report a change when none has occurred, but
   * 2. We must have no "false-equality" where we report no change when one has happened
   *
-  * For AnyVal this is easy - using {{{==}}} is both fast and perfectly accurate.
+  * For AnyVal this is easy - using == is both fast and perfectly accurate.
   *
-  * For AnyRef, knowing that the data is immutable means that 2 can be satisfied by using {{{eq}}} - the contents
-  * of an instance of the data never changed, so if {{{eq}}} returns true we are looking at the same instance, and
-  * therefore the contents must be equal (for example by {{{==}}}, but in general actually by any means at all,
+  * For AnyRef, knowing that the data is immutable means that 2 can be satisfied by using eq - the contents
+  * of an instance of the data never changed, so if eq returns true we are looking at the same instance, and
+  * therefore the contents must be equal (for example by ==, but in general actually by any means at all,
   * assuming referential transparency).
   *
   * This just leaves requirement 1 - in a sensibly designed system we will not create additional equal instances
