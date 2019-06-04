@@ -292,7 +292,7 @@ class LogootSpec extends WordSpec with Matchers with Checkers {
 
       assert (
         run(Position.between[MapState](p, q)) ===
-          List(Identifier(0,SessionId(0)), Identifier(1544347933, SessionId(99)))
+          List(Identifier(0,SessionId(0)), Identifier(1569741361, SessionId(0)))
       )
 
       //Some cases that failed on early implementation with scalacheck
@@ -308,8 +308,10 @@ class LogootSpec extends WordSpec with Matchers with Checkers {
           List(Identifier(1,SessionId(0)), Identifier(109895862,SessionId(0)))
         ))
           ===
-          List(Identifier(0,SessionId(0)), Identifier(1872801123,SessionId(99)))
+          List(Identifier(0,SessionId(0)), Identifier(1898194551,SessionId(0)))
       )
+
+      //TODO check generated positions above actually are strictly between p and q...
 
       //TODO a test case for each of the paths through positionBetweenRec
     }
