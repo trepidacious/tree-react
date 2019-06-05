@@ -286,13 +286,22 @@ class LogootSpec extends WordSpec with Matchers with Checkers {
     // they use pseudo-random values but these are seeded from the DeltaId making them repeatable.
     "construct valid positions between other positions" in {
 
-      // We wouldn't normally have an empty position, but it should work
-      val p = Position.empty
-      val q = List(Identifier(1, SessionId(0)))
+      def testInsert(p: Position, q: Position, b: Position) = {
+        assert (
+          run(Position.between[MapState](p, q)) === b
+        )
 
-      assert (
-        run(Position.between[MapState](p, q)) ===
-          List(Identifier(0,SessionId(0)), Identifier(1569741361, SessionId(0)))
+        // Position b must be strictly between p and q
+        val po = Logoot.positionOrdering
+        assert(po.compare(p, b) == -1)
+        assert(po.compare(b, q) == -1)
+      }
+
+      // We wouldn't normally have an empty position, but it should work
+      testInsert(
+        Position.empty,
+        List(Identifier(1, SessionId(0))),
+        List(Identifier(0,SessionId(0)), Identifier(1569741361, SessionId(0)))
       )
 
       //Some cases that failed on early implementation with scalacheck
@@ -302,16 +311,11 @@ class LogootSpec extends WordSpec with Matchers with Checkers {
       // This isn't actually an error - we are free to choose any ident > p's ident - the
       // second ident from q doesn't matter since after we incorporate the first ident from
       // p into the result we cannot be > q regardless of subsequent idents.
-      assert (
-        run(Position.between[MapState](
-          List(Identifier(0,SessionId(0)), Identifier(1692726032,SessionId(0)), Identifier(1,SessionId(0))),
-          List(Identifier(1,SessionId(0)), Identifier(109895862,SessionId(0)))
-        ))
-          ===
-          List(Identifier(0,SessionId(0)), Identifier(1898194551,SessionId(0)))
+      testInsert(
+        List(Identifier(0,SessionId(0)), Identifier(1692726032,SessionId(0)), Identifier(1,SessionId(0))),
+        List(Identifier(1,SessionId(0)), Identifier(109895862,SessionId(0))),
+        List(Identifier(0,SessionId(0)), Identifier(1898194551,SessionId(0)))
       )
-
-      //TODO check generated positions above actually are strictly between p and q...
 
       //TODO a test case for each of the paths through positionBetweenRec
     }
@@ -343,7 +347,10 @@ class LogootSpec extends WordSpec with Matchers with Checkers {
         }
 
         Logoot.positionOrdering.compare(a, b) match {
+          // If we managed to generate two identical positions there is no position between them, so just pass
           case 0 => true
+
+          // Otherwise run the test with the positions in the correct order
           case -1 => test(a, b)
           case _ => test(b, a)
         }
