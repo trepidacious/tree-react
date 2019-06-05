@@ -80,10 +80,11 @@ class LogootSpec extends WordSpec with Matchers with Checkers {
   )
 
   "Logoot" should {
+
     "compare identifiers" in {
       for (t <- identifierTests) assertCompare(t._1, t._2, t._3)
-
     }
+
     "compare positions" in {
       // Positions with a single identifier compare as per identifier
       for (t <- identifierTests) assertCompare(List(t._1), List(t._2), t._3)
@@ -128,158 +129,6 @@ class LogootSpec extends WordSpec with Matchers with Checkers {
       )
       assertLessThan(p, q)
 
-    }
-
-    "construct positions between other positions" in {
-
-      //      val p = Position(List(          //01
-      //        Identifier(0, SessionId(0)),
-      //        Identifier(1, SessionId(1))
-      //      ))
-      //      val q = Position(List(          //02
-      //        Identifier(0, SessionId(2)),
-      //        Identifier(2, SessionId(3))
-      //      ))
-      //      val r = Position(List(          //03
-      //        Identifier(0, SessionId(4)),
-      //        Identifier(3, SessionId(5))
-      //      ))
-      //
-      //      // There are no 2 digit positions between p and q, so we end up
-      //      // adding a new digit, at 1
-      //      assert (
-      //        run(Position.between(p, q, 1))
-      //          ===
-      //        List(
-      //          Position(List(
-      //            Identifier(0,SessionId(0)),
-      //            Identifier(1,SessionId(1)),
-      //            Identifier(1,SessionId(99))
-      //          ))
-      //        )
-      //      )
-      //
-      //      // There is a single 1 digit position between p and r, 02
-      //      assert (
-      //        run(Position.between(p, r, 1))
-      //          ===
-      //          List(
-      //            Position(List(
-      //              Identifier(0,SessionId(0)),
-      //              Identifier(2,SessionId(99))
-      //            ))
-      //          )
-      //      )
-      //
-      //      val s = Position(List(          //06
-      //        Identifier(0, SessionId(6)),
-      //        Identifier(6, SessionId(7))
-      //      ))
-      //
-      //      // Test a gap for 4 new 2 digit codes (from 01 to 06), requesting 4
-      //      // Will use a step of 1, giving exactly each code
-      //      assert(
-      //        run(Position.between(p, s, 4))
-      //          ===
-      //        List(
-      //          Position(List(Identifier(0,SessionId(0)), Identifier(2,SessionId(99)))),    //02
-      //          Position(List(Identifier(0,SessionId(0)), Identifier(3,SessionId(99)))),    //03
-      //          Position(List(Identifier(0,SessionId(0)), Identifier(4,SessionId(99)))),    //04
-      //          Position(List(Identifier(0,SessionId(0)), Identifier(5,SessionId(99))))     //05
-      //        )
-      //      )
-      //
-      //      // Test a gap for 4 new 2 digit codes (from 01 to 06), requesting 3
-      //      // 3 codes from 4 options means step size 1, so we get the first 3 options
-      //      assert(
-      //        run(Position.between(p, s, 3))
-      //          ===
-      //          List(
-      //            Position(List(Identifier(0,SessionId(0)), Identifier(2,SessionId(99)))),    //02
-      //            Position(List(Identifier(0,SessionId(0)), Identifier(3,SessionId(99)))),    //03
-      //            Position(List(Identifier(0,SessionId(0)), Identifier(4,SessionId(99))))    //04
-      //          )
-      //      )
-      //
-      //      // Test a gap for 4 new 2 digit codes (from 01 to 06), requesting 2
-      //      // 2 codes from 4 options means step size 2, so we get the 1st and 3rd option
-      //      assert(
-      //        run(Position.between(p, s, 2))
-      //          ===
-      //          List(
-      //            Position(List(Identifier(0,SessionId(0)), Identifier(2,SessionId(99)))),    //02
-      //            Position(List(Identifier(0,SessionId(0)), Identifier(4,SessionId(99))))    //04
-      //          )
-      //      )
-      //
-      //      // Test a gap for 4 new 2 digit codes (from 01 to 06), requesting 1
-      //      // 1 codes from 4 options means step size 4, so we get the 1st option only
-      //      assert(
-      //        run(Position.between(p, s, 1))
-      //          ===
-      //          List(
-      //            Position(List(Identifier(0,SessionId(0)), Identifier(2,SessionId(99))))    //02
-      //          )
-      //      )
-      //
-      //
-      //      // Test a gap for 4 new 2 digit codes (from 01 to 06), requesting 5
-      //      // We therefore require more digits.
-      //      // Considered as 3 digit codes, 060 - 010 is 5 * base = 5 * 2147483648 = 10737418240
-      //      // This gives 10737418240 - 1 = 10737418239 options, divided by 5 requested codes
-      //      // gives a window of 2147483647.8, rounded down to 2147483647 for each code.
-      //      // The first code is always at + 1, so we go from 01 to 011,
-      //      // then each subsequent code is at i steps of 2147483647 from this.
-      //      // 2147483647 is the base - 1, the maximum int value m, so we get 011, then 020, then 02m, then 03(m-1) and so on
-      //      assert(
-      //        run(Position.between(p, s, 5))
-      //          ===
-      //        List(
-      //          Position(List(Identifier(0,SessionId(0)), Identifier(1,SessionId(1)), Identifier(1,SessionId(99)))),           //011
-      //          Position(List(Identifier(0,SessionId(0)), Identifier(2,SessionId(99)), Identifier(0,SessionId(99)))),          //020
-      //          Position(List(Identifier(0,SessionId(0)), Identifier(2,SessionId(99)), Identifier(2147483647,SessionId(99)))), //02m
-      //          Position(List(Identifier(0,SessionId(0)), Identifier(3,SessionId(99)), Identifier(2147483646,SessionId(99)))), //03(m-1)
-      //          Position(List(Identifier(0,SessionId(0)), Identifier(4,SessionId(99)), Identifier(2147483645,SessionId(99))))  //04(m-2)
-      //        )
-      //      )
-      //
-      //      // Test a gap for 1 2-digit code (01 to 03), when requesting 2
-      //      // We again require more digits, and get 030-010 = 2 * base,
-      //      // and so 2 * base - 1 = 4294967295 options. Divided by 2 code
-      //      // we get 2147483647.5 rounding down to 2147483647, so as above
-      //      // we get 011 then 020
-      //      assert (
-      //        run(Position.between(p, r, 2))
-      //          ===
-      //        List(
-      //          Position(List(Identifier(0,SessionId(0)), Identifier(1,SessionId(1)), Identifier(1,SessionId(99)))), //011
-      //          Position(List(Identifier(0,SessionId(0)), Identifier(2,SessionId(99)), Identifier(0,SessionId(99)))) //020
-      //        )
-      //      )
-      //
-      //      val p = Position(List(
-      //        Identifier(1, SessionId(0)),
-      //        Identifier(1, SessionId(1)),
-      //        Identifier(2, SessionId(2)),
-      //        Identifier(3, SessionId(3)),
-      //        Identifier(4, SessionId(4)),
-      //        Identifier(5, SessionId(5)),
-      //        Identifier(6, SessionId(6)),
-      //        Identifier(7, SessionId(7))
-      //      ))
-      //      val q = Position(List(
-      //        Identifier(1, SessionId(8)),
-      //        Identifier(1, SessionId(9)),
-      //        Identifier(2, SessionId(10)),
-      //        Identifier(3, SessionId(11)),
-      //        Identifier(4, SessionId(12)),
-      //        Identifier(5, SessionId(13)),
-      //        Identifier(6, SessionId(14)),
-      //        Identifier(7, SessionId(15)),
-      //        Identifier(8, SessionId(16))
-      //      ))
-      ////      run(Position.between(q, p, 2))
-      //      println(s"$p compare to $q is ${Logoot.positionOrdering.compare(p, q)}")
     }
 
     // Note these tests use the generated values from a test run, which were checked for correctness,
