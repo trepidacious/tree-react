@@ -1,0 +1,123 @@
+{
+  "description": "A TextArea can be used to allow for extended user input.\n@see Form",
+  "displayName": "TextArea",
+  "methods": [
+    {
+      "name": "focus",
+      "docblock": null,
+      "modifiers": [],
+      "params": [],
+      "returns": null
+    },
+    {
+      "name": "handleChange",
+      "docblock": null,
+      "modifiers": [],
+      "params": [
+        {
+          "name": "e",
+          "type": null
+        }
+      ],
+      "returns": null
+    },
+    {
+      "name": "handleInput",
+      "docblock": null,
+      "modifiers": [],
+      "params": [
+        {
+          "name": "e",
+          "type": null
+        }
+      ],
+      "returns": null
+    }
+  ],
+  "props": {
+    "as": {
+      "type": {
+        "name": "custom",
+        "raw": "customPropTypes.as"
+      },
+      "required": false,
+      "description": "An element type to render as (string or function).",
+      "defaultValue": {
+        "value": "'textarea'",
+        "computed": false
+      }
+    },
+    "onChange": {
+      "type": {
+        "name": "func"
+      },
+      "required": false,
+      "description": "Called on change.\n@param {SyntheticEvent} event - The React SyntheticEvent object\n@param {object} data - All props and the event value."
+    },
+    "onInput": {
+      "type": {
+        "name": "func"
+      },
+      "required": false,
+      "description": "Called on input.\n@param {SyntheticEvent} event - The React SyntheticEvent object\n@param {object} data - All props and the event value."
+    },
+    "rows": {
+      "type": {
+        "name": "union",
+        "value": [
+          {
+            "name": "number"
+          },
+          {
+            "name": "string"
+          }
+        ]
+      },
+      "required": false,
+      "description": "Indicates row count for a TextArea.",
+      "defaultValue": {
+        "value": "3",
+        "computed": false
+      }
+    },
+    "value": {
+      "type": {
+        "name": "union",
+        "value": [
+          {
+            "name": "number"
+          },
+          {
+            "name": "string"
+          }
+        ]
+      },
+      "required": false,
+      "description": "The value of the textarea."
+    }
+  },
+  "constructorName": "TextArea",
+  "type": "addon",
+  "isParent": true,
+  "isChild": false,
+  "parentDisplayName": null,
+  "subcomponentName": null,
+  "subcomponents": [],
+  "apiPath": "TextArea",
+  "componentClassName": "textarea",
+  "docblock": {
+    "tags": [
+      {
+        "title": "see",
+        "description": "Form"
+      }
+    ],
+    "description": [
+      "A TextArea can be used to allow for extended user input."
+    ]
+  },
+  "examplesExist": true,
+  "repoPath": "src/addons/TextArea/TextArea.js",
+  "filename": "TextArea.js",
+  "filenameWithoutExt": "TextArea"
+}

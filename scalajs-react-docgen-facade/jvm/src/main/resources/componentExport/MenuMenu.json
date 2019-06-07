@@ -1,0 +1,73 @@
+{
+  "description": "A menu can contain a sub menu.",
+  "displayName": "MenuMenu",
+  "methods": [],
+  "props": {
+    "as": {
+      "type": {
+        "name": "custom",
+        "raw": "customPropTypes.as"
+      },
+      "required": false,
+      "description": "An element type to render as (string or function)."
+    },
+    "children": {
+      "type": {
+        "name": "node"
+      },
+      "required": false,
+      "description": "Primary content."
+    },
+    "className": {
+      "type": {
+        "name": "string"
+      },
+      "required": false,
+      "description": "Additional classes."
+    },
+    "content": {
+      "type": {
+        "name": "custom",
+        "raw": "customPropTypes.contentShorthand"
+      },
+      "required": false,
+      "description": "Shorthand for primary content."
+    },
+    "position": {
+      "type": {
+        "name": "enum",
+        "value": [
+          {
+            "value": "left",
+            "computed": false
+          },
+          {
+            "value": "right",
+            "computed": false
+          }
+        ]
+      },
+      "required": false,
+      "description": "A sub menu can take left or right position."
+    }
+  },
+  "constructorName": "MenuMenu",
+  "type": "collection",
+  "isParent": false,
+  "isChild": true,
+  "parentDisplayName": "Menu",
+  "subcomponentName": "Menu",
+  "subcomponents": null,
+  "apiPath": "Menu.Menu",
+  "componentClassName": "menu",
+  "docblock": {
+    "tags": [],
+    "description": [
+      "A menu can contain a sub menu."
+    ]
+  },
+  "examplesExist": false,
+  "repoPath": "src/collections/Menu/MenuMenu.js",
+  "filename": "MenuMenu.js",
+  "filenameWithoutExt": "MenuMenu"
+}

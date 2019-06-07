@@ -1,0 +1,98 @@
+{
+  "description": "Several icons can be used together as a group.",
+  "displayName": "IconGroup",
+  "methods": [],
+  "props": {
+    "as": {
+      "type": {
+        "name": "custom",
+        "raw": "customPropTypes.as"
+      },
+      "required": false,
+      "description": "An element type to render as (string or function).",
+      "defaultValue": {
+        "value": "'i'",
+        "computed": false
+      }
+    },
+    "children": {
+      "type": {
+        "name": "node"
+      },
+      "required": false,
+      "description": "Primary content."
+    },
+    "className": {
+      "type": {
+        "name": "string"
+      },
+      "required": false,
+      "description": "Additional classes."
+    },
+    "content": {
+      "type": {
+        "name": "custom",
+        "raw": "customPropTypes.contentShorthand"
+      },
+      "required": false,
+      "description": "Shorthand for primary content."
+    },
+    "size": {
+      "type": {
+        "name": "enum",
+        "computed": true,
+        "value": [
+          {
+            "value": "mini",
+            "computed": false
+          },
+          {
+            "value": "tiny",
+            "computed": false
+          },
+          {
+            "value": "small",
+            "computed": false
+          },
+          {
+            "value": "large",
+            "computed": false
+          },
+          {
+            "value": "big",
+            "computed": false
+          },
+          {
+            "value": "huge",
+            "computed": false
+          },
+          {
+            "value": "massive",
+            "computed": false
+          }
+        ]
+      },
+      "required": false,
+      "description": "Size of the icon group."
+    }
+  },
+  "constructorName": "IconGroup",
+  "type": "element",
+  "isParent": false,
+  "isChild": true,
+  "parentDisplayName": "Icon",
+  "subcomponentName": "Group",
+  "subcomponents": null,
+  "apiPath": "Icon.Group",
+  "componentClassName": "icons",
+  "docblock": {
+    "tags": [],
+    "description": [
+      "Several icons can be used together as a group."
+    ]
+  },
+  "examplesExist": false,
+  "repoPath": "src/elements/Icon/IconGroup.js",
+  "filename": "IconGroup.js",
+  "filenameWithoutExt": "IconGroup"
+}

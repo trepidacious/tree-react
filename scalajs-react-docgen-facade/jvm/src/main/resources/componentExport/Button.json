@@ -1,0 +1,500 @@
+{
+  "description": "A Button indicates a possible user action.\n@see Form\n@see Icon\n@see Label",
+  "displayName": "Button",
+  "methods": [
+    {
+      "name": "computeButtonAriaRole",
+      "docblock": null,
+      "modifiers": [],
+      "params": [
+        {
+          "name": "ElementType",
+          "type": null
+        }
+      ],
+      "returns": null
+    },
+    {
+      "name": "computeElementType",
+      "docblock": null,
+      "modifiers": [],
+      "params": [],
+      "returns": null
+    },
+    {
+      "name": "computeTabIndex",
+      "docblock": null,
+      "modifiers": [],
+      "params": [
+        {
+          "name": "ElementType",
+          "type": null
+        }
+      ],
+      "returns": null
+    },
+    {
+      "name": "focus",
+      "docblock": null,
+      "modifiers": [],
+      "params": [],
+      "returns": null
+    },
+    {
+      "name": "handleClick",
+      "docblock": null,
+      "modifiers": [],
+      "params": [
+        {
+          "name": "e",
+          "type": null
+        }
+      ],
+      "returns": null
+    },
+    {
+      "name": "hasIconClass",
+      "docblock": null,
+      "modifiers": [],
+      "params": [],
+      "returns": null
+    }
+  ],
+  "props": {
+    "as": {
+      "type": {
+        "name": "custom",
+        "raw": "customPropTypes.as"
+      },
+      "required": false,
+      "description": "An element type to render as (string or function).",
+      "defaultValue": {
+        "value": "'button'",
+        "computed": false
+      }
+    },
+    "active": {
+      "type": {
+        "name": "bool"
+      },
+      "required": false,
+      "description": "A button can show it is currently the active user selection."
+    },
+    "animated": {
+      "type": {
+        "name": "union",
+        "value": [
+          {
+            "name": "bool"
+          },
+          {
+            "name": "enum",
+            "value": [
+              {
+                "value": "'fade'",
+                "computed": false
+              },
+              {
+                "value": "'vertical'",
+                "computed": false
+              }
+            ]
+          }
+        ]
+      },
+      "required": false,
+      "description": "A button can animate to show hidden content."
+    },
+    "attached": {
+      "type": {
+        "name": "union",
+        "value": [
+          {
+            "name": "bool"
+          },
+          {
+            "name": "enum",
+            "value": [
+              {
+                "value": "'left'",
+                "computed": false
+              },
+              {
+                "value": "'right'",
+                "computed": false
+              },
+              {
+                "value": "'top'",
+                "computed": false
+              },
+              {
+                "value": "'bottom'",
+                "computed": false
+              }
+            ]
+          }
+        ]
+      },
+      "required": false,
+      "description": "A button can be attached to other content."
+    },
+    "basic": {
+      "type": {
+        "name": "bool"
+      },
+      "required": false,
+      "description": "A basic button is less pronounced."
+    },
+    "children": {
+      "type": {
+        "name": "union",
+        "value": [
+          {
+            "name": "node"
+          }
+        ]
+      },
+      "required": false,
+      "description": "Primary content."
+    },
+    "circular": {
+      "type": {
+        "name": "bool"
+      },
+      "required": false,
+      "description": "A button can be circular."
+    },
+    "className": {
+      "type": {
+        "name": "string"
+      },
+      "required": false,
+      "description": "Additional classes."
+    },
+    "color": {
+      "type": {
+        "name": "enum",
+        "value": [
+          {
+            "value": "red",
+            "computed": false
+          },
+          {
+            "value": "orange",
+            "computed": false
+          },
+          {
+            "value": "yellow",
+            "computed": false
+          },
+          {
+            "value": "olive",
+            "computed": false
+          },
+          {
+            "value": "green",
+            "computed": false
+          },
+          {
+            "value": "teal",
+            "computed": false
+          },
+          {
+            "value": "blue",
+            "computed": false
+          },
+          {
+            "value": "violet",
+            "computed": false
+          },
+          {
+            "value": "purple",
+            "computed": false
+          },
+          {
+            "value": "pink",
+            "computed": false
+          },
+          {
+            "value": "brown",
+            "computed": false
+          },
+          {
+            "value": "grey",
+            "computed": false
+          },
+          {
+            "value": "black",
+            "computed": false
+          },
+          {
+            "value": "facebook",
+            "computed": false
+          },
+          {
+            "value": "google plus",
+            "computed": false
+          },
+          {
+            "value": "instagram",
+            "computed": false
+          },
+          {
+            "value": "linkedin",
+            "computed": false
+          },
+          {
+            "value": "twitter",
+            "computed": false
+          },
+          {
+            "value": "vk",
+            "computed": false
+          },
+          {
+            "value": "youtube",
+            "computed": false
+          }
+        ]
+      },
+      "required": false,
+      "description": "A button can have different colors"
+    },
+    "compact": {
+      "type": {
+        "name": "bool"
+      },
+      "required": false,
+      "description": "A button can reduce its padding to fit into tighter spaces."
+    },
+    "content": {
+      "type": {
+        "name": "custom",
+        "raw": "customPropTypes.contentShorthand"
+      },
+      "required": false,
+      "description": "Shorthand for primary content."
+    },
+    "disabled": {
+      "type": {
+        "name": "bool"
+      },
+      "required": false,
+      "description": "A button can show it is currently unable to be interacted with."
+    },
+    "floated": {
+      "type": {
+        "name": "enum",
+        "computed": true,
+        "value": [
+          {
+            "value": "left",
+            "computed": false
+          },
+          {
+            "value": "right",
+            "computed": false
+          }
+        ]
+      },
+      "required": false,
+      "description": "A button can be aligned to the left or right of its container."
+    },
+    "fluid": {
+      "type": {
+        "name": "bool"
+      },
+      "required": false,
+      "description": "A button can take the width of its container."
+    },
+    "icon": {
+      "type": {
+        "name": "custom",
+        "raw": "customPropTypes.some([\n  PropTypes.bool,\n  PropTypes.string,\n  PropTypes.object,\n  PropTypes.element,\n])"
+      },
+      "required": false,
+      "description": "Add an Icon by name, props object, or pass an <Icon />."
+    },
+    "inverted": {
+      "type": {
+        "name": "bool"
+      },
+      "required": false,
+      "description": "A button can be formatted to appear on dark backgrounds."
+    },
+    "label": {
+      "type": {
+        "name": "custom",
+        "raw": "customPropTypes.some([PropTypes.string, PropTypes.object, PropTypes.element])"
+      },
+      "required": false,
+      "description": "Add a Label by text, props object, or pass a <Label />."
+    },
+    "labelPosition": {
+      "type": {
+        "name": "enum",
+        "value": [
+          {
+            "value": "right",
+            "computed": false
+          },
+          {
+            "value": "left",
+            "computed": false
+          }
+        ]
+      },
+      "required": false,
+      "description": "A labeled button can format a Label or Icon to appear on the left or right."
+    },
+    "loading": {
+      "type": {
+        "name": "bool"
+      },
+      "required": false,
+      "description": "A button can show a loading indicator."
+    },
+    "negative": {
+      "type": {
+        "name": "bool"
+      },
+      "required": false,
+      "description": "A button can hint towards a negative consequence."
+    },
+    "onClick": {
+      "type": {
+        "name": "func"
+      },
+      "required": false,
+      "description": "Called after user's click.\n@param {SyntheticEvent} event - React's original SyntheticEvent.\n@param {object} data - All props."
+    },
+    "positive": {
+      "type": {
+        "name": "bool"
+      },
+      "required": false,
+      "description": "A button can hint towards a positive consequence."
+    },
+    "primary": {
+      "type": {
+        "name": "bool"
+      },
+      "required": false,
+      "description": "A button can be formatted to show different levels of emphasis."
+    },
+    "role": {
+      "type": {
+        "name": "string"
+      },
+      "required": false,
+      "description": "The role of the HTML element."
+    },
+    "secondary": {
+      "type": {
+        "name": "bool"
+      },
+      "required": false,
+      "description": "A button can be formatted to show different levels of emphasis."
+    },
+    "size": {
+      "type": {
+        "name": "enum",
+        "computed": true,
+        "value": [
+          {
+            "value": "mini",
+            "computed": false
+          },
+          {
+            "value": "tiny",
+            "computed": false
+          },
+          {
+            "value": "small",
+            "computed": false
+          },
+          {
+            "value": "medium",
+            "computed": false
+          },
+          {
+            "value": "large",
+            "computed": false
+          },
+          {
+            "value": "big",
+            "computed": false
+          },
+          {
+            "value": "huge",
+            "computed": false
+          },
+          {
+            "value": "massive",
+            "computed": false
+          }
+        ]
+      },
+      "required": false,
+      "description": "A button can have different sizes."
+    },
+    "tabIndex": {
+      "type": {
+        "name": "union",
+        "value": [
+          {
+            "name": "number"
+          },
+          {
+            "name": "string"
+          }
+        ]
+      },
+      "required": false,
+      "description": "A button can receive focus."
+    },
+    "toggle": {
+      "type": {
+        "name": "bool"
+      },
+      "required": false,
+      "description": "A button can be formatted to toggle on and off."
+    }
+  },
+  "constructorName": "Button",
+  "type": "element",
+  "isParent": true,
+  "isChild": false,
+  "parentDisplayName": null,
+  "subcomponentName": null,
+  "subcomponents": [
+    "ButtonContent",
+    "ButtonGroup",
+    "ButtonOr"
+  ],
+  "apiPath": "Button",
+  "componentClassName": "button",
+  "docblock": {
+    "tags": [
+      {
+        "title": "see",
+        "description": "Form"
+      },
+      {
+        "title": "see",
+        "description": "Icon"
+      },
+      {
+        "title": "see",
+        "description": "Label"
+      }
+    ],
+    "description": [
+      "A Button indicates a possible user action."
+    ]
+  },
+  "examplesExist": true,
+  "repoPath": "src/elements/Button/Button.js",
+  "filename": "Button.js",
+  "filenameWithoutExt": "Button"
+}

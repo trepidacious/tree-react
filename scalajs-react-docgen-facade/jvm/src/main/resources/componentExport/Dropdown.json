@@ -1,0 +1,1325 @@
+{
+  "description": "A dropdown allows a user to select a value from a series of options.\n@see Form\n@see Select\n@see Menu",
+  "displayName": "Dropdown",
+  "methods": [
+    {
+      "name": "getInitialAutoControlledState",
+      "docblock": null,
+      "modifiers": [],
+      "params": [],
+      "returns": null
+    },
+    {
+      "name": "handleChange",
+      "docblock": null,
+      "modifiers": [],
+      "params": [
+        {
+          "name": "e",
+          "type": null
+        },
+        {
+          "name": "value",
+          "type": null
+        }
+      ],
+      "returns": null
+    },
+    {
+      "name": "closeOnChange",
+      "docblock": null,
+      "modifiers": [],
+      "params": [
+        {
+          "name": "e",
+          "type": null
+        }
+      ],
+      "returns": null
+    },
+    {
+      "name": "closeOnEscape",
+      "docblock": null,
+      "modifiers": [],
+      "params": [
+        {
+          "name": "e",
+          "type": null
+        }
+      ],
+      "returns": null
+    },
+    {
+      "name": "moveSelectionOnKeyDown",
+      "docblock": null,
+      "modifiers": [],
+      "params": [
+        {
+          "name": "e",
+          "type": null
+        }
+      ],
+      "returns": null
+    },
+    {
+      "name": "openOnSpace",
+      "docblock": null,
+      "modifiers": [],
+      "params": [
+        {
+          "name": "e",
+          "type": null
+        }
+      ],
+      "returns": null
+    },
+    {
+      "name": "openOnArrow",
+      "docblock": null,
+      "modifiers": [],
+      "params": [
+        {
+          "name": "e",
+          "type": null
+        }
+      ],
+      "returns": null
+    },
+    {
+      "name": "makeSelectedItemActive",
+      "docblock": null,
+      "modifiers": [],
+      "params": [
+        {
+          "name": "e",
+          "type": null
+        }
+      ],
+      "returns": null
+    },
+    {
+      "name": "selectItemOnEnter",
+      "docblock": null,
+      "modifiers": [],
+      "params": [
+        {
+          "name": "e",
+          "type": null
+        }
+      ],
+      "returns": null
+    },
+    {
+      "name": "removeItemOnBackspace",
+      "docblock": null,
+      "modifiers": [],
+      "params": [
+        {
+          "name": "e",
+          "type": null
+        }
+      ],
+      "returns": null
+    },
+    {
+      "name": "closeOnDocumentClick",
+      "docblock": null,
+      "modifiers": [],
+      "params": [
+        {
+          "name": "e",
+          "type": null
+        }
+      ],
+      "returns": null
+    },
+    {
+      "name": "handleMouseDown",
+      "docblock": null,
+      "modifiers": [],
+      "params": [
+        {
+          "name": "e",
+          "type": null
+        }
+      ],
+      "returns": null
+    },
+    {
+      "name": "handleDocumentMouseUp",
+      "docblock": null,
+      "modifiers": [],
+      "params": [],
+      "returns": null
+    },
+    {
+      "name": "handleClick",
+      "docblock": null,
+      "modifiers": [],
+      "params": [
+        {
+          "name": "e",
+          "type": null
+        }
+      ],
+      "returns": null
+    },
+    {
+      "name": "handleIconClick",
+      "docblock": null,
+      "modifiers": [],
+      "params": [
+        {
+          "name": "e",
+          "type": null
+        }
+      ],
+      "returns": null
+    },
+    {
+      "name": "handleItemClick",
+      "docblock": null,
+      "modifiers": [],
+      "params": [
+        {
+          "name": "e",
+          "type": null
+        },
+        {
+          "name": "item",
+          "type": null
+        }
+      ],
+      "returns": null
+    },
+    {
+      "name": "handleFocus",
+      "docblock": null,
+      "modifiers": [],
+      "params": [
+        {
+          "name": "e",
+          "type": null
+        }
+      ],
+      "returns": null
+    },
+    {
+      "name": "handleBlur",
+      "docblock": null,
+      "modifiers": [],
+      "params": [
+        {
+          "name": "e",
+          "type": null
+        }
+      ],
+      "returns": null
+    },
+    {
+      "name": "handleSearchChange",
+      "docblock": null,
+      "modifiers": [],
+      "params": [
+        {
+          "name": "e",
+          "type": null
+        },
+        {
+          "name": "{ value }",
+          "type": null
+        }
+      ],
+      "returns": null
+    },
+    {
+      "name": "getKeyAndValues",
+      "docblock": null,
+      "modifiers": [],
+      "params": [
+        {
+          "name": "options",
+          "type": null
+        }
+      ],
+      "returns": null
+    },
+    {
+      "name": "getMenuOptions",
+      "docblock": null,
+      "modifiers": [],
+      "params": [
+        {
+          "name": "value",
+          "type": null
+        },
+        {
+          "name": "options",
+          "type": null
+        }
+      ],
+      "returns": null
+    },
+    {
+      "name": "getSelectedItem",
+      "docblock": null,
+      "modifiers": [],
+      "params": [],
+      "returns": null
+    },
+    {
+      "name": "getEnabledIndices",
+      "docblock": null,
+      "modifiers": [],
+      "params": [
+        {
+          "name": "givenOptions",
+          "type": null
+        }
+      ],
+      "returns": null
+    },
+    {
+      "name": "getItemByValue",
+      "docblock": null,
+      "modifiers": [],
+      "params": [
+        {
+          "name": "value",
+          "type": null
+        }
+      ],
+      "returns": null
+    },
+    {
+      "name": "getMenuItemIndexByValue",
+      "docblock": null,
+      "modifiers": [],
+      "params": [
+        {
+          "name": "value",
+          "type": null
+        },
+        {
+          "name": "givenOptions",
+          "type": null
+        }
+      ],
+      "returns": null
+    },
+    {
+      "name": "getDropdownAriaOptions",
+      "docblock": null,
+      "modifiers": [],
+      "params": [],
+      "returns": null
+    },
+    {
+      "name": "getDropdownMenuAriaOptions",
+      "docblock": null,
+      "modifiers": [],
+      "params": [],
+      "returns": null
+    },
+    {
+      "name": "clearSearchQuery",
+      "docblock": null,
+      "modifiers": [],
+      "params": [],
+      "returns": null
+    },
+    {
+      "name": "setValue",
+      "docblock": null,
+      "modifiers": [],
+      "params": [
+        {
+          "name": "value",
+          "type": null
+        }
+      ],
+      "returns": null
+    },
+    {
+      "name": "setSelectedIndex",
+      "docblock": null,
+      "modifiers": [],
+      "params": [
+        {
+          "name": "value",
+          "type": null
+        },
+        {
+          "name": "optionsProps",
+          "type": null
+        }
+      ],
+      "returns": null
+    },
+    {
+      "name": "handleLabelClick",
+      "docblock": null,
+      "modifiers": [],
+      "params": [
+        {
+          "name": "e",
+          "type": null
+        },
+        {
+          "name": "labelProps",
+          "type": null
+        }
+      ],
+      "returns": null
+    },
+    {
+      "name": "handleLabelRemove",
+      "docblock": null,
+      "modifiers": [],
+      "params": [
+        {
+          "name": "e",
+          "type": null
+        },
+        {
+          "name": "labelProps",
+          "type": null
+        }
+      ],
+      "returns": null
+    },
+    {
+      "name": "moveSelectionBy",
+      "docblock": null,
+      "modifiers": [],
+      "params": [
+        {
+          "name": "offset",
+          "type": null
+        },
+        {
+          "name": "startIndex",
+          "type": null
+        }
+      ],
+      "returns": null
+    },
+    {
+      "name": "handleIconOverrides",
+      "docblock": null,
+      "modifiers": [],
+      "params": [
+        {
+          "name": "predefinedProps",
+          "type": null
+        }
+      ],
+      "returns": null
+    },
+    {
+      "name": "clearValue",
+      "docblock": null,
+      "modifiers": [],
+      "params": [
+        {
+          "name": "e",
+          "type": null
+        }
+      ],
+      "returns": null
+    },
+    {
+      "name": "computeSearchInputTabIndex",
+      "docblock": null,
+      "modifiers": [],
+      "params": [],
+      "returns": null
+    },
+    {
+      "name": "computeSearchInputWidth",
+      "docblock": null,
+      "modifiers": [],
+      "params": [],
+      "returns": null
+    },
+    {
+      "name": "computeTabIndex",
+      "docblock": null,
+      "modifiers": [],
+      "params": [],
+      "returns": null
+    },
+    {
+      "name": "handleSearchInputOverrides",
+      "docblock": null,
+      "modifiers": [],
+      "params": [
+        {
+          "name": "predefinedProps",
+          "type": null
+        }
+      ],
+      "returns": null
+    },
+    {
+      "name": "hasValue",
+      "docblock": null,
+      "modifiers": [],
+      "params": [],
+      "returns": null
+    },
+    {
+      "name": "scrollSelectedItemIntoView",
+      "docblock": null,
+      "modifiers": [],
+      "params": [],
+      "returns": null
+    },
+    {
+      "name": "setOpenDirection",
+      "docblock": null,
+      "modifiers": [],
+      "params": [],
+      "returns": null
+    },
+    {
+      "name": "open",
+      "docblock": null,
+      "modifiers": [],
+      "params": [
+        {
+          "name": "e",
+          "type": null
+        }
+      ],
+      "returns": null
+    },
+    {
+      "name": "close",
+      "docblock": null,
+      "modifiers": [],
+      "params": [
+        {
+          "name": "e",
+          "type": null
+        }
+      ],
+      "returns": null
+    },
+    {
+      "name": "handleClose",
+      "docblock": null,
+      "modifiers": [],
+      "params": [],
+      "returns": null
+    },
+    {
+      "name": "toggle",
+      "docblock": null,
+      "modifiers": [],
+      "params": [
+        {
+          "name": "e",
+          "type": null
+        }
+      ],
+      "returns": null
+    },
+    {
+      "name": "renderText",
+      "docblock": null,
+      "modifiers": [],
+      "params": [],
+      "returns": null
+    },
+    {
+      "name": "renderSearchInput",
+      "docblock": null,
+      "modifiers": [],
+      "params": [],
+      "returns": null
+    },
+    {
+      "name": "renderSearchSizer",
+      "docblock": null,
+      "modifiers": [],
+      "params": [],
+      "returns": null
+    },
+    {
+      "name": "renderLabels",
+      "docblock": null,
+      "modifiers": [],
+      "params": [],
+      "returns": null
+    },
+    {
+      "name": "renderOptions",
+      "docblock": null,
+      "modifiers": [],
+      "params": [],
+      "returns": null
+    },
+    {
+      "name": "renderMenu",
+      "docblock": null,
+      "modifiers": [],
+      "params": [],
+      "returns": null
+    }
+  ],
+  "props": {
+    "as": {
+      "type": {
+        "name": "custom",
+        "raw": "customPropTypes.as"
+      },
+      "required": false,
+      "description": "An element type to render as (string or function)."
+    },
+    "additionLabel": {
+      "type": {
+        "name": "union",
+        "value": [
+          {
+            "name": "element"
+          },
+          {
+            "name": "string"
+          }
+        ]
+      },
+      "required": false,
+      "description": "Label prefixed to an option added by a user.",
+      "defaultValue": {
+        "value": "'Add '",
+        "computed": false
+      }
+    },
+    "additionPosition": {
+      "type": {
+        "name": "enum",
+        "value": [
+          {
+            "value": "top",
+            "computed": false
+          },
+          {
+            "value": "bottom",
+            "computed": false
+          }
+        ]
+      },
+      "required": false,
+      "description": "Position of the `Add: ...` option in the dropdown list ('top' or 'bottom').",
+      "defaultValue": {
+        "value": "'top'",
+        "computed": false
+      }
+    },
+    "allowAdditions": {
+      "type": {
+        "name": "union",
+        "value": [
+          {
+            "name": "bool"
+          }
+        ]
+      },
+      "required": false,
+      "description": "Allow user additions to the list of options (boolean).\nRequires the use of `selection`, `options` and `search`."
+    },
+    "basic": {
+      "type": {
+        "name": "bool"
+      },
+      "required": false,
+      "description": "A Dropdown can reduce its complexity."
+    },
+    "button": {
+      "type": {
+        "name": "bool"
+      },
+      "required": false,
+      "description": "Format the Dropdown to appear as a button."
+    },
+    "children": {
+      "type": {
+        "name": "union",
+        "value": []
+      },
+      "required": false,
+      "description": "Primary content."
+    },
+    "className": {
+      "type": {
+        "name": "string"
+      },
+      "required": false,
+      "description": "Additional classes."
+    },
+    "clearable": {
+      "type": {
+        "name": "bool"
+      },
+      "required": false,
+      "description": "Using the clearable setting will let users remove their selection from a dropdown."
+    },
+    "closeOnBlur": {
+      "type": {
+        "name": "bool"
+      },
+      "required": false,
+      "description": "Whether or not the menu should close when the dropdown is blurred.",
+      "defaultValue": {
+        "value": "true",
+        "computed": false
+      }
+    },
+    "closeOnChange": {
+      "type": {
+        "name": "bool"
+      },
+      "required": false,
+      "description": "Whether or not the menu should close when a value is selected from the dropdown.\nBy default, multiple selection dropdowns will remain open on change, while single\nselection dropdowns will close on change."
+    },
+    "compact": {
+      "type": {
+        "name": "bool"
+      },
+      "required": false,
+      "description": "A compact dropdown has no minimum width."
+    },
+    "deburr": {
+      "type": {
+        "name": "bool"
+      },
+      "required": false,
+      "description": "Whether or not the dropdown should strip diacritics in options and input search",
+      "defaultValue": {
+        "value": "false",
+        "computed": false
+      }
+    },
+    "defaultOpen": {
+      "type": {
+        "name": "bool"
+      },
+      "required": false,
+      "description": "Initial value of open."
+    },
+    "defaultSearchQuery": {
+      "type": {
+        "name": "string"
+      },
+      "required": false,
+      "description": "Initial value of searchQuery."
+    },
+    "defaultSelectedLabel": {
+      "type": {
+        "name": "union",
+        "value": [
+          {
+            "name": "union",
+            "value": [
+              {
+                "name": "number"
+              },
+              {
+                "name": "string"
+              }
+            ]
+          }
+        ]
+      },
+      "required": false,
+      "description": "Currently selected label in multi-select."
+    },
+    "defaultUpward": {
+      "type": {
+        "name": "bool"
+      },
+      "required": false,
+      "description": "Initial value of upward."
+    },
+    "defaultValue": {
+      "type": {
+        "name": "union",
+        "value": [
+          {
+            "name": "number"
+          },
+          {
+            "name": "string"
+          },
+          {
+            "name": "bool"
+          },
+          {
+            "name": "arrayOf",
+            "value": {
+              "name": "union",
+              "value": [
+                {
+                  "name": "string"
+                },
+                {
+                  "name": "number"
+                },
+                {
+                  "name": "bool"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "required": false,
+      "description": "Initial value or value array if multiple."
+    },
+    "direction": {
+      "type": {
+        "name": "enum",
+        "value": [
+          {
+            "value": "left",
+            "computed": false
+          },
+          {
+            "value": "right",
+            "computed": false
+          }
+        ]
+      },
+      "required": false,
+      "description": "A dropdown menu can open to the left or to the right."
+    },
+    "disabled": {
+      "type": {
+        "name": "bool"
+      },
+      "required": false,
+      "description": "A disabled dropdown menu or item does not allow user interaction."
+    },
+    "error": {
+      "type": {
+        "name": "bool"
+      },
+      "required": false,
+      "description": "An errored dropdown can alert a user to a problem."
+    },
+    "floating": {
+      "type": {
+        "name": "bool"
+      },
+      "required": false,
+      "description": "A dropdown menu can contain floated content."
+    },
+    "fluid": {
+      "type": {
+        "name": "bool"
+      },
+      "required": false,
+      "description": "A dropdown can take the full width of its parent"
+    },
+    "header": {
+      "type": {
+        "name": "node"
+      },
+      "required": false,
+      "description": "A dropdown menu can contain a header."
+    },
+    "icon": {
+      "type": {
+        "name": "union",
+        "value": [
+          {
+            "name": "node"
+          },
+          {
+            "name": "object"
+          }
+        ]
+      },
+      "required": false,
+      "description": "Shorthand for Icon.",
+      "defaultValue": {
+        "value": "'dropdown'",
+        "computed": false
+      }
+    },
+    "inline": {
+      "type": {
+        "name": "bool"
+      },
+      "required": false,
+      "description": "A dropdown can be formatted to appear inline in other content."
+    },
+    "item": {
+      "type": {
+        "name": "bool"
+      },
+      "required": false,
+      "description": "A dropdown can be formatted as a Menu item."
+    },
+    "labeled": {
+      "type": {
+        "name": "bool"
+      },
+      "required": false,
+      "description": "A dropdown can be labeled."
+    },
+    "lazyLoad": {
+      "type": {
+        "name": "bool"
+      },
+      "required": false,
+      "description": "A dropdown can defer rendering its options until it is open."
+    },
+    "loading": {
+      "type": {
+        "name": "bool"
+      },
+      "required": false,
+      "description": "A dropdown can show that it is currently loading data."
+    },
+    "minCharacters": {
+      "type": {
+        "name": "number"
+      },
+      "required": false,
+      "description": "The minimum characters for a search to begin showing results.",
+      "defaultValue": {
+        "value": "1",
+        "computed": false
+      }
+    },
+    "multiple": {
+      "type": {
+        "name": "bool"
+      },
+      "required": false,
+      "description": "A selection dropdown can allow multiple selections."
+    },
+    "noResultsMessage": {
+      "type": {
+        "name": "node"
+      },
+      "required": false,
+      "description": "Message to display when there are no results.",
+      "defaultValue": {
+        "value": "'No results found.'",
+        "computed": false
+      }
+    },
+    "onAddItem": {
+      "type": {
+        "name": "func"
+      },
+      "required": false,
+      "description": "Called when a user adds a new item. Use this to update the options list.\n\n@param {SyntheticEvent} event - React's original SyntheticEvent.\n@param {object} data - All props and the new item's value."
+    },
+    "onBlur": {
+      "type": {
+        "name": "func"
+      },
+      "required": false,
+      "description": "Called on blur.\n\n@param {SyntheticEvent} event - React's original SyntheticEvent.\n@param {object} data - All props."
+    },
+    "onChange": {
+      "type": {
+        "name": "func"
+      },
+      "required": false,
+      "description": "Called when the user attempts to change the value.\n\n@param {SyntheticEvent} event - React's original SyntheticEvent.\n@param {object} data - All props and proposed value."
+    },
+    "onClick": {
+      "type": {
+        "name": "func"
+      },
+      "required": false,
+      "description": "Called on click.\n\n@param {SyntheticEvent} event - React's original SyntheticEvent.\n@param {object} data - All props."
+    },
+    "onClose": {
+      "type": {
+        "name": "func"
+      },
+      "required": false,
+      "description": "Called when a close event happens.\n\n@param {SyntheticEvent} event - React's original SyntheticEvent.\n@param {object} data - All props."
+    },
+    "onFocus": {
+      "type": {
+        "name": "func"
+      },
+      "required": false,
+      "description": "Called on focus.\n\n@param {SyntheticEvent} event - React's original SyntheticEvent.\n@param {object} data - All props."
+    },
+    "onLabelClick": {
+      "type": {
+        "name": "func"
+      },
+      "required": false,
+      "description": "Called when a multi-select label is clicked.\n\n@param {SyntheticEvent} event - React's original SyntheticEvent.\n@param {object} data - All label props."
+    },
+    "onMouseDown": {
+      "type": {
+        "name": "func"
+      },
+      "required": false,
+      "description": "Called on mousedown.\n\n@param {SyntheticEvent} event - React's original SyntheticEvent.\n@param {object} data - All props."
+    },
+    "onOpen": {
+      "type": {
+        "name": "func"
+      },
+      "required": false,
+      "description": "Called when an open event happens.\n\n@param {SyntheticEvent} event - React's original SyntheticEvent.\n@param {object} data - All props."
+    },
+    "onSearchChange": {
+      "type": {
+        "name": "func"
+      },
+      "required": false,
+      "description": "Called on search input change.\n\n@param {SyntheticEvent} event - React's original SyntheticEvent.\n@param {object} data - All props, includes current value of searchQuery."
+    },
+    "open": {
+      "type": {
+        "name": "bool"
+      },
+      "required": false,
+      "description": "Controls whether or not the dropdown menu is displayed."
+    },
+    "openOnFocus": {
+      "type": {
+        "name": "bool"
+      },
+      "required": false,
+      "description": "Whether or not the menu should open when the dropdown is focused.",
+      "defaultValue": {
+        "value": "true",
+        "computed": false
+      }
+    },
+    "options": {
+      "type": {
+        "name": "union",
+        "value": [
+          {
+            "name": "arrayOf",
+            "value": {
+              "name": "shape",
+              "value": "DropdownItem.propTypes",
+              "computed": true
+            }
+          }
+        ]
+      },
+      "required": false,
+      "description": "Array of Dropdown.Item props e.g. `{ text: '', value: '' }`"
+    },
+    "placeholder": {
+      "type": {
+        "name": "string"
+      },
+      "required": false,
+      "description": "Placeholder text."
+    },
+    "pointing": {
+      "type": {
+        "name": "union",
+        "value": [
+          {
+            "name": "bool"
+          },
+          {
+            "name": "enum",
+            "value": [
+              {
+                "value": "'left'",
+                "computed": false
+              },
+              {
+                "value": "'right'",
+                "computed": false
+              },
+              {
+                "value": "'top'",
+                "computed": false
+              },
+              {
+                "value": "'top left'",
+                "computed": false
+              },
+              {
+                "value": "'top right'",
+                "computed": false
+              },
+              {
+                "value": "'bottom'",
+                "computed": false
+              },
+              {
+                "value": "'bottom left'",
+                "computed": false
+              },
+              {
+                "value": "'bottom right'",
+                "computed": false
+              }
+            ]
+          }
+        ]
+      },
+      "required": false,
+      "description": "A dropdown can be formatted so that its menu is pointing."
+    },
+    "renderLabel": {
+      "type": {
+        "name": "func"
+      },
+      "required": false,
+      "description": "Mapped over the active items and returns shorthand for the active item Labels.\nOnly applies to `multiple` Dropdowns.\n\n@param {object} item - A currently active dropdown item.\n@param {number} index - The current index.\n@param {object} defaultLabelProps - The default props for an active item Label.\n@returns {*} Shorthand for a Label.",
+      "defaultValue": {
+        "value": "({ text }) => text",
+        "computed": false
+      }
+    },
+    "scrolling": {
+      "type": {
+        "name": "bool"
+      },
+      "required": false,
+      "description": "A dropdown can have its menu scroll."
+    },
+    "search": {
+      "type": {
+        "name": "union",
+        "value": [
+          {
+            "name": "bool"
+          },
+          {
+            "name": "func"
+          }
+        ]
+      },
+      "required": false,
+      "description": "A selection dropdown can allow a user to search through a large list of choices.\nPass a function here to replace the default search."
+    },
+    "searchInput": {
+      "type": {
+        "name": "union",
+        "value": [
+          {
+            "name": "array"
+          },
+          {
+            "name": "node"
+          },
+          {
+            "name": "object"
+          }
+        ]
+      },
+      "required": false,
+      "description": "A shorthand for a search input.",
+      "defaultValue": {
+        "value": "'text'",
+        "computed": false
+      }
+    },
+    "searchQuery": {
+      "type": {
+        "name": "string"
+      },
+      "required": false,
+      "description": "Current value of searchQuery. Creates a controlled component."
+    },
+    "selectOnBlur": {
+      "type": {
+        "name": "bool"
+      },
+      "required": false,
+      "description": "Define whether the highlighted item should be selected on blur.",
+      "defaultValue": {
+        "value": "true",
+        "computed": false
+      }
+    },
+    "selectOnNavigation": {
+      "type": {
+        "name": "bool"
+      },
+      "required": false,
+      "description": "Whether or not to change the value when navigating the menu using arrow keys.\nSetting to false will require enter or left click to confirm a choice.",
+      "defaultValue": {
+        "value": "true",
+        "computed": false
+      }
+    },
+    "selectedLabel": {
+      "type": {
+        "name": "union",
+        "value": [
+          {
+            "name": "union",
+            "value": [
+              {
+                "name": "string"
+              },
+              {
+                "name": "number"
+              }
+            ]
+          }
+        ]
+      },
+      "required": false,
+      "description": "Currently selected label in multi-select."
+    },
+    "selection": {
+      "type": {
+        "name": "union",
+        "value": [
+          {
+            "name": "bool"
+          }
+        ]
+      },
+      "required": false,
+      "description": "A dropdown can be used to select between choices in a form."
+    },
+    "simple": {
+      "type": {
+        "name": "bool"
+      },
+      "required": false,
+      "description": "A simple dropdown can open without Javascript."
+    },
+    "tabIndex": {
+      "type": {
+        "name": "union",
+        "value": [
+          {
+            "name": "number"
+          },
+          {
+            "name": "string"
+          }
+        ]
+      },
+      "required": false,
+      "description": "A dropdown can receive focus."
+    },
+    "text": {
+      "type": {
+        "name": "string"
+      },
+      "required": false,
+      "description": "The text displayed in the dropdown, usually for the active item."
+    },
+    "trigger": {
+      "type": {
+        "name": "union",
+        "value": [
+          {
+            "name": "node"
+          }
+        ]
+      },
+      "required": false,
+      "description": "Custom element to trigger the menu to become visible. Takes place of 'text'."
+    },
+    "value": {
+      "type": {
+        "name": "union",
+        "value": [
+          {
+            "name": "bool"
+          },
+          {
+            "name": "string"
+          },
+          {
+            "name": "number"
+          },
+          {
+            "name": "arrayOf",
+            "value": {
+              "name": "union",
+              "value": [
+                {
+                  "name": "bool"
+                },
+                {
+                  "name": "string"
+                },
+                {
+                  "name": "number"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "required": false,
+      "description": "Current value or value array if multiple. Creates a controlled component."
+    },
+    "upward": {
+      "type": {
+        "name": "bool"
+      },
+      "required": false,
+      "description": "Controls whether the dropdown will open upward."
+    },
+    "wrapSelection": {
+      "type": {
+        "name": "bool"
+      },
+      "required": false,
+      "description": "A dropdown will go to the last element when ArrowUp is pressed on the first,\nor go to the first when ArrowDown is pressed on the last( aka infinite selection )",
+      "defaultValue": {
+        "value": "true",
+        "computed": false
+      }
+    }
+  },
+  "constructorName": "Dropdown",
+  "type": "module",
+  "isParent": true,
+  "isChild": false,
+  "parentDisplayName": null,
+  "subcomponentName": null,
+  "subcomponents": [
+    "DropdownDivider",
+    "DropdownHeader",
+    "DropdownItem",
+    "DropdownMenu",
+    "DropdownSearchInput"
+  ],
+  "apiPath": "Dropdown",
+  "componentClassName": "dropdown",
+  "docblock": {
+    "tags": [
+      {
+        "title": "see",
+        "description": "Form"
+      },
+      {
+        "title": "see",
+        "description": "Select"
+      },
+      {
+        "title": "see",
+        "description": "Menu"
+      }
+    ],
+    "description": [
+      "A dropdown allows a user to select a value from a series of options."
+    ]
+  },
+  "examplesExist": true,
+  "repoPath": "src/modules/Dropdown/Dropdown.js",
+  "filename": "Dropdown.js",
+  "filenameWithoutExt": "Dropdown"
+}

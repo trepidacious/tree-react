@@ -1,0 +1,262 @@
+{
+  "description": "A list groups related content.",
+  "displayName": "List",
+  "methods": [
+    {
+      "name": "handleItemOverrides",
+      "docblock": null,
+      "modifiers": [],
+      "params": [
+        {
+          "name": "predefinedProps",
+          "type": null
+        }
+      ],
+      "returns": null
+    }
+  ],
+  "props": {
+    "as": {
+      "type": {
+        "name": "custom",
+        "raw": "customPropTypes.as"
+      },
+      "required": false,
+      "description": "An element type to render as (string or function)."
+    },
+    "animated": {
+      "type": {
+        "name": "bool"
+      },
+      "required": false,
+      "description": "A list can animate to set the current item apart from the list."
+    },
+    "bulleted": {
+      "type": {
+        "name": "bool"
+      },
+      "required": false,
+      "description": "A list can mark items with a bullet."
+    },
+    "celled": {
+      "type": {
+        "name": "bool"
+      },
+      "required": false,
+      "description": "A list can divide its items into cells."
+    },
+    "children": {
+      "type": {
+        "name": "node"
+      },
+      "required": false,
+      "description": "Primary content."
+    },
+    "className": {
+      "type": {
+        "name": "string"
+      },
+      "required": false,
+      "description": "Additional classes."
+    },
+    "content": {
+      "type": {
+        "name": "custom",
+        "raw": "customPropTypes.contentShorthand"
+      },
+      "required": false,
+      "description": "Shorthand for primary content."
+    },
+    "divided": {
+      "type": {
+        "name": "bool"
+      },
+      "required": false,
+      "description": "A list can show divisions between content."
+    },
+    "floated": {
+      "type": {
+        "name": "enum",
+        "computed": true,
+        "value": [
+          {
+            "value": "left",
+            "computed": false
+          },
+          {
+            "value": "right",
+            "computed": false
+          }
+        ]
+      },
+      "required": false,
+      "description": "An list can be floated left or right."
+    },
+    "horizontal": {
+      "type": {
+        "name": "bool"
+      },
+      "required": false,
+      "description": "A list can be formatted to have items appear horizontally."
+    },
+    "inverted": {
+      "type": {
+        "name": "bool"
+      },
+      "required": false,
+      "description": "A list can be inverted to appear on a dark background."
+    },
+    "items": {
+      "type": {
+        "name": "custom",
+        "raw": "customPropTypes.collectionShorthand"
+      },
+      "required": false,
+      "description": "Shorthand array of props for ListItem."
+    },
+    "link": {
+      "type": {
+        "name": "bool"
+      },
+      "required": false,
+      "description": "A list can be specially formatted for navigation links."
+    },
+    "onItemClick": {
+      "type": {
+        "name": "union",
+        "value": [
+          {
+            "name": "func"
+          }
+        ]
+      },
+      "required": false,
+      "description": "onClick handler for ListItem. Mutually exclusive with children.\n\n@param {SyntheticEvent} event - React's original SyntheticEvent.\n@param {object} data - All item props."
+    },
+    "ordered": {
+      "type": {
+        "name": "bool"
+      },
+      "required": false,
+      "description": "A list can be ordered numerically."
+    },
+    "relaxed": {
+      "type": {
+        "name": "union",
+        "value": [
+          {
+            "name": "bool"
+          },
+          {
+            "name": "enum",
+            "value": [
+              {
+                "value": "'very'",
+                "computed": false
+              }
+            ]
+          }
+        ]
+      },
+      "required": false,
+      "description": "A list can relax its padding to provide more negative space."
+    },
+    "selection": {
+      "type": {
+        "name": "bool"
+      },
+      "required": false,
+      "description": "A selection list formats list items as possible choices."
+    },
+    "size": {
+      "type": {
+        "name": "enum",
+        "computed": true,
+        "value": [
+          {
+            "value": "mini",
+            "computed": false
+          },
+          {
+            "value": "tiny",
+            "computed": false
+          },
+          {
+            "value": "small",
+            "computed": false
+          },
+          {
+            "value": "medium",
+            "computed": false
+          },
+          {
+            "value": "large",
+            "computed": false
+          },
+          {
+            "value": "big",
+            "computed": false
+          },
+          {
+            "value": "huge",
+            "computed": false
+          },
+          {
+            "value": "massive",
+            "computed": false
+          }
+        ]
+      },
+      "required": false,
+      "description": "A list can vary in size."
+    },
+    "verticalAlign": {
+      "type": {
+        "name": "enum",
+        "computed": true,
+        "value": [
+          {
+            "value": "bottom",
+            "computed": false
+          },
+          {
+            "value": "middle",
+            "computed": false
+          },
+          {
+            "value": "top",
+            "computed": false
+          }
+        ]
+      },
+      "required": false,
+      "description": "An element inside a list can be vertically aligned."
+    }
+  },
+  "constructorName": "List",
+  "type": "element",
+  "isParent": true,
+  "isChild": false,
+  "parentDisplayName": null,
+  "subcomponentName": null,
+  "subcomponents": [
+    "ListContent",
+    "ListDescription",
+    "ListHeader",
+    "ListIcon",
+    "ListItem",
+    "ListList"
+  ],
+  "apiPath": "List",
+  "componentClassName": "list",
+  "docblock": {
+    "tags": [],
+    "description": [
+      "A list groups related content."
+    ]
+  },
+  "examplesExist": true,
+  "repoPath": "src/elements/List/List.js",
+  "filename": "List.js",
+  "filenameWithoutExt": "List"
+}

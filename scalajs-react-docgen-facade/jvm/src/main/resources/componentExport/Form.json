@@ -1,0 +1,226 @@
+{
+  "description": "A Form displays a set of related user input fields in a structured way.\n@see Button\n@see Checkbox\n@see Dropdown\n@see Input\n@see Message\n@see Radio\n@see Select\n@see Visibility",
+  "displayName": "Form",
+  "methods": [
+    {
+      "name": "handleSubmit",
+      "docblock": null,
+      "modifiers": [],
+      "params": [
+        {
+          "name": "e",
+          "type": null
+        },
+        {
+          "name": "...args",
+          "type": null
+        }
+      ],
+      "returns": null
+    }
+  ],
+  "props": {
+    "as": {
+      "type": {
+        "name": "custom",
+        "raw": "customPropTypes.as"
+      },
+      "required": false,
+      "description": "An element type to render as (string or function).",
+      "defaultValue": {
+        "value": "'form'",
+        "computed": false
+      }
+    },
+    "action": {
+      "type": {
+        "name": "string"
+      },
+      "required": false,
+      "description": "The HTML form action"
+    },
+    "children": {
+      "type": {
+        "name": "node"
+      },
+      "required": false,
+      "description": "Primary content."
+    },
+    "className": {
+      "type": {
+        "name": "string"
+      },
+      "required": false,
+      "description": "Additional classes."
+    },
+    "error": {
+      "type": {
+        "name": "bool"
+      },
+      "required": false,
+      "description": "Automatically show any error Message children."
+    },
+    "inverted": {
+      "type": {
+        "name": "bool"
+      },
+      "required": false,
+      "description": "A form can have its color inverted for contrast."
+    },
+    "loading": {
+      "type": {
+        "name": "bool"
+      },
+      "required": false,
+      "description": "Automatically show a loading indicator."
+    },
+    "onSubmit": {
+      "type": {
+        "name": "func"
+      },
+      "required": false,
+      "description": "The HTML form submit handler."
+    },
+    "reply": {
+      "type": {
+        "name": "bool"
+      },
+      "required": false,
+      "description": "A comment can contain a form to reply to a comment. This may have arbitrary content."
+    },
+    "size": {
+      "type": {
+        "name": "enum",
+        "computed": true,
+        "value": [
+          {
+            "value": "mini",
+            "computed": false
+          },
+          {
+            "value": "tiny",
+            "computed": false
+          },
+          {
+            "value": "small",
+            "computed": false
+          },
+          {
+            "value": "large",
+            "computed": false
+          },
+          {
+            "value": "big",
+            "computed": false
+          },
+          {
+            "value": "huge",
+            "computed": false
+          },
+          {
+            "value": "massive",
+            "computed": false
+          }
+        ]
+      },
+      "required": false,
+      "description": "A form can vary in size."
+    },
+    "success": {
+      "type": {
+        "name": "bool"
+      },
+      "required": false,
+      "description": "Automatically show any success Message children."
+    },
+    "unstackable": {
+      "type": {
+        "name": "bool"
+      },
+      "required": false,
+      "description": "A form can prevent itself from stacking on mobile."
+    },
+    "warning": {
+      "type": {
+        "name": "bool"
+      },
+      "required": false,
+      "description": "Automatically show any warning Message children."
+    },
+    "widths": {
+      "type": {
+        "name": "enum",
+        "value": [
+          {
+            "value": "equal",
+            "computed": false
+          }
+        ]
+      },
+      "required": false,
+      "description": "Forms can automatically divide fields to be equal width."
+    }
+  },
+  "constructorName": "Form",
+  "type": "collection",
+  "isParent": true,
+  "isChild": false,
+  "parentDisplayName": null,
+  "subcomponentName": null,
+  "subcomponents": [
+    "FormButton",
+    "FormCheckbox",
+    "FormDropdown",
+    "FormField",
+    "FormGroup",
+    "FormInput",
+    "FormRadio",
+    "FormSelect",
+    "FormTextArea"
+  ],
+  "apiPath": "Form",
+  "componentClassName": "form",
+  "docblock": {
+    "tags": [
+      {
+        "title": "see",
+        "description": "Button"
+      },
+      {
+        "title": "see",
+        "description": "Checkbox"
+      },
+      {
+        "title": "see",
+        "description": "Dropdown"
+      },
+      {
+        "title": "see",
+        "description": "Input"
+      },
+      {
+        "title": "see",
+        "description": "Message"
+      },
+      {
+        "title": "see",
+        "description": "Radio"
+      },
+      {
+        "title": "see",
+        "description": "Select"
+      },
+      {
+        "title": "see",
+        "description": "Visibility"
+      }
+    ],
+    "description": [
+      "A Form displays a set of related user input fields in a structured way."
+    ]
+  },
+  "examplesExist": true,
+  "repoPath": "src/collections/Form/Form.js",
+  "filename": "Form.js",
+  "filenameWithoutExt": "Form"
+}

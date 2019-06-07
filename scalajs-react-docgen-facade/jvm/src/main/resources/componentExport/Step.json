@@ -1,0 +1,154 @@
+{
+  "description": "A step shows the completion status of an activity in a series of activities.",
+  "displayName": "Step",
+  "methods": [
+    {
+      "name": "computeElementType",
+      "docblock": null,
+      "modifiers": [],
+      "params": [],
+      "returns": null
+    },
+    {
+      "name": "handleClick",
+      "docblock": null,
+      "modifiers": [],
+      "params": [
+        {
+          "name": "e",
+          "type": null
+        }
+      ],
+      "returns": null
+    }
+  ],
+  "props": {
+    "as": {
+      "type": {
+        "name": "custom",
+        "raw": "customPropTypes.as"
+      },
+      "required": false,
+      "description": "An element type to render as (string or function)."
+    },
+    "active": {
+      "type": {
+        "name": "bool"
+      },
+      "required": false,
+      "description": "A step can be highlighted as active."
+    },
+    "children": {
+      "type": {
+        "name": "node"
+      },
+      "required": false,
+      "description": "Primary content."
+    },
+    "className": {
+      "type": {
+        "name": "string"
+      },
+      "required": false,
+      "description": "Additional classes."
+    },
+    "completed": {
+      "type": {
+        "name": "bool"
+      },
+      "required": false,
+      "description": "A step can show that a user has completed it."
+    },
+    "content": {
+      "type": {
+        "name": "custom",
+        "raw": "customPropTypes.contentShorthand"
+      },
+      "required": false,
+      "description": "Shorthand for primary content."
+    },
+    "description": {
+      "type": {
+        "name": "custom",
+        "raw": "customPropTypes.itemShorthand"
+      },
+      "required": false,
+      "description": "Shorthand for StepDescription."
+    },
+    "disabled": {
+      "type": {
+        "name": "bool"
+      },
+      "required": false,
+      "description": "Show that the Loader is inactive."
+    },
+    "href": {
+      "type": {
+        "name": "string"
+      },
+      "required": false,
+      "description": "Render as an `a` tag instead of a `div` and adds the href attribute."
+    },
+    "icon": {
+      "type": {
+        "name": "custom",
+        "raw": "customPropTypes.itemShorthand"
+      },
+      "required": false,
+      "description": "Shorthand for Icon."
+    },
+    "link": {
+      "type": {
+        "name": "bool"
+      },
+      "required": false,
+      "description": "A step can be link."
+    },
+    "onClick": {
+      "type": {
+        "name": "func"
+      },
+      "required": false,
+      "description": "Called on click. When passed, the component will render as an `a`\ntag by default instead of a `div`.\n\n@param {SyntheticEvent} event - React's original SyntheticEvent.\n@param {object} data - All props."
+    },
+    "ordered": {
+      "type": {
+        "name": "bool"
+      },
+      "required": false,
+      "description": "A step can show a ordered sequence of steps. Passed from StepGroup."
+    },
+    "title": {
+      "type": {
+        "name": "custom",
+        "raw": "customPropTypes.itemShorthand"
+      },
+      "required": false,
+      "description": "Shorthand for StepTitle."
+    }
+  },
+  "constructorName": "Step",
+  "type": "element",
+  "isParent": true,
+  "isChild": false,
+  "parentDisplayName": null,
+  "subcomponentName": null,
+  "subcomponents": [
+    "StepContent",
+    "StepDescription",
+    "StepGroup",
+    "StepTitle"
+  ],
+  "apiPath": "Step",
+  "componentClassName": "step",
+  "docblock": {
+    "tags": [],
+    "description": [
+      "A step shows the completion status of an activity in a series of activities."
+    ]
+  },
+  "examplesExist": true,
+  "repoPath": "src/elements/Step/Step.js",
+  "filename": "Step.js",
+  "filenameWithoutExt": "Step"
+}

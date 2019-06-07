@@ -1,0 +1,84 @@
+{
+  "description": "A panel sub-component for Accordion component.",
+  "displayName": "AccordionPanel",
+  "methods": [
+    {
+      "name": "handleTitleOverrides",
+      "docblock": null,
+      "modifiers": [],
+      "params": [
+        {
+          "name": "predefinedProps",
+          "type": null
+        }
+      ],
+      "returns": null
+    }
+  ],
+  "props": {
+    "active": {
+      "type": {
+        "name": "bool"
+      },
+      "required": false,
+      "description": "Whether or not the title is in the open state."
+    },
+    "content": {
+      "type": {
+        "name": "custom",
+        "raw": "customPropTypes.itemShorthand"
+      },
+      "required": false,
+      "description": "A shorthand for Accordion.Content."
+    },
+    "index": {
+      "type": {
+        "name": "union",
+        "value": [
+          {
+            "name": "number"
+          },
+          {
+            "name": "string"
+          }
+        ]
+      },
+      "required": false,
+      "description": "A panel index."
+    },
+    "onTitleClick": {
+      "type": {
+        "name": "func"
+      },
+      "required": false,
+      "description": "Called when a panel title is clicked.\n\n@param {SyntheticEvent} event - React's original SyntheticEvent.\n@param {object} data - All item props."
+    },
+    "title": {
+      "type": {
+        "name": "custom",
+        "raw": "customPropTypes.itemShorthand"
+      },
+      "required": false,
+      "description": "A shorthand for Accordion.Title."
+    }
+  },
+  "constructorName": "AccordionPanel",
+  "type": "module",
+  "isParent": false,
+  "isChild": true,
+  "parentDisplayName": "Accordion",
+  "subcomponentName": "Panel",
+  "subcomponents": null,
+  "apiPath": "Accordion.Panel",
+  "componentClassName": "panel",
+  "docblock": {
+    "tags": [],
+    "description": [
+      "A panel sub-component for Accordion component."
+    ]
+  },
+  "examplesExist": false,
+  "repoPath": "src/modules/Accordion/AccordionPanel.js",
+  "filename": "AccordionPanel.js",
+  "filenameWithoutExt": "AccordionPanel"
+}

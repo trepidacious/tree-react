@@ -1,0 +1,56 @@
+{
+  "description": "A step can contain a title.",
+  "displayName": "StepTitle",
+  "methods": [],
+  "props": {
+    "as": {
+      "type": {
+        "name": "custom",
+        "raw": "customPropTypes.as"
+      },
+      "required": false,
+      "description": "An element type to render as (string or function)."
+    },
+    "children": {
+      "type": {
+        "name": "node"
+      },
+      "required": false,
+      "description": "Primary content."
+    },
+    "className": {
+      "type": {
+        "name": "string"
+      },
+      "required": false,
+      "description": "Additional classes."
+    },
+    "content": {
+      "type": {
+        "name": "custom",
+        "raw": "customPropTypes.contentShorthand"
+      },
+      "required": false,
+      "description": "Shorthand for primary content."
+    }
+  },
+  "constructorName": "StepTitle",
+  "type": "element",
+  "isParent": false,
+  "isChild": true,
+  "parentDisplayName": "Step",
+  "subcomponentName": "Title",
+  "subcomponents": null,
+  "apiPath": "Step.Title",
+  "componentClassName": "title",
+  "docblock": {
+    "tags": [],
+    "description": [
+      "A step can contain a title."
+    ]
+  },
+  "examplesExist": false,
+  "repoPath": "src/elements/Step/StepTitle.js",
+  "filename": "StepTitle.js",
+  "filenameWithoutExt": "StepTitle"
+}

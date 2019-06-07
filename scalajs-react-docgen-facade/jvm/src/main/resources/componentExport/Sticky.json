@@ -1,0 +1,346 @@
+{
+  "description": "Sticky content stays fixed to the browser viewport while another column of content is visible on the page.",
+  "displayName": "Sticky",
+  "methods": [
+    {
+      "name": "addListeners",
+      "docblock": null,
+      "modifiers": [],
+      "params": [
+        {
+          "name": "props",
+          "type": null
+        }
+      ],
+      "returns": null
+    },
+    {
+      "name": "removeListeners",
+      "docblock": null,
+      "modifiers": [],
+      "params": [],
+      "returns": null
+    },
+    {
+      "name": "update",
+      "docblock": null,
+      "modifiers": [],
+      "params": [
+        {
+          "name": "e",
+          "type": null
+        }
+      ],
+      "returns": null
+    },
+    {
+      "name": "handleUpdate",
+      "docblock": null,
+      "modifiers": [],
+      "params": [
+        {
+          "name": "e",
+          "type": null
+        }
+      ],
+      "returns": null
+    },
+    {
+      "name": "assignRects",
+      "docblock": null,
+      "modifiers": [],
+      "params": [],
+      "returns": null
+    },
+    {
+      "name": "computeStyle",
+      "docblock": null,
+      "modifiers": [],
+      "params": [],
+      "returns": null
+    },
+    {
+      "name": "didReachContextBottom",
+      "docblock": null,
+      "modifiers": [],
+      "params": [],
+      "returns": null
+    },
+    {
+      "name": "didReachStartingPoint",
+      "docblock": null,
+      "modifiers": [],
+      "params": [],
+      "returns": null
+    },
+    {
+      "name": "didTouchScreenTop",
+      "docblock": null,
+      "modifiers": [],
+      "params": [],
+      "returns": null
+    },
+    {
+      "name": "didTouchScreenBottom",
+      "docblock": null,
+      "modifiers": [],
+      "params": [],
+      "returns": null
+    },
+    {
+      "name": "isOversized",
+      "docblock": null,
+      "modifiers": [],
+      "params": [],
+      "returns": null
+    },
+    {
+      "name": "pushing",
+      "docblock": null,
+      "modifiers": [],
+      "params": [
+        {
+          "name": "pushing",
+          "type": null
+        }
+      ],
+      "returns": null
+    },
+    {
+      "name": "stick",
+      "docblock": null,
+      "modifiers": [],
+      "params": [
+        {
+          "name": "e",
+          "type": null
+        },
+        {
+          "name": "bound",
+          "type": null
+        }
+      ],
+      "returns": null
+    },
+    {
+      "name": "unstick",
+      "docblock": null,
+      "modifiers": [],
+      "params": [
+        {
+          "name": "e",
+          "type": null
+        },
+        {
+          "name": "bound",
+          "type": null
+        }
+      ],
+      "returns": null
+    },
+    {
+      "name": "stickToContextBottom",
+      "docblock": null,
+      "modifiers": [],
+      "params": [
+        {
+          "name": "e",
+          "type": null
+        }
+      ],
+      "returns": null
+    },
+    {
+      "name": "stickToContextTop",
+      "docblock": null,
+      "modifiers": [],
+      "params": [
+        {
+          "name": "e",
+          "type": null
+        }
+      ],
+      "returns": null
+    },
+    {
+      "name": "stickToScreenBottom",
+      "docblock": null,
+      "modifiers": [],
+      "params": [
+        {
+          "name": "e",
+          "type": null
+        }
+      ],
+      "returns": null
+    },
+    {
+      "name": "stickToScreenTop",
+      "docblock": null,
+      "modifiers": [],
+      "params": [
+        {
+          "name": "e",
+          "type": null
+        }
+      ],
+      "returns": null
+    }
+  ],
+  "props": {
+    "as": {
+      "type": {
+        "name": "custom",
+        "raw": "customPropTypes.as"
+      },
+      "required": false,
+      "description": "An element type to render as (string or function)."
+    },
+    "active": {
+      "type": {
+        "name": "bool"
+      },
+      "required": false,
+      "description": "A Sticky can be active.",
+      "defaultValue": {
+        "value": "true",
+        "computed": false
+      }
+    },
+    "bottomOffset": {
+      "type": {
+        "name": "number"
+      },
+      "required": false,
+      "description": "Offset in pixels from the bottom of the screen when fixing element to viewport.",
+      "defaultValue": {
+        "value": "0",
+        "computed": false
+      }
+    },
+    "children": {
+      "type": {
+        "name": "node"
+      },
+      "required": false,
+      "description": "Primary content."
+    },
+    "className": {
+      "type": {
+        "name": "string"
+      },
+      "required": false,
+      "description": "Additional classes."
+    },
+    "context": {
+      "type": {
+        "name": "union",
+        "value": [
+          {
+            "name": "custom",
+            "raw": "customPropTypes.domNode"
+          },
+          {
+            "name": "custom",
+            "raw": "customPropTypes.refObject"
+          }
+        ]
+      },
+      "required": false,
+      "description": "Context which sticky element should stick to."
+    },
+    "offset": {
+      "type": {
+        "name": "number"
+      },
+      "required": false,
+      "description": "Offset in pixels from the top of the screen when fixing element to viewport.",
+      "defaultValue": {
+        "value": "0",
+        "computed": false
+      }
+    },
+    "onBottom": {
+      "type": {
+        "name": "func"
+      },
+      "required": false,
+      "description": "Callback when element is bound to bottom of parent container.\n\n@param {SyntheticEvent} event - React's original SyntheticEvent.\n@param {object} data - All props."
+    },
+    "onStick": {
+      "type": {
+        "name": "func"
+      },
+      "required": false,
+      "description": "Callback when element is fixed to page.\n\n@param {SyntheticEvent} event - React's original SyntheticEvent.\n@param {object} data - All props."
+    },
+    "onTop": {
+      "type": {
+        "name": "func"
+      },
+      "required": false,
+      "description": "Callback when element is bound to top of parent container.\n\n@param {SyntheticEvent} event - React's original SyntheticEvent.\n@param {object} data - All props."
+    },
+    "onUnstick": {
+      "type": {
+        "name": "func"
+      },
+      "required": false,
+      "description": "Callback when element is unfixed from page.\n\n@param {SyntheticEvent} event - React's original SyntheticEvent.\n@param {object} data - All props."
+    },
+    "pushing": {
+      "type": {
+        "name": "bool"
+      },
+      "required": false,
+      "description": "Whether element should be \"pushed\" by the viewport, attaching to the bottom of the screen when scrolling up."
+    },
+    "scrollContext": {
+      "type": {
+        "name": "union",
+        "value": [
+          {
+            "name": "custom",
+            "raw": "customPropTypes.domNode"
+          },
+          {
+            "name": "custom",
+            "raw": "customPropTypes.refObject"
+          }
+        ]
+      },
+      "required": false,
+      "description": "Context which sticky should attach onscroll events.",
+      "defaultValue": {
+        "value": "isBrowser() ? window : null",
+        "computed": false
+      }
+    },
+    "styleElement": {
+      "type": {
+        "name": "object"
+      },
+      "required": false,
+      "description": "Custom style for sticky element."
+    }
+  },
+  "constructorName": "Sticky",
+  "type": "module",
+  "isParent": true,
+  "isChild": false,
+  "parentDisplayName": null,
+  "subcomponentName": null,
+  "subcomponents": [],
+  "apiPath": "Sticky",
+  "componentClassName": "sticky",
+  "docblock": {
+    "tags": [],
+    "description": [
+      "Sticky content stays fixed to the browser viewport while another column of content is visible on the page."
+    ]
+  },
+  "examplesExist": true,
+  "repoPath": "src/modules/Sticky/Sticky.js",
+  "filename": "Sticky.js",
+  "filenameWithoutExt": "Sticky"
+}

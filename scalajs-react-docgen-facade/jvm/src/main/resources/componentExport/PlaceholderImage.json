@@ -1,0 +1,65 @@
+{
+  "description": "A placeholder can contain an image.",
+  "displayName": "PlaceholderImage",
+  "methods": [],
+  "props": {
+    "as": {
+      "type": {
+        "name": "custom",
+        "raw": "customPropTypes.as"
+      },
+      "required": false,
+      "description": "An element type to render as (string or function)."
+    },
+    "className": {
+      "type": {
+        "name": "string"
+      },
+      "required": false,
+      "description": "Additional classes."
+    },
+    "square": {
+      "type": {
+        "name": "union",
+        "value": [
+          {
+            "name": "bool"
+          }
+        ]
+      },
+      "required": false,
+      "description": "An image can modify size correctly with responsive styles."
+    },
+    "rectangular": {
+      "type": {
+        "name": "union",
+        "value": [
+          {
+            "name": "bool"
+          }
+        ]
+      },
+      "required": false,
+      "description": "An image can modify size correctly with responsive styles."
+    }
+  },
+  "constructorName": "PlaceholderImage",
+  "type": "element",
+  "isParent": false,
+  "isChild": true,
+  "parentDisplayName": "Placeholder",
+  "subcomponentName": "Image",
+  "subcomponents": null,
+  "apiPath": "Placeholder.Image",
+  "componentClassName": "image",
+  "docblock": {
+    "tags": [],
+    "description": [
+      "A placeholder can contain an image."
+    ]
+  },
+  "examplesExist": false,
+  "repoPath": "src/elements/Placeholder/PlaceholderImage.js",
+  "filename": "PlaceholderImage.js",
+  "filenameWithoutExt": "PlaceholderImage"
+}

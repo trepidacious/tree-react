@@ -1,0 +1,154 @@
+{
+  "description": "A rail is used to show accompanying content outside the boundaries of the main view of a site.",
+  "displayName": "Rail",
+  "methods": [],
+  "props": {
+    "as": {
+      "type": {
+        "name": "custom",
+        "raw": "customPropTypes.as"
+      },
+      "required": false,
+      "description": "An element type to render as (string or function)."
+    },
+    "attached": {
+      "type": {
+        "name": "bool"
+      },
+      "required": false,
+      "description": "A rail can appear attached to the main viewport."
+    },
+    "children": {
+      "type": {
+        "name": "node"
+      },
+      "required": false,
+      "description": "Primary content."
+    },
+    "className": {
+      "type": {
+        "name": "string"
+      },
+      "required": false,
+      "description": "Additional classes."
+    },
+    "close": {
+      "type": {
+        "name": "union",
+        "value": [
+          {
+            "name": "bool"
+          },
+          {
+            "name": "enum",
+            "value": [
+              {
+                "value": "'very'",
+                "computed": false
+              }
+            ]
+          }
+        ]
+      },
+      "required": false,
+      "description": "A rail can appear closer to the main viewport."
+    },
+    "content": {
+      "type": {
+        "name": "custom",
+        "raw": "customPropTypes.contentShorthand"
+      },
+      "required": false,
+      "description": "Shorthand for primary content."
+    },
+    "dividing": {
+      "type": {
+        "name": "bool"
+      },
+      "required": false,
+      "description": "A rail can create a division between itself and a container."
+    },
+    "internal": {
+      "type": {
+        "name": "bool"
+      },
+      "required": false,
+      "description": "A rail can attach itself to the inside of a container."
+    },
+    "position": {
+      "type": {
+        "name": "enum",
+        "computed": true,
+        "value": [
+          {
+            "value": "left",
+            "computed": false
+          },
+          {
+            "value": "right",
+            "computed": false
+          }
+        ]
+      },
+      "required": true,
+      "description": "A rail can be presented on the left or right side of a container."
+    },
+    "size": {
+      "type": {
+        "name": "enum",
+        "computed": true,
+        "value": [
+          {
+            "value": "mini",
+            "computed": false
+          },
+          {
+            "value": "tiny",
+            "computed": false
+          },
+          {
+            "value": "small",
+            "computed": false
+          },
+          {
+            "value": "large",
+            "computed": false
+          },
+          {
+            "value": "big",
+            "computed": false
+          },
+          {
+            "value": "huge",
+            "computed": false
+          },
+          {
+            "value": "massive",
+            "computed": false
+          }
+        ]
+      },
+      "required": false,
+      "description": "A rail can have different sizes."
+    }
+  },
+  "constructorName": "Rail",
+  "type": "element",
+  "isParent": true,
+  "isChild": false,
+  "parentDisplayName": null,
+  "subcomponentName": null,
+  "subcomponents": [],
+  "apiPath": "Rail",
+  "componentClassName": "rail",
+  "docblock": {
+    "tags": [],
+    "description": [
+      "A rail is used to show accompanying content outside the boundaries of the main view of a site."
+    ]
+  },
+  "examplesExist": true,
+  "repoPath": "src/elements/Rail/Rail.js",
+  "filename": "Rail.js",
+  "filenameWithoutExt": "Rail"
+}

@@ -1,0 +1,56 @@
+{
+  "description": "A comment can contain content.",
+  "displayName": "CommentContent",
+  "methods": [],
+  "props": {
+    "as": {
+      "type": {
+        "name": "custom",
+        "raw": "customPropTypes.as"
+      },
+      "required": false,
+      "description": "An element type to render as (string or function)."
+    },
+    "children": {
+      "type": {
+        "name": "node"
+      },
+      "required": false,
+      "description": "Primary content."
+    },
+    "className": {
+      "type": {
+        "name": "string"
+      },
+      "required": false,
+      "description": "Additional classes."
+    },
+    "content": {
+      "type": {
+        "name": "custom",
+        "raw": "customPropTypes.contentShorthand"
+      },
+      "required": false,
+      "description": "Shorthand for primary content."
+    }
+  },
+  "constructorName": "CommentContent",
+  "type": "view",
+  "isParent": false,
+  "isChild": true,
+  "parentDisplayName": "Comment",
+  "subcomponentName": "Content",
+  "subcomponents": null,
+  "apiPath": "Comment.Content",
+  "componentClassName": "content",
+  "docblock": {
+    "tags": [],
+    "description": [
+      "A comment can contain content."
+    ]
+  },
+  "examplesExist": false,
+  "repoPath": "src/views/Comment/CommentContent.js",
+  "filename": "CommentContent.js",
+  "filenameWithoutExt": "CommentContent"
+}

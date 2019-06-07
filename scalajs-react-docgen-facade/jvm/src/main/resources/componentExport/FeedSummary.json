@@ -1,0 +1,72 @@
+{
+  "description": "A feed can contain a summary.",
+  "displayName": "FeedSummary",
+  "methods": [],
+  "props": {
+    "as": {
+      "type": {
+        "name": "custom",
+        "raw": "customPropTypes.as"
+      },
+      "required": false,
+      "description": "An element type to render as (string or function)."
+    },
+    "children": {
+      "type": {
+        "name": "node"
+      },
+      "required": false,
+      "description": "Primary content."
+    },
+    "className": {
+      "type": {
+        "name": "string"
+      },
+      "required": false,
+      "description": "Additional classes."
+    },
+    "content": {
+      "type": {
+        "name": "custom",
+        "raw": "customPropTypes.contentShorthand"
+      },
+      "required": false,
+      "description": "Shorthand for primary content."
+    },
+    "date": {
+      "type": {
+        "name": "custom",
+        "raw": "customPropTypes.itemShorthand"
+      },
+      "required": false,
+      "description": "Shorthand for FeedDate."
+    },
+    "user": {
+      "type": {
+        "name": "custom",
+        "raw": "customPropTypes.itemShorthand"
+      },
+      "required": false,
+      "description": "Shorthand for FeedUser."
+    }
+  },
+  "constructorName": "FeedSummary",
+  "type": "view",
+  "isParent": false,
+  "isChild": true,
+  "parentDisplayName": "Feed",
+  "subcomponentName": "Summary",
+  "subcomponents": null,
+  "apiPath": "Feed.Summary",
+  "componentClassName": "summary",
+  "docblock": {
+    "tags": [],
+    "description": [
+      "A feed can contain a summary."
+    ]
+  },
+  "examplesExist": false,
+  "repoPath": "src/views/Feed/FeedSummary.js",
+  "filename": "FeedSummary.js",
+  "filenameWithoutExt": "FeedSummary"
+}

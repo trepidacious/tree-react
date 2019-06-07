@@ -1,0 +1,189 @@
+{
+  "description": "A set of steps.",
+  "displayName": "StepGroup",
+  "methods": [],
+  "props": {
+    "as": {
+      "type": {
+        "name": "custom",
+        "raw": "customPropTypes.as"
+      },
+      "required": false,
+      "description": "An element type to render as (string or function)."
+    },
+    "attached": {
+      "type": {
+        "name": "union",
+        "value": [
+          {
+            "name": "bool"
+          },
+          {
+            "name": "enum",
+            "value": [
+              {
+                "value": "'top'",
+                "computed": false
+              },
+              {
+                "value": "'bottom'",
+                "computed": false
+              }
+            ]
+          }
+        ]
+      },
+      "required": false,
+      "description": "Steps can be attached to other elements."
+    },
+    "children": {
+      "type": {
+        "name": "node"
+      },
+      "required": false,
+      "description": "Primary content."
+    },
+    "className": {
+      "type": {
+        "name": "string"
+      },
+      "required": false,
+      "description": "Additional classes."
+    },
+    "content": {
+      "type": {
+        "name": "custom",
+        "raw": "customPropTypes.contentShorthand"
+      },
+      "required": false,
+      "description": "Shorthand for primary content."
+    },
+    "fluid": {
+      "type": {
+        "name": "bool"
+      },
+      "required": false,
+      "description": "A fluid step takes up the width of its container."
+    },
+    "items": {
+      "type": {
+        "name": "custom",
+        "raw": "customPropTypes.collectionShorthand"
+      },
+      "required": false,
+      "description": "Shorthand array of props for Step."
+    },
+    "ordered": {
+      "type": {
+        "name": "bool"
+      },
+      "required": false,
+      "description": "A step can show a ordered sequence of steps."
+    },
+    "size": {
+      "type": {
+        "name": "enum",
+        "computed": true,
+        "value": [
+          {
+            "value": "mini",
+            "computed": false
+          },
+          {
+            "value": "tiny",
+            "computed": false
+          },
+          {
+            "value": "small",
+            "computed": false
+          },
+          {
+            "value": "large",
+            "computed": false
+          },
+          {
+            "value": "big",
+            "computed": false
+          },
+          {
+            "value": "huge",
+            "computed": false
+          },
+          {
+            "value": "massive",
+            "computed": false
+          }
+        ]
+      },
+      "required": false,
+      "description": "Steps can have different sizes."
+    },
+    "stackable": {
+      "type": {
+        "name": "enum",
+        "value": [
+          {
+            "value": "tablet",
+            "computed": false
+          }
+        ]
+      },
+      "required": false,
+      "description": "A step can stack vertically only on smaller screens."
+    },
+    "unstackable": {
+      "type": {
+        "name": "bool"
+      },
+      "required": false,
+      "description": "A step can prevent itself from stacking on mobile."
+    },
+    "vertical": {
+      "type": {
+        "name": "bool"
+      },
+      "required": false,
+      "description": "A step can be displayed stacked vertically."
+    },
+    "widths": {
+      "type": {
+        "name": "enum",
+        "value": [
+          {
+            "value": "..._.keys(numberMap)",
+            "computed": false
+          },
+          {
+            "value": "..._.keys(numberMap).map(Number)",
+            "computed": false
+          },
+          {
+            "value": "..._.values(numberMap)",
+            "computed": false
+          }
+        ]
+      },
+      "required": false,
+      "description": "Steps can be divided evenly inside their parent."
+    }
+  },
+  "constructorName": "StepGroup",
+  "type": "element",
+  "isParent": false,
+  "isChild": true,
+  "parentDisplayName": "Step",
+  "subcomponentName": "Group",
+  "subcomponents": null,
+  "apiPath": "Step.Group",
+  "componentClassName": "steps",
+  "docblock": {
+    "tags": [],
+    "description": [
+      "A set of steps."
+    ]
+  },
+  "examplesExist": false,
+  "repoPath": "src/elements/Step/StepGroup.js",
+  "filename": "StepGroup.js",
+  "filenameWithoutExt": "StepGroup"
+}

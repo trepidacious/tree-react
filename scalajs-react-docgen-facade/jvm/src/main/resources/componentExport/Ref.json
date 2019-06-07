@@ -1,0 +1,52 @@
+{
+  "description": "This component exposes a prop that supports functional and createRef() API and returns the DOM\nnode of both functional and class component children.",
+  "displayName": "Ref",
+  "methods": [],
+  "props": {
+    "children": {
+      "type": {
+        "name": "element"
+      },
+      "required": true,
+      "description": "Primary content."
+    },
+    "innerRef": {
+      "type": {
+        "name": "union",
+        "value": [
+          {
+            "name": "func"
+          },
+          {
+            "name": "object"
+          }
+        ]
+      },
+      "required": false,
+      "description": "Called when a child component will be mounted or updated.\n\n@param {HTMLElement} node - Referred node."
+    }
+  },
+  "constructorName": "Ref",
+  "type": "addon",
+  "isParent": true,
+  "isChild": false,
+  "parentDisplayName": null,
+  "subcomponentName": null,
+  "subcomponents": [
+    "RefFindNode",
+    "RefForward"
+  ],
+  "apiPath": "Ref",
+  "componentClassName": "ref",
+  "docblock": {
+    "tags": [],
+    "description": [
+      "This component exposes a prop that supports functional and createRef() API and returns the DOM",
+      "node of both functional and class component children."
+    ]
+  },
+  "examplesExist": true,
+  "repoPath": "src/addons/Ref/Ref.js",
+  "filename": "Ref.js",
+  "filenameWithoutExt": "Ref"
+}

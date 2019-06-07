@@ -1,0 +1,56 @@
+{
+  "description": "Header content wraps the main content when there is an adjacent Icon or Image.",
+  "displayName": "HeaderContent",
+  "methods": [],
+  "props": {
+    "as": {
+      "type": {
+        "name": "custom",
+        "raw": "customPropTypes.as"
+      },
+      "required": false,
+      "description": "An element type to render as (string or function)."
+    },
+    "children": {
+      "type": {
+        "name": "node"
+      },
+      "required": false,
+      "description": "Primary content."
+    },
+    "className": {
+      "type": {
+        "name": "string"
+      },
+      "required": false,
+      "description": "Additional classes."
+    },
+    "content": {
+      "type": {
+        "name": "custom",
+        "raw": "customPropTypes.contentShorthand"
+      },
+      "required": false,
+      "description": "Shorthand for primary content."
+    }
+  },
+  "constructorName": "HeaderContent",
+  "type": "element",
+  "isParent": false,
+  "isChild": true,
+  "parentDisplayName": "Header",
+  "subcomponentName": "Content",
+  "subcomponents": null,
+  "apiPath": "Header.Content",
+  "componentClassName": "content",
+  "docblock": {
+    "tags": [],
+    "description": [
+      "Header content wraps the main content when there is an adjacent Icon or Image."
+    ]
+  },
+  "examplesExist": false,
+  "repoPath": "src/elements/Header/HeaderContent.js",
+  "filename": "HeaderContent.js",
+  "filenameWithoutExt": "HeaderContent"
+}

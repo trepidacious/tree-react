@@ -1,0 +1,112 @@
+{
+  "description": "A list item can contain a content.",
+  "displayName": "ListContent",
+  "methods": [],
+  "props": {
+    "as": {
+      "type": {
+        "name": "custom",
+        "raw": "customPropTypes.as"
+      },
+      "required": false,
+      "description": "An element type to render as (string or function)."
+    },
+    "children": {
+      "type": {
+        "name": "node"
+      },
+      "required": false,
+      "description": "Primary content."
+    },
+    "className": {
+      "type": {
+        "name": "string"
+      },
+      "required": false,
+      "description": "Additional classes."
+    },
+    "content": {
+      "type": {
+        "name": "custom",
+        "raw": "customPropTypes.contentShorthand"
+      },
+      "required": false,
+      "description": "Shorthand for primary content."
+    },
+    "description": {
+      "type": {
+        "name": "custom",
+        "raw": "customPropTypes.itemShorthand"
+      },
+      "required": false,
+      "description": "Shorthand for ListDescription."
+    },
+    "floated": {
+      "type": {
+        "name": "enum",
+        "computed": true,
+        "value": [
+          {
+            "value": "left",
+            "computed": false
+          },
+          {
+            "value": "right",
+            "computed": false
+          }
+        ]
+      },
+      "required": false,
+      "description": "An list content can be floated left or right."
+    },
+    "header": {
+      "type": {
+        "name": "custom",
+        "raw": "customPropTypes.itemShorthand"
+      },
+      "required": false,
+      "description": "Shorthand for ListHeader."
+    },
+    "verticalAlign": {
+      "type": {
+        "name": "enum",
+        "computed": true,
+        "value": [
+          {
+            "value": "bottom",
+            "computed": false
+          },
+          {
+            "value": "middle",
+            "computed": false
+          },
+          {
+            "value": "top",
+            "computed": false
+          }
+        ]
+      },
+      "required": false,
+      "description": "An element inside a list can be vertically aligned."
+    }
+  },
+  "constructorName": "ListContent",
+  "type": "element",
+  "isParent": false,
+  "isChild": true,
+  "parentDisplayName": "List",
+  "subcomponentName": "Content",
+  "subcomponents": null,
+  "apiPath": "List.Content",
+  "componentClassName": "content",
+  "docblock": {
+    "tags": [],
+    "description": [
+      "A list item can contain a content."
+    ]
+  },
+  "examplesExist": false,
+  "repoPath": "src/elements/List/ListContent.js",
+  "filename": "ListContent.js",
+  "filenameWithoutExt": "ListContent"
+}

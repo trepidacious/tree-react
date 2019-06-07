@@ -1,0 +1,70 @@
+{
+  "description": "A content sub-component for the Reveal.",
+  "displayName": "RevealContent",
+  "methods": [],
+  "props": {
+    "as": {
+      "type": {
+        "name": "custom",
+        "raw": "customPropTypes.as"
+      },
+      "required": false,
+      "description": "An element type to render as (string or function)."
+    },
+    "children": {
+      "type": {
+        "name": "node"
+      },
+      "required": false,
+      "description": "Primary content."
+    },
+    "className": {
+      "type": {
+        "name": "string"
+      },
+      "required": false,
+      "description": "Additional classes."
+    },
+    "content": {
+      "type": {
+        "name": "custom",
+        "raw": "customPropTypes.contentShorthand"
+      },
+      "required": false,
+      "description": "Shorthand for primary content."
+    },
+    "hidden": {
+      "type": {
+        "name": "bool"
+      },
+      "required": false,
+      "description": "A reveal may contain content that is visible before interaction."
+    },
+    "visible": {
+      "type": {
+        "name": "bool"
+      },
+      "required": false,
+      "description": "A reveal may contain content that is hidden before user interaction."
+    }
+  },
+  "constructorName": "RevealContent",
+  "type": "element",
+  "isParent": false,
+  "isChild": true,
+  "parentDisplayName": "Reveal",
+  "subcomponentName": "Content",
+  "subcomponents": null,
+  "apiPath": "Reveal.Content",
+  "componentClassName": "content",
+  "docblock": {
+    "tags": [],
+    "description": [
+      "A content sub-component for the Reveal."
+    ]
+  },
+  "examplesExist": false,
+  "repoPath": "src/elements/Reveal/RevealContent.js",
+  "filename": "RevealContent.js",
+  "filenameWithoutExt": "RevealContent"
+}

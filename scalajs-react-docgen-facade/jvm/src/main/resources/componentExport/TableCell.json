@@ -1,0 +1,313 @@
+{
+  "description": "A table row can have cells.",
+  "displayName": "TableCell",
+  "methods": [],
+  "props": {
+    "as": {
+      "type": {
+        "name": "custom",
+        "raw": "customPropTypes.as"
+      },
+      "required": false,
+      "description": "An element type to render as (string or function).",
+      "defaultValue": {
+        "value": "'td'",
+        "computed": false
+      }
+    },
+    "active": {
+      "type": {
+        "name": "bool"
+      },
+      "required": false,
+      "description": "A cell can be active or selected by a user."
+    },
+    "children": {
+      "type": {
+        "name": "node"
+      },
+      "required": false,
+      "description": "Primary content."
+    },
+    "className": {
+      "type": {
+        "name": "string"
+      },
+      "required": false,
+      "description": "Additional classes."
+    },
+    "collapsing": {
+      "type": {
+        "name": "bool"
+      },
+      "required": false,
+      "description": "A cell can be collapsing so that it only uses as much space as required."
+    },
+    "content": {
+      "type": {
+        "name": "custom",
+        "raw": "customPropTypes.contentShorthand"
+      },
+      "required": false,
+      "description": "Shorthand for primary content."
+    },
+    "disabled": {
+      "type": {
+        "name": "bool"
+      },
+      "required": false,
+      "description": "A cell can be disabled."
+    },
+    "error": {
+      "type": {
+        "name": "bool"
+      },
+      "required": false,
+      "description": "A cell may call attention to an error or a negative value."
+    },
+    "icon": {
+      "type": {
+        "name": "custom",
+        "raw": "customPropTypes.itemShorthand"
+      },
+      "required": false,
+      "description": "Add an Icon by name, props object, or pass an <Icon />"
+    },
+    "negative": {
+      "type": {
+        "name": "bool"
+      },
+      "required": false,
+      "description": "A cell may let a user know whether a value is bad."
+    },
+    "positive": {
+      "type": {
+        "name": "bool"
+      },
+      "required": false,
+      "description": "A cell may let a user know whether a value is good."
+    },
+    "selectable": {
+      "type": {
+        "name": "bool"
+      },
+      "required": false,
+      "description": "A cell can be selectable."
+    },
+    "singleLine": {
+      "type": {
+        "name": "bool"
+      },
+      "required": false,
+      "description": "A cell can specify that its contents should remain on a single line and not wrap."
+    },
+    "textAlign": {
+      "type": {
+        "name": "enum",
+        "computed": true,
+        "value": [
+          {
+            "value": "left",
+            "computed": false
+          },
+          {
+            "value": "center",
+            "computed": false
+          },
+          {
+            "value": "right",
+            "computed": false
+          }
+        ]
+      },
+      "required": false,
+      "description": "A table cell can adjust its text alignment."
+    },
+    "verticalAlign": {
+      "type": {
+        "name": "enum",
+        "computed": true,
+        "value": [
+          {
+            "value": "bottom",
+            "computed": false
+          },
+          {
+            "value": "middle",
+            "computed": false
+          },
+          {
+            "value": "top",
+            "computed": false
+          }
+        ]
+      },
+      "required": false,
+      "description": "A table cell can adjust its text alignment."
+    },
+    "warning": {
+      "type": {
+        "name": "bool"
+      },
+      "required": false,
+      "description": "A cell may warn a user."
+    },
+    "width": {
+      "type": {
+        "name": "enum",
+        "computed": true,
+        "value": [
+          {
+            "value": "1",
+            "computed": false
+          },
+          {
+            "value": "2",
+            "computed": false
+          },
+          {
+            "value": "3",
+            "computed": false
+          },
+          {
+            "value": "4",
+            "computed": false
+          },
+          {
+            "value": "5",
+            "computed": false
+          },
+          {
+            "value": "6",
+            "computed": false
+          },
+          {
+            "value": "7",
+            "computed": false
+          },
+          {
+            "value": "8",
+            "computed": false
+          },
+          {
+            "value": "9",
+            "computed": false
+          },
+          {
+            "value": "10",
+            "computed": false
+          },
+          {
+            "value": "11",
+            "computed": false
+          },
+          {
+            "value": "12",
+            "computed": false
+          },
+          {
+            "value": "13",
+            "computed": false
+          },
+          {
+            "value": "14",
+            "computed": false
+          },
+          {
+            "value": "15",
+            "computed": false
+          },
+          {
+            "value": "16",
+            "computed": false
+          },
+          {
+            "value": "one",
+            "computed": false
+          },
+          {
+            "value": "two",
+            "computed": false
+          },
+          {
+            "value": "three",
+            "computed": false
+          },
+          {
+            "value": "four",
+            "computed": false
+          },
+          {
+            "value": "five",
+            "computed": false
+          },
+          {
+            "value": "six",
+            "computed": false
+          },
+          {
+            "value": "seven",
+            "computed": false
+          },
+          {
+            "value": "eight",
+            "computed": false
+          },
+          {
+            "value": "nine",
+            "computed": false
+          },
+          {
+            "value": "ten",
+            "computed": false
+          },
+          {
+            "value": "eleven",
+            "computed": false
+          },
+          {
+            "value": "twelve",
+            "computed": false
+          },
+          {
+            "value": "thirteen",
+            "computed": false
+          },
+          {
+            "value": "fourteen",
+            "computed": false
+          },
+          {
+            "value": "fifteen",
+            "computed": false
+          },
+          {
+            "value": "sixteen",
+            "computed": false
+          }
+        ]
+      },
+      "required": false,
+      "description": "A table can specify the width of individual columns independently."
+    }
+  },
+  "constructorName": "TableCell",
+  "type": "collection",
+  "isParent": false,
+  "isChild": true,
+  "parentDisplayName": "Table",
+  "subcomponentName": "Cell",
+  "subcomponents": null,
+  "apiPath": "Table.Cell",
+  "componentClassName": "cell",
+  "docblock": {
+    "tags": [],
+    "description": [
+      "A table row can have cells."
+    ]
+  },
+  "examplesExist": false,
+  "repoPath": "src/collections/Table/TableCell.js",
+  "filename": "TableCell.js",
+  "filenameWithoutExt": "TableCell"
+}

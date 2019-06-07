@@ -1,0 +1,308 @@
+{
+  "description": "A group of statistics.",
+  "displayName": "StatisticGroup",
+  "methods": [],
+  "props": {
+    "as": {
+      "type": {
+        "name": "custom",
+        "raw": "customPropTypes.as"
+      },
+      "required": false,
+      "description": "An element type to render as (string or function)."
+    },
+    "children": {
+      "type": {
+        "name": "node"
+      },
+      "required": false,
+      "description": "Primary content."
+    },
+    "className": {
+      "type": {
+        "name": "string"
+      },
+      "required": false,
+      "description": "Additional classes."
+    },
+    "color": {
+      "type": {
+        "name": "enum",
+        "computed": true,
+        "value": [
+          {
+            "value": "red",
+            "computed": false
+          },
+          {
+            "value": "orange",
+            "computed": false
+          },
+          {
+            "value": "yellow",
+            "computed": false
+          },
+          {
+            "value": "olive",
+            "computed": false
+          },
+          {
+            "value": "green",
+            "computed": false
+          },
+          {
+            "value": "teal",
+            "computed": false
+          },
+          {
+            "value": "blue",
+            "computed": false
+          },
+          {
+            "value": "violet",
+            "computed": false
+          },
+          {
+            "value": "purple",
+            "computed": false
+          },
+          {
+            "value": "pink",
+            "computed": false
+          },
+          {
+            "value": "brown",
+            "computed": false
+          },
+          {
+            "value": "grey",
+            "computed": false
+          },
+          {
+            "value": "black",
+            "computed": false
+          }
+        ]
+      },
+      "required": false,
+      "description": "A statistic group can be formatted to be different colors."
+    },
+    "content": {
+      "type": {
+        "name": "custom",
+        "raw": "customPropTypes.contentShorthand"
+      },
+      "required": false,
+      "description": "Shorthand for primary content."
+    },
+    "horizontal": {
+      "type": {
+        "name": "bool"
+      },
+      "required": false,
+      "description": "A statistic group can present its measurement horizontally."
+    },
+    "inverted": {
+      "type": {
+        "name": "bool"
+      },
+      "required": false,
+      "description": "A statistic group can be formatted to fit on a dark background."
+    },
+    "items": {
+      "type": {
+        "name": "custom",
+        "raw": "customPropTypes.collectionShorthand"
+      },
+      "required": false,
+      "description": "Array of props for Statistic."
+    },
+    "size": {
+      "type": {
+        "name": "enum",
+        "computed": true,
+        "value": [
+          {
+            "value": "mini",
+            "computed": false
+          },
+          {
+            "value": "tiny",
+            "computed": false
+          },
+          {
+            "value": "small",
+            "computed": false
+          },
+          {
+            "value": "large",
+            "computed": false
+          },
+          {
+            "value": "huge",
+            "computed": false
+          }
+        ]
+      },
+      "required": false,
+      "description": "A statistic group can vary in size."
+    },
+    "widths": {
+      "type": {
+        "name": "enum",
+        "computed": true,
+        "value": [
+          {
+            "value": "1",
+            "computed": false
+          },
+          {
+            "value": "2",
+            "computed": false
+          },
+          {
+            "value": "3",
+            "computed": false
+          },
+          {
+            "value": "4",
+            "computed": false
+          },
+          {
+            "value": "5",
+            "computed": false
+          },
+          {
+            "value": "6",
+            "computed": false
+          },
+          {
+            "value": "7",
+            "computed": false
+          },
+          {
+            "value": "8",
+            "computed": false
+          },
+          {
+            "value": "9",
+            "computed": false
+          },
+          {
+            "value": "10",
+            "computed": false
+          },
+          {
+            "value": "11",
+            "computed": false
+          },
+          {
+            "value": "12",
+            "computed": false
+          },
+          {
+            "value": "13",
+            "computed": false
+          },
+          {
+            "value": "14",
+            "computed": false
+          },
+          {
+            "value": "15",
+            "computed": false
+          },
+          {
+            "value": "16",
+            "computed": false
+          },
+          {
+            "value": "one",
+            "computed": false
+          },
+          {
+            "value": "two",
+            "computed": false
+          },
+          {
+            "value": "three",
+            "computed": false
+          },
+          {
+            "value": "four",
+            "computed": false
+          },
+          {
+            "value": "five",
+            "computed": false
+          },
+          {
+            "value": "six",
+            "computed": false
+          },
+          {
+            "value": "seven",
+            "computed": false
+          },
+          {
+            "value": "eight",
+            "computed": false
+          },
+          {
+            "value": "nine",
+            "computed": false
+          },
+          {
+            "value": "ten",
+            "computed": false
+          },
+          {
+            "value": "eleven",
+            "computed": false
+          },
+          {
+            "value": "twelve",
+            "computed": false
+          },
+          {
+            "value": "thirteen",
+            "computed": false
+          },
+          {
+            "value": "fourteen",
+            "computed": false
+          },
+          {
+            "value": "fifteen",
+            "computed": false
+          },
+          {
+            "value": "sixteen",
+            "computed": false
+          }
+        ]
+      },
+      "required": false,
+      "description": "A statistic group can have its items divided evenly."
+    }
+  },
+  "constructorName": "StatisticGroup",
+  "type": "view",
+  "isParent": false,
+  "isChild": true,
+  "parentDisplayName": "Statistic",
+  "subcomponentName": "Group",
+  "subcomponents": null,
+  "apiPath": "Statistic.Group",
+  "componentClassName": "statistics",
+  "docblock": {
+    "tags": [],
+    "description": [
+      "A group of statistics."
+    ]
+  },
+  "examplesExist": false,
+  "repoPath": "src/views/Statistic/StatisticGroup.js",
+  "filename": "StatisticGroup.js",
+  "filenameWithoutExt": "StatisticGroup"
+}

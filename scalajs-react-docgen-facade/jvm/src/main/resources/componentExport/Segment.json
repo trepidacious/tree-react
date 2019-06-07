@@ -1,0 +1,343 @@
+{
+  "description": "A segment is used to create a grouping of related content.",
+  "displayName": "Segment",
+  "methods": [],
+  "props": {
+    "as": {
+      "type": {
+        "name": "custom",
+        "raw": "customPropTypes.as"
+      },
+      "required": false,
+      "description": "An element type to render as (string or function)."
+    },
+    "attached": {
+      "type": {
+        "name": "union",
+        "value": [
+          {
+            "name": "bool"
+          },
+          {
+            "name": "enum",
+            "value": [
+              {
+                "value": "'top'",
+                "computed": false
+              },
+              {
+                "value": "'bottom'",
+                "computed": false
+              }
+            ]
+          }
+        ]
+      },
+      "required": false,
+      "description": "Attach segment to other content, like a header."
+    },
+    "basic": {
+      "type": {
+        "name": "bool"
+      },
+      "required": false,
+      "description": "A basic segment has no special formatting."
+    },
+    "children": {
+      "type": {
+        "name": "node"
+      },
+      "required": false,
+      "description": "Primary content."
+    },
+    "circular": {
+      "type": {
+        "name": "bool"
+      },
+      "required": false,
+      "description": "A segment can be circular."
+    },
+    "className": {
+      "type": {
+        "name": "string"
+      },
+      "required": false,
+      "description": "Additional classes."
+    },
+    "clearing": {
+      "type": {
+        "name": "bool"
+      },
+      "required": false,
+      "description": "A segment can clear floated content."
+    },
+    "color": {
+      "type": {
+        "name": "enum",
+        "computed": true,
+        "value": [
+          {
+            "value": "red",
+            "computed": false
+          },
+          {
+            "value": "orange",
+            "computed": false
+          },
+          {
+            "value": "yellow",
+            "computed": false
+          },
+          {
+            "value": "olive",
+            "computed": false
+          },
+          {
+            "value": "green",
+            "computed": false
+          },
+          {
+            "value": "teal",
+            "computed": false
+          },
+          {
+            "value": "blue",
+            "computed": false
+          },
+          {
+            "value": "violet",
+            "computed": false
+          },
+          {
+            "value": "purple",
+            "computed": false
+          },
+          {
+            "value": "pink",
+            "computed": false
+          },
+          {
+            "value": "brown",
+            "computed": false
+          },
+          {
+            "value": "grey",
+            "computed": false
+          },
+          {
+            "value": "black",
+            "computed": false
+          }
+        ]
+      },
+      "required": false,
+      "description": "Segment can be colored."
+    },
+    "compact": {
+      "type": {
+        "name": "bool"
+      },
+      "required": false,
+      "description": "A segment may take up only as much space as is necessary."
+    },
+    "content": {
+      "type": {
+        "name": "custom",
+        "raw": "customPropTypes.contentShorthand"
+      },
+      "required": false,
+      "description": "Shorthand for primary content."
+    },
+    "disabled": {
+      "type": {
+        "name": "bool"
+      },
+      "required": false,
+      "description": "A segment may show its content is disabled."
+    },
+    "floated": {
+      "type": {
+        "name": "enum",
+        "computed": true,
+        "value": [
+          {
+            "value": "left",
+            "computed": false
+          },
+          {
+            "value": "right",
+            "computed": false
+          }
+        ]
+      },
+      "required": false,
+      "description": "Segment content can be floated to the left or right."
+    },
+    "inverted": {
+      "type": {
+        "name": "bool"
+      },
+      "required": false,
+      "description": "A segment can have its colors inverted for contrast."
+    },
+    "loading": {
+      "type": {
+        "name": "bool"
+      },
+      "required": false,
+      "description": "A segment may show its content is being loaded."
+    },
+    "padded": {
+      "type": {
+        "name": "union",
+        "value": [
+          {
+            "name": "bool"
+          },
+          {
+            "name": "enum",
+            "value": [
+              {
+                "value": "'very'",
+                "computed": false
+              }
+            ]
+          }
+        ]
+      },
+      "required": false,
+      "description": "A segment can increase its padding."
+    },
+    "placeholder": {
+      "type": {
+        "name": "bool"
+      },
+      "required": false,
+      "description": "A segment can be used to reserve space for conditionally displayed content."
+    },
+    "piled": {
+      "type": {
+        "name": "bool"
+      },
+      "required": false,
+      "description": "Formatted to look like a pile of pages."
+    },
+    "raised": {
+      "type": {
+        "name": "bool"
+      },
+      "required": false,
+      "description": "A segment may be formatted to raise above the page."
+    },
+    "secondary": {
+      "type": {
+        "name": "bool"
+      },
+      "required": false,
+      "description": "A segment can be formatted to appear less noticeable."
+    },
+    "size": {
+      "type": {
+        "name": "enum",
+        "computed": true,
+        "value": [
+          {
+            "value": "mini",
+            "computed": false
+          },
+          {
+            "value": "tiny",
+            "computed": false
+          },
+          {
+            "value": "small",
+            "computed": false
+          },
+          {
+            "value": "large",
+            "computed": false
+          },
+          {
+            "value": "big",
+            "computed": false
+          },
+          {
+            "value": "huge",
+            "computed": false
+          },
+          {
+            "value": "massive",
+            "computed": false
+          }
+        ]
+      },
+      "required": false,
+      "description": "A segment can have different sizes."
+    },
+    "stacked": {
+      "type": {
+        "name": "bool"
+      },
+      "required": false,
+      "description": "Formatted to show it contains multiple pages."
+    },
+    "tertiary": {
+      "type": {
+        "name": "bool"
+      },
+      "required": false,
+      "description": "A segment can be formatted to appear even less noticeable."
+    },
+    "textAlign": {
+      "type": {
+        "name": "enum",
+        "computed": true,
+        "value": [
+          {
+            "value": "left",
+            "computed": false
+          },
+          {
+            "value": "center",
+            "computed": false
+          },
+          {
+            "value": "right",
+            "computed": false
+          }
+        ]
+      },
+      "required": false,
+      "description": "Formats content to be aligned as part of a vertical group."
+    },
+    "vertical": {
+      "type": {
+        "name": "bool"
+      },
+      "required": false,
+      "description": "Formats content to be aligned vertically."
+    }
+  },
+  "constructorName": "Segment",
+  "type": "element",
+  "isParent": true,
+  "isChild": false,
+  "parentDisplayName": null,
+  "subcomponentName": null,
+  "subcomponents": [
+    "SegmentGroup",
+    "SegmentInline"
+  ],
+  "apiPath": "Segment",
+  "componentClassName": "segment",
+  "docblock": {
+    "tags": [],
+    "description": [
+      "A segment is used to create a grouping of related content."
+    ]
+  },
+  "examplesExist": true,
+  "repoPath": "src/elements/Segment/Segment.js",
+  "filename": "Segment.js",
+  "filenameWithoutExt": "Segment"
+}

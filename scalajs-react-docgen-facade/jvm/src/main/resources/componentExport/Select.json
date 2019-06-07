@@ -1,0 +1,47 @@
+{
+  "description": "A Select is sugar for <Dropdown selection />.\n@see Dropdown\n@see Form",
+  "displayName": "Select",
+  "methods": [],
+  "props": {
+    "options": {
+      "type": {
+        "name": "arrayOf",
+        "value": {
+          "name": "shape",
+          "value": "Dropdown.Item.propTypes",
+          "computed": true
+        }
+      },
+      "required": true,
+      "description": "Array of Dropdown.Item props e.g. `{ text: '', value: '' }`"
+    }
+  },
+  "constructorName": "Select",
+  "type": "addon",
+  "isParent": true,
+  "isChild": false,
+  "parentDisplayName": null,
+  "subcomponentName": null,
+  "subcomponents": [],
+  "apiPath": "Select",
+  "componentClassName": "select",
+  "docblock": {
+    "tags": [
+      {
+        "title": "see",
+        "description": "Dropdown"
+      },
+      {
+        "title": "see",
+        "description": "Form"
+      }
+    ],
+    "description": [
+      "A Select is sugar for <Dropdown selection />."
+    ]
+  },
+  "examplesExist": true,
+  "repoPath": "src/addons/Select/Select.js",
+  "filename": "Select.js",
+  "filenameWithoutExt": "Select"
+}

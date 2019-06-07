@@ -1,0 +1,63 @@
+{
+  "description": "A content sub-component for Accordion component.",
+  "displayName": "AccordionContent",
+  "methods": [],
+  "props": {
+    "as": {
+      "type": {
+        "name": "custom",
+        "raw": "customPropTypes.as"
+      },
+      "required": false,
+      "description": "An element type to render as (string or function)."
+    },
+    "active": {
+      "type": {
+        "name": "bool"
+      },
+      "required": false,
+      "description": "Whether or not the content is visible."
+    },
+    "children": {
+      "type": {
+        "name": "node"
+      },
+      "required": false,
+      "description": "Primary content."
+    },
+    "className": {
+      "type": {
+        "name": "string"
+      },
+      "required": false,
+      "description": "Additional classes."
+    },
+    "content": {
+      "type": {
+        "name": "custom",
+        "raw": "customPropTypes.contentShorthand"
+      },
+      "required": false,
+      "description": "Shorthand for primary content."
+    }
+  },
+  "constructorName": "AccordionContent",
+  "type": "module",
+  "isParent": false,
+  "isChild": true,
+  "parentDisplayName": "Accordion",
+  "subcomponentName": "Content",
+  "subcomponents": null,
+  "apiPath": "Accordion.Content",
+  "componentClassName": "content",
+  "docblock": {
+    "tags": [],
+    "description": [
+      "A content sub-component for Accordion component."
+    ]
+  },
+  "examplesExist": false,
+  "repoPath": "src/modules/Accordion/AccordionContent.js",
+  "filename": "AccordionContent.js",
+  "filenameWithoutExt": "AccordionContent"
+}

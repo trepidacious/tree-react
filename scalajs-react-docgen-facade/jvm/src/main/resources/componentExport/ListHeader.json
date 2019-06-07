@@ -1,0 +1,56 @@
+{
+  "description": "A list item can contain a header.",
+  "displayName": "ListHeader",
+  "methods": [],
+  "props": {
+    "as": {
+      "type": {
+        "name": "custom",
+        "raw": "customPropTypes.as"
+      },
+      "required": false,
+      "description": "An element type to render as (string or function)."
+    },
+    "children": {
+      "type": {
+        "name": "node"
+      },
+      "required": false,
+      "description": "Primary content."
+    },
+    "className": {
+      "type": {
+        "name": "string"
+      },
+      "required": false,
+      "description": "Additional classes."
+    },
+    "content": {
+      "type": {
+        "name": "custom",
+        "raw": "customPropTypes.contentShorthand"
+      },
+      "required": false,
+      "description": "Shorthand for primary content."
+    }
+  },
+  "constructorName": "ListHeader",
+  "type": "element",
+  "isParent": false,
+  "isChild": true,
+  "parentDisplayName": "List",
+  "subcomponentName": "Header",
+  "subcomponents": null,
+  "apiPath": "List.Header",
+  "componentClassName": "header",
+  "docblock": {
+    "tags": [],
+    "description": [
+      "A list item can contain a header."
+    ]
+  },
+  "examplesExist": false,
+  "repoPath": "src/elements/List/ListHeader.js",
+  "filename": "ListHeader.js",
+  "filenameWithoutExt": "ListHeader"
+}

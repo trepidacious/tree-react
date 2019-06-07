@@ -1,0 +1,112 @@
+{
+  "description": "A feed contains an event.",
+  "displayName": "FeedEvent",
+  "methods": [],
+  "props": {
+    "as": {
+      "type": {
+        "name": "custom",
+        "raw": "customPropTypes.as"
+      },
+      "required": false,
+      "description": "An element type to render as (string or function)."
+    },
+    "children": {
+      "type": {
+        "name": "node"
+      },
+      "required": false,
+      "description": "Primary content."
+    },
+    "className": {
+      "type": {
+        "name": "string"
+      },
+      "required": false,
+      "description": "Additional classes."
+    },
+    "content": {
+      "type": {
+        "name": "custom",
+        "raw": "customPropTypes.itemShorthand"
+      },
+      "required": false,
+      "description": "Shorthand for FeedContent."
+    },
+    "date": {
+      "type": {
+        "name": "custom",
+        "raw": "customPropTypes.itemShorthand"
+      },
+      "required": false,
+      "description": "Shorthand for FeedDate."
+    },
+    "extraImages": {
+      "type": {
+        "name": "custom",
+        "raw": "customPropTypes.itemShorthand"
+      },
+      "required": false,
+      "description": "Shorthand for FeedExtra with images."
+    },
+    "extraText": {
+      "type": {
+        "name": "custom",
+        "raw": "customPropTypes.itemShorthand"
+      },
+      "required": false,
+      "description": "Shorthand for FeedExtra with content."
+    },
+    "icon": {
+      "type": {
+        "name": "custom",
+        "raw": "customPropTypes.itemShorthand"
+      },
+      "required": false,
+      "description": "An event can contain icon label."
+    },
+    "image": {
+      "type": {
+        "name": "custom",
+        "raw": "customPropTypes.itemShorthand"
+      },
+      "required": false,
+      "description": "An event can contain image label."
+    },
+    "meta": {
+      "type": {
+        "name": "custom",
+        "raw": "customPropTypes.itemShorthand"
+      },
+      "required": false,
+      "description": "Shorthand for FeedMeta."
+    },
+    "summary": {
+      "type": {
+        "name": "custom",
+        "raw": "customPropTypes.itemShorthand"
+      },
+      "required": false,
+      "description": "Shorthand for FeedSummary."
+    }
+  },
+  "constructorName": "FeedEvent",
+  "type": "view",
+  "isParent": false,
+  "isChild": true,
+  "parentDisplayName": "Feed",
+  "subcomponentName": "Event",
+  "subcomponents": null,
+  "apiPath": "Feed.Event",
+  "componentClassName": "event",
+  "docblock": {
+    "tags": [],
+    "description": [
+      "A feed contains an event."
+    ]
+  },
+  "examplesExist": false,
+  "repoPath": "src/views/Feed/FeedEvent.js",
+  "filename": "FeedEvent.js",
+  "filenameWithoutExt": "FeedEvent"
+}

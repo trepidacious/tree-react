@@ -1,0 +1,135 @@
+{
+  "description": "Responsive can control visibility of content.",
+  "displayName": "Responsive",
+  "methods": [
+    {
+      "name": "getDerivedStateFromProps",
+      "docblock": null,
+      "modifiers": [
+        "static"
+      ],
+      "params": [
+        {
+          "name": "props",
+          "type": null
+        }
+      ],
+      "returns": null
+    },
+    {
+      "name": "handleResize",
+      "docblock": null,
+      "modifiers": [],
+      "params": [
+        {
+          "name": "e",
+          "type": null
+        }
+      ],
+      "returns": null
+    },
+    {
+      "name": "handleUpdate",
+      "docblock": null,
+      "modifiers": [],
+      "params": [
+        {
+          "name": "e",
+          "type": null
+        }
+      ],
+      "returns": null
+    }
+  ],
+  "props": {
+    "as": {
+      "type": {
+        "name": "custom",
+        "raw": "customPropTypes.as"
+      },
+      "required": false,
+      "description": "An element type to render as (string or function)."
+    },
+    "children": {
+      "type": {
+        "name": "node"
+      },
+      "required": false,
+      "description": "Primary content."
+    },
+    "fireOnMount": {
+      "type": {
+        "name": "bool"
+      },
+      "required": false,
+      "description": "Fires callbacks immediately after mount."
+    },
+    "getWidth": {
+      "type": {
+        "name": "func"
+      },
+      "required": false,
+      "description": "Called to get width of screen. Defaults to using `window.innerWidth` when in a browser;\notherwise, assumes a width of 0.",
+      "defaultValue": {
+        "value": "() => (isBrowser() ? window.innerWidth : 0)",
+        "computed": false
+      }
+    },
+    "maxWidth": {
+      "type": {
+        "name": "union",
+        "value": [
+          {
+            "name": "number"
+          },
+          {
+            "name": "string"
+          }
+        ]
+      },
+      "required": false,
+      "description": "The maximum width at which content will be displayed."
+    },
+    "minWidth": {
+      "type": {
+        "name": "union",
+        "value": [
+          {
+            "name": "number"
+          },
+          {
+            "name": "string"
+          }
+        ]
+      },
+      "required": false,
+      "description": "The minimum width at which content will be displayed."
+    },
+    "onUpdate": {
+      "type": {
+        "name": "func"
+      },
+      "required": false,
+      "description": "Called on update.\n\n@param {SyntheticEvent} event - The React SyntheticEvent object\n@param {object} data - All props and the event value."
+    }
+  },
+  "constructorName": "Responsive",
+  "type": "addon",
+  "isParent": true,
+  "isChild": false,
+  "parentDisplayName": null,
+  "subcomponentName": null,
+  "subcomponents": [],
+  "apiPath": "Responsive",
+  "componentClassName": "responsive",
+  "docblock": {
+    "tags": [],
+    "description": [
+      "Responsive can control visibility of content."
+    ]
+  },
+  "examplesExist": true,
+  "repoPath": "src/addons/Responsive/Responsive.js",
+  "filename": "Responsive.js",
+  "filenameWithoutExt": "Responsive"
+}

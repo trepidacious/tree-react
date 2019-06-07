@@ -1,0 +1,70 @@
+{
+  "description": "A dimmable sub-component for Dimmer.",
+  "displayName": "DimmerDimmable",
+  "methods": [],
+  "props": {
+    "as": {
+      "type": {
+        "name": "custom",
+        "raw": "customPropTypes.as"
+      },
+      "required": false,
+      "description": "An element type to render as (string or function)."
+    },
+    "blurring": {
+      "type": {
+        "name": "bool"
+      },
+      "required": false,
+      "description": "A dimmable element can blur its contents."
+    },
+    "children": {
+      "type": {
+        "name": "node"
+      },
+      "required": false,
+      "description": "Primary content."
+    },
+    "className": {
+      "type": {
+        "name": "string"
+      },
+      "required": false,
+      "description": "Additional classes."
+    },
+    "content": {
+      "type": {
+        "name": "custom",
+        "raw": "customPropTypes.contentShorthand"
+      },
+      "required": false,
+      "description": "Shorthand for primary content."
+    },
+    "dimmed": {
+      "type": {
+        "name": "bool"
+      },
+      "required": false,
+      "description": "Controls whether or not the dim is displayed."
+    }
+  },
+  "constructorName": "DimmerDimmable",
+  "type": "module",
+  "isParent": false,
+  "isChild": true,
+  "parentDisplayName": "Dimmer",
+  "subcomponentName": "Dimmable",
+  "subcomponents": null,
+  "apiPath": "Dimmer.Dimmable",
+  "componentClassName": "dimmable",
+  "docblock": {
+    "tags": [],
+    "description": [
+      "A dimmable sub-component for Dimmer."
+    ]
+  },
+  "examplesExist": false,
+  "repoPath": "src/modules/Dimmer/DimmerDimmable.js",
+  "filename": "DimmerDimmable.js",
+  "filenameWithoutExt": "DimmerDimmable"
+}

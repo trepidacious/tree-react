@@ -1,0 +1,56 @@
+{
+  "description": "A comment can contain an author.",
+  "displayName": "CommentAuthor",
+  "methods": [],
+  "props": {
+    "as": {
+      "type": {
+        "name": "custom",
+        "raw": "customPropTypes.as"
+      },
+      "required": false,
+      "description": "An element type to render as (string or function)."
+    },
+    "children": {
+      "type": {
+        "name": "node"
+      },
+      "required": false,
+      "description": "Primary content."
+    },
+    "className": {
+      "type": {
+        "name": "string"
+      },
+      "required": false,
+      "description": "Additional classes."
+    },
+    "content": {
+      "type": {
+        "name": "custom",
+        "raw": "customPropTypes.contentShorthand"
+      },
+      "required": false,
+      "description": "Shorthand for primary content."
+    }
+  },
+  "constructorName": "CommentAuthor",
+  "type": "view",
+  "isParent": false,
+  "isChild": true,
+  "parentDisplayName": "Comment",
+  "subcomponentName": "Author",
+  "subcomponents": null,
+  "apiPath": "Comment.Author",
+  "componentClassName": "author",
+  "docblock": {
+    "tags": [],
+    "description": [
+      "A comment can contain an author."
+    ]
+  },
+  "examplesExist": false,
+  "repoPath": "src/views/Comment/CommentAuthor.js",
+  "filename": "CommentAuthor.js",
+  "filenameWithoutExt": "CommentAuthor"
+}

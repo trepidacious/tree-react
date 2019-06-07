@@ -1,0 +1,56 @@
+{
+  "description": "An item can contain a header.",
+  "displayName": "ItemHeader",
+  "methods": [],
+  "props": {
+    "as": {
+      "type": {
+        "name": "custom",
+        "raw": "customPropTypes.as"
+      },
+      "required": false,
+      "description": "An element type to render as (string or function)."
+    },
+    "children": {
+      "type": {
+        "name": "node"
+      },
+      "required": false,
+      "description": "Primary content."
+    },
+    "className": {
+      "type": {
+        "name": "string"
+      },
+      "required": false,
+      "description": "Additional classes."
+    },
+    "content": {
+      "type": {
+        "name": "custom",
+        "raw": "customPropTypes.contentShorthand"
+      },
+      "required": false,
+      "description": "Shorthand for primary content."
+    }
+  },
+  "constructorName": "ItemHeader",
+  "type": "view",
+  "isParent": false,
+  "isChild": true,
+  "parentDisplayName": "Item",
+  "subcomponentName": "Header",
+  "subcomponents": null,
+  "apiPath": "Item.Header",
+  "componentClassName": "header",
+  "docblock": {
+    "tags": [],
+    "description": [
+      "An item can contain a header."
+    ]
+  },
+  "examplesExist": false,
+  "repoPath": "src/views/Item/ItemHeader.js",
+  "filename": "ItemHeader.js",
+  "filenameWithoutExt": "ItemHeader"
+}

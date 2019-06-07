@@ -1,0 +1,98 @@
+{
+  "description": "A group of images.",
+  "displayName": "ImageGroup",
+  "methods": [],
+  "props": {
+    "as": {
+      "type": {
+        "name": "custom",
+        "raw": "customPropTypes.as"
+      },
+      "required": false,
+      "description": "An element type to render as (string or function)."
+    },
+    "children": {
+      "type": {
+        "name": "node"
+      },
+      "required": false,
+      "description": "Primary content."
+    },
+    "className": {
+      "type": {
+        "name": "string"
+      },
+      "required": false,
+      "description": "Additional classes."
+    },
+    "content": {
+      "type": {
+        "name": "custom",
+        "raw": "customPropTypes.contentShorthand"
+      },
+      "required": false,
+      "description": "Shorthand for primary content."
+    },
+    "size": {
+      "type": {
+        "name": "enum",
+        "computed": true,
+        "value": [
+          {
+            "value": "mini",
+            "computed": false
+          },
+          {
+            "value": "tiny",
+            "computed": false
+          },
+          {
+            "value": "small",
+            "computed": false
+          },
+          {
+            "value": "medium",
+            "computed": false
+          },
+          {
+            "value": "large",
+            "computed": false
+          },
+          {
+            "value": "big",
+            "computed": false
+          },
+          {
+            "value": "huge",
+            "computed": false
+          },
+          {
+            "value": "massive",
+            "computed": false
+          }
+        ]
+      },
+      "required": false,
+      "description": "A group of images can be formatted to have the same size."
+    }
+  },
+  "constructorName": "ImageGroup",
+  "type": "element",
+  "isParent": false,
+  "isChild": true,
+  "parentDisplayName": "Image",
+  "subcomponentName": "Group",
+  "subcomponents": null,
+  "apiPath": "Image.Group",
+  "componentClassName": "images",
+  "docblock": {
+    "tags": [],
+    "description": [
+      "A group of images."
+    ]
+  },
+  "examplesExist": false,
+  "repoPath": "src/elements/Image/ImageGroup.js",
+  "filename": "ImageGroup.js",
+  "filenameWithoutExt": "ImageGroup"
+}

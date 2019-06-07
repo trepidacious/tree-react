@@ -1,0 +1,75 @@
+{
+  "description": "A placeholder is used to reserve splace for content that soon will appear in a layout.",
+  "displayName": "Placeholder",
+  "methods": [],
+  "props": {
+    "as": {
+      "type": {
+        "name": "custom",
+        "raw": "customPropTypes.as"
+      },
+      "required": false,
+      "description": "An element type to render as (string or function)."
+    },
+    "children": {
+      "type": {
+        "name": "node"
+      },
+      "required": false,
+      "description": "Primary content."
+    },
+    "className": {
+      "type": {
+        "name": "string"
+      },
+      "required": false,
+      "description": "Additional classes."
+    },
+    "content": {
+      "type": {
+        "name": "custom",
+        "raw": "customPropTypes.contentShorthand"
+      },
+      "required": false,
+      "description": "Shorthand for primary content."
+    },
+    "fluid": {
+      "type": {
+        "name": "bool"
+      },
+      "required": false,
+      "description": "A fluid placeholder takes up the width of its container."
+    },
+    "inverted": {
+      "type": {
+        "name": "bool"
+      },
+      "required": false,
+      "description": "A placeholder can have their colors inverted."
+    }
+  },
+  "constructorName": "Placeholder",
+  "type": "element",
+  "isParent": true,
+  "isChild": false,
+  "parentDisplayName": null,
+  "subcomponentName": null,
+  "subcomponents": [
+    "PlaceholderHeader",
+    "PlaceholderImage",
+    "PlaceholderLine",
+    "PlaceholderParagraph"
+  ],
+  "apiPath": "Placeholder",
+  "componentClassName": "placeholder",
+  "docblock": {
+    "tags": [],
+    "description": [
+      "A placeholder is used to reserve splace for content that soon will appear in a layout."
+    ]
+  },
+  "examplesExist": true,
+  "repoPath": "src/elements/Placeholder/Placeholder.js",
+  "filename": "Placeholder.js",
+  "filenameWithoutExt": "Placeholder"
+}

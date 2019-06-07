@@ -1,0 +1,313 @@
+{
+  "description": "A message displays information that explains nearby content.\n@see Form",
+  "displayName": "Message",
+  "methods": [
+    {
+      "name": "handleDismiss",
+      "docblock": null,
+      "modifiers": [],
+      "params": [
+        {
+          "name": "e",
+          "type": null
+        }
+      ],
+      "returns": null
+    }
+  ],
+  "props": {
+    "as": {
+      "type": {
+        "name": "custom",
+        "raw": "customPropTypes.as"
+      },
+      "required": false,
+      "description": "An element type to render as (string or function)."
+    },
+    "attached": {
+      "type": {
+        "name": "union",
+        "value": [
+          {
+            "name": "bool"
+          },
+          {
+            "name": "enum",
+            "value": [
+              {
+                "value": "'bottom'",
+                "computed": false
+              },
+              {
+                "value": "'top'",
+                "computed": false
+              }
+            ]
+          }
+        ]
+      },
+      "required": false,
+      "description": "A message can be formatted to attach itself to other content."
+    },
+    "children": {
+      "type": {
+        "name": "node"
+      },
+      "required": false,
+      "description": "Primary content."
+    },
+    "className": {
+      "type": {
+        "name": "string"
+      },
+      "required": false,
+      "description": "Additional classes."
+    },
+    "color": {
+      "type": {
+        "name": "enum",
+        "computed": true,
+        "value": [
+          {
+            "value": "red",
+            "computed": false
+          },
+          {
+            "value": "orange",
+            "computed": false
+          },
+          {
+            "value": "yellow",
+            "computed": false
+          },
+          {
+            "value": "olive",
+            "computed": false
+          },
+          {
+            "value": "green",
+            "computed": false
+          },
+          {
+            "value": "teal",
+            "computed": false
+          },
+          {
+            "value": "blue",
+            "computed": false
+          },
+          {
+            "value": "violet",
+            "computed": false
+          },
+          {
+            "value": "purple",
+            "computed": false
+          },
+          {
+            "value": "pink",
+            "computed": false
+          },
+          {
+            "value": "brown",
+            "computed": false
+          },
+          {
+            "value": "grey",
+            "computed": false
+          },
+          {
+            "value": "black",
+            "computed": false
+          }
+        ]
+      },
+      "required": false,
+      "description": "A message can be formatted to be different colors."
+    },
+    "compact": {
+      "type": {
+        "name": "bool"
+      },
+      "required": false,
+      "description": "A message can only take up the width of its content."
+    },
+    "content": {
+      "type": {
+        "name": "custom",
+        "raw": "customPropTypes.contentShorthand"
+      },
+      "required": false,
+      "description": "Shorthand for primary content."
+    },
+    "error": {
+      "type": {
+        "name": "bool"
+      },
+      "required": false,
+      "description": "A message may be formatted to display a negative message. Same as `negative`."
+    },
+    "floating": {
+      "type": {
+        "name": "bool"
+      },
+      "required": false,
+      "description": "A message can float above content that it is related to."
+    },
+    "header": {
+      "type": {
+        "name": "custom",
+        "raw": "customPropTypes.itemShorthand"
+      },
+      "required": false,
+      "description": "Shorthand for MessageHeader."
+    },
+    "hidden": {
+      "type": {
+        "name": "bool"
+      },
+      "required": false,
+      "description": "A message can be hidden."
+    },
+    "icon": {
+      "type": {
+        "name": "union",
+        "value": [
+          {
+            "name": "custom",
+            "raw": "customPropTypes.itemShorthand"
+          },
+          {
+            "name": "bool"
+          }
+        ]
+      },
+      "required": false,
+      "description": "A message can contain an icon."
+    },
+    "info": {
+      "type": {
+        "name": "bool"
+      },
+      "required": false,
+      "description": "A message may be formatted to display information."
+    },
+    "list": {
+      "type": {
+        "name": "custom",
+        "raw": "customPropTypes.collectionShorthand"
+      },
+      "required": false,
+      "description": "Array shorthand items for the MessageList. Mutually exclusive with children."
+    },
+    "negative": {
+      "type": {
+        "name": "bool"
+      },
+      "required": false,
+      "description": "A message may be formatted to display a negative message. Same as `error`."
+    },
+    "onDismiss": {
+      "type": {
+        "name": "func"
+      },
+      "required": false,
+      "description": "A message that the user can choose to hide.\nCalled when the user clicks the \"x\" icon. This also adds the \"x\" icon.\n\n@param {SyntheticEvent} event - React's original SyntheticEvent.\n@param {object} data - All props."
+    },
+    "positive": {
+      "type": {
+        "name": "bool"
+      },
+      "required": false,
+      "description": "A message may be formatted to display a positive message.  Same as `success`."
+    },
+    "size": {
+      "type": {
+        "name": "enum",
+        "computed": true,
+        "value": [
+          {
+            "value": "mini",
+            "computed": false
+          },
+          {
+            "value": "tiny",
+            "computed": false
+          },
+          {
+            "value": "small",
+            "computed": false
+          },
+          {
+            "value": "large",
+            "computed": false
+          },
+          {
+            "value": "big",
+            "computed": false
+          },
+          {
+            "value": "huge",
+            "computed": false
+          },
+          {
+            "value": "massive",
+            "computed": false
+          }
+        ]
+      },
+      "required": false,
+      "description": "A message can have different sizes."
+    },
+    "success": {
+      "type": {
+        "name": "bool"
+      },
+      "required": false,
+      "description": "A message may be formatted to display a positive message.  Same as `positive`."
+    },
+    "visible": {
+      "type": {
+        "name": "bool"
+      },
+      "required": false,
+      "description": "A message can be set to visible to force itself to be shown."
+    },
+    "warning": {
+      "type": {
+        "name": "bool"
+      },
+      "required": false,
+      "description": "A message may be formatted to display warning messages."
+    }
+  },
+  "constructorName": "Message",
+  "type": "collection",
+  "isParent": true,
+  "isChild": false,
+  "parentDisplayName": null,
+  "subcomponentName": null,
+  "subcomponents": [
+    "MessageContent",
+    "MessageHeader",
+    "MessageItem",
+    "MessageList"
+  ],
+  "apiPath": "Message",
+  "componentClassName": "message",
+  "docblock": {
+    "tags": [
+      {
+        "title": "see",
+        "description": "Form"
+      }
+    ],
+    "description": [
+      "A message displays information that explains nearby content."
+    ]
+  },
+  "examplesExist": true,
+  "repoPath": "src/collections/Message/Message.js",
+  "filename": "Message.js",
+  "filenameWithoutExt": "Message"
+}

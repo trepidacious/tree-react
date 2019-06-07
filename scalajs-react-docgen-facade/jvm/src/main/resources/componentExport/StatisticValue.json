@@ -1,0 +1,63 @@
+{
+  "description": "A statistic can contain a numeric, icon, image, or text value.",
+  "displayName": "StatisticValue",
+  "methods": [],
+  "props": {
+    "as": {
+      "type": {
+        "name": "custom",
+        "raw": "customPropTypes.as"
+      },
+      "required": false,
+      "description": "An element type to render as (string or function)."
+    },
+    "children": {
+      "type": {
+        "name": "node"
+      },
+      "required": false,
+      "description": "Primary content."
+    },
+    "className": {
+      "type": {
+        "name": "string"
+      },
+      "required": false,
+      "description": "Additional classes."
+    },
+    "content": {
+      "type": {
+        "name": "custom",
+        "raw": "customPropTypes.contentShorthand"
+      },
+      "required": false,
+      "description": "Shorthand for primary content."
+    },
+    "text": {
+      "type": {
+        "name": "bool"
+      },
+      "required": false,
+      "description": "Format the value with smaller font size to fit nicely beside number values."
+    }
+  },
+  "constructorName": "StatisticValue",
+  "type": "view",
+  "isParent": false,
+  "isChild": true,
+  "parentDisplayName": "Statistic",
+  "subcomponentName": "Value",
+  "subcomponents": null,
+  "apiPath": "Statistic.Value",
+  "componentClassName": "value",
+  "docblock": {
+    "tags": [],
+    "description": [
+      "A statistic can contain a numeric, icon, image, or text value."
+    ]
+  },
+  "examplesExist": false,
+  "repoPath": "src/views/Statistic/StatisticValue.js",
+  "filename": "StatisticValue.js",
+  "filenameWithoutExt": "StatisticValue"
+}

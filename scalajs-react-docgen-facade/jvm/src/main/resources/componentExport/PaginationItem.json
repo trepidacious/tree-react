@@ -1,0 +1,119 @@
+{
+  "description": "An item of a pagination.",
+  "displayName": "PaginationItem",
+  "methods": [
+    {
+      "name": "handleClick",
+      "docblock": null,
+      "modifiers": [],
+      "params": [
+        {
+          "name": "e",
+          "type": null
+        }
+      ],
+      "returns": null
+    },
+    {
+      "name": "handleKeyDown",
+      "docblock": null,
+      "modifiers": [],
+      "params": [
+        {
+          "name": "e",
+          "type": null
+        }
+      ],
+      "returns": null
+    },
+    {
+      "name": "handleOverrides",
+      "docblock": null,
+      "modifiers": [],
+      "params": [],
+      "returns": null
+    }
+  ],
+  "props": {
+    "active": {
+      "type": {
+        "name": "bool"
+      },
+      "required": false,
+      "description": "A pagination item can be active."
+    },
+    "disabled": {
+      "type": {
+        "name": "bool"
+      },
+      "required": false,
+      "description": "A pagination item can be disabled."
+    },
+    "onClick": {
+      "type": {
+        "name": "func"
+      },
+      "required": false,
+      "description": "Called on click.\n\n@param {SyntheticEvent} event - React's original SyntheticEvent.\n@param {object} data - All props."
+    },
+    "onKeyDown": {
+      "type": {
+        "name": "func"
+      },
+      "required": false,
+      "description": "Called on key down.\n\n@param {SyntheticEvent} event - React's original SyntheticEvent.\n@param {object} data - All props."
+    },
+    "type": {
+      "type": {
+        "name": "enum",
+        "value": [
+          {
+            "value": "ellipsisItem",
+            "computed": false
+          },
+          {
+            "value": "firstItem",
+            "computed": false
+          },
+          {
+            "value": "prevItem",
+            "computed": false
+          },
+          {
+            "value": "pageItem",
+            "computed": false
+          },
+          {
+            "value": "nextItem",
+            "computed": false
+          },
+          {
+            "value": "lastItem",
+            "computed": false
+          }
+        ]
+      },
+      "required": false,
+      "description": "A pagination should have a type."
+    }
+  },
+  "constructorName": "PaginationItem",
+  "type": "addon",
+  "isParent": false,
+  "isChild": true,
+  "parentDisplayName": "Pagination",
+  "subcomponentName": "Item",
+  "subcomponents": null,
+  "apiPath": "Pagination.Item",
+  "componentClassName": "item",
+  "docblock": {
+    "tags": [],
+    "description": [
+      "An item of a pagination."
+    ]
+  },
+  "examplesExist": false,
+  "repoPath": "src/addons/Pagination/PaginationItem.js",
+  "filename": "PaginationItem.js",
+  "filenameWithoutExt": "PaginationItem"
+}

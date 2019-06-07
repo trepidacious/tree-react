@@ -73,6 +73,7 @@ lazy val testDeps = Seq(
 lazy val root = project.in(file(".")).
   aggregate(
     scalajsReactMaterialUIJS, scalajsReactMaterialUIJVM,
+    scalajsReactDocgenFacadeJS, scalajsReactDocgenFacadeJVM,
     scalajsReactMaterialIconsJS, scalajsReactMaterialIconsJVM,
     scalajsReactDownshiftJS, scalajsReactDownshiftJVM, 
     scalajsReactMaterialUIExtraJS, scalajsReactMaterialUIExtraJVM,
@@ -123,6 +124,60 @@ lazy val scalajsReactMaterialUI = crossProject(JSPlatform, JVMPlatform).in(file(
 lazy val scalajsReactMaterialUIJVM = scalajsReactMaterialUI.jvm
 lazy val scalajsReactMaterialUIJS = scalajsReactMaterialUI.js
 
+///////////////////////////////
+// scalajs-react-material-ui //
+///////////////////////////////
+lazy val scalajsReactDocgenFacade = crossProject(JSPlatform, JVMPlatform).in(file("scalajs-react-docgen-facade")).
+  settings(
+    name := "scalajs-react-docgen-facade"
+
+  ).jvmSettings(
+  mainClass := Some("org.rebeam.Generate"),
+
+  libraryDependencies ++= Seq(
+    "io.circe"                    %%% "circe-core"        % circeVersion,
+    "io.circe"                    %%% "circe-generic"     % circeVersion,
+    "io.circe"                    %%% "circe-parser"      % circeVersion,
+
+    "org.typelevel"               %%% "cats-core"         % catsVersion,
+    "org.typelevel"               %%% "cats-effect"       % catsEffectVersion
+  ),
+
+  //For Circe
+  addCompilerPlugin("org.scalamacros" %% "paradise" % "2.1.0" cross CrossVersion.patch)
+
+).jsSettings(
+  //Scalajs dependencies that are used on the client only
+  resolvers += Resolver.jcenterRepo,
+
+  scalajsReactDeps,
+
+  //Produce a module, so we can use @JSImport on material-ui
+  scalaJSLinkerConfig ~= { _.withModuleKind(ModuleKind.CommonJSModule) }
+).dependsOn(scalajsReactCommon)
+
+lazy val scalajsReactDocgenFacadeJVM = scalajsReactDocgenFacade.jvm
+lazy val scalajsReactDocgenFacadeJS = scalajsReactDocgenFacade.js
+
+///////////////////////////////
+// scalajs-react-common //
+///////////////////////////////
+lazy val scalajsReactCommon = crossProject(JSPlatform, JVMPlatform).in(file("scalajs-react-common")).
+  settings(
+    name := "scalajs-react-common"
+
+  ).jsSettings(
+  //Scalajs dependencies that are used on the client only
+  resolvers += Resolver.jcenterRepo,
+
+  scalajsReactDeps,
+
+  //Produce a module, so we can use @JSImport on material-ui
+  scalaJSLinkerConfig ~= { _.withModuleKind(ModuleKind.CommonJSModule) }
+)
+
+lazy val scalajsReactCommonJVM = scalajsReactCommon.jvm
+lazy val scalajsReactCommonJS = scalajsReactCommon.js
 
 
   //////////////////////////////////

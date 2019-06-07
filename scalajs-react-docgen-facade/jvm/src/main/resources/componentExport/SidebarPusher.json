@@ -1,0 +1,63 @@
+{
+  "description": "A pushable sub-component for Sidebar.",
+  "displayName": "SidebarPusher",
+  "methods": [],
+  "props": {
+    "as": {
+      "type": {
+        "name": "custom",
+        "raw": "customPropTypes.as"
+      },
+      "required": false,
+      "description": "An element type to render as (string or function)."
+    },
+    "children": {
+      "type": {
+        "name": "node"
+      },
+      "required": false,
+      "description": "Primary content."
+    },
+    "className": {
+      "type": {
+        "name": "string"
+      },
+      "required": false,
+      "description": "Additional classes."
+    },
+    "content": {
+      "type": {
+        "name": "custom",
+        "raw": "customPropTypes.contentShorthand"
+      },
+      "required": false,
+      "description": "Shorthand for primary content."
+    },
+    "dimmed": {
+      "type": {
+        "name": "bool"
+      },
+      "required": false,
+      "description": "Controls whether or not the dim is displayed."
+    }
+  },
+  "constructorName": "SidebarPusher",
+  "type": "module",
+  "isParent": false,
+  "isChild": true,
+  "parentDisplayName": "Sidebar",
+  "subcomponentName": "Pusher",
+  "subcomponents": null,
+  "apiPath": "Sidebar.Pusher",
+  "componentClassName": "pusher",
+  "docblock": {
+    "tags": [],
+    "description": [
+      "A pushable sub-component for Sidebar."
+    ]
+  },
+  "examplesExist": false,
+  "repoPath": "src/modules/Sidebar/SidebarPusher.js",
+  "filename": "SidebarPusher.js",
+  "filenameWithoutExt": "SidebarPusher"
+}

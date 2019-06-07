@@ -1,0 +1,138 @@
+{
+  "description": "A Transition.Group animates children as they mount and unmount.",
+  "displayName": "TransitionGroup",
+  "methods": [
+    {
+      "name": "handleOnHide",
+      "docblock": null,
+      "modifiers": [],
+      "params": [
+        {
+          "name": "nothing",
+          "type": null
+        },
+        {
+          "name": "childProps",
+          "type": null
+        }
+      ],
+      "returns": null
+    },
+    {
+      "name": "wrapChild",
+      "docblock": null,
+      "modifiers": [],
+      "params": [
+        {
+          "name": "child",
+          "type": null
+        },
+        {
+          "name": "options",
+          "type": null
+        }
+      ],
+      "returns": null
+    }
+  ],
+  "props": {
+    "as": {
+      "type": {
+        "name": "custom",
+        "raw": "customPropTypes.as"
+      },
+      "required": false,
+      "description": "An element type to render as (string or function).",
+      "defaultValue": {
+        "value": "Fragment",
+        "computed": true
+      }
+    },
+    "animation": {
+      "type": {
+        "name": "union",
+        "value": [
+          {
+            "name": "enum",
+            "computed": true,
+            "value": "SUI.TRANSITIONS"
+          },
+          {
+            "name": "string"
+          }
+        ]
+      },
+      "required": false,
+      "description": "Named animation event to used. Must be defined in CSS.",
+      "defaultValue": {
+        "value": "'fade'",
+        "computed": false
+      }
+    },
+    "children": {
+      "type": {
+        "name": "node"
+      },
+      "required": false,
+      "description": "Primary content."
+    },
+    "directional": {
+      "type": {
+        "name": "bool"
+      },
+      "required": false,
+      "description": "Whether it is directional animation event or not. Use it only for custom transitions."
+    },
+    "duration": {
+      "type": {
+        "name": "union",
+        "value": [
+          {
+            "name": "number"
+          },
+          {
+            "name": "shape",
+            "value": {
+              "hide": {
+                "name": "number",
+                "required": true
+              },
+              "show": {
+                "name": "number",
+                "required": true
+              }
+            }
+          },
+          {
+            "name": "string"
+          }
+        ]
+      },
+      "required": false,
+      "description": "Duration of the CSS transition animation in milliseconds.",
+      "defaultValue": {
+        "value": "500",
+        "computed": false
+      }
+    }
+  },
+  "constructorName": "TransitionGroup",
+  "type": "module",
+  "isParent": false,
+  "isChild": true,
+  "parentDisplayName": "Transition",
+  "subcomponentName": "Group",
+  "subcomponents": null,
+  "apiPath": "Transition.Group",
+  "componentClassName": "transitions",
+  "docblock": {
+    "tags": [],
+    "description": [
+      "A Transition.Group animates children as they mount and unmount."
+    ]
+  },
+  "examplesExist": false,
+  "repoPath": "src/modules/Transition/TransitionGroup.js",
+  "filename": "TransitionGroup.js",
+  "filenameWithoutExt": "TransitionGroup"
+}

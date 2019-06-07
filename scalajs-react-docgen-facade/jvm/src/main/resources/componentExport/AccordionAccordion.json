@@ -1,0 +1,197 @@
+{
+  "description": "An Accordion can contain sub-accordions.",
+  "displayName": "AccordionAccordion",
+  "methods": [
+    {
+      "name": "getInitialAutoControlledState",
+      "docblock": null,
+      "modifiers": [],
+      "params": [
+        {
+          "name": "{ exclusive }",
+          "type": null
+        }
+      ],
+      "returns": null
+    },
+    {
+      "name": "computeNewIndex",
+      "docblock": null,
+      "modifiers": [],
+      "params": [
+        {
+          "name": "index",
+          "type": null
+        }
+      ],
+      "returns": null
+    },
+    {
+      "name": "handleTitleClick",
+      "docblock": null,
+      "modifiers": [],
+      "params": [
+        {
+          "name": "e",
+          "type": null
+        },
+        {
+          "name": "titleProps",
+          "type": null
+        }
+      ],
+      "returns": null
+    },
+    {
+      "name": "isIndexActive",
+      "docblock": null,
+      "modifiers": [],
+      "params": [
+        {
+          "name": "index",
+          "type": null
+        }
+      ],
+      "returns": null
+    }
+  ],
+  "props": {
+    "as": {
+      "type": {
+        "name": "custom",
+        "raw": "customPropTypes.as"
+      },
+      "required": false,
+      "description": "An element type to render as (string or function)."
+    },
+    "activeIndex": {
+      "type": {
+        "name": "union",
+        "value": [
+          {
+            "name": "union",
+            "value": [
+              {
+                "name": "arrayOf",
+                "value": {
+                  "name": "number"
+                }
+              },
+              {
+                "name": "number"
+              }
+            ]
+          }
+        ]
+      },
+      "required": false,
+      "description": "Index of the currently active panel."
+    },
+    "children": {
+      "type": {
+        "name": "node"
+      },
+      "required": false,
+      "description": "Primary content."
+    },
+    "className": {
+      "type": {
+        "name": "string"
+      },
+      "required": false,
+      "description": "Additional classes."
+    },
+    "defaultActiveIndex": {
+      "type": {
+        "name": "union",
+        "value": [
+          {
+            "name": "union",
+            "value": [
+              {
+                "name": "arrayOf",
+                "value": {
+                  "name": "number"
+                }
+              },
+              {
+                "name": "number"
+              }
+            ]
+          }
+        ]
+      },
+      "required": false,
+      "description": "Initial activeIndex value."
+    },
+    "exclusive": {
+      "type": {
+        "name": "bool"
+      },
+      "required": false,
+      "description": "Only allow one panel open at a time.",
+      "defaultValue": {
+        "value": "true",
+        "computed": false
+      }
+    },
+    "onTitleClick": {
+      "type": {
+        "name": "union",
+        "value": [
+          {
+            "name": "func"
+          }
+        ]
+      },
+      "required": false,
+      "description": "Called when a panel title is clicked.\n\n@param {SyntheticEvent} event - React's original SyntheticEvent.\n@param {object} data - All item props."
+    },
+    "panels": {
+      "type": {
+        "name": "union",
+        "value": [
+          {
+            "name": "arrayOf",
+            "value": {
+              "name": "shape",
+              "value": {
+                "content": {
+                  "name": "custom",
+                  "raw": "customPropTypes.itemShorthand",
+                  "required": false
+                },
+                "title": {
+                  "name": "custom",
+                  "raw": "customPropTypes.itemShorthand",
+                  "required": false
+                }
+              }
+            }
+          }
+        ]
+      },
+      "required": false,
+      "description": "Shorthand array of props for Accordion."
+    }
+  },
+  "constructorName": "AccordionAccordion",
+  "type": "module",
+  "isParent": false,
+  "isChild": true,
+  "parentDisplayName": "Accordion",
+  "subcomponentName": "Accordion",
+  "subcomponents": null,
+  "apiPath": "Accordion.Accordion",
+  "componentClassName": "accordion",
+  "docblock": {
+    "tags": [],
+    "description": [
+      "An Accordion can contain sub-accordions."
+    ]
+  },
+  "examplesExist": false,
+  "repoPath": "src/modules/Accordion/AccordionAccordion.js",
+  "filename": "AccordionAccordion.js",
+  "filenameWithoutExt": "AccordionAccordion"
+}

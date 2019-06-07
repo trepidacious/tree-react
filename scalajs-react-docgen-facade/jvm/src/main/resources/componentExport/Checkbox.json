@@ -1,0 +1,314 @@
+{
+  "description": "A checkbox allows a user to select a value from a small set of options, often binary.\n@see Form\n@see Radio",
+  "displayName": "Checkbox",
+  "methods": [
+    {
+      "name": "canToggle",
+      "docblock": null,
+      "modifiers": [],
+      "params": [],
+      "returns": null
+    },
+    {
+      "name": "computeTabIndex",
+      "docblock": null,
+      "modifiers": [],
+      "params": [],
+      "returns": null
+    },
+    {
+      "name": "handleClick",
+      "docblock": null,
+      "modifiers": [],
+      "params": [
+        {
+          "name": "e",
+          "type": null
+        }
+      ],
+      "returns": null
+    },
+    {
+      "name": "handleChange",
+      "docblock": null,
+      "modifiers": [],
+      "params": [
+        {
+          "name": "e",
+          "type": null
+        }
+      ],
+      "returns": null
+    },
+    {
+      "name": "handleMouseDown",
+      "docblock": null,
+      "modifiers": [],
+      "params": [
+        {
+          "name": "e",
+          "type": null
+        }
+      ],
+      "returns": null
+    },
+    {
+      "name": "handleMouseUp",
+      "docblock": null,
+      "modifiers": [],
+      "params": [
+        {
+          "name": "e",
+          "type": null
+        }
+      ],
+      "returns": null
+    },
+    {
+      "name": "setIndeterminate",
+      "docblock": null,
+      "modifiers": [],
+      "params": [],
+      "returns": null
+    }
+  ],
+  "props": {
+    "as": {
+      "type": {
+        "name": "custom",
+        "raw": "customPropTypes.as"
+      },
+      "required": false,
+      "description": "An element type to render as (string or function)."
+    },
+    "checked": {
+      "type": {
+        "name": "bool"
+      },
+      "required": false,
+      "description": "Whether or not checkbox is checked."
+    },
+    "className": {
+      "type": {
+        "name": "string"
+      },
+      "required": false,
+      "description": "Additional classes."
+    },
+    "defaultChecked": {
+      "type": {
+        "name": "bool"
+      },
+      "required": false,
+      "description": "The initial value of checked."
+    },
+    "defaultIndeterminate": {
+      "type": {
+        "name": "bool"
+      },
+      "required": false,
+      "description": "Whether or not checkbox is indeterminate."
+    },
+    "disabled": {
+      "type": {
+        "name": "bool"
+      },
+      "required": false,
+      "description": "A checkbox can appear disabled and be unable to change states"
+    },
+    "fitted": {
+      "type": {
+        "name": "bool"
+      },
+      "required": false,
+      "description": "Removes padding for a label. Auto applied when there is no label."
+    },
+    "id": {
+      "type": {
+        "name": "union",
+        "value": [
+          {
+            "name": "number"
+          },
+          {
+            "name": "string"
+          }
+        ]
+      },
+      "required": false,
+      "description": "A unique identifier."
+    },
+    "indeterminate": {
+      "type": {
+        "name": "bool"
+      },
+      "required": false,
+      "description": "Whether or not checkbox is indeterminate."
+    },
+    "label": {
+      "type": {
+        "name": "custom",
+        "raw": "customPropTypes.itemShorthand"
+      },
+      "required": false,
+      "description": "The text of the associated label element."
+    },
+    "name": {
+      "type": {
+        "name": "string"
+      },
+      "required": false,
+      "description": "The HTML input name."
+    },
+    "onChange": {
+      "type": {
+        "name": "func"
+      },
+      "required": false,
+      "description": "Called when the user attempts to change the checked state.\n\n@param {SyntheticEvent} event - React's original SyntheticEvent.\n@param {object} data - All props and proposed checked/indeterminate state."
+    },
+    "onClick": {
+      "type": {
+        "name": "func"
+      },
+      "required": false,
+      "description": "Called when the checkbox or label is clicked.\n\n@param {SyntheticEvent} event - React's original SyntheticEvent.\n@param {object} data - All props and current checked/indeterminate state."
+    },
+    "onMouseDown": {
+      "type": {
+        "name": "func"
+      },
+      "required": false,
+      "description": "Called when the user presses down on the mouse.\n\n@param {SyntheticEvent} event - React's original SyntheticEvent.\n@param {object} data - All props and current checked/indeterminate state."
+    },
+    "onMouseUp": {
+      "type": {
+        "name": "func"
+      },
+      "required": false,
+      "description": "Called when the user releases the mouse.\n\n@param {SyntheticEvent} event - React's original SyntheticEvent.\n@param {object} data - All props and current checked/indeterminate state."
+    },
+    "radio": {
+      "type": {
+        "name": "union",
+        "value": [
+          {
+            "name": "bool"
+          }
+        ]
+      },
+      "required": false,
+      "description": "Format as a radio element. This means it is an exclusive option."
+    },
+    "readOnly": {
+      "type": {
+        "name": "bool"
+      },
+      "required": false,
+      "description": "A checkbox can be read-only and unable to change states."
+    },
+    "slider": {
+      "type": {
+        "name": "union",
+        "value": [
+          {
+            "name": "bool"
+          }
+        ]
+      },
+      "required": false,
+      "description": "Format to emphasize the current selection state."
+    },
+    "tabIndex": {
+      "type": {
+        "name": "union",
+        "value": [
+          {
+            "name": "number"
+          },
+          {
+            "name": "string"
+          }
+        ]
+      },
+      "required": false,
+      "description": "A checkbox can receive focus."
+    },
+    "toggle": {
+      "type": {
+        "name": "union",
+        "value": [
+          {
+            "name": "bool"
+          }
+        ]
+      },
+      "required": false,
+      "description": "Format to show an on or off choice."
+    },
+    "type": {
+      "type": {
+        "name": "enum",
+        "value": [
+          {
+            "value": "checkbox",
+            "computed": false
+          },
+          {
+            "value": "radio",
+            "computed": false
+          }
+        ]
+      },
+      "required": false,
+      "description": "HTML input type, either checkbox or radio.",
+      "defaultValue": {
+        "value": "'checkbox'",
+        "computed": false
+      }
+    },
+    "value": {
+      "type": {
+        "name": "union",
+        "value": [
+          {
+            "name": "string"
+          },
+          {
+            "name": "number"
+          }
+        ]
+      },
+      "required": false,
+      "description": "The HTML input value."
+    }
+  },
+  "constructorName": "Checkbox",
+  "type": "module",
+  "isParent": true,
+  "isChild": false,
+  "parentDisplayName": null,
+  "subcomponentName": null,
+  "subcomponents": [],
+  "apiPath": "Checkbox",
+  "componentClassName": "checkbox",
+  "docblock": {
+    "tags": [
+      {
+        "title": "see",
+        "description": "Form"
+      },
+      {
+        "title": "see",
+        "description": "Radio"
+      }
+    ],
+    "description": [
+      "A checkbox allows a user to select a value from a small set of options, often binary."
+    ]
+  },
+  "examplesExist": true,
+  "repoPath": "src/modules/Checkbox/Checkbox.js",
+  "filename": "Checkbox.js",
+  "filenameWithoutExt": "Checkbox"
+}

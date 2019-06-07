@@ -1,0 +1,58 @@
+{
+  "description": "A dimmer hides distractions to focus attention on particular content.",
+  "displayName": "Dimmer",
+  "methods": [
+    {
+      "name": "handlePortalMount",
+      "docblock": null,
+      "modifiers": [],
+      "params": [],
+      "returns": null
+    },
+    {
+      "name": "handlePortalUnmount",
+      "docblock": null,
+      "modifiers": [],
+      "params": [],
+      "returns": null
+    }
+  ],
+  "props": {
+    "active": {
+      "type": {
+        "name": "bool"
+      },
+      "required": false,
+      "description": "An active dimmer will dim its parent container."
+    },
+    "page": {
+      "type": {
+        "name": "bool"
+      },
+      "required": false,
+      "description": "A dimmer can be formatted to be fixed to the page."
+    }
+  },
+  "constructorName": "Dimmer",
+  "type": "module",
+  "isParent": true,
+  "isChild": false,
+  "parentDisplayName": null,
+  "subcomponentName": null,
+  "subcomponents": [
+    "DimmerDimmable",
+    "DimmerInner"
+  ],
+  "apiPath": "Dimmer",
+  "componentClassName": "dimmer",
+  "docblock": {
+    "tags": [],
+    "description": [
+      "A dimmer hides distractions to focus attention on particular content."
+    ]
+  },
+  "examplesExist": true,
+  "repoPath": "src/modules/Dimmer/Dimmer.js",
+  "filename": "Dimmer.js",
+  "filenameWithoutExt": "Dimmer"
+}

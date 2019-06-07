@@ -1,0 +1,70 @@
+{
+  "description": "A modal can contain content.",
+  "displayName": "ModalContent",
+  "methods": [],
+  "props": {
+    "as": {
+      "type": {
+        "name": "custom",
+        "raw": "customPropTypes.as"
+      },
+      "required": false,
+      "description": "An element type to render as (string or function)."
+    },
+    "children": {
+      "type": {
+        "name": "node"
+      },
+      "required": false,
+      "description": "Primary content."
+    },
+    "className": {
+      "type": {
+        "name": "string"
+      },
+      "required": false,
+      "description": "Additional classes."
+    },
+    "content": {
+      "type": {
+        "name": "custom",
+        "raw": "customPropTypes.contentShorthand"
+      },
+      "required": false,
+      "description": "Shorthand for primary content."
+    },
+    "image": {
+      "type": {
+        "name": "bool"
+      },
+      "required": false,
+      "description": "A modal can contain image content."
+    },
+    "scrolling": {
+      "type": {
+        "name": "bool"
+      },
+      "required": false,
+      "description": "A modal can use the entire size of the screen."
+    }
+  },
+  "constructorName": "ModalContent",
+  "type": "module",
+  "isParent": false,
+  "isChild": true,
+  "parentDisplayName": "Modal",
+  "subcomponentName": "Content",
+  "subcomponents": null,
+  "apiPath": "Modal.Content",
+  "componentClassName": "content",
+  "docblock": {
+    "tags": [],
+    "description": [
+      "A modal can contain content."
+    ]
+  },
+  "examplesExist": false,
+  "repoPath": "src/modules/Modal/ModalContent.js",
+  "filename": "ModalContent.js",
+  "filenameWithoutExt": "ModalContent"
+}

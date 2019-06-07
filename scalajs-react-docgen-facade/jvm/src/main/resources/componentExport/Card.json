@@ -1,0 +1,219 @@
+{
+  "description": "A card displays site content in a manner similar to a playing card.",
+  "displayName": "Card",
+  "methods": [
+    {
+      "name": "handleClick",
+      "docblock": null,
+      "modifiers": [],
+      "params": [
+        {
+          "name": "e",
+          "type": null
+        }
+      ],
+      "returns": null
+    }
+  ],
+  "props": {
+    "as": {
+      "type": {
+        "name": "custom",
+        "raw": "customPropTypes.as"
+      },
+      "required": false,
+      "description": "An element type to render as (string or function)."
+    },
+    "centered": {
+      "type": {
+        "name": "bool"
+      },
+      "required": false,
+      "description": "A Card can center itself inside its container."
+    },
+    "children": {
+      "type": {
+        "name": "node"
+      },
+      "required": false,
+      "description": "Primary content."
+    },
+    "className": {
+      "type": {
+        "name": "string"
+      },
+      "required": false,
+      "description": "Additional classes."
+    },
+    "color": {
+      "type": {
+        "name": "enum",
+        "computed": true,
+        "value": [
+          {
+            "value": "red",
+            "computed": false
+          },
+          {
+            "value": "orange",
+            "computed": false
+          },
+          {
+            "value": "yellow",
+            "computed": false
+          },
+          {
+            "value": "olive",
+            "computed": false
+          },
+          {
+            "value": "green",
+            "computed": false
+          },
+          {
+            "value": "teal",
+            "computed": false
+          },
+          {
+            "value": "blue",
+            "computed": false
+          },
+          {
+            "value": "violet",
+            "computed": false
+          },
+          {
+            "value": "purple",
+            "computed": false
+          },
+          {
+            "value": "pink",
+            "computed": false
+          },
+          {
+            "value": "brown",
+            "computed": false
+          },
+          {
+            "value": "grey",
+            "computed": false
+          },
+          {
+            "value": "black",
+            "computed": false
+          }
+        ]
+      },
+      "required": false,
+      "description": "A Card can be formatted to display different colors."
+    },
+    "content": {
+      "type": {
+        "name": "custom",
+        "raw": "customPropTypes.contentShorthand"
+      },
+      "required": false,
+      "description": "Shorthand for primary content."
+    },
+    "description": {
+      "type": {
+        "name": "custom",
+        "raw": "customPropTypes.itemShorthand"
+      },
+      "required": false,
+      "description": "Shorthand for CardDescription."
+    },
+    "extra": {
+      "type": {
+        "name": "custom",
+        "raw": "customPropTypes.contentShorthand"
+      },
+      "required": false,
+      "description": "Shorthand for primary content of CardContent."
+    },
+    "fluid": {
+      "type": {
+        "name": "bool"
+      },
+      "required": false,
+      "description": "A Card can be formatted to take up the width of its container."
+    },
+    "header": {
+      "type": {
+        "name": "custom",
+        "raw": "customPropTypes.itemShorthand"
+      },
+      "required": false,
+      "description": "Shorthand for CardHeader."
+    },
+    "href": {
+      "type": {
+        "name": "string"
+      },
+      "required": false,
+      "description": "Render as an `a` tag instead of a `div` and adds the href attribute."
+    },
+    "image": {
+      "type": {
+        "name": "custom",
+        "raw": "customPropTypes.itemShorthand"
+      },
+      "required": false,
+      "description": "A card can contain an Image component."
+    },
+    "link": {
+      "type": {
+        "name": "bool"
+      },
+      "required": false,
+      "description": "A card can be formatted to link to other content."
+    },
+    "meta": {
+      "type": {
+        "name": "custom",
+        "raw": "customPropTypes.itemShorthand"
+      },
+      "required": false,
+      "description": "Shorthand for CardMeta."
+    },
+    "onClick": {
+      "type": {
+        "name": "func"
+      },
+      "required": false,
+      "description": "Called on click. When passed, the component renders as an `a`\ntag by default instead of a `div`.\n\n@param {SyntheticEvent} event - React's original SyntheticEvent.\n@param {object} data - All props."
+    },
+    "raised": {
+      "type": {
+        "name": "bool"
+      },
+      "required": false,
+      "description": "A Card can be formatted to raise above the page."
+    }
+  },
+  "constructorName": "Card",
+  "type": "view",
+  "isParent": true,
+  "isChild": false,
+  "parentDisplayName": null,
+  "subcomponentName": null,
+  "subcomponents": [
+    "CardContent",
+    "CardDescription",
+    "CardGroup",
+    "CardHeader",
+    "CardMeta"
+  ],
+  "apiPath": "Card",
+  "componentClassName": "card",
+  "docblock": {
+    "tags": [],
+    "description": [
+      "A card displays site content in a manner similar to a playing card."
+    ]
+  },
+  "examplesExist": true,
+  "repoPath": "src/views/Card/Card.js",
+  "filename": "Card.js",
+  "filenameWithoutExt": "Card"
+}

@@ -1,0 +1,56 @@
+{
+  "description": "",
+  "displayName": "SearchResults",
+  "methods": [],
+  "props": {
+    "as": {
+      "type": {
+        "name": "custom",
+        "raw": "customPropTypes.as"
+      },
+      "required": false,
+      "description": "An element type to render as (string or function)."
+    },
+    "children": {
+      "type": {
+        "name": "node"
+      },
+      "required": false,
+      "description": "Primary content."
+    },
+    "className": {
+      "type": {
+        "name": "string"
+      },
+      "required": false,
+      "description": "Additional classes."
+    },
+    "content": {
+      "type": {
+        "name": "custom",
+        "raw": "customPropTypes.contentShorthand"
+      },
+      "required": false,
+      "description": "Shorthand for primary content."
+    }
+  },
+  "constructorName": "SearchResults",
+  "type": "module",
+  "isParent": false,
+  "isChild": true,
+  "parentDisplayName": "Search",
+  "subcomponentName": "Results",
+  "subcomponents": null,
+  "apiPath": "Search.Results",
+  "componentClassName": "results",
+  "docblock": {
+    "tags": [],
+    "description": [
+      ""
+    ]
+  },
+  "examplesExist": false,
+  "repoPath": "src/modules/Search/SearchResults.js",
+  "filename": "SearchResults.js",
+  "filenameWithoutExt": "SearchResults"
+}

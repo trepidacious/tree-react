@@ -1,0 +1,227 @@
+{
+  "description": "A rating indicates user interest in content.",
+  "displayName": "Rating",
+  "methods": [
+    {
+      "name": "handleIconClick",
+      "docblock": null,
+      "modifiers": [],
+      "params": [
+        {
+          "name": "e",
+          "type": null
+        },
+        {
+          "name": "{ index }",
+          "type": null
+        }
+      ],
+      "returns": null
+    },
+    {
+      "name": "handleIconMouseEnter",
+      "docblock": null,
+      "modifiers": [],
+      "params": [
+        {
+          "name": "e",
+          "type": null
+        },
+        {
+          "name": "{ index }",
+          "type": null
+        }
+      ],
+      "returns": null
+    },
+    {
+      "name": "handleMouseLeave",
+      "docblock": null,
+      "modifiers": [],
+      "params": [
+        {
+          "name": "...args",
+          "type": null
+        }
+      ],
+      "returns": null
+    }
+  ],
+  "props": {
+    "as": {
+      "type": {
+        "name": "custom",
+        "raw": "customPropTypes.as"
+      },
+      "required": false,
+      "description": "An element type to render as (string or function)."
+    },
+    "className": {
+      "type": {
+        "name": "string"
+      },
+      "required": false,
+      "description": "Additional classes."
+    },
+    "clearable": {
+      "type": {
+        "name": "union",
+        "value": [
+          {
+            "name": "bool"
+          },
+          {
+            "name": "enum",
+            "value": [
+              {
+                "value": "'auto'",
+                "computed": false
+              }
+            ]
+          }
+        ]
+      },
+      "required": false,
+      "description": "You can clear the rating by clicking on the current start rating.\nBy default a rating will be only clearable if there is 1 icon.\nSetting to `true`/`false` will allow or disallow a user to clear their rating.",
+      "defaultValue": {
+        "value": "'auto'",
+        "computed": false
+      }
+    },
+    "defaultRating": {
+      "type": {
+        "name": "union",
+        "value": [
+          {
+            "name": "number"
+          },
+          {
+            "name": "string"
+          }
+        ]
+      },
+      "required": false,
+      "description": "The initial rating value."
+    },
+    "disabled": {
+      "type": {
+        "name": "bool"
+      },
+      "required": false,
+      "description": "You can disable or enable interactive rating.  Makes a read-only rating."
+    },
+    "icon": {
+      "type": {
+        "name": "enum",
+        "value": [
+          {
+            "value": "star",
+            "computed": false
+          },
+          {
+            "value": "heart",
+            "computed": false
+          }
+        ]
+      },
+      "required": false,
+      "description": "A rating can use a set of star or heart icons."
+    },
+    "maxRating": {
+      "type": {
+        "name": "union",
+        "value": [
+          {
+            "name": "number"
+          },
+          {
+            "name": "string"
+          }
+        ]
+      },
+      "required": false,
+      "description": "The total number of icons.",
+      "defaultValue": {
+        "value": "1",
+        "computed": false
+      }
+    },
+    "onRate": {
+      "type": {
+        "name": "func"
+      },
+      "required": false,
+      "description": "Called after user selects a new rating.\n\n@param {SyntheticEvent} event - React's original SyntheticEvent.\n@param {object} data - All props and proposed rating."
+    },
+    "rating": {
+      "type": {
+        "name": "union",
+        "value": [
+          {
+            "name": "number"
+          },
+          {
+            "name": "string"
+          }
+        ]
+      },
+      "required": false,
+      "description": "The current number of active icons."
+    },
+    "size": {
+      "type": {
+        "name": "enum",
+        "computed": true,
+        "value": [
+          {
+            "value": "mini",
+            "computed": false
+          },
+          {
+            "value": "tiny",
+            "computed": false
+          },
+          {
+            "value": "small",
+            "computed": false
+          },
+          {
+            "value": "large",
+            "computed": false
+          },
+          {
+            "value": "huge",
+            "computed": false
+          },
+          {
+            "value": "massive",
+            "computed": false
+          }
+        ]
+      },
+      "required": false,
+      "description": "A progress bar can vary in size."
+    }
+  },
+  "constructorName": "Rating",
+  "type": "module",
+  "isParent": true,
+  "isChild": false,
+  "parentDisplayName": null,
+  "subcomponentName": null,
+  "subcomponents": [
+    "RatingIcon"
+  ],
+  "apiPath": "Rating",
+  "componentClassName": "rating",
+  "docblock": {
+    "tags": [],
+    "description": [
+      "A rating indicates user interest in content."
+    ]
+  },
+  "examplesExist": true,
+  "repoPath": "src/modules/Rating/Rating.js",
+  "filename": "Rating.js",
+  "filenameWithoutExt": "Rating"
+}

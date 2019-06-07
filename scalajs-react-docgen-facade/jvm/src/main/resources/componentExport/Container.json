@@ -1,0 +1,96 @@
+{
+  "description": "A container limits content to a maximum width.",
+  "displayName": "Container",
+  "methods": [],
+  "props": {
+    "as": {
+      "type": {
+        "name": "custom",
+        "raw": "customPropTypes.as"
+      },
+      "required": false,
+      "description": "An element type to render as (string or function)."
+    },
+    "children": {
+      "type": {
+        "name": "node"
+      },
+      "required": false,
+      "description": "Primary content."
+    },
+    "className": {
+      "type": {
+        "name": "string"
+      },
+      "required": false,
+      "description": "Additional classes."
+    },
+    "content": {
+      "type": {
+        "name": "custom",
+        "raw": "customPropTypes.contentShorthand"
+      },
+      "required": false,
+      "description": "Shorthand for primary content."
+    },
+    "fluid": {
+      "type": {
+        "name": "bool"
+      },
+      "required": false,
+      "description": "Container has no maximum width."
+    },
+    "text": {
+      "type": {
+        "name": "bool"
+      },
+      "required": false,
+      "description": "Reduce maximum width to more naturally accommodate text."
+    },
+    "textAlign": {
+      "type": {
+        "name": "enum",
+        "computed": true,
+        "value": [
+          {
+            "value": "left",
+            "computed": false
+          },
+          {
+            "value": "center",
+            "computed": false
+          },
+          {
+            "value": "right",
+            "computed": false
+          },
+          {
+            "value": "justified",
+            "computed": false
+          }
+        ]
+      },
+      "required": false,
+      "description": "Align container text."
+    }
+  },
+  "constructorName": "Container",
+  "type": "element",
+  "isParent": true,
+  "isChild": false,
+  "parentDisplayName": null,
+  "subcomponentName": null,
+  "subcomponents": [],
+  "apiPath": "Container",
+  "componentClassName": "container",
+  "docblock": {
+    "tags": [],
+    "description": [
+      "A container limits content to a maximum width."
+    ]
+  },
+  "examplesExist": true,
+  "repoPath": "src/elements/Container/Container.js",
+  "filename": "Container.js",
+  "filenameWithoutExt": "Container"
+}

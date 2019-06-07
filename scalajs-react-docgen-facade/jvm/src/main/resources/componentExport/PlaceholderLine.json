@@ -1,0 +1,74 @@
+{
+  "description": "A placeholder can contain have lines of text.",
+  "displayName": "PlaceholderLine",
+  "methods": [],
+  "props": {
+    "as": {
+      "type": {
+        "name": "custom",
+        "raw": "customPropTypes.as"
+      },
+      "required": false,
+      "description": "An element type to render as (string or function)."
+    },
+    "className": {
+      "type": {
+        "name": "string"
+      },
+      "required": false,
+      "description": "Additional classes."
+    },
+    "length": {
+      "type": {
+        "name": "enum",
+        "value": [
+          {
+            "value": "full",
+            "computed": false
+          },
+          {
+            "value": "very long",
+            "computed": false
+          },
+          {
+            "value": "long",
+            "computed": false
+          },
+          {
+            "value": "medium",
+            "computed": false
+          },
+          {
+            "value": "short",
+            "computed": false
+          },
+          {
+            "value": "very short",
+            "computed": false
+          }
+        ]
+      },
+      "required": false,
+      "description": "A line can specify how long its contents should appear."
+    }
+  },
+  "constructorName": "PlaceholderLine",
+  "type": "element",
+  "isParent": false,
+  "isChild": true,
+  "parentDisplayName": "Placeholder",
+  "subcomponentName": "Line",
+  "subcomponents": null,
+  "apiPath": "Placeholder.Line",
+  "componentClassName": "line",
+  "docblock": {
+    "tags": [],
+    "description": [
+      "A placeholder can contain have lines of text."
+    ]
+  },
+  "examplesExist": false,
+  "repoPath": "src/elements/Placeholder/PlaceholderLine.js",
+  "filename": "PlaceholderLine.js",
+  "filenameWithoutExt": "PlaceholderLine"
+}

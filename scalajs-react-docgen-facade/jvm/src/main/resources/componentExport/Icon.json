@@ -1,0 +1,5315 @@
+{
+  "description": "An icon is a glyph used to represent something else.\n@see Image",
+  "displayName": "Icon",
+  "methods": [
+    {
+      "name": "getIconAriaOptions",
+      "docblock": null,
+      "modifiers": [],
+      "params": [],
+      "returns": null
+    },
+    {
+      "name": "handleClick",
+      "docblock": null,
+      "modifiers": [],
+      "params": [
+        {
+          "name": "e",
+          "type": null
+        }
+      ],
+      "returns": null
+    }
+  ],
+  "props": {
+    "as": {
+      "type": {
+        "name": "custom",
+        "raw": "customPropTypes.as"
+      },
+      "required": false,
+      "description": "An element type to render as (string or function).",
+      "defaultValue": {
+        "value": "'i'",
+        "computed": false
+      }
+    },
+    "bordered": {
+      "type": {
+        "name": "bool"
+      },
+      "required": false,
+      "description": "Formatted to appear bordered."
+    },
+    "circular": {
+      "type": {
+        "name": "bool"
+      },
+      "required": false,
+      "description": "Icon can formatted to appear circular."
+    },
+    "className": {
+      "type": {
+        "name": "string"
+      },
+      "required": false,
+      "description": "Additional classes."
+    },
+    "color": {
+      "type": {
+        "name": "enum",
+        "computed": true,
+        "value": [
+          {
+            "value": "red",
+            "computed": false
+          },
+          {
+            "value": "orange",
+            "computed": false
+          },
+          {
+            "value": "yellow",
+            "computed": false
+          },
+          {
+            "value": "olive",
+            "computed": false
+          },
+          {
+            "value": "green",
+            "computed": false
+          },
+          {
+            "value": "teal",
+            "computed": false
+          },
+          {
+            "value": "blue",
+            "computed": false
+          },
+          {
+            "value": "violet",
+            "computed": false
+          },
+          {
+            "value": "purple",
+            "computed": false
+          },
+          {
+            "value": "pink",
+            "computed": false
+          },
+          {
+            "value": "brown",
+            "computed": false
+          },
+          {
+            "value": "grey",
+            "computed": false
+          },
+          {
+            "value": "black",
+            "computed": false
+          }
+        ]
+      },
+      "required": false,
+      "description": "Color of the icon."
+    },
+    "corner": {
+      "type": {
+        "name": "union",
+        "value": [
+          {
+            "name": "bool"
+          },
+          {
+            "name": "enum",
+            "value": [
+              {
+                "value": "'top left'",
+                "computed": false
+              },
+              {
+                "value": "'top right'",
+                "computed": false
+              },
+              {
+                "value": "'bottom left'",
+                "computed": false
+              },
+              {
+                "value": "'bottom right'",
+                "computed": false
+              }
+            ]
+          }
+        ]
+      },
+      "required": false,
+      "description": "Icons can display a smaller corner icon."
+    },
+    "disabled": {
+      "type": {
+        "name": "bool"
+      },
+      "required": false,
+      "description": "Show that the icon is inactive."
+    },
+    "fitted": {
+      "type": {
+        "name": "bool"
+      },
+      "required": false,
+      "description": "Fitted, without space to left or right of Icon."
+    },
+    "flipped": {
+      "type": {
+        "name": "enum",
+        "value": [
+          {
+            "value": "horizontally",
+            "computed": false
+          },
+          {
+            "value": "vertically",
+            "computed": false
+          }
+        ]
+      },
+      "required": false,
+      "description": "Icon can flipped."
+    },
+    "inverted": {
+      "type": {
+        "name": "bool"
+      },
+      "required": false,
+      "description": "Formatted to have its colors inverted for contrast."
+    },
+    "link": {
+      "type": {
+        "name": "bool"
+      },
+      "required": false,
+      "description": "Icon can be formatted as a link."
+    },
+    "loading": {
+      "type": {
+        "name": "bool"
+      },
+      "required": false,
+      "description": "Icon can be used as a simple loader."
+    },
+    "name": {
+      "type": {
+        "name": "enum",
+        "value": [
+          {
+            "value": "american sign language interpreting",
+            "computed": false
+          },
+          {
+            "value": "assistive listening systems",
+            "computed": false
+          },
+          {
+            "value": "audio description",
+            "computed": false
+          },
+          {
+            "value": "blind",
+            "computed": false
+          },
+          {
+            "value": "braille",
+            "computed": false
+          },
+          {
+            "value": "closed captioning",
+            "computed": false
+          },
+          {
+            "value": "closed captioning outline",
+            "computed": false
+          },
+          {
+            "value": "deaf",
+            "computed": false
+          },
+          {
+            "value": "low vision",
+            "computed": false
+          },
+          {
+            "value": "phone volume",
+            "computed": false
+          },
+          {
+            "value": "question circle",
+            "computed": false
+          },
+          {
+            "value": "question circle outline",
+            "computed": false
+          },
+          {
+            "value": "sign language",
+            "computed": false
+          },
+          {
+            "value": "tty",
+            "computed": false
+          },
+          {
+            "value": "universal access",
+            "computed": false
+          },
+          {
+            "value": "wheelchair",
+            "computed": false
+          },
+          {
+            "value": "angle double down",
+            "computed": false
+          },
+          {
+            "value": "angle double left",
+            "computed": false
+          },
+          {
+            "value": "angle double right",
+            "computed": false
+          },
+          {
+            "value": "angle double up",
+            "computed": false
+          },
+          {
+            "value": "angle down",
+            "computed": false
+          },
+          {
+            "value": "angle left",
+            "computed": false
+          },
+          {
+            "value": "angle right",
+            "computed": false
+          },
+          {
+            "value": "angle up",
+            "computed": false
+          },
+          {
+            "value": "arrow alternate circle down",
+            "computed": false
+          },
+          {
+            "value": "arrow alternate circle down outline",
+            "computed": false
+          },
+          {
+            "value": "arrow alternate circle left",
+            "computed": false
+          },
+          {
+            "value": "arrow alternate circle left outline",
+            "computed": false
+          },
+          {
+            "value": "arrow alternate circle right",
+            "computed": false
+          },
+          {
+            "value": "arrow alternate circle right outline",
+            "computed": false
+          },
+          {
+            "value": "arrow alternate circle up",
+            "computed": false
+          },
+          {
+            "value": "arrow alternate circle up outline",
+            "computed": false
+          },
+          {
+            "value": "arrow circle down",
+            "computed": false
+          },
+          {
+            "value": "arrow circle left",
+            "computed": false
+          },
+          {
+            "value": "arrow circle right",
+            "computed": false
+          },
+          {
+            "value": "arrow circle up",
+            "computed": false
+          },
+          {
+            "value": "arrow down",
+            "computed": false
+          },
+          {
+            "value": "arrow left",
+            "computed": false
+          },
+          {
+            "value": "arrow right",
+            "computed": false
+          },
+          {
+            "value": "arrow up",
+            "computed": false
+          },
+          {
+            "value": "arrows alternate",
+            "computed": false
+          },
+          {
+            "value": "arrows alternate horizontal",
+            "computed": false
+          },
+          {
+            "value": "arrows alternate vertical",
+            "computed": false
+          },
+          {
+            "value": "caret down",
+            "computed": false
+          },
+          {
+            "value": "caret left",
+            "computed": false
+          },
+          {
+            "value": "caret right",
+            "computed": false
+          },
+          {
+            "value": "caret square down",
+            "computed": false
+          },
+          {
+            "value": "caret square down outline",
+            "computed": false
+          },
+          {
+            "value": "caret square left",
+            "computed": false
+          },
+          {
+            "value": "caret square left outline",
+            "computed": false
+          },
+          {
+            "value": "caret square right",
+            "computed": false
+          },
+          {
+            "value": "caret square right outline",
+            "computed": false
+          },
+          {
+            "value": "caret square up",
+            "computed": false
+          },
+          {
+            "value": "caret square up outline",
+            "computed": false
+          },
+          {
+            "value": "caret up",
+            "computed": false
+          },
+          {
+            "value": "cart arrow down",
+            "computed": false
+          },
+          {
+            "value": "chart line",
+            "computed": false
+          },
+          {
+            "value": "chevron circle down",
+            "computed": false
+          },
+          {
+            "value": "chevron circle left",
+            "computed": false
+          },
+          {
+            "value": "chevron circle right",
+            "computed": false
+          },
+          {
+            "value": "chevron circle up",
+            "computed": false
+          },
+          {
+            "value": "chevron down",
+            "computed": false
+          },
+          {
+            "value": "chevron left",
+            "computed": false
+          },
+          {
+            "value": "chevron right",
+            "computed": false
+          },
+          {
+            "value": "chevron up",
+            "computed": false
+          },
+          {
+            "value": "cloud download",
+            "computed": false
+          },
+          {
+            "value": "cloud upload",
+            "computed": false
+          },
+          {
+            "value": "download",
+            "computed": false
+          },
+          {
+            "value": "exchange",
+            "computed": false
+          },
+          {
+            "value": "expand arrows alternate",
+            "computed": false
+          },
+          {
+            "value": "external alternate",
+            "computed": false
+          },
+          {
+            "value": "external square alternate",
+            "computed": false
+          },
+          {
+            "value": "hand point down",
+            "computed": false
+          },
+          {
+            "value": "hand point down outline",
+            "computed": false
+          },
+          {
+            "value": "hand point left",
+            "computed": false
+          },
+          {
+            "value": "hand point left outline",
+            "computed": false
+          },
+          {
+            "value": "hand point right",
+            "computed": false
+          },
+          {
+            "value": "hand point right outline",
+            "computed": false
+          },
+          {
+            "value": "hand point up",
+            "computed": false
+          },
+          {
+            "value": "hand point up outline",
+            "computed": false
+          },
+          {
+            "value": "hand pointer",
+            "computed": false
+          },
+          {
+            "value": "hand pointer outline",
+            "computed": false
+          },
+          {
+            "value": "history",
+            "computed": false
+          },
+          {
+            "value": "level down alternate",
+            "computed": false
+          },
+          {
+            "value": "level up alternate",
+            "computed": false
+          },
+          {
+            "value": "location arrow",
+            "computed": false
+          },
+          {
+            "value": "long arrow alternate down",
+            "computed": false
+          },
+          {
+            "value": "long arrow alternate left",
+            "computed": false
+          },
+          {
+            "value": "long arrow alternate right",
+            "computed": false
+          },
+          {
+            "value": "long arrow alternate up",
+            "computed": false
+          },
+          {
+            "value": "mouse pointer",
+            "computed": false
+          },
+          {
+            "value": "play",
+            "computed": false
+          },
+          {
+            "value": "random",
+            "computed": false
+          },
+          {
+            "value": "recycle",
+            "computed": false
+          },
+          {
+            "value": "redo",
+            "computed": false
+          },
+          {
+            "value": "redo alternate",
+            "computed": false
+          },
+          {
+            "value": "reply",
+            "computed": false
+          },
+          {
+            "value": "reply all",
+            "computed": false
+          },
+          {
+            "value": "retweet",
+            "computed": false
+          },
+          {
+            "value": "share",
+            "computed": false
+          },
+          {
+            "value": "share square",
+            "computed": false
+          },
+          {
+            "value": "share square outline",
+            "computed": false
+          },
+          {
+            "value": "sign-in",
+            "computed": false
+          },
+          {
+            "value": "sign-out",
+            "computed": false
+          },
+          {
+            "value": "sign-in alternate",
+            "computed": false
+          },
+          {
+            "value": "sign-out alternate",
+            "computed": false
+          },
+          {
+            "value": "sort",
+            "computed": false
+          },
+          {
+            "value": "sort alphabet down",
+            "computed": false
+          },
+          {
+            "value": "sort alphabet up",
+            "computed": false
+          },
+          {
+            "value": "sort amount down",
+            "computed": false
+          },
+          {
+            "value": "sort amount up",
+            "computed": false
+          },
+          {
+            "value": "sort down",
+            "computed": false
+          },
+          {
+            "value": "sort numeric down",
+            "computed": false
+          },
+          {
+            "value": "sort numeric up",
+            "computed": false
+          },
+          {
+            "value": "sort up",
+            "computed": false
+          },
+          {
+            "value": "sync",
+            "computed": false
+          },
+          {
+            "value": "sync alternate",
+            "computed": false
+          },
+          {
+            "value": "text height",
+            "computed": false
+          },
+          {
+            "value": "text width",
+            "computed": false
+          },
+          {
+            "value": "undo",
+            "computed": false
+          },
+          {
+            "value": "undo alternate",
+            "computed": false
+          },
+          {
+            "value": "upload",
+            "computed": false
+          },
+          {
+            "value": "zoom-in",
+            "computed": false
+          },
+          {
+            "value": "zoom-out",
+            "computed": false
+          },
+          {
+            "value": "backward",
+            "computed": false
+          },
+          {
+            "value": "circle",
+            "computed": false
+          },
+          {
+            "value": "circle outline",
+            "computed": false
+          },
+          {
+            "value": "compress",
+            "computed": false
+          },
+          {
+            "value": "eject",
+            "computed": false
+          },
+          {
+            "value": "expand",
+            "computed": false
+          },
+          {
+            "value": "fast backward",
+            "computed": false
+          },
+          {
+            "value": "fast forward",
+            "computed": false
+          },
+          {
+            "value": "file audio",
+            "computed": false
+          },
+          {
+            "value": "file audio outline",
+            "computed": false
+          },
+          {
+            "value": "file video",
+            "computed": false
+          },
+          {
+            "value": "file video outline",
+            "computed": false
+          },
+          {
+            "value": "film",
+            "computed": false
+          },
+          {
+            "value": "forward",
+            "computed": false
+          },
+          {
+            "value": "headphones",
+            "computed": false
+          },
+          {
+            "value": "microphone",
+            "computed": false
+          },
+          {
+            "value": "microphone slash",
+            "computed": false
+          },
+          {
+            "value": "music",
+            "computed": false
+          },
+          {
+            "value": "pause",
+            "computed": false
+          },
+          {
+            "value": "pause circle",
+            "computed": false
+          },
+          {
+            "value": "pause circle outline",
+            "computed": false
+          },
+          {
+            "value": "play circle",
+            "computed": false
+          },
+          {
+            "value": "play circle outline",
+            "computed": false
+          },
+          {
+            "value": "podcast",
+            "computed": false
+          },
+          {
+            "value": "rss",
+            "computed": false
+          },
+          {
+            "value": "rss square",
+            "computed": false
+          },
+          {
+            "value": "step backward",
+            "computed": false
+          },
+          {
+            "value": "step forward",
+            "computed": false
+          },
+          {
+            "value": "stop",
+            "computed": false
+          },
+          {
+            "value": "stop circle",
+            "computed": false
+          },
+          {
+            "value": "stop circle outline",
+            "computed": false
+          },
+          {
+            "value": "video",
+            "computed": false
+          },
+          {
+            "value": "volume down",
+            "computed": false
+          },
+          {
+            "value": "volume off",
+            "computed": false
+          },
+          {
+            "value": "volume up",
+            "computed": false
+          },
+          {
+            "value": "address book",
+            "computed": false
+          },
+          {
+            "value": "address book outline",
+            "computed": false
+          },
+          {
+            "value": "address card",
+            "computed": false
+          },
+          {
+            "value": "address card outline",
+            "computed": false
+          },
+          {
+            "value": "archive",
+            "computed": false
+          },
+          {
+            "value": "balance scale",
+            "computed": false
+          },
+          {
+            "value": "birthday cake",
+            "computed": false
+          },
+          {
+            "value": "book",
+            "computed": false
+          },
+          {
+            "value": "briefcase",
+            "computed": false
+          },
+          {
+            "value": "building",
+            "computed": false
+          },
+          {
+            "value": "building outline",
+            "computed": false
+          },
+          {
+            "value": "bullhorn",
+            "computed": false
+          },
+          {
+            "value": "bullseye",
+            "computed": false
+          },
+          {
+            "value": "calculator",
+            "computed": false
+          },
+          {
+            "value": "calendar",
+            "computed": false
+          },
+          {
+            "value": "calendar outline",
+            "computed": false
+          },
+          {
+            "value": "calendar alternate",
+            "computed": false
+          },
+          {
+            "value": "calendar alternate outline",
+            "computed": false
+          },
+          {
+            "value": "certificate",
+            "computed": false
+          },
+          {
+            "value": "chart area",
+            "computed": false
+          },
+          {
+            "value": "chart bar",
+            "computed": false
+          },
+          {
+            "value": "chart bar outline",
+            "computed": false
+          },
+          {
+            "value": "chart pie",
+            "computed": false
+          },
+          {
+            "value": "clipboard",
+            "computed": false
+          },
+          {
+            "value": "clipboard outline",
+            "computed": false
+          },
+          {
+            "value": "coffee",
+            "computed": false
+          },
+          {
+            "value": "columns",
+            "computed": false
+          },
+          {
+            "value": "compass",
+            "computed": false
+          },
+          {
+            "value": "compass outline",
+            "computed": false
+          },
+          {
+            "value": "copy",
+            "computed": false
+          },
+          {
+            "value": "copy outline",
+            "computed": false
+          },
+          {
+            "value": "copyright",
+            "computed": false
+          },
+          {
+            "value": "copyright outline",
+            "computed": false
+          },
+          {
+            "value": "cut",
+            "computed": false
+          },
+          {
+            "value": "edit",
+            "computed": false
+          },
+          {
+            "value": "edit outline",
+            "computed": false
+          },
+          {
+            "value": "envelope",
+            "computed": false
+          },
+          {
+            "value": "envelope outline",
+            "computed": false
+          },
+          {
+            "value": "envelope open",
+            "computed": false
+          },
+          {
+            "value": "envelope open outline",
+            "computed": false
+          },
+          {
+            "value": "envelope square",
+            "computed": false
+          },
+          {
+            "value": "eraser",
+            "computed": false
+          },
+          {
+            "value": "fax",
+            "computed": false
+          },
+          {
+            "value": "file",
+            "computed": false
+          },
+          {
+            "value": "file outline",
+            "computed": false
+          },
+          {
+            "value": "file alternate",
+            "computed": false
+          },
+          {
+            "value": "file alternate outline",
+            "computed": false
+          },
+          {
+            "value": "folder",
+            "computed": false
+          },
+          {
+            "value": "folder outline",
+            "computed": false
+          },
+          {
+            "value": "folder open",
+            "computed": false
+          },
+          {
+            "value": "folder open outline",
+            "computed": false
+          },
+          {
+            "value": "globe",
+            "computed": false
+          },
+          {
+            "value": "industry",
+            "computed": false
+          },
+          {
+            "value": "paperclip",
+            "computed": false
+          },
+          {
+            "value": "paste",
+            "computed": false
+          },
+          {
+            "value": "pen square",
+            "computed": false
+          },
+          {
+            "value": "pencil alternate",
+            "computed": false
+          },
+          {
+            "value": "percent",
+            "computed": false
+          },
+          {
+            "value": "phone",
+            "computed": false
+          },
+          {
+            "value": "phone square",
+            "computed": false
+          },
+          {
+            "value": "registered",
+            "computed": false
+          },
+          {
+            "value": "registered outline",
+            "computed": false
+          },
+          {
+            "value": "save",
+            "computed": false
+          },
+          {
+            "value": "save outline",
+            "computed": false
+          },
+          {
+            "value": "sitemap",
+            "computed": false
+          },
+          {
+            "value": "sticky note",
+            "computed": false
+          },
+          {
+            "value": "sticky note outline",
+            "computed": false
+          },
+          {
+            "value": "suitcase",
+            "computed": false
+          },
+          {
+            "value": "table",
+            "computed": false
+          },
+          {
+            "value": "tag",
+            "computed": false
+          },
+          {
+            "value": "tags",
+            "computed": false
+          },
+          {
+            "value": "tasks",
+            "computed": false
+          },
+          {
+            "value": "thumbtack",
+            "computed": false
+          },
+          {
+            "value": "trademark",
+            "computed": false
+          },
+          {
+            "value": "chess",
+            "computed": false
+          },
+          {
+            "value": "chess bishop",
+            "computed": false
+          },
+          {
+            "value": "chess board",
+            "computed": false
+          },
+          {
+            "value": "chess king",
+            "computed": false
+          },
+          {
+            "value": "chess knight",
+            "computed": false
+          },
+          {
+            "value": "chess pawn",
+            "computed": false
+          },
+          {
+            "value": "chess queen",
+            "computed": false
+          },
+          {
+            "value": "chess rook",
+            "computed": false
+          },
+          {
+            "value": "square full",
+            "computed": false
+          },
+          {
+            "value": "barcode",
+            "computed": false
+          },
+          {
+            "value": "bath",
+            "computed": false
+          },
+          {
+            "value": "bug",
+            "computed": false
+          },
+          {
+            "value": "code",
+            "computed": false
+          },
+          {
+            "value": "code branch",
+            "computed": false
+          },
+          {
+            "value": "file code",
+            "computed": false
+          },
+          {
+            "value": "file code outline",
+            "computed": false
+          },
+          {
+            "value": "filter",
+            "computed": false
+          },
+          {
+            "value": "fire extinguisher",
+            "computed": false
+          },
+          {
+            "value": "keyboard",
+            "computed": false
+          },
+          {
+            "value": "keyboard outline",
+            "computed": false
+          },
+          {
+            "value": "microchip",
+            "computed": false
+          },
+          {
+            "value": "qrcode",
+            "computed": false
+          },
+          {
+            "value": "shield alternate",
+            "computed": false
+          },
+          {
+            "value": "terminal",
+            "computed": false
+          },
+          {
+            "value": "user secret",
+            "computed": false
+          },
+          {
+            "value": "window close",
+            "computed": false
+          },
+          {
+            "value": "window close outline",
+            "computed": false
+          },
+          {
+            "value": "window maximize",
+            "computed": false
+          },
+          {
+            "value": "window maximize outline",
+            "computed": false
+          },
+          {
+            "value": "window minimize",
+            "computed": false
+          },
+          {
+            "value": "window minimize outline",
+            "computed": false
+          },
+          {
+            "value": "window restore",
+            "computed": false
+          },
+          {
+            "value": "window restore outline",
+            "computed": false
+          },
+          {
+            "value": "at",
+            "computed": false
+          },
+          {
+            "value": "bell",
+            "computed": false
+          },
+          {
+            "value": "bell outline",
+            "computed": false
+          },
+          {
+            "value": "bell slash",
+            "computed": false
+          },
+          {
+            "value": "bell slash outline",
+            "computed": false
+          },
+          {
+            "value": "comment",
+            "computed": false
+          },
+          {
+            "value": "comment outline",
+            "computed": false
+          },
+          {
+            "value": "comment alternate",
+            "computed": false
+          },
+          {
+            "value": "comment alternate outline",
+            "computed": false
+          },
+          {
+            "value": "comments",
+            "computed": false
+          },
+          {
+            "value": "comments outline",
+            "computed": false
+          },
+          {
+            "value": "inbox",
+            "computed": false
+          },
+          {
+            "value": "language",
+            "computed": false
+          },
+          {
+            "value": "mobile",
+            "computed": false
+          },
+          {
+            "value": "mobile alternate",
+            "computed": false
+          },
+          {
+            "value": "paper plane",
+            "computed": false
+          },
+          {
+            "value": "paper plane outline",
+            "computed": false
+          },
+          {
+            "value": "wifi",
+            "computed": false
+          },
+          {
+            "value": "desktop",
+            "computed": false
+          },
+          {
+            "value": "hdd",
+            "computed": false
+          },
+          {
+            "value": "hdd outline",
+            "computed": false
+          },
+          {
+            "value": "laptop",
+            "computed": false
+          },
+          {
+            "value": "plug",
+            "computed": false
+          },
+          {
+            "value": "power off",
+            "computed": false
+          },
+          {
+            "value": "print",
+            "computed": false
+          },
+          {
+            "value": "server",
+            "computed": false
+          },
+          {
+            "value": "tablet",
+            "computed": false
+          },
+          {
+            "value": "tablet alternate",
+            "computed": false
+          },
+          {
+            "value": "tv",
+            "computed": false
+          },
+          {
+            "value": "dollar sign",
+            "computed": false
+          },
+          {
+            "value": "euro sign",
+            "computed": false
+          },
+          {
+            "value": "lira sign",
+            "computed": false
+          },
+          {
+            "value": "money bill alternate",
+            "computed": false
+          },
+          {
+            "value": "money bill alternate outline",
+            "computed": false
+          },
+          {
+            "value": "pound sign",
+            "computed": false
+          },
+          {
+            "value": "ruble sign",
+            "computed": false
+          },
+          {
+            "value": "rupee sign",
+            "computed": false
+          },
+          {
+            "value": "shekel sign",
+            "computed": false
+          },
+          {
+            "value": "won sign",
+            "computed": false
+          },
+          {
+            "value": "yen sign",
+            "computed": false
+          },
+          {
+            "value": "calendar check",
+            "computed": false
+          },
+          {
+            "value": "calendar check outline",
+            "computed": false
+          },
+          {
+            "value": "calendar minus",
+            "computed": false
+          },
+          {
+            "value": "calendar minus outline",
+            "computed": false
+          },
+          {
+            "value": "calendar plus",
+            "computed": false
+          },
+          {
+            "value": "calendar plus outline",
+            "computed": false
+          },
+          {
+            "value": "calendar times",
+            "computed": false
+          },
+          {
+            "value": "calendar times outline",
+            "computed": false
+          },
+          {
+            "value": "clock",
+            "computed": false
+          },
+          {
+            "value": "clock outline",
+            "computed": false
+          },
+          {
+            "value": "hourglass",
+            "computed": false
+          },
+          {
+            "value": "hourglass outline",
+            "computed": false
+          },
+          {
+            "value": "hourglass end",
+            "computed": false
+          },
+          {
+            "value": "hourglass half",
+            "computed": false
+          },
+          {
+            "value": "hourglass start",
+            "computed": false
+          },
+          {
+            "value": "stopwatch",
+            "computed": false
+          },
+          {
+            "value": "adjust",
+            "computed": false
+          },
+          {
+            "value": "clone",
+            "computed": false
+          },
+          {
+            "value": "clone outline",
+            "computed": false
+          },
+          {
+            "value": "crop",
+            "computed": false
+          },
+          {
+            "value": "crosshairs",
+            "computed": false
+          },
+          {
+            "value": "eye",
+            "computed": false
+          },
+          {
+            "value": "eye dropper",
+            "computed": false
+          },
+          {
+            "value": "eye slash",
+            "computed": false
+          },
+          {
+            "value": "eye slash outline",
+            "computed": false
+          },
+          {
+            "value": "object group",
+            "computed": false
+          },
+          {
+            "value": "object group outline",
+            "computed": false
+          },
+          {
+            "value": "object ungroup",
+            "computed": false
+          },
+          {
+            "value": "object ungroup outline",
+            "computed": false
+          },
+          {
+            "value": "paint brush",
+            "computed": false
+          },
+          {
+            "value": "tint",
+            "computed": false
+          },
+          {
+            "value": "align center",
+            "computed": false
+          },
+          {
+            "value": "align justify",
+            "computed": false
+          },
+          {
+            "value": "align left",
+            "computed": false
+          },
+          {
+            "value": "align right",
+            "computed": false
+          },
+          {
+            "value": "bold",
+            "computed": false
+          },
+          {
+            "value": "font",
+            "computed": false
+          },
+          {
+            "value": "heading",
+            "computed": false
+          },
+          {
+            "value": "i cursor",
+            "computed": false
+          },
+          {
+            "value": "indent",
+            "computed": false
+          },
+          {
+            "value": "italic",
+            "computed": false
+          },
+          {
+            "value": "linkify",
+            "computed": false
+          },
+          {
+            "value": "list",
+            "computed": false
+          },
+          {
+            "value": "list alternate",
+            "computed": false
+          },
+          {
+            "value": "list alternate outline",
+            "computed": false
+          },
+          {
+            "value": "list ol",
+            "computed": false
+          },
+          {
+            "value": "list ul",
+            "computed": false
+          },
+          {
+            "value": "outdent",
+            "computed": false
+          },
+          {
+            "value": "paragraph",
+            "computed": false
+          },
+          {
+            "value": "quote left",
+            "computed": false
+          },
+          {
+            "value": "quote right",
+            "computed": false
+          },
+          {
+            "value": "strikethrough",
+            "computed": false
+          },
+          {
+            "value": "subscript",
+            "computed": false
+          },
+          {
+            "value": "superscript",
+            "computed": false
+          },
+          {
+            "value": "th",
+            "computed": false
+          },
+          {
+            "value": "th large",
+            "computed": false
+          },
+          {
+            "value": "th list",
+            "computed": false
+          },
+          {
+            "value": "trash",
+            "computed": false
+          },
+          {
+            "value": "trash alternate",
+            "computed": false
+          },
+          {
+            "value": "trash alternate outline",
+            "computed": false
+          },
+          {
+            "value": "underline",
+            "computed": false
+          },
+          {
+            "value": "unlink",
+            "computed": false
+          },
+          {
+            "value": "file archive",
+            "computed": false
+          },
+          {
+            "value": "file archive outline",
+            "computed": false
+          },
+          {
+            "value": "file excel",
+            "computed": false
+          },
+          {
+            "value": "file excel outline",
+            "computed": false
+          },
+          {
+            "value": "file image",
+            "computed": false
+          },
+          {
+            "value": "file image outline",
+            "computed": false
+          },
+          {
+            "value": "file pdf",
+            "computed": false
+          },
+          {
+            "value": "file pdf outline",
+            "computed": false
+          },
+          {
+            "value": "file powerpoint",
+            "computed": false
+          },
+          {
+            "value": "file powerpoint outline",
+            "computed": false
+          },
+          {
+            "value": "file word",
+            "computed": false
+          },
+          {
+            "value": "file word outline",
+            "computed": false
+          },
+          {
+            "value": "genderless",
+            "computed": false
+          },
+          {
+            "value": "mars",
+            "computed": false
+          },
+          {
+            "value": "mars double",
+            "computed": false
+          },
+          {
+            "value": "mars stroke",
+            "computed": false
+          },
+          {
+            "value": "mars stroke horizontal",
+            "computed": false
+          },
+          {
+            "value": "mars stroke vertical",
+            "computed": false
+          },
+          {
+            "value": "mercury",
+            "computed": false
+          },
+          {
+            "value": "neuter",
+            "computed": false
+          },
+          {
+            "value": "transgender",
+            "computed": false
+          },
+          {
+            "value": "transgender alternate",
+            "computed": false
+          },
+          {
+            "value": "venus",
+            "computed": false
+          },
+          {
+            "value": "venus double",
+            "computed": false
+          },
+          {
+            "value": "venus mars",
+            "computed": false
+          },
+          {
+            "value": "hand lizard",
+            "computed": false
+          },
+          {
+            "value": "hand lizard outline",
+            "computed": false
+          },
+          {
+            "value": "hand paper",
+            "computed": false
+          },
+          {
+            "value": "hand paper outline",
+            "computed": false
+          },
+          {
+            "value": "hand peace",
+            "computed": false
+          },
+          {
+            "value": "hand peace outline",
+            "computed": false
+          },
+          {
+            "value": "hand rock",
+            "computed": false
+          },
+          {
+            "value": "hand rock outline",
+            "computed": false
+          },
+          {
+            "value": "hand scissors",
+            "computed": false
+          },
+          {
+            "value": "hand scissors outline",
+            "computed": false
+          },
+          {
+            "value": "hand spock",
+            "computed": false
+          },
+          {
+            "value": "hand spock outline",
+            "computed": false
+          },
+          {
+            "value": "handshake",
+            "computed": false
+          },
+          {
+            "value": "handshake outline",
+            "computed": false
+          },
+          {
+            "value": "thumbs down",
+            "computed": false
+          },
+          {
+            "value": "thumbs down outline",
+            "computed": false
+          },
+          {
+            "value": "thumbs up",
+            "computed": false
+          },
+          {
+            "value": "thumbs up outline",
+            "computed": false
+          },
+          {
+            "value": "ambulance",
+            "computed": false
+          },
+          {
+            "value": "h square",
+            "computed": false
+          },
+          {
+            "value": "heart",
+            "computed": false
+          },
+          {
+            "value": "heart outline",
+            "computed": false
+          },
+          {
+            "value": "heartbeat",
+            "computed": false
+          },
+          {
+            "value": "hospital",
+            "computed": false
+          },
+          {
+            "value": "hospital outline",
+            "computed": false
+          },
+          {
+            "value": "medkit",
+            "computed": false
+          },
+          {
+            "value": "plus square",
+            "computed": false
+          },
+          {
+            "value": "plus square outline",
+            "computed": false
+          },
+          {
+            "value": "stethoscope",
+            "computed": false
+          },
+          {
+            "value": "user md",
+            "computed": false
+          },
+          {
+            "value": "bolt",
+            "computed": false
+          },
+          {
+            "value": "camera",
+            "computed": false
+          },
+          {
+            "value": "camera retro",
+            "computed": false
+          },
+          {
+            "value": "id badge",
+            "computed": false
+          },
+          {
+            "value": "id badge outline",
+            "computed": false
+          },
+          {
+            "value": "id card",
+            "computed": false
+          },
+          {
+            "value": "id card outline",
+            "computed": false
+          },
+          {
+            "value": "image",
+            "computed": false
+          },
+          {
+            "value": "image outline",
+            "computed": false
+          },
+          {
+            "value": "images",
+            "computed": false
+          },
+          {
+            "value": "images outline",
+            "computed": false
+          },
+          {
+            "value": "sliders horizontal",
+            "computed": false
+          },
+          {
+            "value": "ban",
+            "computed": false
+          },
+          {
+            "value": "bars",
+            "computed": false
+          },
+          {
+            "value": "beer",
+            "computed": false
+          },
+          {
+            "value": "check",
+            "computed": false
+          },
+          {
+            "value": "check circle",
+            "computed": false
+          },
+          {
+            "value": "check circle outline",
+            "computed": false
+          },
+          {
+            "value": "check square",
+            "computed": false
+          },
+          {
+            "value": "check square outline",
+            "computed": false
+          },
+          {
+            "value": "cloud",
+            "computed": false
+          },
+          {
+            "value": "cog",
+            "computed": false
+          },
+          {
+            "value": "cogs",
+            "computed": false
+          },
+          {
+            "value": "database",
+            "computed": false
+          },
+          {
+            "value": "dot circle",
+            "computed": false
+          },
+          {
+            "value": "dot circle outline",
+            "computed": false
+          },
+          {
+            "value": "ellipsis horizontal",
+            "computed": false
+          },
+          {
+            "value": "ellipsis vertical",
+            "computed": false
+          },
+          {
+            "value": "exclamation",
+            "computed": false
+          },
+          {
+            "value": "exclamation circle",
+            "computed": false
+          },
+          {
+            "value": "exclamation triangle",
+            "computed": false
+          },
+          {
+            "value": "flag",
+            "computed": false
+          },
+          {
+            "value": "flag outline",
+            "computed": false
+          },
+          {
+            "value": "flag checkered",
+            "computed": false
+          },
+          {
+            "value": "frown",
+            "computed": false
+          },
+          {
+            "value": "frown outline",
+            "computed": false
+          },
+          {
+            "value": "hashtag",
+            "computed": false
+          },
+          {
+            "value": "home",
+            "computed": false
+          },
+          {
+            "value": "info",
+            "computed": false
+          },
+          {
+            "value": "info circle",
+            "computed": false
+          },
+          {
+            "value": "magic",
+            "computed": false
+          },
+          {
+            "value": "meh",
+            "computed": false
+          },
+          {
+            "value": "meh outline",
+            "computed": false
+          },
+          {
+            "value": "minus",
+            "computed": false
+          },
+          {
+            "value": "minus circle",
+            "computed": false
+          },
+          {
+            "value": "minus square",
+            "computed": false
+          },
+          {
+            "value": "minus square outline",
+            "computed": false
+          },
+          {
+            "value": "plus",
+            "computed": false
+          },
+          {
+            "value": "plus circle",
+            "computed": false
+          },
+          {
+            "value": "question",
+            "computed": false
+          },
+          {
+            "value": "search",
+            "computed": false
+          },
+          {
+            "value": "search minus",
+            "computed": false
+          },
+          {
+            "value": "search plus",
+            "computed": false
+          },
+          {
+            "value": "share alternate",
+            "computed": false
+          },
+          {
+            "value": "share alternate square",
+            "computed": false
+          },
+          {
+            "value": "signal",
+            "computed": false
+          },
+          {
+            "value": "smile",
+            "computed": false
+          },
+          {
+            "value": "smile outline",
+            "computed": false
+          },
+          {
+            "value": "star",
+            "computed": false
+          },
+          {
+            "value": "star outline",
+            "computed": false
+          },
+          {
+            "value": "star half",
+            "computed": false
+          },
+          {
+            "value": "star half outline",
+            "computed": false
+          },
+          {
+            "value": "times",
+            "computed": false
+          },
+          {
+            "value": "times circle",
+            "computed": false
+          },
+          {
+            "value": "times circle outline",
+            "computed": false
+          },
+          {
+            "value": "toggle off",
+            "computed": false
+          },
+          {
+            "value": "toggle on",
+            "computed": false
+          },
+          {
+            "value": "trophy",
+            "computed": false
+          },
+          {
+            "value": "user",
+            "computed": false
+          },
+          {
+            "value": "user outline",
+            "computed": false
+          },
+          {
+            "value": "user circle",
+            "computed": false
+          },
+          {
+            "value": "user circle outline",
+            "computed": false
+          },
+          {
+            "value": "box",
+            "computed": false
+          },
+          {
+            "value": "boxes",
+            "computed": false
+          },
+          {
+            "value": "clipboard check",
+            "computed": false
+          },
+          {
+            "value": "clipboard list",
+            "computed": false
+          },
+          {
+            "value": "dolly",
+            "computed": false
+          },
+          {
+            "value": "dolly flatbed",
+            "computed": false
+          },
+          {
+            "value": "pallet",
+            "computed": false
+          },
+          {
+            "value": "shipping fast",
+            "computed": false
+          },
+          {
+            "value": "truck",
+            "computed": false
+          },
+          {
+            "value": "warehouse",
+            "computed": false
+          },
+          {
+            "value": "anchor",
+            "computed": false
+          },
+          {
+            "value": "bed",
+            "computed": false
+          },
+          {
+            "value": "bicycle",
+            "computed": false
+          },
+          {
+            "value": "binoculars",
+            "computed": false
+          },
+          {
+            "value": "bomb",
+            "computed": false
+          },
+          {
+            "value": "bookmark",
+            "computed": false
+          },
+          {
+            "value": "bookmark outline",
+            "computed": false
+          },
+          {
+            "value": "car",
+            "computed": false
+          },
+          {
+            "value": "fighter jet",
+            "computed": false
+          },
+          {
+            "value": "fire",
+            "computed": false
+          },
+          {
+            "value": "flask",
+            "computed": false
+          },
+          {
+            "value": "gamepad",
+            "computed": false
+          },
+          {
+            "value": "gavel",
+            "computed": false
+          },
+          {
+            "value": "gift",
+            "computed": false
+          },
+          {
+            "value": "glass martini",
+            "computed": false
+          },
+          {
+            "value": "graduation cap",
+            "computed": false
+          },
+          {
+            "value": "key",
+            "computed": false
+          },
+          {
+            "value": "leaf",
+            "computed": false
+          },
+          {
+            "value": "lemon",
+            "computed": false
+          },
+          {
+            "value": "lemon outline",
+            "computed": false
+          },
+          {
+            "value": "life ring",
+            "computed": false
+          },
+          {
+            "value": "life ring outline",
+            "computed": false
+          },
+          {
+            "value": "lightbulb",
+            "computed": false
+          },
+          {
+            "value": "lightbulb outline",
+            "computed": false
+          },
+          {
+            "value": "magnet",
+            "computed": false
+          },
+          {
+            "value": "male",
+            "computed": false
+          },
+          {
+            "value": "map",
+            "computed": false
+          },
+          {
+            "value": "map outline",
+            "computed": false
+          },
+          {
+            "value": "map marker",
+            "computed": false
+          },
+          {
+            "value": "map marker alternate",
+            "computed": false
+          },
+          {
+            "value": "map pin",
+            "computed": false
+          },
+          {
+            "value": "map signs",
+            "computed": false
+          },
+          {
+            "value": "motorcycle",
+            "computed": false
+          },
+          {
+            "value": "newspaper",
+            "computed": false
+          },
+          {
+            "value": "newspaper outline",
+            "computed": false
+          },
+          {
+            "value": "paw",
+            "computed": false
+          },
+          {
+            "value": "plane",
+            "computed": false
+          },
+          {
+            "value": "road",
+            "computed": false
+          },
+          {
+            "value": "rocket",
+            "computed": false
+          },
+          {
+            "value": "ship",
+            "computed": false
+          },
+          {
+            "value": "shopping bag",
+            "computed": false
+          },
+          {
+            "value": "shopping basket",
+            "computed": false
+          },
+          {
+            "value": "shopping cart",
+            "computed": false
+          },
+          {
+            "value": "shower",
+            "computed": false
+          },
+          {
+            "value": "street view",
+            "computed": false
+          },
+          {
+            "value": "subway",
+            "computed": false
+          },
+          {
+            "value": "taxi",
+            "computed": false
+          },
+          {
+            "value": "ticket alternate",
+            "computed": false
+          },
+          {
+            "value": "train",
+            "computed": false
+          },
+          {
+            "value": "tree",
+            "computed": false
+          },
+          {
+            "value": "umbrella",
+            "computed": false
+          },
+          {
+            "value": "university",
+            "computed": false
+          },
+          {
+            "value": "utensil spoon",
+            "computed": false
+          },
+          {
+            "value": "utensils",
+            "computed": false
+          },
+          {
+            "value": "wrench",
+            "computed": false
+          },
+          {
+            "value": "band aid",
+            "computed": false
+          },
+          {
+            "value": "dna",
+            "computed": false
+          },
+          {
+            "value": "first aid",
+            "computed": false
+          },
+          {
+            "value": "hospital symbol",
+            "computed": false
+          },
+          {
+            "value": "pills",
+            "computed": false
+          },
+          {
+            "value": "syringe",
+            "computed": false
+          },
+          {
+            "value": "thermometer",
+            "computed": false
+          },
+          {
+            "value": "weight",
+            "computed": false
+          },
+          {
+            "value": "bus",
+            "computed": false
+          },
+          {
+            "value": "cube",
+            "computed": false
+          },
+          {
+            "value": "cubes",
+            "computed": false
+          },
+          {
+            "value": "futbol",
+            "computed": false
+          },
+          {
+            "value": "futbol outline",
+            "computed": false
+          },
+          {
+            "value": "gem",
+            "computed": false
+          },
+          {
+            "value": "gem outline",
+            "computed": false
+          },
+          {
+            "value": "lock",
+            "computed": false
+          },
+          {
+            "value": "lock open",
+            "computed": false
+          },
+          {
+            "value": "moon",
+            "computed": false
+          },
+          {
+            "value": "moon outline",
+            "computed": false
+          },
+          {
+            "value": "puzzle piece",
+            "computed": false
+          },
+          {
+            "value": "snowflake",
+            "computed": false
+          },
+          {
+            "value": "snowflake outline",
+            "computed": false
+          },
+          {
+            "value": "space shuttle",
+            "computed": false
+          },
+          {
+            "value": "sun",
+            "computed": false
+          },
+          {
+            "value": "sun outline",
+            "computed": false
+          },
+          {
+            "value": "tachometer alternate",
+            "computed": false
+          },
+          {
+            "value": "unlock",
+            "computed": false
+          },
+          {
+            "value": "unlock alternate",
+            "computed": false
+          },
+          {
+            "value": "cart plus",
+            "computed": false
+          },
+          {
+            "value": "credit card",
+            "computed": false
+          },
+          {
+            "value": "credit card outline",
+            "computed": false
+          },
+          {
+            "value": "square",
+            "computed": false
+          },
+          {
+            "value": "square outline",
+            "computed": false
+          },
+          {
+            "value": "asterisk",
+            "computed": false
+          },
+          {
+            "value": "circle notch",
+            "computed": false
+          },
+          {
+            "value": "spinner",
+            "computed": false
+          },
+          {
+            "value": "baseball ball",
+            "computed": false
+          },
+          {
+            "value": "basketball ball",
+            "computed": false
+          },
+          {
+            "value": "bowling ball",
+            "computed": false
+          },
+          {
+            "value": "football ball",
+            "computed": false
+          },
+          {
+            "value": "golf ball",
+            "computed": false
+          },
+          {
+            "value": "hockey puck",
+            "computed": false
+          },
+          {
+            "value": "quidditch",
+            "computed": false
+          },
+          {
+            "value": "table tennis",
+            "computed": false
+          },
+          {
+            "value": "volleyball ball",
+            "computed": false
+          },
+          {
+            "value": "battery empty",
+            "computed": false
+          },
+          {
+            "value": "battery full",
+            "computed": false
+          },
+          {
+            "value": "battery half",
+            "computed": false
+          },
+          {
+            "value": "battery quarter",
+            "computed": false
+          },
+          {
+            "value": "battery three quarters",
+            "computed": false
+          },
+          {
+            "value": "sign in alternate",
+            "computed": false
+          },
+          {
+            "value": "sign out alternate",
+            "computed": false
+          },
+          {
+            "value": "thermometer empty",
+            "computed": false
+          },
+          {
+            "value": "thermometer full",
+            "computed": false
+          },
+          {
+            "value": "thermometer half",
+            "computed": false
+          },
+          {
+            "value": "thermometer quarter",
+            "computed": false
+          },
+          {
+            "value": "thermometer three quarters",
+            "computed": false
+          },
+          {
+            "value": "child",
+            "computed": false
+          },
+          {
+            "value": "female",
+            "computed": false
+          },
+          {
+            "value": "user plus",
+            "computed": false
+          },
+          {
+            "value": "user times",
+            "computed": false
+          },
+          {
+            "value": "users",
+            "computed": false
+          },
+          {
+            "value": "500px",
+            "computed": false
+          },
+          {
+            "value": "accessible",
+            "computed": false
+          },
+          {
+            "value": "accusoft",
+            "computed": false
+          },
+          {
+            "value": "adn",
+            "computed": false
+          },
+          {
+            "value": "adversal",
+            "computed": false
+          },
+          {
+            "value": "affiliatetheme",
+            "computed": false
+          },
+          {
+            "value": "algolia",
+            "computed": false
+          },
+          {
+            "value": "amazon",
+            "computed": false
+          },
+          {
+            "value": "amazon pay",
+            "computed": false
+          },
+          {
+            "value": "amilia",
+            "computed": false
+          },
+          {
+            "value": "android",
+            "computed": false
+          },
+          {
+            "value": "angellist",
+            "computed": false
+          },
+          {
+            "value": "angrycreative",
+            "computed": false
+          },
+          {
+            "value": "angular",
+            "computed": false
+          },
+          {
+            "value": "app store",
+            "computed": false
+          },
+          {
+            "value": "app store ios",
+            "computed": false
+          },
+          {
+            "value": "apper",
+            "computed": false
+          },
+          {
+            "value": "apple",
+            "computed": false
+          },
+          {
+            "value": "apple pay",
+            "computed": false
+          },
+          {
+            "value": "asymmetrik",
+            "computed": false
+          },
+          {
+            "value": "audible",
+            "computed": false
+          },
+          {
+            "value": "autoprefixer",
+            "computed": false
+          },
+          {
+            "value": "avianex",
+            "computed": false
+          },
+          {
+            "value": "aviato",
+            "computed": false
+          },
+          {
+            "value": "aws",
+            "computed": false
+          },
+          {
+            "value": "bandcamp",
+            "computed": false
+          },
+          {
+            "value": "behance",
+            "computed": false
+          },
+          {
+            "value": "behance square",
+            "computed": false
+          },
+          {
+            "value": "bimobject",
+            "computed": false
+          },
+          {
+            "value": "bitbucket",
+            "computed": false
+          },
+          {
+            "value": "bitcoin",
+            "computed": false
+          },
+          {
+            "value": "bity",
+            "computed": false
+          },
+          {
+            "value": "black tie",
+            "computed": false
+          },
+          {
+            "value": "blackberry",
+            "computed": false
+          },
+          {
+            "value": "blogger",
+            "computed": false
+          },
+          {
+            "value": "blogger b",
+            "computed": false
+          },
+          {
+            "value": "bluetooth",
+            "computed": false
+          },
+          {
+            "value": "bluetooth b",
+            "computed": false
+          },
+          {
+            "value": "btc",
+            "computed": false
+          },
+          {
+            "value": "buromobelexperte",
+            "computed": false
+          },
+          {
+            "value": "buysellads",
+            "computed": false
+          },
+          {
+            "value": "cc amazon pay",
+            "computed": false
+          },
+          {
+            "value": "cc amex",
+            "computed": false
+          },
+          {
+            "value": "cc apple pay",
+            "computed": false
+          },
+          {
+            "value": "cc diners club",
+            "computed": false
+          },
+          {
+            "value": "cc discover",
+            "computed": false
+          },
+          {
+            "value": "cc jcb",
+            "computed": false
+          },
+          {
+            "value": "cc mastercard",
+            "computed": false
+          },
+          {
+            "value": "cc paypal",
+            "computed": false
+          },
+          {
+            "value": "cc stripe",
+            "computed": false
+          },
+          {
+            "value": "cc visa",
+            "computed": false
+          },
+          {
+            "value": "centercode",
+            "computed": false
+          },
+          {
+            "value": "chrome",
+            "computed": false
+          },
+          {
+            "value": "cloudscale",
+            "computed": false
+          },
+          {
+            "value": "cloudsmith",
+            "computed": false
+          },
+          {
+            "value": "cloudversify",
+            "computed": false
+          },
+          {
+            "value": "codepen",
+            "computed": false
+          },
+          {
+            "value": "codiepie",
+            "computed": false
+          },
+          {
+            "value": "connectdevelop",
+            "computed": false
+          },
+          {
+            "value": "contao",
+            "computed": false
+          },
+          {
+            "value": "cpanel",
+            "computed": false
+          },
+          {
+            "value": "creative commons",
+            "computed": false
+          },
+          {
+            "value": "css3",
+            "computed": false
+          },
+          {
+            "value": "css3 alternate",
+            "computed": false
+          },
+          {
+            "value": "cuttlefish",
+            "computed": false
+          },
+          {
+            "value": "d and d",
+            "computed": false
+          },
+          {
+            "value": "dashcube",
+            "computed": false
+          },
+          {
+            "value": "delicious",
+            "computed": false
+          },
+          {
+            "value": "deploydog",
+            "computed": false
+          },
+          {
+            "value": "deskpro",
+            "computed": false
+          },
+          {
+            "value": "deviantart",
+            "computed": false
+          },
+          {
+            "value": "digg",
+            "computed": false
+          },
+          {
+            "value": "digital ocean",
+            "computed": false
+          },
+          {
+            "value": "discord",
+            "computed": false
+          },
+          {
+            "value": "discourse",
+            "computed": false
+          },
+          {
+            "value": "dochub",
+            "computed": false
+          },
+          {
+            "value": "docker",
+            "computed": false
+          },
+          {
+            "value": "draft2digital",
+            "computed": false
+          },
+          {
+            "value": "dribbble",
+            "computed": false
+          },
+          {
+            "value": "dribbble square",
+            "computed": false
+          },
+          {
+            "value": "dropbox",
+            "computed": false
+          },
+          {
+            "value": "drupal",
+            "computed": false
+          },
+          {
+            "value": "dyalog",
+            "computed": false
+          },
+          {
+            "value": "earlybirds",
+            "computed": false
+          },
+          {
+            "value": "edge",
+            "computed": false
+          },
+          {
+            "value": "elementor",
+            "computed": false
+          },
+          {
+            "value": "ember",
+            "computed": false
+          },
+          {
+            "value": "empire",
+            "computed": false
+          },
+          {
+            "value": "envira",
+            "computed": false
+          },
+          {
+            "value": "erlang",
+            "computed": false
+          },
+          {
+            "value": "ethereum",
+            "computed": false
+          },
+          {
+            "value": "etsy",
+            "computed": false
+          },
+          {
+            "value": "expeditedssl",
+            "computed": false
+          },
+          {
+            "value": "facebook",
+            "computed": false
+          },
+          {
+            "value": "facebook f",
+            "computed": false
+          },
+          {
+            "value": "facebook messenger",
+            "computed": false
+          },
+          {
+            "value": "facebook square",
+            "computed": false
+          },
+          {
+            "value": "firefox",
+            "computed": false
+          },
+          {
+            "value": "first order",
+            "computed": false
+          },
+          {
+            "value": "firstdraft",
+            "computed": false
+          },
+          {
+            "value": "flickr",
+            "computed": false
+          },
+          {
+            "value": "flipboard",
+            "computed": false
+          },
+          {
+            "value": "fly",
+            "computed": false
+          },
+          {
+            "value": "font awesome",
+            "computed": false
+          },
+          {
+            "value": "font awesome alternate",
+            "computed": false
+          },
+          {
+            "value": "font awesome flag",
+            "computed": false
+          },
+          {
+            "value": "fonticons",
+            "computed": false
+          },
+          {
+            "value": "fonticons fi",
+            "computed": false
+          },
+          {
+            "value": "fort awesome",
+            "computed": false
+          },
+          {
+            "value": "fort awesome alternate",
+            "computed": false
+          },
+          {
+            "value": "forumbee",
+            "computed": false
+          },
+          {
+            "value": "foursquare",
+            "computed": false
+          },
+          {
+            "value": "free code camp",
+            "computed": false
+          },
+          {
+            "value": "freebsd",
+            "computed": false
+          },
+          {
+            "value": "get pocket",
+            "computed": false
+          },
+          {
+            "value": "gg",
+            "computed": false
+          },
+          {
+            "value": "gg circle",
+            "computed": false
+          },
+          {
+            "value": "git",
+            "computed": false
+          },
+          {
+            "value": "git square",
+            "computed": false
+          },
+          {
+            "value": "github",
+            "computed": false
+          },
+          {
+            "value": "github alternate",
+            "computed": false
+          },
+          {
+            "value": "github square",
+            "computed": false
+          },
+          {
+            "value": "gitkraken",
+            "computed": false
+          },
+          {
+            "value": "gitlab",
+            "computed": false
+          },
+          {
+            "value": "gitter",
+            "computed": false
+          },
+          {
+            "value": "glide",
+            "computed": false
+          },
+          {
+            "value": "glide g",
+            "computed": false
+          },
+          {
+            "value": "gofore",
+            "computed": false
+          },
+          {
+            "value": "goodreads",
+            "computed": false
+          },
+          {
+            "value": "goodreads g",
+            "computed": false
+          },
+          {
+            "value": "google",
+            "computed": false
+          },
+          {
+            "value": "google drive",
+            "computed": false
+          },
+          {
+            "value": "google play",
+            "computed": false
+          },
+          {
+            "value": "google plus",
+            "computed": false
+          },
+          {
+            "value": "google plus g",
+            "computed": false
+          },
+          {
+            "value": "google plus square",
+            "computed": false
+          },
+          {
+            "value": "google wallet",
+            "computed": false
+          },
+          {
+            "value": "gratipay",
+            "computed": false
+          },
+          {
+            "value": "grav",
+            "computed": false
+          },
+          {
+            "value": "gripfire",
+            "computed": false
+          },
+          {
+            "value": "grunt",
+            "computed": false
+          },
+          {
+            "value": "gulp",
+            "computed": false
+          },
+          {
+            "value": "hacker news",
+            "computed": false
+          },
+          {
+            "value": "hacker news square",
+            "computed": false
+          },
+          {
+            "value": "hips",
+            "computed": false
+          },
+          {
+            "value": "hire a helper",
+            "computed": false
+          },
+          {
+            "value": "hooli",
+            "computed": false
+          },
+          {
+            "value": "hotjar",
+            "computed": false
+          },
+          {
+            "value": "houzz",
+            "computed": false
+          },
+          {
+            "value": "html5",
+            "computed": false
+          },
+          {
+            "value": "hubspot",
+            "computed": false
+          },
+          {
+            "value": "imdb",
+            "computed": false
+          },
+          {
+            "value": "instagram",
+            "computed": false
+          },
+          {
+            "value": "internet explorer",
+            "computed": false
+          },
+          {
+            "value": "ioxhost",
+            "computed": false
+          },
+          {
+            "value": "itunes",
+            "computed": false
+          },
+          {
+            "value": "itunes note",
+            "computed": false
+          },
+          {
+            "value": "jenkins",
+            "computed": false
+          },
+          {
+            "value": "joget",
+            "computed": false
+          },
+          {
+            "value": "joomla",
+            "computed": false
+          },
+          {
+            "value": "js",
+            "computed": false
+          },
+          {
+            "value": "js square",
+            "computed": false
+          },
+          {
+            "value": "jsfiddle",
+            "computed": false
+          },
+          {
+            "value": "keycdn",
+            "computed": false
+          },
+          {
+            "value": "kickstarter",
+            "computed": false
+          },
+          {
+            "value": "kickstarter k",
+            "computed": false
+          },
+          {
+            "value": "korvue",
+            "computed": false
+          },
+          {
+            "value": "laravel",
+            "computed": false
+          },
+          {
+            "value": "lastfm",
+            "computed": false
+          },
+          {
+            "value": "lastfm square",
+            "computed": false
+          },
+          {
+            "value": "leanpub",
+            "computed": false
+          },
+          {
+            "value": "less",
+            "computed": false
+          },
+          {
+            "value": "linechat",
+            "computed": false
+          },
+          {
+            "value": "linkedin",
+            "computed": false
+          },
+          {
+            "value": "linkedin alternate",
+            "computed": false
+          },
+          {
+            "value": "linode",
+            "computed": false
+          },
+          {
+            "value": "linux",
+            "computed": false
+          },
+          {
+            "value": "lyft",
+            "computed": false
+          },
+          {
+            "value": "magento",
+            "computed": false
+          },
+          {
+            "value": "maxcdn",
+            "computed": false
+          },
+          {
+            "value": "medapps",
+            "computed": false
+          },
+          {
+            "value": "medium",
+            "computed": false
+          },
+          {
+            "value": "medium m",
+            "computed": false
+          },
+          {
+            "value": "medrt",
+            "computed": false
+          },
+          {
+            "value": "meetup",
+            "computed": false
+          },
+          {
+            "value": "microsoft",
+            "computed": false
+          },
+          {
+            "value": "mix",
+            "computed": false
+          },
+          {
+            "value": "mixcloud",
+            "computed": false
+          },
+          {
+            "value": "mizuni",
+            "computed": false
+          },
+          {
+            "value": "modx",
+            "computed": false
+          },
+          {
+            "value": "monero",
+            "computed": false
+          },
+          {
+            "value": "napster",
+            "computed": false
+          },
+          {
+            "value": "nintendo switch",
+            "computed": false
+          },
+          {
+            "value": "node",
+            "computed": false
+          },
+          {
+            "value": "node js",
+            "computed": false
+          },
+          {
+            "value": "npm",
+            "computed": false
+          },
+          {
+            "value": "ns8",
+            "computed": false
+          },
+          {
+            "value": "nutritionix",
+            "computed": false
+          },
+          {
+            "value": "odnoklassniki",
+            "computed": false
+          },
+          {
+            "value": "odnoklassniki square",
+            "computed": false
+          },
+          {
+            "value": "opencart",
+            "computed": false
+          },
+          {
+            "value": "openid",
+            "computed": false
+          },
+          {
+            "value": "opera",
+            "computed": false
+          },
+          {
+            "value": "optin monster",
+            "computed": false
+          },
+          {
+            "value": "osi",
+            "computed": false
+          },
+          {
+            "value": "page4",
+            "computed": false
+          },
+          {
+            "value": "pagelines",
+            "computed": false
+          },
+          {
+            "value": "palfed",
+            "computed": false
+          },
+          {
+            "value": "patreon",
+            "computed": false
+          },
+          {
+            "value": "paypal",
+            "computed": false
+          },
+          {
+            "value": "periscope",
+            "computed": false
+          },
+          {
+            "value": "phabricator",
+            "computed": false
+          },
+          {
+            "value": "phoenix framework",
+            "computed": false
+          },
+          {
+            "value": "php",
+            "computed": false
+          },
+          {
+            "value": "pied piper",
+            "computed": false
+          },
+          {
+            "value": "pied piper alternate",
+            "computed": false
+          },
+          {
+            "value": "pied piper pp",
+            "computed": false
+          },
+          {
+            "value": "pinterest",
+            "computed": false
+          },
+          {
+            "value": "pinterest p",
+            "computed": false
+          },
+          {
+            "value": "pinterest square",
+            "computed": false
+          },
+          {
+            "value": "playstation",
+            "computed": false
+          },
+          {
+            "value": "product hunt",
+            "computed": false
+          },
+          {
+            "value": "pushed",
+            "computed": false
+          },
+          {
+            "value": "python",
+            "computed": false
+          },
+          {
+            "value": "qq",
+            "computed": false
+          },
+          {
+            "value": "quinscape",
+            "computed": false
+          },
+          {
+            "value": "quora",
+            "computed": false
+          },
+          {
+            "value": "ravelry",
+            "computed": false
+          },
+          {
+            "value": "react",
+            "computed": false
+          },
+          {
+            "value": "rebel",
+            "computed": false
+          },
+          {
+            "value": "redriver",
+            "computed": false
+          },
+          {
+            "value": "reddit",
+            "computed": false
+          },
+          {
+            "value": "reddit alien",
+            "computed": false
+          },
+          {
+            "value": "reddit square",
+            "computed": false
+          },
+          {
+            "value": "rendact",
+            "computed": false
+          },
+          {
+            "value": "renren",
+            "computed": false
+          },
+          {
+            "value": "replyd",
+            "computed": false
+          },
+          {
+            "value": "resolving",
+            "computed": false
+          },
+          {
+            "value": "rocketchat",
+            "computed": false
+          },
+          {
+            "value": "rockrms",
+            "computed": false
+          },
+          {
+            "value": "safari",
+            "computed": false
+          },
+          {
+            "value": "sass",
+            "computed": false
+          },
+          {
+            "value": "schlix",
+            "computed": false
+          },
+          {
+            "value": "scribd",
+            "computed": false
+          },
+          {
+            "value": "searchengin",
+            "computed": false
+          },
+          {
+            "value": "sellcast",
+            "computed": false
+          },
+          {
+            "value": "sellsy",
+            "computed": false
+          },
+          {
+            "value": "servicestack",
+            "computed": false
+          },
+          {
+            "value": "shirtsinbulk",
+            "computed": false
+          },
+          {
+            "value": "simplybuilt",
+            "computed": false
+          },
+          {
+            "value": "sistrix",
+            "computed": false
+          },
+          {
+            "value": "skyatlas",
+            "computed": false
+          },
+          {
+            "value": "skype",
+            "computed": false
+          },
+          {
+            "value": "slack",
+            "computed": false
+          },
+          {
+            "value": "slack hash",
+            "computed": false
+          },
+          {
+            "value": "slideshare",
+            "computed": false
+          },
+          {
+            "value": "snapchat",
+            "computed": false
+          },
+          {
+            "value": "snapchat ghost",
+            "computed": false
+          },
+          {
+            "value": "snapchat square",
+            "computed": false
+          },
+          {
+            "value": "soundcloud",
+            "computed": false
+          },
+          {
+            "value": "speakap",
+            "computed": false
+          },
+          {
+            "value": "spotify",
+            "computed": false
+          },
+          {
+            "value": "stack exchange",
+            "computed": false
+          },
+          {
+            "value": "stack overflow",
+            "computed": false
+          },
+          {
+            "value": "staylinked",
+            "computed": false
+          },
+          {
+            "value": "steam",
+            "computed": false
+          },
+          {
+            "value": "steam square",
+            "computed": false
+          },
+          {
+            "value": "steam symbol",
+            "computed": false
+          },
+          {
+            "value": "sticker mule",
+            "computed": false
+          },
+          {
+            "value": "strava",
+            "computed": false
+          },
+          {
+            "value": "stripe",
+            "computed": false
+          },
+          {
+            "value": "stripe s",
+            "computed": false
+          },
+          {
+            "value": "studiovinari",
+            "computed": false
+          },
+          {
+            "value": "stumbleupon",
+            "computed": false
+          },
+          {
+            "value": "stumbleupon circle",
+            "computed": false
+          },
+          {
+            "value": "superpowers",
+            "computed": false
+          },
+          {
+            "value": "supple",
+            "computed": false
+          },
+          {
+            "value": "telegram",
+            "computed": false
+          },
+          {
+            "value": "telegram plane",
+            "computed": false
+          },
+          {
+            "value": "tencent weibo",
+            "computed": false
+          },
+          {
+            "value": "themeisle",
+            "computed": false
+          },
+          {
+            "value": "trello",
+            "computed": false
+          },
+          {
+            "value": "tripadvisor",
+            "computed": false
+          },
+          {
+            "value": "tumblr",
+            "computed": false
+          },
+          {
+            "value": "tumblr square",
+            "computed": false
+          },
+          {
+            "value": "twitch",
+            "computed": false
+          },
+          {
+            "value": "twitter",
+            "computed": false
+          },
+          {
+            "value": "twitter square",
+            "computed": false
+          },
+          {
+            "value": "typo3",
+            "computed": false
+          },
+          {
+            "value": "uber",
+            "computed": false
+          },
+          {
+            "value": "uikit",
+            "computed": false
+          },
+          {
+            "value": "uniregistry",
+            "computed": false
+          },
+          {
+            "value": "untappd",
+            "computed": false
+          },
+          {
+            "value": "usb",
+            "computed": false
+          },
+          {
+            "value": "ussunnah",
+            "computed": false
+          },
+          {
+            "value": "vaadin",
+            "computed": false
+          },
+          {
+            "value": "viacoin",
+            "computed": false
+          },
+          {
+            "value": "viadeo",
+            "computed": false
+          },
+          {
+            "value": "viadeo square",
+            "computed": false
+          },
+          {
+            "value": "viber",
+            "computed": false
+          },
+          {
+            "value": "vimeo",
+            "computed": false
+          },
+          {
+            "value": "vimeo square",
+            "computed": false
+          },
+          {
+            "value": "vimeo v",
+            "computed": false
+          },
+          {
+            "value": "vine",
+            "computed": false
+          },
+          {
+            "value": "vk",
+            "computed": false
+          },
+          {
+            "value": "vnv",
+            "computed": false
+          },
+          {
+            "value": "vuejs",
+            "computed": false
+          },
+          {
+            "value": "wechat",
+            "computed": false
+          },
+          {
+            "value": "weibo",
+            "computed": false
+          },
+          {
+            "value": "weixin",
+            "computed": false
+          },
+          {
+            "value": "whatsapp",
+            "computed": false
+          },
+          {
+            "value": "whatsapp square",
+            "computed": false
+          },
+          {
+            "value": "whmcs",
+            "computed": false
+          },
+          {
+            "value": "wikipedia w",
+            "computed": false
+          },
+          {
+            "value": "windows",
+            "computed": false
+          },
+          {
+            "value": "wordpress",
+            "computed": false
+          },
+          {
+            "value": "wordpress simple",
+            "computed": false
+          },
+          {
+            "value": "wpbeginner",
+            "computed": false
+          },
+          {
+            "value": "wpexplorer",
+            "computed": false
+          },
+          {
+            "value": "wpforms",
+            "computed": false
+          },
+          {
+            "value": "xbox",
+            "computed": false
+          },
+          {
+            "value": "xing",
+            "computed": false
+          },
+          {
+            "value": "xing square",
+            "computed": false
+          },
+          {
+            "value": "y combinator",
+            "computed": false
+          },
+          {
+            "value": "yahoo",
+            "computed": false
+          },
+          {
+            "value": "yandex",
+            "computed": false
+          },
+          {
+            "value": "yandex international",
+            "computed": false
+          },
+          {
+            "value": "yelp",
+            "computed": false
+          },
+          {
+            "value": "yoast",
+            "computed": false
+          },
+          {
+            "value": "youtube",
+            "computed": false
+          },
+          {
+            "value": "youtube square",
+            "computed": false
+          },
+          {
+            "value": "chess rock",
+            "computed": false
+          },
+          {
+            "value": "ordered list",
+            "computed": false
+          },
+          {
+            "value": "unordered list",
+            "computed": false
+          },
+          {
+            "value": "user doctor",
+            "computed": false
+          },
+          {
+            "value": "shield",
+            "computed": false
+          },
+          {
+            "value": "puzzle",
+            "computed": false
+          },
+          {
+            "value": "add circle",
+            "computed": false
+          },
+          {
+            "value": "add square",
+            "computed": false
+          },
+          {
+            "value": "add to calendar",
+            "computed": false
+          },
+          {
+            "value": "add to cart",
+            "computed": false
+          },
+          {
+            "value": "add user",
+            "computed": false
+          },
+          {
+            "value": "add",
+            "computed": false
+          },
+          {
+            "value": "alarm mute",
+            "computed": false
+          },
+          {
+            "value": "alarm",
+            "computed": false
+          },
+          {
+            "value": "ald",
+            "computed": false
+          },
+          {
+            "value": "als",
+            "computed": false
+          },
+          {
+            "value": "announcement",
+            "computed": false
+          },
+          {
+            "value": "area chart",
+            "computed": false
+          },
+          {
+            "value": "area graph",
+            "computed": false
+          },
+          {
+            "value": "arrow down cart",
+            "computed": false
+          },
+          {
+            "value": "asexual",
+            "computed": false
+          },
+          {
+            "value": "asl interpreting",
+            "computed": false
+          },
+          {
+            "value": "asl",
+            "computed": false
+          },
+          {
+            "value": "assistive listening devices",
+            "computed": false
+          },
+          {
+            "value": "attach",
+            "computed": false
+          },
+          {
+            "value": "attention",
+            "computed": false
+          },
+          {
+            "value": "balance",
+            "computed": false
+          },
+          {
+            "value": "bar",
+            "computed": false
+          },
+          {
+            "value": "bathtub",
+            "computed": false
+          },
+          {
+            "value": "battery four",
+            "computed": false
+          },
+          {
+            "value": "battery high",
+            "computed": false
+          },
+          {
+            "value": "battery low",
+            "computed": false
+          },
+          {
+            "value": "battery one",
+            "computed": false
+          },
+          {
+            "value": "battery three",
+            "computed": false
+          },
+          {
+            "value": "battery two",
+            "computed": false
+          },
+          {
+            "value": "battery zero",
+            "computed": false
+          },
+          {
+            "value": "birthday",
+            "computed": false
+          },
+          {
+            "value": "block layout",
+            "computed": false
+          },
+          {
+            "value": "bluetooth alternative",
+            "computed": false
+          },
+          {
+            "value": "broken chain",
+            "computed": false
+          },
+          {
+            "value": "browser",
+            "computed": false
+          },
+          {
+            "value": "call square",
+            "computed": false
+          },
+          {
+            "value": "call",
+            "computed": false
+          },
+          {
+            "value": "cancel",
+            "computed": false
+          },
+          {
+            "value": "cart",
+            "computed": false
+          },
+          {
+            "value": "cc",
+            "computed": false
+          },
+          {
+            "value": "chain",
+            "computed": false
+          },
+          {
+            "value": "chat",
+            "computed": false
+          },
+          {
+            "value": "checked calendar",
+            "computed": false
+          },
+          {
+            "value": "checkmark",
+            "computed": false
+          },
+          {
+            "value": "circle notched",
+            "computed": false
+          },
+          {
+            "value": "close",
+            "computed": false
+          },
+          {
+            "value": "cny",
+            "computed": false
+          },
+          {
+            "value": "cocktail",
+            "computed": false
+          },
+          {
+            "value": "commenting",
+            "computed": false
+          },
+          {
+            "value": "computer",
+            "computed": false
+          },
+          {
+            "value": "configure",
+            "computed": false
+          },
+          {
+            "value": "content",
+            "computed": false
+          },
+          {
+            "value": "deafness",
+            "computed": false
+          },
+          {
+            "value": "delete calendar",
+            "computed": false
+          },
+          {
+            "value": "delete",
+            "computed": false
+          },
+          {
+            "value": "detective",
+            "computed": false
+          },
+          {
+            "value": "discussions",
+            "computed": false
+          },
+          {
+            "value": "doctor",
+            "computed": false
+          },
+          {
+            "value": "dollar",
+            "computed": false
+          },
+          {
+            "value": "dont",
+            "computed": false
+          },
+          {
+            "value": "drivers license",
+            "computed": false
+          },
+          {
+            "value": "dropdown",
+            "computed": false
+          },
+          {
+            "value": "emergency",
+            "computed": false
+          },
+          {
+            "value": "envira gallery",
+            "computed": false
+          },
+          {
+            "value": "erase",
+            "computed": false
+          },
+          {
+            "value": "eur",
+            "computed": false
+          },
+          {
+            "value": "euro",
+            "computed": false
+          },
+          {
+            "value": "eyedropper",
+            "computed": false
+          },
+          {
+            "value": "factory",
+            "computed": false
+          },
+          {
+            "value": "favorite",
+            "computed": false
+          },
+          {
+            "value": "feed",
+            "computed": false
+          },
+          {
+            "value": "female homosexual",
+            "computed": false
+          },
+          {
+            "value": "file text",
+            "computed": false
+          },
+          {
+            "value": "file text outline",
+            "computed": false
+          },
+          {
+            "value": "find",
+            "computed": false
+          },
+          {
+            "value": "fork",
+            "computed": false
+          },
+          {
+            "value": "game",
+            "computed": false
+          },
+          {
+            "value": "gay",
+            "computed": false
+          },
+          {
+            "value": "gbp",
+            "computed": false
+          },
+          {
+            "value": "google plus circle",
+            "computed": false
+          },
+          {
+            "value": "google plus official",
+            "computed": false
+          },
+          {
+            "value": "grab",
+            "computed": false
+          },
+          {
+            "value": "graduation",
+            "computed": false
+          },
+          {
+            "value": "grid layout",
+            "computed": false
+          },
+          {
+            "value": "group",
+            "computed": false
+          },
+          {
+            "value": "h",
+            "computed": false
+          },
+          {
+            "value": "hand victory",
+            "computed": false
+          },
+          {
+            "value": "handicap",
+            "computed": false
+          },
+          {
+            "value": "hard of hearing",
+            "computed": false
+          },
+          {
+            "value": "header",
+            "computed": false
+          },
+          {
+            "value": "help circle",
+            "computed": false
+          },
+          {
+            "value": "help",
+            "computed": false
+          },
+          {
+            "value": "heterosexual",
+            "computed": false
+          },
+          {
+            "value": "hide",
+            "computed": false
+          },
+          {
+            "value": "hotel",
+            "computed": false
+          },
+          {
+            "value": "hourglass four",
+            "computed": false
+          },
+          {
+            "value": "hourglass full",
+            "computed": false
+          },
+          {
+            "value": "hourglass one",
+            "computed": false
+          },
+          {
+            "value": "hourglass three",
+            "computed": false
+          },
+          {
+            "value": "hourglass two",
+            "computed": false
+          },
+          {
+            "value": "idea",
+            "computed": false
+          },
+          {
+            "value": "ils",
+            "computed": false
+          },
+          {
+            "value": "in cart",
+            "computed": false
+          },
+          {
+            "value": "inr",
+            "computed": false
+          },
+          {
+            "value": "intergender",
+            "computed": false
+          },
+          {
+            "value": "intersex",
+            "computed": false
+          },
+          {
+            "value": "jpy",
+            "computed": false
+          },
+          {
+            "value": "krw",
+            "computed": false
+          },
+          {
+            "value": "lab",
+            "computed": false
+          },
+          {
+            "value": "law",
+            "computed": false
+          },
+          {
+            "value": "legal",
+            "computed": false
+          },
+          {
+            "value": "lesbian",
+            "computed": false
+          },
+          {
+            "value": "lightning",
+            "computed": false
+          },
+          {
+            "value": "like",
+            "computed": false
+          },
+          {
+            "value": "line graph",
+            "computed": false
+          },
+          {
+            "value": "linkedin square",
+            "computed": false
+          },
+          {
+            "value": "lira",
+            "computed": false
+          },
+          {
+            "value": "list layout",
+            "computed": false
+          },
+          {
+            "value": "magnify",
+            "computed": false
+          },
+          {
+            "value": "mail forward",
+            "computed": false
+          },
+          {
+            "value": "mail outline",
+            "computed": false
+          },
+          {
+            "value": "mail square",
+            "computed": false
+          },
+          {
+            "value": "mail",
+            "computed": false
+          },
+          {
+            "value": "male homosexual",
+            "computed": false
+          },
+          {
+            "value": "man",
+            "computed": false
+          },
+          {
+            "value": "marker",
+            "computed": false
+          },
+          {
+            "value": "mars alternate",
+            "computed": false
+          },
+          {
+            "value": "mars horizontal",
+            "computed": false
+          },
+          {
+            "value": "mars vertical",
+            "computed": false
+          },
+          {
+            "value": "microsoft edge",
+            "computed": false
+          },
+          {
+            "value": "military",
+            "computed": false
+          },
+          {
+            "value": "ms edge",
+            "computed": false
+          },
+          {
+            "value": "mute",
+            "computed": false
+          },
+          {
+            "value": "new pied piper",
+            "computed": false
+          },
+          {
+            "value": "non binary transgender",
+            "computed": false
+          },
+          {
+            "value": "numbered list",
+            "computed": false
+          },
+          {
+            "value": "options",
+            "computed": false
+          },
+          {
+            "value": "other gender horizontal",
+            "computed": false
+          },
+          {
+            "value": "other gender vertical",
+            "computed": false
+          },
+          {
+            "value": "other gender",
+            "computed": false
+          },
+          {
+            "value": "payment",
+            "computed": false
+          },
+          {
+            "value": "paypal card",
+            "computed": false
+          },
+          {
+            "value": "pencil square",
+            "computed": false
+          },
+          {
+            "value": "photo",
+            "computed": false
+          },
+          {
+            "value": "picture",
+            "computed": false
+          },
+          {
+            "value": "pie chart",
+            "computed": false
+          },
+          {
+            "value": "pie graph",
+            "computed": false
+          },
+          {
+            "value": "pied piper hat",
+            "computed": false
+          },
+          {
+            "value": "pin",
+            "computed": false
+          },
+          {
+            "value": "plus cart",
+            "computed": false
+          },
+          {
+            "value": "point",
+            "computed": false
+          },
+          {
+            "value": "pointing down",
+            "computed": false
+          },
+          {
+            "value": "pointing left",
+            "computed": false
+          },
+          {
+            "value": "pointing right",
+            "computed": false
+          },
+          {
+            "value": "pointing up",
+            "computed": false
+          },
+          {
+            "value": "pound",
+            "computed": false
+          },
+          {
+            "value": "power cord",
+            "computed": false
+          },
+          {
+            "value": "power",
+            "computed": false
+          },
+          {
+            "value": "privacy",
+            "computed": false
+          },
+          {
+            "value": "r circle",
+            "computed": false
+          },
+          {
+            "value": "rain",
+            "computed": false
+          },
+          {
+            "value": "record",
+            "computed": false
+          },
+          {
+            "value": "refresh",
+            "computed": false
+          },
+          {
+            "value": "remove circle",
+            "computed": false
+          },
+          {
+            "value": "remove from calendar",
+            "computed": false
+          },
+          {
+            "value": "remove user",
+            "computed": false
+          },
+          {
+            "value": "remove",
+            "computed": false
+          },
+          {
+            "value": "repeat",
+            "computed": false
+          },
+          {
+            "value": "rmb",
+            "computed": false
+          },
+          {
+            "value": "rouble",
+            "computed": false
+          },
+          {
+            "value": "rub",
+            "computed": false
+          },
+          {
+            "value": "ruble",
+            "computed": false
+          },
+          {
+            "value": "rupee",
+            "computed": false
+          },
+          {
+            "value": "s15",
+            "computed": false
+          },
+          {
+            "value": "selected radio",
+            "computed": false
+          },
+          {
+            "value": "send",
+            "computed": false
+          },
+          {
+            "value": "setting",
+            "computed": false
+          },
+          {
+            "value": "settings",
+            "computed": false
+          },
+          {
+            "value": "shekel",
+            "computed": false
+          },
+          {
+            "value": "sheqel",
+            "computed": false
+          },
+          {
+            "value": "shipping",
+            "computed": false
+          },
+          {
+            "value": "shop",
+            "computed": false
+          },
+          {
+            "value": "shuffle",
+            "computed": false
+          },
+          {
+            "value": "shutdown",
+            "computed": false
+          },
+          {
+            "value": "sidebar",
+            "computed": false
+          },
+          {
+            "value": "signing",
+            "computed": false
+          },
+          {
+            "value": "signup",
+            "computed": false
+          },
+          {
+            "value": "sliders",
+            "computed": false
+          },
+          {
+            "value": "soccer",
+            "computed": false
+          },
+          {
+            "value": "sort alphabet ascending",
+            "computed": false
+          },
+          {
+            "value": "sort alphabet descending",
+            "computed": false
+          },
+          {
+            "value": "sort ascending",
+            "computed": false
+          },
+          {
+            "value": "sort content ascending",
+            "computed": false
+          },
+          {
+            "value": "sort content descending",
+            "computed": false
+          },
+          {
+            "value": "sort descending",
+            "computed": false
+          },
+          {
+            "value": "sort numeric ascending",
+            "computed": false
+          },
+          {
+            "value": "sort numeric descending",
+            "computed": false
+          },
+          {
+            "value": "sound",
+            "computed": false
+          },
+          {
+            "value": "spy",
+            "computed": false
+          },
+          {
+            "value": "stripe card",
+            "computed": false
+          },
+          {
+            "value": "student",
+            "computed": false
+          },
+          {
+            "value": "talk",
+            "computed": false
+          },
+          {
+            "value": "target",
+            "computed": false
+          },
+          {
+            "value": "teletype",
+            "computed": false
+          },
+          {
+            "value": "television",
+            "computed": false
+          },
+          {
+            "value": "text cursor",
+            "computed": false
+          },
+          {
+            "value": "text telephone",
+            "computed": false
+          },
+          {
+            "value": "theme",
+            "computed": false
+          },
+          {
+            "value": "thumb tack",
+            "computed": false
+          },
+          {
+            "value": "time",
+            "computed": false
+          },
+          {
+            "value": "tm",
+            "computed": false
+          },
+          {
+            "value": "toggle down",
+            "computed": false
+          },
+          {
+            "value": "toggle left",
+            "computed": false
+          },
+          {
+            "value": "toggle right",
+            "computed": false
+          },
+          {
+            "value": "toggle up",
+            "computed": false
+          },
+          {
+            "value": "translate",
+            "computed": false
+          },
+          {
+            "value": "travel",
+            "computed": false
+          },
+          {
+            "value": "treatment",
+            "computed": false
+          },
+          {
+            "value": "triangle down",
+            "computed": false
+          },
+          {
+            "value": "triangle left",
+            "computed": false
+          },
+          {
+            "value": "triangle right",
+            "computed": false
+          },
+          {
+            "value": "triangle up",
+            "computed": false
+          },
+          {
+            "value": "try",
+            "computed": false
+          },
+          {
+            "value": "unhide",
+            "computed": false
+          },
+          {
+            "value": "unlinkify",
+            "computed": false
+          },
+          {
+            "value": "unmute",
+            "computed": false
+          },
+          {
+            "value": "usd",
+            "computed": false
+          },
+          {
+            "value": "user cancel",
+            "computed": false
+          },
+          {
+            "value": "user close",
+            "computed": false
+          },
+          {
+            "value": "user delete",
+            "computed": false
+          },
+          {
+            "value": "user x",
+            "computed": false
+          },
+          {
+            "value": "vcard",
+            "computed": false
+          },
+          {
+            "value": "video camera",
+            "computed": false
+          },
+          {
+            "value": "video play",
+            "computed": false
+          },
+          {
+            "value": "volume control phone",
+            "computed": false
+          },
+          {
+            "value": "wait",
+            "computed": false
+          },
+          {
+            "value": "warning circle",
+            "computed": false
+          },
+          {
+            "value": "warning sign",
+            "computed": false
+          },
+          {
+            "value": "warning",
+            "computed": false
+          },
+          {
+            "value": "wi-fi",
+            "computed": false
+          },
+          {
+            "value": "winner",
+            "computed": false
+          },
+          {
+            "value": "wizard",
+            "computed": false
+          },
+          {
+            "value": "woman",
+            "computed": false
+          },
+          {
+            "value": "won",
+            "computed": false
+          },
+          {
+            "value": "wordpress beginner",
+            "computed": false
+          },
+          {
+            "value": "wordpress forms",
+            "computed": false
+          },
+          {
+            "value": "world",
+            "computed": false
+          },
+          {
+            "value": "write square",
+            "computed": false
+          },
+          {
+            "value": "x",
+            "computed": false
+          },
+          {
+            "value": "yen",
+            "computed": false
+          },
+          {
+            "value": "zip",
+            "computed": false
+          },
+          {
+            "value": "zoom in",
+            "computed": false
+          },
+          {
+            "value": "zoom out",
+            "computed": false
+          },
+          {
+            "value": "zoom",
+            "computed": false
+          },
+          {
+            "value": "bitbucket square",
+            "computed": false
+          },
+          {
+            "value": "checkmark box",
+            "computed": false
+          },
+          {
+            "value": "circle thin",
+            "computed": false
+          },
+          {
+            "value": "compose",
+            "computed": false
+          },
+          {
+            "value": "conversation",
+            "computed": false
+          },
+          {
+            "value": "credit card alternative",
+            "computed": false
+          },
+          {
+            "value": "currency",
+            "computed": false
+          },
+          {
+            "value": "dashboard",
+            "computed": false
+          },
+          {
+            "value": "diamond",
+            "computed": false
+          },
+          {
+            "value": "disk",
+            "computed": false
+          },
+          {
+            "value": "external share",
+            "computed": false
+          },
+          {
+            "value": "external square",
+            "computed": false
+          },
+          {
+            "value": "external",
+            "computed": false
+          },
+          {
+            "value": "facebook official",
+            "computed": false
+          },
+          {
+            "value": "food",
+            "computed": false
+          },
+          {
+            "value": "hourglass zero",
+            "computed": false
+          },
+          {
+            "value": "level down",
+            "computed": false
+          },
+          {
+            "value": "level up",
+            "computed": false
+          },
+          {
+            "value": "log out",
+            "computed": false
+          },
+          {
+            "value": "meanpath",
+            "computed": false
+          },
+          {
+            "value": "money",
+            "computed": false
+          },
+          {
+            "value": "move",
+            "computed": false
+          },
+          {
+            "value": "pencil",
+            "computed": false
+          },
+          {
+            "value": "protect",
+            "computed": false
+          },
+          {
+            "value": "radio",
+            "computed": false
+          },
+          {
+            "value": "remove bookmark",
+            "computed": false
+          },
+          {
+            "value": "resize horizontal",
+            "computed": false
+          },
+          {
+            "value": "resize vertical",
+            "computed": false
+          },
+          {
+            "value": "sign in",
+            "computed": false
+          },
+          {
+            "value": "sign out",
+            "computed": false
+          },
+          {
+            "value": "spoon",
+            "computed": false
+          },
+          {
+            "value": "star half empty",
+            "computed": false
+          },
+          {
+            "value": "star half full",
+            "computed": false
+          },
+          {
+            "value": "ticket",
+            "computed": false
+          },
+          {
+            "value": "times rectangle",
+            "computed": false
+          },
+          {
+            "value": "write",
+            "computed": false
+          },
+          {
+            "value": "youtube play",
+            "computed": false
+          },
+          {
+            "value": "left dropdown",
+            "computed": false
+          }
+        ]
+      },
+      "required": false,
+      "description": "Name of the icon."
+    },
+    "rotated": {
+      "type": {
+        "name": "enum",
+        "value": [
+          {
+            "value": "clockwise",
+            "computed": false
+          },
+          {
+            "value": "counterclockwise",
+            "computed": false
+          }
+        ]
+      },
+      "required": false,
+      "description": "Icon can rotated."
+    },
+    "size": {
+      "type": {
+        "name": "enum",
+        "computed": true,
+        "value": [
+          {
+            "value": "mini",
+            "computed": false
+          },
+          {
+            "value": "tiny",
+            "computed": false
+          },
+          {
+            "value": "small",
+            "computed": false
+          },
+          {
+            "value": "large",
+            "computed": false
+          },
+          {
+            "value": "big",
+            "computed": false
+          },
+          {
+            "value": "huge",
+            "computed": false
+          },
+          {
+            "value": "massive",
+            "computed": false
+          }
+        ]
+      },
+      "required": false,
+      "description": "Size of the icon."
+    },
+    "aria-hidden": {
+      "type": {
+        "name": "string"
+      },
+      "required": false,
+      "description": "Icon can have an aria label."
+    },
+    "aria-label": {
+      "type": {
+        "name": "string"
+      },
+      "required": false,
+      "description": "Icon can have an aria label."
+    }
+  },
+  "constructorName": "Icon",
+  "type": "element",
+  "isParent": true,
+  "isChild": false,
+  "parentDisplayName": null,
+  "subcomponentName": null,
+  "subcomponents": [
+    "IconGroup"
+  ],
+  "apiPath": "Icon",
+  "componentClassName": "icon",
+  "docblock": {
+    "tags": [
+      {
+        "title": "see",
+        "description": "Image"
+      }
+    ],
+    "description": [
+      "An icon is a glyph used to represent something else."
+    ]
+  },
+  "examplesExist": true,
+  "repoPath": "src/elements/Icon/Icon.js",
+  "filename": "Icon.js",
+  "filenameWithoutExt": "Icon"
+}
