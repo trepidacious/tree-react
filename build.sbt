@@ -5,7 +5,7 @@ import sbtcrossproject.CrossPlugin.autoImport.crossProject
 name := "tree-react root project"
 version in ThisBuild := "0.0.1-SNAPSHOT"
 organization in ThisBuild := "org.rebeam"
-scalaVersion in ThisBuild := "2.12.6"
+scalaVersion in ThisBuild := "2.12.8"
 // crossScalaVersions in ThisBuild := Seq("2.11.12", "2.12.6")
 
 
@@ -435,7 +435,7 @@ lazy val electronApp = crossProject(JSPlatform, JVMPlatform).in(file("electron-a
   //Produce a module, so we can use @JSImport.
   scalaJSLinkerConfig ~= { _.withModuleKind(ModuleKind.CommonJSModule) }
 
-).dependsOn(scalajsElectron, scalajsElectronReact, scalajsReactMaterialUIExtra, treeReact)
+).dependsOn(scalajsElectron, scalajsElectronReact, scalajsReactMaterialUIExtra, treeReact, scalajsReactDocgenFacade)
 
 lazy val electronAppJVM = electronApp.jvm
 lazy val electronAppJS = electronApp.js

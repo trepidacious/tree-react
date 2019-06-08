@@ -37,3 +37,7 @@ dist
 .eslintcache
 
 tree-test/
+
+# Metals
+.metals/
+.bloop/

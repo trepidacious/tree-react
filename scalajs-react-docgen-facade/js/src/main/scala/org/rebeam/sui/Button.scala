@@ -1,5 +1,5 @@
 
-package org.rebeam.mui
+package org.rebeam.sui
 
 import japgolly.scalajs.react._
 import scalajs.js
@@ -94,7 +94,7 @@ object Button {
     var toggle: js.UndefOr[Boolean] = js.native
   }
 
-  @JSImport("@material-ui/core/Button", JSImport.Default)
+  @JSImport("semantic-ui-react", "Button")
   @js.native
   object ButtonJS extends js.Object
 
