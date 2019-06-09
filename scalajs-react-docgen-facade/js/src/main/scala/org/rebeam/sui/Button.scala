@@ -98,7 +98,7 @@ object Button {
   @js.native
   object ButtonJS extends js.Object
 
-  val jsComponent = JsComponent[Props, Children.None, Null](ButtonJS)
+  val jsComponent = JsComponent[Props, Children.Varargs, Null](ButtonJS)
   
   /**
    * A Button indicates a possible user action.
@@ -115,6 +115,8 @@ object Button {
    *        A button can be attached to other content.
    * @param basic
    *        A basic button is less pronounced.
+   * @param children
+   *        Primary content.
    * @param circular
    *        A button can be circular.
    * @param className
@@ -205,7 +207,7 @@ object Button {
     tabIndex: js.UndefOr[js.Any] = js.undefined,
     toggle: js.UndefOr[Boolean] = js.undefined,
     additionalProps: js.UndefOr[js.Object] = js.undefined
-  ) = {
+  )(children: VdomNode *) = {
 
     val p = (new js.Object).asInstanceOf[Props]
     if (active.isDefined) {p.active = active}
@@ -248,7 +250,7 @@ object Button {
       }
     }
     
-    jsComponent(p)
+    jsComponent(p)(children: _*)
   }
 
 }

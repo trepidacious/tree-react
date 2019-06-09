@@ -45,10 +45,10 @@ object DocGenGen {
     }
 
     /**
-     * Children that have an unknown type, not matching a known pattern - not currently supported
+     * Children that have an unknown type, not matching a known pattern - support for now
      */
     case object UnknownChildren extends Children {
-      val isSupportedChildren: Boolean = false
+      val isSupportedChildren: Boolean = true
     }
   }
 
