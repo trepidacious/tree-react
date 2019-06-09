@@ -173,6 +173,10 @@ For example, `ListItem` is processed as follows:
 8. Consider changing PascalCase prop names to camelCase to be more idiomatic. Consider typing these based on a map from prop names to the Component name of the sub element. This would still allow use of a `js.Object` containing props, in an `additionalProps` field.
 9. Support component methods
 10. Support for withStyles?
+11. SUI: Better support for `as` property - detect the custom prop type and use a custom scala mapping?
+12. SUI: Use the component grouping information to replicate `List.Item` etc. via objects?
+13: SUI: Test components other than button!
+14. SUI: Document export process, move code to this project or submit pull request to semantic-ui-react?
 
 ## scalajs-react-material-icons
 
