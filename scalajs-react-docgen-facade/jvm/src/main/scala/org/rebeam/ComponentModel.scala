@@ -157,7 +157,8 @@ object ComponentModel {
   case class ComponentData(
     component: Component,
     importData: ImportData,
-    functional: Boolean
+    functional: Boolean,
+    packageName: String
   )
 
 }

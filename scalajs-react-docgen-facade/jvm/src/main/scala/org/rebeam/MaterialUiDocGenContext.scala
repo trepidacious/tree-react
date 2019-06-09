@@ -168,7 +168,8 @@ object MaterialUiDocGenContext extends DocGenContext {
             }
           ),
           importData = importData,
-          functional = functional
+          functional = functional,
+          packageName = "org.rebeam.mui"
         )
       )
     }

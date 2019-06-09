@@ -18,13 +18,7 @@ object SemanticUiDocGenContext extends DocGenContext {
     "style" -> Prop(StyleType, false, "React element CSS style", None)
   )
 
-  def extractImportData(pathRaw: String, c: Component): ImportData = {
-    if (c.displayName == "MuiThemeProvider") {
-      ImportData(s"@material-ui/core/styles", s""""${c.displayName}"""")
-    } else {
-      ImportData(s"@material-ui/core/${c.displayName}", "JSImport.Default")
-    }
-  }
+  def extractImportData(pathRaw: String, c: Component): ImportData = ImportData("semantic-ui-react", s""""${c.displayName}"""")
 
   def isFunctional(pathRaw: String, c: Component): Boolean = false
 
@@ -54,7 +48,8 @@ object SemanticUiDocGenContext extends DocGenContext {
             }
           ),
           importData = importData,
-          functional = functional
+          functional = functional,
+          packageName = "org.rebeam.sui"
         )
       )
     }
@@ -126,8 +121,41 @@ object SemanticUiDocGenContext extends DocGenContext {
     def eventProp(s: String): (String, Prop) = name -> prop.copy(propType = eventFuncType(s))
     def funcInSet(s: Set[String]): Boolean = s.contains(name) && prop.propType == FuncType
 
-    if (c.displayName == "TextField" && name == "value") {
-      name -> prop.copy(propType = StringType)
+    // StepGroup.widths has a weird type, an enum having values:
+    // ..._.keys(numberMap)
+    // ..._.keys(numberMap).map(Number)
+    // ..._.values(numberMap)
+    // These aren't processed by the docgen export in semantic-ui-react and
+    // so are just displayed as-is in the docs. They break generated code
+    // for our facade.
+    // I'm not sure what these mean even when using the component fom JS,
+    // and I can't see an example in the semantic-ui-react docs, so just
+    // default to "any" for now.
+    if (c.displayName == "StepGroup" && name == "widths") {
+      name -> prop.copy(propType = AnyType)
+
+    // Icon has some alternate string values with hyphens, which map to the
+    // same sanitised enum object name in Scala - these represent the same
+    // actual icons as the un-hyphenated version, so just remove them.
+    // Also remove versions that only differ by case when sanitised, because
+    // they have a space removed in a compound version or a hyphenated version
+
+    } else if (c.displayName == "Icon" && name == "name") {
+      val excludedValues = Set(
+        "sign-in", "sign-out",
+        "sign-in alternate", "sign-out alternate",
+        "zoom-in", "zoom-out",
+        "wi-fi",
+        "thumb tack",
+        "eye dropper"
+      )
+      prop.propType match {
+        case EnumType(values) =>
+          name -> prop.copy(
+            propType = EnumType(values.filterNot(v => excludedValues.contains(v.value)))
+          )
+        case _ => name -> prop
+      }
 
     // Style properties use specific style type, since React expects an object and
     // we can make this nicer to use

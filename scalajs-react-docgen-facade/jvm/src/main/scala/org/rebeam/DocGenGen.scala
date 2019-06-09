@@ -90,14 +90,23 @@ object DocGenGen {
 
   def initialUpper(s: String): String = s.head.toUpper + s.tail 
 
-  def enumValueString(s: String): String = {
-    val s2 = s.split('-').flatMap(_.split(' ')).filterNot(_.isEmpty).map(initialUpper).mkString("")
+  def sanitiseIdentifier(s: String, isObject: Boolean): String = {
+    val words = s.replace(':','_').split('-').flatMap(_.split(' ')).filterNot(_.isEmpty).toList
+    val s2 = if (isObject) {
+      words.map(initialUpper).mkString("")
+    } else {
+      (words.head :: words.tail.map(initialUpper)).mkString("")
+    }
     if (s2.head.isDigit) {
       "_" + s2
     } else s2
   }
 
+  def enumValueString(s: String): String = sanitiseIdentifier(s, isObject = true)
+
   def enumNameString(s: String): String = initialUpper(s)
+
+  def propNameScala(s: String): String = sanitiseIdentifier(s, isObject = false)
 
   def propTypeScala(name: String, p: Prop): String = {
     val t = p.propType match {
@@ -126,6 +135,12 @@ object DocGenGen {
       case StyleType => "org.rebeam.react.Style"
     }
     if (p.required) t else s"js.UndefOr[$t]"
+  }
+
+  def propNameJS(s: String): String = if (s.contains("-")) {
+    s"`$s`"
+  } else {
+    s
   }
 
   def propTypeJS(name: String, p: Prop): String = {
@@ -184,17 +199,15 @@ object DocGenGen {
 
     if (p.required) {
       a.fold(
-        s"p.$name = $name"
+        s"p.${propNameJS(name)} = ${propNameScala(name)}"
       )(
-        f => s"p.$name = ${f(name)}"
+        f => s"p.${propNameJS(name)} = ${f(propNameScala(name))}"
       )
     } else {
       a.fold(
-        s"if ($name.isDefined) {p.$name = $name}"
+        s"if (${propNameScala(name)}.isDefined) {p.${propNameJS(name)} = ${propNameScala(name)}}"
       )(
-        f => s"if ($name.isDefined) {p.$name = $name.map(v => ${f("v")})}"
-        // f => s"$name.foreach(v => "
-        // f => s"$name.map(v => ${f("v")})"
+        f => s"if (${propNameScala(name)}.isDefined) {p.${propNameJS(name)} = ${propNameScala(name)}.map(v => ${f("v")})}"
       )
     }
   }
@@ -298,12 +311,12 @@ object DocGenGen {
 
         val propFields = usedProps.map { 
           case (name, prop) =>
-            s"var $name: ${propTypeJS(name, prop)} = js.native"
+            s"var ${propNameJS(name)}: ${propTypeJS(name, prop)} = js.native"
         }.mkString("\n    ")
 
         val propParams = (usedProps.map { 
           case (name, prop) =>
-            s"$name: ${propTypeScala(name, prop)}${defaultValue(prop)}"
+            s"${propNameScala(name)}: ${propTypeScala(name, prop)}${defaultValue(prop)}"
         } :+ "additionalProps: js.UndefOr[js.Object] = js.undefined").mkString(",\n    ")
 
         val propAssignments = usedProps.map { 
@@ -326,7 +339,7 @@ object DocGenGen {
         }
 
         s"""
-        |package org.rebeam.mui
+        |package ${cd.packageName}
         |
         |import japgolly.scalajs.react._
         |import scalajs.js

@@ -9,6 +9,11 @@ import io.circe.parser.decode
 import java.nio.charset.StandardCharsets
 import java.nio.file._
 
+import org.reflections.Reflections
+import org.reflections.scanners.ResourcesScanner
+import java.util.regex.Pattern
+import scala.collection.JavaConverters._
+
 object Generate {
 
   def writeToFile(filename: String, contents: String): Unit = {
@@ -18,6 +23,9 @@ object Generate {
 
   def main(args: Array[String]): Unit = {
 
+    val reflections = new Reflections("sui.componentExport", new ResourcesScanner)
+    val componentJsonResources = reflections.getResources(Pattern.compile(".*\\.json"))
+
     implicit val context: DocGenContext = SemanticUiDocGenContext
 
     def component(all: Map[String, Component], path: String, c: Component): Unit = {
@@ -26,9 +34,17 @@ object Generate {
       code.foreach(s => writeToFile(s"./scalajs-react-docgen-facade/js/src/main/scala/org/rebeam/sui/$name.scala", s.replaceAllLiterally("\r\n", "\n")))
     }
 
-    val s = scala.io.Source.fromInputStream(getClass.getResourceAsStream("/componentExport/Button.json"), "utf-8").mkString
+    val rawD = Map[String, Component](
+      componentJsonResources.asScala.toList.flatMap( jsonResource => {
+        println(s"Trying $jsonResource")
+        val s = scala.io.Source.fromInputStream(getClass.getResourceAsStream("/" + jsonResource), "utf-8").mkString
+        decode[Component](s).toOption.map(c => c.displayName -> c)
+      }): _*
+    )
 
-    val rawD = Map("Button" -> decode[Component](s).toOption.get)
+//    val s = scala.io.Source.fromInputStream(getClass.getResourceAsStream("/sui/componentExport/Button.json"), "utf-8").mkString
+
+//    val rawD = Map("Button" -> decode[Component](s).toOption.get)
 
     val processedD = context.preprocessComponents(rawD)
 

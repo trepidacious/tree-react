@@ -140,7 +140,8 @@ lazy val scalajsReactDocgenFacade = crossProject(JSPlatform, JVMPlatform).in(fil
     "io.circe"                    %%% "circe-parser"      % circeVersion,
 
     "org.typelevel"               %%% "cats-core"         % catsVersion,
-    "org.typelevel"               %%% "cats-effect"       % catsEffectVersion
+    "org.typelevel"               %%% "cats-effect"       % catsEffectVersion,
+    "org.reflections"             % "reflections"         % "0.9.11"
   ),
 
   //For Circe
