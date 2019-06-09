@@ -1,8 +1,9 @@
 package org.rebeam.demo
 
 import org.rebeam._
+import org.rebeam.react.EventCallback
 
-import scalajs.js
+//import scalajs.js
 // import japgolly.scalajs.react._
 import japgolly.scalajs.react.vdom.html_<^._
 // import org.rebeam.ElectronUtils.DialogFileFilter
@@ -100,12 +101,14 @@ object Main {
 
     // ()
 
+    val onClick = EventCallback{println("Clicked")}
+
     <.div(
       ^.className := "mainDiv",
       TitleBar(icon = Some(Node.relativePath("../build/icons/small_icon_32.png")))(
         Title("Electron Demo")
       ),
-      Button(label = "Hi":js.Any)
+      Button(onClick = onClick)("Click me!")
     ).renderIntoDOM(dom.document.getElementById("App"))
 
     ()
