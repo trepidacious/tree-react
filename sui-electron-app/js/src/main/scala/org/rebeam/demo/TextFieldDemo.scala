@@ -1,9 +1,10 @@
 package org.rebeam.demo
 
 import org.rebeam._
-
 import japgolly.scalajs.react._
+import sui._
 import japgolly.scalajs.react.vdom.html_<^._
+import org.rebeam.react.InputEventCallback
 
 object TextFieldDemo {
 
@@ -13,16 +14,17 @@ object TextFieldDemo {
 
   class Backend(scope: BackendScope[Props, State]) {
 
+    private val onChange = InputEventCallback {
+      s =>
+        scope.modState(_.copy(inputValue = s)) >>
+          Callback{println(s"Input '$s'")}
+    }
+
     def render(props: Props, state: State) =
-      mui.TextField(
-        fullWidth = true,
-        // value = state.inputValue,
-        onChange = (e: ReactEventFromInput) => {
-          val s = e.target.value
-          scope.modState(_.copy(inputValue = s)) >> Callback{println(s"Input '${e.target.value}'")}
-        },
-        value = state.inputValue
-      )
+      Input(
+        value = state.inputValue,
+        onChange = onChange
+      )()
   }
 
   //Just make the component constructor - props to be supplied later to make a component

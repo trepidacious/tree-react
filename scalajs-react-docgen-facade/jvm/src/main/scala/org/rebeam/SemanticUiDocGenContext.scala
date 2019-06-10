@@ -7,10 +7,22 @@ import org.rebeam.DocGenContext.{addMissingProps, callbackFuncType, eventFuncTyp
 object SemanticUiDocGenContext extends DocGenContext {
 
   // Additional components for use as ancestors.
-  // This includes synthetic components that just provide props where they are missing from the API,
-  // and components coming from outside Material-UI
-  // Note - none needed so far bu Semantic-UI
-  val additionalAncestorComponents: Map[String, Component] = Map()
+  // This includes synthetic components that just provide props where they are missing from the API
+  val additionalAncestorComponents: Map[String, Component] = Map(
+    "InputHasValue" -> Component (
+      "Ancestor to add value prop to Input",
+      "InputHasValue",
+      List(
+        "value" -> Prop(
+          StringType,
+          required = false,
+          "Input value",
+          None
+        )
+      ),
+      inheritance = None
+    ),
+  )
 
   // Props that are added to all components, if not already present
   val defaultProps: List[(String, Prop)] = List(
@@ -25,7 +37,10 @@ object SemanticUiDocGenContext extends DocGenContext {
   override def preprocessComponents(all: Map[String, Component]): Map[String, Component] =
     all.mapValues(preprocessComponent)
 
-  def preprocessComponent(c: Component): Component = c
+  def preprocessComponent(c: Component): Component = c match {
+    case Component(_, "Input", _, _) => c.copy(inheritance = Some(Inheritance("InputHasValue", "n/a")))
+    case _ => c
+  }
 
   def processComponent(all: Map[String, Component], path: String, c: Component): Option[ComponentData] = {
 
@@ -162,10 +177,9 @@ object SemanticUiDocGenContext extends DocGenContext {
     } else if (name == "style" && prop.propType == ObjectType) {
       name -> prop.copy(propType = StyleType)
 
-    // TODO reinstate?
     // Specific Input events
-//    } else if (c.displayName == "Input" && namedFunc("onChange")) {
-//      eventProp("ReactEventFromInput")
+    } else if (c.displayName == "Input" && namedFunc("onChange")) {
+      eventProp("ReactEventFromInput")
 
       // Change event
     } else if (namedFunc("onChange")) {

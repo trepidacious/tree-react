@@ -59,12 +59,13 @@ object Input {
     var label: js.UndefOr[js.Any] = js.native
     var labelPosition: js.UndefOr[String] = js.native
     var loading: js.UndefOr[Boolean] = js.native
-    var onChange: js.UndefOr[scalajs.js.Function1[ReactEvent, Unit]] = js.native
+    var onChange: js.UndefOr[scalajs.js.Function1[ReactEventFromInput, Unit]] = js.native
     var size: js.UndefOr[String] = js.native
     var style: js.UndefOr[js.Object] = js.native
     var tabIndex: js.UndefOr[js.Any] = js.native
     var transparent: js.UndefOr[Boolean] = js.native
     var `type`: js.UndefOr[String] = js.native
+    var value: js.UndefOr[String] = js.native
   }
 
   @JSImport("semantic-ui-react", "Input")
@@ -128,6 +129,9 @@ object Input {
    *        Transparent Input has no background.
    * @param `type`
    *        The HTML input type.
+   * @param value
+   *        Input value
+   *        Passed to InputHasValue
    * @param additionalProps
    *        Optional parameter - if specified, this must be a js.Object containing additional props
    *        to pass to the underlying JS component. Each field of additionalProps will be added to the
@@ -154,12 +158,13 @@ object Input {
     label: js.UndefOr[js.Any] = js.undefined,
     labelPosition: js.UndefOr[LabelPosition] = js.undefined,
     loading: js.UndefOr[Boolean] = js.undefined,
-    onChange: js.UndefOr[ReactEvent => Callback] = js.undefined,
+    onChange: js.UndefOr[ReactEventFromInput => Callback] = js.undefined,
     size: js.UndefOr[Size] = js.undefined,
     style: js.UndefOr[org.rebeam.react.Style] = js.undefined,
     tabIndex: js.UndefOr[js.Any] = js.undefined,
     transparent: js.UndefOr[Boolean] = js.undefined,
     `type`: js.UndefOr[String] = js.undefined,
+    value: js.UndefOr[String] = js.undefined,
     additionalProps: js.UndefOr[js.Object] = js.undefined
   )(children: VdomNode *) = {
 
@@ -180,12 +185,13 @@ object Input {
     if (label.isDefined) {p.label = label}
     if (labelPosition.isDefined) {p.labelPosition = labelPosition.map(v => v.value)}
     if (loading.isDefined) {p.loading = loading}
-    if (onChange.isDefined) {p.onChange = onChange.map(v => (e: ReactEvent) => v(e).runNow())}
+    if (onChange.isDefined) {p.onChange = onChange.map(v => (e: ReactEventFromInput) => v(e).runNow())}
     if (size.isDefined) {p.size = size.map(v => v.value)}
     if (style.isDefined) {p.style = style.map(v => v.o)}
     if (tabIndex.isDefined) {p.tabIndex = tabIndex}
     if (transparent.isDefined) {p.transparent = transparent}
     if (`type`.isDefined) {p.`type` = `type`}
+    if (value.isDefined) {p.value = value}
 
     additionalProps.foreach {
       a => {
