@@ -1,0 +1,59 @@
+{
+  "name": "scalajs-electron-react-app",
+  "productName": "ScalaJS Electron React App",
+  "version": "0.0.1",
+  "description": "Demo of an Electron app using React from Scalajs",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "electron .",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder",
+    "dist-all": "electron-builder -mwl --ia32 --x64"
+  },
+  "keywords": [],
+  "author": "trepidacious",
+  "license": "MIT",
+  "build": {
+    "appId": "org.rebeam.scalajs-electron-react-app",
+    "productName": "ScalaJS Electron React App",
+    "files": [
+      "src",
+      "scalajs_src",
+      "assets",
+      "build"
+    ],
+    "mac": {
+      "category": "public.app-category.developer-tools"
+    },
+    "linux": {
+      "category": "Development",
+      "target": "AppImage"
+    },
+    "publish": [
+      {
+        "provider": "generic",
+        "url": "http://updateserver.local:8080/scalajs-electron-react-app"
+      }
+    ]
+  },
+  "dependencies": {
+    "@material-ui/core": "^3.7.1",
+    "@material-ui/icons": "^3.0.1",
+    "downshift": "^2.1.5",
+    "electron-is-dev": "^0.3.0",
+    "electron-log": "^2.2.17",
+    "electron-updater": "^3.1.2",
+    "googleapis": "^35.0.0",
+    "react": "^16.5.1",
+    "react-dom": "^16.5.1",
+    "semantic-ui-css": "^2.4.1",
+    "semantic-ui-react": "^0.87.1",
+    "typeface-roboto": "0.0.54"
+  },
+  "devDependencies": {
+    "electron": "^3.0.7",
+    "electron-builder": "^20.29.0",
+    "electron-devtools-installer": "^2.2.4",
+    "http-server": "^0.11.1"
+  }
+}

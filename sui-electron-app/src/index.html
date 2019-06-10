@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <link rel="stylesheet" href="../node_modules/typeface-roboto/index.css">
+  <link rel="stylesheet" href="../node_modules/semantic-ui-css/semantic.min.css">
+  <link rel="stylesheet" href="app.css">
+
+  <!--
+    Set a security policy, this potentially makes things more secure by catching mistaken
+    attempts to use external resources, inline scripts etc. This also avoids the warning
+    from electron on console.
+
+    See the following for details:
+    https://electronjs.org/docs/tutorial/security#6-define-a-content-security-policy
+    https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy
+
+    We default to requiring everything to come from the same origin (self), however just for
+    styles we also permit in-line content. Otherwise many React libraries etc. will fail.
+  -->
+<!--  TODO reinstate -->
+<!--  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline'">-->
+</head>
+
+<body>
+  <div id="App"></div>
+</body>
+
+<!-- Use a script from a file rather than in-line, this passes the security policy set above -->
+<script type="text/javascript" src="renderer.js"></script>
+
+</html>

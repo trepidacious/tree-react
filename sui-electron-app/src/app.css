@@ -1,0 +1,142 @@
+body {
+  background-color: #f1f3f4;
+  margin: 0;
+}
+
+#App {
+  width: 100%;
+  top: 0px;
+  bottom: 0px;
+  position: absolute;
+}
+
+.mainDiv {  
+  top: 0px;
+  bottom: 0px;
+  left: 0px;
+  right: 0px;
+  position: absolute;
+  /* border-style: solid;
+  border-color: #2e3b84;
+  border-width: 1px; */
+}
+
+.full {
+  width: 100%;
+  top: 0px;
+  bottom: 0px;
+  position: absolute;
+}
+
+.sidenav {
+  height: 100%;
+  width: 300px;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  background-color: #3f51b5;
+  overflow-x: hidden;
+  overflow-y: hidden;
+  box-shadow: 2px 0px 4px -1px rgba(0, 0, 0, 0.2), 4px 0px 5px 0px rgba(0, 0, 0, 0.14), 1px 0px 10px 0px rgba(0, 0, 0, 0.12);
+}
+
+.main {
+  margin-left: 300px; /* Same as the width of the sidenav */
+}
+
+.sideitem {
+  padding-top: 8px;
+}
+
+.searchbar {
+  /* padding: 12px; */
+  width: 100%;
+  justify-content: center;
+  display: flex;
+}
+
+.searchbox {
+  padding: 12px;
+  width: 400px;
+}
+
+.searchResults {
+  padding: 12px;
+}
+
+.searchItem {
+  padding-left: 24px;
+  padding-right: 24px;
+  padding-top: 12px;
+  padding-bottom: 12px;
+}
+
+.selectedItems {
+  padding: 12px;
+}
+
+.centeredcontents {
+  /* top: 0px;
+  bottom: 0px;
+  left: 0px;
+  right: 0px;
+  position: absolute; */
+
+  /* width: 100%; */
+  justify-content: center;
+  display: flex;
+  /* max-height: 200px;
+  overflow-y: auto; */
+}
+
+.results {
+  padding: 12px;
+  width: 400px;
+}
+
+.itemcard {
+  margin-bottom: 8px;
+}
+
+.card-text {
+  margin-top: 12px;
+}
+
+.scalajs-electron-react--titlebar-drag {
+  -webkit-app-region: drag;
+}
+
+.scalajs-electron-react--titlebar-nodrag {
+  -webkit-app-region: no-drag;
+}
+
+.tree-error {
+  position: relative;
+  display: inline-block;
+  user-select: none;
+  font-family: monospace;
+  white-space: pre;
+}
+
+.tree-error__tooltip {
+  visibility: hidden;
+  width: 120px;
+  background-color: #555;
+  color: #fff;
+  text-align: center;
+  font-family: monospace;
+  white-space: pre;
+  padding: 6px;
+  margin: 0 10px;
+  border-radius: 3px;
+
+  /* Position the tooltip text - see examples below! */
+  position: absolute;
+  z-index: 1;
+}
+
+/* Show the tooltip text when you mouse over the tooltip container */
+.tree-error:hover .tree-error__tooltip {
+  visibility: visible;
+}

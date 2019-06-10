@@ -82,7 +82,8 @@ lazy val root = project.in(file(".")).
     treeCoreJS, treeCoreJVM,
     treeOTJS, treeOTJVM,
     treeReactJS, treeReactJVM,
-    electronAppJS, electronAppJVM
+    electronAppJS, electronAppJVM,
+    suiElectronAppJS, suiElectronAppJVM
   ).settings(
     publish := {},
     publishLocal := {}
@@ -440,3 +441,33 @@ lazy val electronApp = crossProject(JSPlatform, JVMPlatform).in(file("electron-a
 
 lazy val electronAppJVM = electronApp.jvm
 lazy val electronAppJS = electronApp.js
+
+
+  //////////////////////
+ // sui-electron-app //
+//////////////////////
+lazy val suiElectronApp = crossProject(JSPlatform, JVMPlatform).in(file("sui-electron-app")).
+  //Settings for all projects
+  settings(
+  name := "sui-electron-app",
+
+  addCompilerPlugin(
+    "org.scalamacros" % "paradise" % "2.1.1" cross CrossVersion.patch
+  )
+).jvmSettings(
+
+).jsSettings(
+
+  // Move just the required artifacts to scalajs_src for electron project to use. This allows us to include that
+  // directory in the electron app, and include only the minimal required files. Note the baseDirectory for the
+  // js project is "js" in the root project directory, hence the "..".
+  artifactPath in (Compile, fastOptJS) := baseDirectory.value / ".." / "scalajs_src" / "fastOpt.js",
+  artifactPath in (Compile, fullOptJS) := baseDirectory.value / ".." / "scalajs_src" / "fullOpt.js",
+
+  //Produce a module, so we can use @JSImport.
+  scalaJSLinkerConfig ~= { _.withModuleKind(ModuleKind.CommonJSModule) }
+
+).dependsOn(scalajsElectron, scalajsElectronReact, scalajsReactMaterialUIExtra, treeReact, scalajsReactDocgenFacade)
+
+lazy val suiElectronAppJVM = suiElectronApp.jvm
+lazy val suiElectronAppJS = suiElectronApp.js
