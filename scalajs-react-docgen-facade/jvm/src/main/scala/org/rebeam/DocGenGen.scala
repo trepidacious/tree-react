@@ -172,7 +172,7 @@ object DocGenGen {
     if (p.required) t else s"js.UndefOr[$t]"
   }
 
-  def propAssignment(name: String, p: Prop): String = {
+  def propAssignment(name: String, p: Prop, justExpression: Boolean = false): String = {
     
     val a: Option[String => String] = p.propType match {
       // case AnyType =>
@@ -187,7 +187,10 @@ object DocGenGen {
       case NodeType => Some(n => s"$n.rawNode")
       case EnumType(values) => Some(n => s"$n.value")
       // case UnionType(types) =>
-      case ArrayOfType(elementType) => Some(n => s"$n.map(e => ${propAssignment("e", Prop(elementType, required = true, "", None))}).toJSArray") //Not yet tested
+      case ArrayOfType(elementType) =>
+        Some(n =>
+          s"$n.map(e => ${propAssignment("e", Prop(elementType, required = true, "", None), justExpression = true)}).toJSArray"
+        ) //Not yet tested thoroughly - works for simple case
       // case StructuralType(fieldTypes) =>
       // case CustomType(raw) =>
 
@@ -197,7 +200,13 @@ object DocGenGen {
       case _ => None
     }
 
-    if (p.required) {
+    if (justExpression) {
+      a.fold(
+        propNameScala(name)
+      )(
+        f => f(propNameScala(name))
+      )
+    } else if (p.required) {
       a.fold(
         s"p.${propNameJS(name)} = ${propNameScala(name)}"
       )(
@@ -324,6 +333,19 @@ object DocGenGen {
             propAssignment(name, prop)
         }.mkString("\n    ")
 
+        val hasArrayProps = usedProps.exists{
+          case (_, prop) => prop.propType match {
+            case ArrayOfType(_) => true
+            case _ => false
+          }
+        }
+
+        val importJSConverters = if (hasArrayProps) {
+          "import scalajs.js.JSConverters._\n"
+        } else {
+          ""
+        }
+
         val hc = hasChildren(c)
 
         val docs = applyDocs(c, if (hc) c.props else usedProps)
@@ -344,7 +366,7 @@ object DocGenGen {
         |import japgolly.scalajs.react._
         |import scalajs.js
         |import scalajs.js.annotation.JSImport
-        |
+        |$importJSConverters
         |import japgolly.scalajs.react.vdom.html_<^._
         |
         |object $componentName {
