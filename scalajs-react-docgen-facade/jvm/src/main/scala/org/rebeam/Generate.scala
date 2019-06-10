@@ -31,7 +31,7 @@ object Generate {
     def component(all: Map[String, Component], path: String, c: Component): Unit = {
       val code = genComponent(all, path, c)
       val name = c.displayName
-      code.foreach(s => writeToFile(s"./scalajs-react-docgen-facade/js/src/main/scala/org/rebeam/sui/$name.scala", s.replaceAllLiterally("\r\n", "\n")))
+      code.foreach(s => writeToFile(s"./scalajs-react-semantic-ui/js/src/main/scala/org/rebeam/sui/$name.scala", s.replaceAllLiterally("\r\n", "\n")))
     }
 
     val rawD = Map[String, Component](

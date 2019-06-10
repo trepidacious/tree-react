@@ -72,6 +72,7 @@ lazy val testDeps = Seq(
 
 lazy val root = project.in(file(".")).
   aggregate(
+    scalajsReactSemanticUIJS, scalajsReactSemanticUIJVM,
     scalajsReactMaterialUIJS, scalajsReactMaterialUIJVM,
     scalajsReactDocgenFacadeJS, scalajsReactDocgenFacadeJVM,
     scalajsReactMaterialIconsJS, scalajsReactMaterialIconsJVM,
@@ -160,6 +161,26 @@ lazy val scalajsReactDocgenFacade = crossProject(JSPlatform, JVMPlatform).in(fil
 
 lazy val scalajsReactDocgenFacadeJVM = scalajsReactDocgenFacade.jvm
 lazy val scalajsReactDocgenFacadeJS = scalajsReactDocgenFacade.js
+
+///////////////////////////////
+// scalajs-react-semantic-ui //
+///////////////////////////////
+lazy val scalajsReactSemanticUI = crossProject(JSPlatform, JVMPlatform).in(file("scalajs-react-semantic-ui")).
+  settings(
+    name := "scalajs-react-semantic-ui"
+
+  ).jsSettings(
+    //Scalajs dependencies that are used on the client only
+    resolvers += Resolver.jcenterRepo,
+  
+    scalajsReactDeps,
+  
+    //Produce a module, so we can use @JSImport on material-ui
+    scalaJSLinkerConfig ~= { _.withModuleKind(ModuleKind.CommonJSModule) }
+  ).dependsOn(scalajsReactCommon)
+
+lazy val scalajsReactSemanticUIJVM = scalajsReactSemanticUI.jvm
+lazy val scalajsReactSemanticUIJS = scalajsReactSemanticUI.js
 
 ///////////////////////////////
 // scalajs-react-common //
@@ -467,7 +488,7 @@ lazy val suiElectronApp = crossProject(JSPlatform, JVMPlatform).in(file("sui-ele
   //Produce a module, so we can use @JSImport.
   scalaJSLinkerConfig ~= { _.withModuleKind(ModuleKind.CommonJSModule) }
 
-).dependsOn(scalajsElectron, scalajsElectronReact, scalajsReactMaterialUIExtra, treeReact, scalajsReactDocgenFacade)
+).dependsOn(scalajsElectron, scalajsElectronReact, scalajsReactMaterialUIExtra, treeReact, scalajsReactSemanticUI)
 
 lazy val suiElectronAppJVM = suiElectronApp.jvm
 lazy val suiElectronAppJS = suiElectronApp.js
