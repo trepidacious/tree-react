@@ -108,7 +108,7 @@ object Main {
       TitleBar(icon = Some(Node.relativePath("../build/icons/small_icon_32.png")))(
         Title("Electron Demo")
       ),
-      Button(onClick = onClick)("Click me!")
+      Button(onClick = onClick, primary = true)("Click me!")
     ).renderIntoDOM(dom.document.getElementById("App"))
 
     ()
