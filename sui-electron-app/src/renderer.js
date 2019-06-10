@@ -1,2 +1,2 @@
-  var scalajs = require('../scalajs_src/fastopt.js');
+  var scalajs = require('../scalajs_src/sui-electron-app-fastopt-bundle.js');
   scalajs.Main.main();

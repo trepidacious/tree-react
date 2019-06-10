@@ -9,7 +9,6 @@ import japgolly.scalajs.react.vdom.html_<^._
 // import org.rebeam.ElectronUtils.DialogFileFilter
 import org.scalajs.dom
 
-import scala.scalajs.js.annotation._
 import org.rebeam.electron.react._
 import org.rebeam.electron.react.CssSettings._
 import scalacss.ScalaCssReact._
@@ -18,7 +17,6 @@ import org.rebeam.sui._
 
 import org.log4s._
 
-@JSExportTopLevel("Main")
 object Main {
 
   def initLogging(): Unit = {
@@ -30,8 +28,8 @@ object Main {
   }
 
 
-  @JSExport
-  def main(): Unit = {
+  def main(args: Array[String]): Unit = {
+    println("Hello world!")
 
     initLogging()
 
