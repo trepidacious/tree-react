@@ -5,8 +5,6 @@ const path = require('path')
 
 const net = require('net');
 
-const { default: installExtension, REACT_DEVELOPER_TOOLS } = require('electron-devtools-installer');
-
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow;
@@ -40,6 +38,9 @@ const createWindow = async () => {
 
   // Open the DevTools.
   if (isDev) {
+
+    const { default: installExtension, REACT_DEVELOPER_TOOLS } = require('electron-devtools-installer');
+
     // See https://github.com/electron/electron/issues/12438
     mainWindow.webContents.once('dom-ready', () => {
       mainWindow.openDevTools()
@@ -131,8 +132,6 @@ if (!firstInstance) {
       mainWindow.webContents.send('notifications', 'A new version is available - restart software to install. ' + info);
     }
   })
-
-
 
 }
 

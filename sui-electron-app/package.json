@@ -1,7 +1,7 @@
 {
   "name": "scalajs-electron-react-app",
   "productName": "ScalaJS Electron React App",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "description": "Demo of an Electron app using React from Scalajs",
   "main": "src/index.js",
   "scripts": {
@@ -18,7 +18,7 @@
     "productName": "ScalaJS Electron React App",
     "files": [
       "src",
-      "scalajs_src",
+      "js/target/scala-2.12/scalajs-bundler/main/sui-electron-app-fastopt-bundle.js",
       "assets",
       "build"
     ],
