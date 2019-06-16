@@ -30,7 +30,7 @@ object Checkbox {
     var key: js.UndefOr[String] = js.native
     var label: js.UndefOr[js.Any] = js.native
     var name: js.UndefOr[String] = js.native
-    var onChange: js.UndefOr[scalajs.js.Function1[ReactEvent, Unit]] = js.native
+    var onChange: js.UndefOr[scalajs.js.Function2[ReactEvent, Props, Unit]] = js.native
     var onClick: js.UndefOr[scalajs.js.Function1[ReactMouseEvent, Unit]] = js.native
     var onMouseDown: js.UndefOr[scalajs.js.Function1[ReactMouseEvent, Unit]] = js.native
     var onMouseUp: js.UndefOr[scalajs.js.Function1[ReactMouseEvent, Unit]] = js.native
@@ -136,7 +136,7 @@ object Checkbox {
     key: js.UndefOr[String] = js.undefined,
     label: js.UndefOr[js.Any] = js.undefined,
     name: js.UndefOr[String] = js.undefined,
-    onChange: js.UndefOr[ReactEvent => Callback] = js.undefined,
+    onChange: js.UndefOr[(ReactEvent, Props) => Callback] = js.undefined,
     onClick: js.UndefOr[ReactMouseEvent => Callback] = js.undefined,
     onMouseDown: js.UndefOr[ReactMouseEvent => Callback] = js.undefined,
     onMouseUp: js.UndefOr[ReactMouseEvent => Callback] = js.undefined,
@@ -164,7 +164,7 @@ object Checkbox {
     if (key.isDefined) {p.key = key}
     if (label.isDefined) {p.label = label}
     if (name.isDefined) {p.name = name}
-    if (onChange.isDefined) {p.onChange = onChange.map(v => (e: ReactEvent) => v(e).runNow())}
+    if (onChange.isDefined) {p.onChange = onChange.map(v => (e: ReactEvent, p: Props) => v(e, p).runNow())}
     if (onClick.isDefined) {p.onClick = onClick.map(v => (e: ReactMouseEvent) => v(e).runNow())}
     if (onMouseDown.isDefined) {p.onMouseDown = onMouseDown.map(v => (e: ReactMouseEvent) => v(e).runNow())}
     if (onMouseUp.isDefined) {p.onMouseUp = onMouseUp.map(v => (e: ReactMouseEvent) => v(e).runNow())}

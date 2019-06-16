@@ -21,6 +21,16 @@ body {
   border-width: 1px; */
 }
 
+/* Checkboxes used as labels for an input, without text (fitted) don't get enough padding by default */
+.ui.fitted.checkbox.label {
+  padding-right: 2em;
+}
+
+/* Checkboxes with toggle, used as labels for an input, without text (fitted) don't get enough padding by default */
+.ui.fitted.checkbox.toggle.label {
+  padding-right: 4.5em;
+}
+
 .full {
   width: 100%;
   top: 0px;
