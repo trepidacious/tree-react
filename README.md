@@ -177,6 +177,10 @@ For example, `ListItem` is processed as follows:
 12. SUI: Use the component grouping information to replicate `List.Item` etc. via objects?
 13: SUI: Test components other than button!
 14. SUI: Document export process, move code to this project or submit pull request to semantic-ui-react?
+15. sui-electron-app: Bundle with useYarn? 
+16. sui-electron-app: Bundle main process index.js as well? 
+17. sui-electron-app: Process semantic theme?
+18. SUI: Checkbox onChange/onClick - accept props parameter in function (as per current hand-modified version)
 
 ## scalajs-react-material-icons
 

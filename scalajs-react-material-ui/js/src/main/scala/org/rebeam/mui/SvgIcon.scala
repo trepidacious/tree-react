@@ -104,7 +104,7 @@ object SvgIcon {
     key: js.UndefOr[String] = js.undefined,
     nativeColor: js.UndefOr[String] = js.undefined,
     shapeRendering: js.UndefOr[String] = js.undefined,
-    style: js.UndefOr[org.rebeam.mui.styles.Style] = js.undefined,
+    style: js.UndefOr[org.rebeam.react.Style] = js.undefined,
     titleAccess: js.UndefOr[String] = js.undefined,
     viewBox: js.UndefOr[String] = js.undefined,
     additionalProps: js.UndefOr[js.Object] = js.undefined

@@ -107,7 +107,7 @@ object Drawer {
     key: js.UndefOr[String] = js.undefined,
     onClose: js.UndefOr[Callback] = js.undefined,
     open: js.UndefOr[Boolean] = js.undefined,
-    style: js.UndefOr[org.rebeam.mui.styles.Style] = js.undefined,
+    style: js.UndefOr[org.rebeam.react.Style] = js.undefined,
     theme: js.Object,
     transitionDuration: js.UndefOr[js.Any] = js.undefined,
     variant: js.UndefOr[Variant] = js.undefined,

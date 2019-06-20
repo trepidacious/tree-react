@@ -59,7 +59,7 @@ object StepIcon {
     error: js.UndefOr[Boolean] = js.undefined,
     icon: VdomNode,
     key: js.UndefOr[String] = js.undefined,
-    style: js.UndefOr[org.rebeam.mui.styles.Style] = js.undefined,
+    style: js.UndefOr[org.rebeam.react.Style] = js.undefined,
     additionalProps: js.UndefOr[js.Object] = js.undefined
   ) = {
 

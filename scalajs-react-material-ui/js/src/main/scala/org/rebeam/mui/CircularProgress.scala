@@ -91,7 +91,7 @@ object CircularProgress {
     disableShrink: js.UndefOr[Boolean] = js.undefined,
     key: js.UndefOr[String] = js.undefined,
     size: js.UndefOr[js.Any] = js.undefined,
-    style: js.UndefOr[org.rebeam.mui.styles.Style] = js.undefined,
+    style: js.UndefOr[org.rebeam.react.Style] = js.undefined,
     thickness: js.UndefOr[Double] = js.undefined,
     value: js.UndefOr[Double] = js.undefined,
     variant: js.UndefOr[Variant] = js.undefined,

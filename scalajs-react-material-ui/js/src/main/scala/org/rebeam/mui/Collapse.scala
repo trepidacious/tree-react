@@ -119,7 +119,7 @@ object Collapse {
     onEntering: js.UndefOr[Callback] = js.undefined,
     onExit: js.UndefOr[Callback] = js.undefined,
     onExiting: js.UndefOr[Callback] = js.undefined,
-    style: js.UndefOr[org.rebeam.mui.styles.Style] = js.undefined,
+    style: js.UndefOr[org.rebeam.react.Style] = js.undefined,
     theme: js.Object,
     timeout: js.UndefOr[js.Any] = js.undefined,
     unmountOnExit: js.UndefOr[Boolean] = js.undefined,

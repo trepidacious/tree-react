@@ -80,7 +80,7 @@ object InputAdornment {
     disableTypography: js.UndefOr[Boolean] = js.undefined,
     key: js.UndefOr[String] = js.undefined,
     position: js.UndefOr[Position] = js.undefined,
-    style: js.UndefOr[org.rebeam.mui.styles.Style] = js.undefined,
+    style: js.UndefOr[org.rebeam.react.Style] = js.undefined,
     variant: js.UndefOr[Variant] = js.undefined,
     additionalProps: js.UndefOr[js.Object] = js.undefined
   )(children: VdomNode *) = {

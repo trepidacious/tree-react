@@ -202,7 +202,7 @@ object OutlinedInput {
     rows: js.UndefOr[js.Any] = js.undefined,
     rowsMax: js.UndefOr[js.Any] = js.undefined,
     startAdornment: js.UndefOr[VdomNode] = js.undefined,
-    style: js.UndefOr[org.rebeam.mui.styles.Style] = js.undefined,
+    style: js.UndefOr[org.rebeam.react.Style] = js.undefined,
     `type`: js.UndefOr[String] = js.undefined,
     value: js.UndefOr[js.Any] = js.undefined,
     additionalProps: js.UndefOr[js.Object] = js.undefined

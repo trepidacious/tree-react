@@ -222,7 +222,7 @@ object Tab {
     onTouchStart: js.UndefOr[ReactTouchEvent => Callback] = js.undefined,
     role: js.UndefOr[String] = js.undefined,
     selected: js.UndefOr[Boolean] = js.undefined,
-    style: js.UndefOr[org.rebeam.mui.styles.Style] = js.undefined,
+    style: js.UndefOr[org.rebeam.react.Style] = js.undefined,
     tabIndex: js.UndefOr[js.Any] = js.undefined,
     textColor: js.UndefOr[TextColor] = js.undefined,
     `type`: js.UndefOr[String] = js.undefined,

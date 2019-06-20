@@ -73,7 +73,7 @@ object ClickAwayListener {
     key: js.UndefOr[String] = js.undefined,
     mouseEvent: js.UndefOr[MouseEvent] = js.undefined,
     onClickAway: Callback,
-    style: js.UndefOr[org.rebeam.mui.styles.Style] = js.undefined,
+    style: js.UndefOr[org.rebeam.react.Style] = js.undefined,
     target: js.Any,
     touchEvent: js.UndefOr[TouchEvent] = js.undefined,
     additionalProps: js.UndefOr[js.Object] = js.undefined

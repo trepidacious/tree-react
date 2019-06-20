@@ -292,7 +292,7 @@ object Menu {
     onRendered: js.UndefOr[Callback] = js.undefined,
     open: Boolean,
     role: js.UndefOr[String] = js.undefined,
-    style: js.UndefOr[org.rebeam.mui.styles.Style] = js.undefined,
+    style: js.UndefOr[org.rebeam.react.Style] = js.undefined,
     transformOrigin: js.UndefOr[js.Any] = js.undefined,
     transitionDuration: js.UndefOr[js.Any] = js.undefined,
     additionalProps: js.UndefOr[js.Object] = js.undefined

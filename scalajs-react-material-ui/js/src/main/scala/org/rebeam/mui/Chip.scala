@@ -118,7 +118,7 @@ object Chip {
     onDelete: js.UndefOr[Callback] = js.undefined,
     onKeyDown: js.UndefOr[ReactKeyboardEvent => Callback] = js.undefined,
     onKeyUp: js.UndefOr[ReactKeyboardEvent => Callback] = js.undefined,
-    style: js.UndefOr[org.rebeam.mui.styles.Style] = js.undefined,
+    style: js.UndefOr[org.rebeam.react.Style] = js.undefined,
     tabIndex: js.UndefOr[js.Any] = js.undefined,
     variant: js.UndefOr[Variant] = js.undefined,
     additionalProps: js.UndefOr[js.Object] = js.undefined

@@ -280,7 +280,7 @@ object Grid {
     md: js.UndefOr[Md] = js.undefined,
     sm: js.UndefOr[Sm] = js.undefined,
     spacing: js.UndefOr[Spacing] = js.undefined,
-    style: js.UndefOr[org.rebeam.mui.styles.Style] = js.undefined,
+    style: js.UndefOr[org.rebeam.react.Style] = js.undefined,
     wrap: js.UndefOr[Wrap] = js.undefined,
     xl: js.UndefOr[Xl] = js.undefined,
     xs: js.UndefOr[Xs] = js.undefined,
