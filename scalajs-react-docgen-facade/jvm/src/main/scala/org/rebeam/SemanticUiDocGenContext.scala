@@ -129,6 +129,12 @@ object SemanticUiDocGenContext extends DocGenContext {
     "onCompositionEnd", "onCompositionStart", "onCompositionUpdate"
   )
 
+  def eventFuncWithProps(eventType: String) = KnownFuncType(
+    scalaType = s"($eventType, Props) => Callback",
+    jsType = s"scalajs.js.Function2[$eventType, Props, Unit]",
+    assignment = (n: String) => s"(e: $eventType, p: Props) => $n(e, p).runNow()"
+  )
+
   // TODO factor out the useful general cases here - e.g. onBlah props
   def transformProp(c: Component, name: String, prop: Prop): (String, Prop) = {
 
@@ -149,12 +155,21 @@ object SemanticUiDocGenContext extends DocGenContext {
     if (c.displayName == "StepGroup" && name == "widths") {
       name -> prop.copy(propType = AnyType)
 
+    // Checkbox onClick accepts ReactMouseEvent and the Props of the
+    // Checkbox itself (e.g. to use value)
+    } else if (c.displayName == "Checkbox" && name == "onClick") {
+      name -> prop.copy(propType = eventFuncWithProps("ReactMouseEvent"))
+
+    // Checkbox onChange accepts a ReactEvent and the Props of the
+    // Checkbox itself (e.g. to use value)
+    } else if (c.displayName == "Checkbox" && name == "onChange") {
+      name -> prop.copy(propType = eventFuncWithProps("ReactEvent"))
+
     // Icon has some alternate string values with hyphens, which map to the
     // same sanitised enum object name in Scala - these represent the same
     // actual icons as the un-hyphenated version, so just remove them.
     // Also remove versions that only differ by case when sanitised, because
     // they have a space removed in a compound version or a hyphenated version
-
     } else if (c.displayName == "Icon" && name == "name") {
       val excludedValues = Set(
         "sign-in", "sign-out",

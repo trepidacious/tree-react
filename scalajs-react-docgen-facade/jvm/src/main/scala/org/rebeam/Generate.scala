@@ -35,15 +35,10 @@ object Generate {
 
     val rawD = Map[String, Component](
       componentJsonResources.asScala.toList.flatMap( jsonResource => {
-        println(s"Trying $jsonResource")
         val s = scala.io.Source.fromInputStream(getClass.getResourceAsStream("/" + jsonResource), "utf-8").mkString
         decode[Component](s).toOption.map(c => c.displayName -> c)
       }): _*
     )
-
-    //    val s = scala.io.Source.fromInputStream(getClass.getResourceAsStream("/sui/componentExport/Button.json"), "utf-8").mkString
-
-    //    val rawD = Map("Button" -> decode[Component](s).toOption.get)
 
     val processedD = context.preprocessComponents(rawD)
 
@@ -54,7 +49,7 @@ object Generate {
 
   def generateMUI(): Unit = {
 
-    implicit val context = MaterialUiDocGenContext
+    implicit val context: DocGenContext = MaterialUiDocGenContext
 
     def component(all: Map[String, Component], path: String, c: Component): Unit = {
       val code = genComponent(all, path, c)

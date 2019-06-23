@@ -119,7 +119,7 @@ lazy val scalajsReactMaterialUI = crossProject(JSPlatform, JVMPlatform).in(file(
     
     //Produce a module, so we can use @JSImport on material-ui
     scalaJSLinkerConfig ~= { _.withModuleKind(ModuleKind.CommonJSModule) }
-  )
+  ).dependsOn(scalajsReactCommon)
 
 lazy val scalajsReactMaterialUIJVM = scalajsReactMaterialUI.jvm
 lazy val scalajsReactMaterialUIJS = scalajsReactMaterialUI.js
@@ -456,7 +456,7 @@ lazy val electronApp = crossProject(JSPlatform, JVMPlatform).in(file("electron-a
   //Produce a module, so we can use @JSImport.
   scalaJSLinkerConfig ~= { _.withModuleKind(ModuleKind.CommonJSModule) }
 
-).dependsOn(scalajsElectron, scalajsElectronReact, scalajsReactMaterialUIExtra, treeReact, scalajsReactDocgenFacade)
+).dependsOn(scalajsElectron, scalajsElectronReact, scalajsReactMaterialUIExtra, treeReact, scalajsReactSemanticUI)
 
 lazy val electronAppJVM = electronApp.jvm
 lazy val electronAppJS = electronApp.js
