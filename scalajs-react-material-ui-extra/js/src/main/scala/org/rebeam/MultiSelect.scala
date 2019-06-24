@@ -1,13 +1,12 @@
 package org.rebeam
 
 import scala.scalajs.js
-
 import japgolly.scalajs.react._
 import japgolly.scalajs.react.vdom.VdomElement
 import japgolly.scalajs.react.vdom.html_<^._
-
 import org.rebeam.downshift.Downshift
 import org.rebeam.downshift.Downshift._
+import org.rebeam.react.Style
 
 /**
  * Uses Downshift and material-ui components to build an autocompleting
@@ -138,7 +137,7 @@ object MultiSelect {
                   tabIndex = -1: js.Any,
                   label = props.itemToString(item): VdomNode,
                   onDelete = handleDelete(item),
-                  style = mui.styles.Style(
+                  style = Style(
                     "margin" -> "3px 6px 3px 0px"
                   )
                 )
@@ -234,7 +233,7 @@ object MultiSelect {
 
               mui.Paper(
                 square = true,
-                style = mui.styles.Style(
+                style = Style(
                   "position" -> "absolute",
                   "zIndex" -> "1",
                   "marginTop" -> "4px",

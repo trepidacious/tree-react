@@ -222,7 +222,7 @@ object Fab {
     onTouchStart: js.UndefOr[ReactTouchEvent => Callback] = js.undefined,
     role: js.UndefOr[String] = js.undefined,
     size: js.UndefOr[Size] = js.undefined,
-    style: js.UndefOr[org.rebeam.mui.styles.Style] = js.undefined,
+    style: js.UndefOr[org.rebeam.react.Style] = js.undefined,
     tabIndex: js.UndefOr[js.Any] = js.undefined,
     `type`: js.UndefOr[String] = js.undefined,
     variant: js.UndefOr[Variant] = js.undefined,

@@ -1,7 +1,5 @@
 import sbtcrossproject.CrossPlugin.autoImport.crossProject
 
-
-
 name := "tree-react root project"
 version in ThisBuild := "0.0.1-SNAPSHOT"
 organization in ThisBuild := "org.rebeam"
@@ -121,7 +119,7 @@ lazy val scalajsReactMaterialUI = crossProject(JSPlatform, JVMPlatform).in(file(
     
     //Produce a module, so we can use @JSImport on material-ui
     scalaJSLinkerConfig ~= { _.withModuleKind(ModuleKind.CommonJSModule) }
-  )
+  ).dependsOn(scalajsReactCommon)
 
 lazy val scalajsReactMaterialUIJVM = scalajsReactMaterialUI.jvm
 lazy val scalajsReactMaterialUIJS = scalajsReactMaterialUI.js
@@ -172,9 +170,9 @@ lazy val scalajsReactSemanticUI = crossProject(JSPlatform, JVMPlatform).in(file(
   ).jsSettings(
     //Scalajs dependencies that are used on the client only
     resolvers += Resolver.jcenterRepo,
-  
+
     scalajsReactDeps,
-  
+
     //Produce a module, so we can use @JSImport on material-ui
     scalaJSLinkerConfig ~= { _.withModuleKind(ModuleKind.CommonJSModule) }
   ).dependsOn(scalajsReactCommon)
@@ -458,7 +456,7 @@ lazy val electronApp = crossProject(JSPlatform, JVMPlatform).in(file("electron-a
   //Produce a module, so we can use @JSImport.
   scalaJSLinkerConfig ~= { _.withModuleKind(ModuleKind.CommonJSModule) }
 
-).dependsOn(scalajsElectron, scalajsElectronReact, scalajsReactMaterialUIExtra, treeReact, scalajsReactDocgenFacade)
+).dependsOn(scalajsElectron, scalajsElectronReact, scalajsReactMaterialUIExtra, treeReact, scalajsReactSemanticUI)
 
 lazy val electronAppJVM = electronApp.jvm
 lazy val electronAppJS = electronApp.js
@@ -477,18 +475,46 @@ lazy val suiElectronApp = crossProject(JSPlatform, JVMPlatform).in(file("sui-ele
   )
 ).jvmSettings(
 
+).jsConfigure(
+   _.enablePlugins(ScalaJSBundlerPlugin)
 ).jsSettings(
 
-  // Move just the required artifacts to scalajs_src for electron project to use. This allows us to include that
+   webpackConfigFile :=
+     Some(baseDirectory.value / "src" / "main" / "resources" / "electron.webpack.config.js"),
+
+   // Move just the required artifacts to scalajs_src for electron project to use. This allows us to include that
   // directory in the electron app, and include only the minimal required files. Note the baseDirectory for the
   // js project is "js" in the root project directory, hence the "..".
-  artifactPath in (Compile, fastOptJS) := baseDirectory.value / ".." / "scalajs_src" / "fastOpt.js",
-  artifactPath in (Compile, fullOptJS) := baseDirectory.value / ".." / "scalajs_src" / "fullOpt.js",
+//  artifactPath in (Compile, fastOptJS) := baseDirectory.value / ".." / "scalajs_src" / "fastOpt.js",
+//  artifactPath in (Compile, fullOptJS) := baseDirectory.value / ".." / "scalajs_src" / "fullOpt.js",
+//
+//  //Produce a module, so we can use @JSImport.
+//  scalaJSLinkerConfig ~= { _.withModuleKind(ModuleKind.CommonJSModule) }
 
-  //Produce a module, so we can use @JSImport.
-  scalaJSLinkerConfig ~= { _.withModuleKind(ModuleKind.CommonJSModule) }
+   scalaJSUseMainModuleInitializer := true,
 
-).dependsOn(scalajsElectron, scalajsElectronReact, scalajsReactMaterialUIExtra, treeReact, scalajsReactSemanticUI)
+   // TODO use a main method instead, and make this do everything?
+   // Respect the export points so we can require from electron
+   // See https://scalacenter.github.io/scalajs-bundler/cookbook.html#several-entry-points
+//   webpackBundlingMode := BundlingMode.LibraryAndApplication(),
+
+
+   scalaJSModuleKind := ModuleKind.CommonJSModule,
+
+   npmDependencies in Compile ++= Seq(
+     "downshift" -> "^2.1.5",
+     "electron-is-dev" -> "^0.3.0",
+     "electron-log" -> "^2.2.17",
+     "electron-updater" -> "^3.1.2",
+     "react" -> "^16.5.1",
+     "react-dom" -> "^16.5.1",
+     "semantic-ui-css" -> "^2.4.1",
+     "semantic-ui-react" -> "^0.87.1"
+   )
+
+
+
+ ).dependsOn(scalajsElectron, scalajsElectronReact, scalajsReactMaterialUIExtra, treeReact, scalajsReactSemanticUI)
 
 lazy val suiElectronAppJVM = suiElectronApp.jvm
 lazy val suiElectronAppJS = suiElectronApp.js

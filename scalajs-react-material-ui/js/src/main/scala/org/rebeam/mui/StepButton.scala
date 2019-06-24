@@ -224,7 +224,7 @@ object StepButton {
     optional: js.UndefOr[VdomNode] = js.undefined,
     orientation: js.UndefOr[Orientation] = js.undefined,
     role: js.UndefOr[String] = js.undefined,
-    style: js.UndefOr[org.rebeam.mui.styles.Style] = js.undefined,
+    style: js.UndefOr[org.rebeam.react.Style] = js.undefined,
     tabIndex: js.UndefOr[js.Any] = js.undefined,
     `type`: js.UndefOr[String] = js.undefined,
     additionalProps: js.UndefOr[js.Object] = js.undefined

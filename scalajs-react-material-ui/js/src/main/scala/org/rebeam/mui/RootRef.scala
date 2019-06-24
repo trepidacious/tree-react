@@ -72,7 +72,7 @@ object RootRef {
   def apply(
     key: js.UndefOr[String] = js.undefined,
     rootRef: js.Any,
-    style: js.UndefOr[org.rebeam.mui.styles.Style] = js.undefined,
+    style: js.UndefOr[org.rebeam.react.Style] = js.undefined,
     additionalProps: js.UndefOr[js.Object] = js.undefined
   )(children: VdomNode *) = {
 

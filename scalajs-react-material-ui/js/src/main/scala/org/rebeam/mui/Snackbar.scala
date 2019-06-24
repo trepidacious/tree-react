@@ -149,7 +149,7 @@ object Snackbar {
     onMouseLeave: js.UndefOr[ReactMouseEvent => Callback] = js.undefined,
     open: js.UndefOr[Boolean] = js.undefined,
     resumeHideDuration: js.UndefOr[Double] = js.undefined,
-    style: js.UndefOr[org.rebeam.mui.styles.Style] = js.undefined,
+    style: js.UndefOr[org.rebeam.react.Style] = js.undefined,
     transitionDuration: js.UndefOr[js.Any] = js.undefined,
     additionalProps: js.UndefOr[js.Object] = js.undefined
   )(children: VdomNode *) = {

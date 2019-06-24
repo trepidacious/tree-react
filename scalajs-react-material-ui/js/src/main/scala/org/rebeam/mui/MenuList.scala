@@ -80,7 +80,7 @@ object MenuList {
     key: js.UndefOr[String] = js.undefined,
     onBlur: js.UndefOr[ReactFocusEvent => Callback] = js.undefined,
     onKeyDown: js.UndefOr[ReactKeyboardEvent => Callback] = js.undefined,
-    style: js.UndefOr[org.rebeam.mui.styles.Style] = js.undefined,
+    style: js.UndefOr[org.rebeam.react.Style] = js.undefined,
     subheader: js.UndefOr[VdomNode] = js.undefined,
     additionalProps: js.UndefOr[js.Object] = js.undefined
   )(children: VdomNode *) = {

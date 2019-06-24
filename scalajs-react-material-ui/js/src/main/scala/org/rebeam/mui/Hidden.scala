@@ -118,7 +118,7 @@ object Hidden {
     only: js.UndefOr[js.Any] = js.undefined,
     smDown: js.UndefOr[Boolean] = js.undefined,
     smUp: js.UndefOr[Boolean] = js.undefined,
-    style: js.UndefOr[org.rebeam.mui.styles.Style] = js.undefined,
+    style: js.UndefOr[org.rebeam.react.Style] = js.undefined,
     xlDown: js.UndefOr[Boolean] = js.undefined,
     xlUp: js.UndefOr[Boolean] = js.undefined,
     xsDown: js.UndefOr[Boolean] = js.undefined,

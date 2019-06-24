@@ -69,7 +69,7 @@ object BottomNavigation {
     key: js.UndefOr[String] = js.undefined,
     onChange: js.UndefOr[ReactEvent => Callback] = js.undefined,
     showLabels: js.UndefOr[Boolean] = js.undefined,
-    style: js.UndefOr[org.rebeam.mui.styles.Style] = js.undefined,
+    style: js.UndefOr[org.rebeam.react.Style] = js.undefined,
     value: js.UndefOr[js.Any] = js.undefined,
     additionalProps: js.UndefOr[js.Object] = js.undefined
   )(children: VdomNode *) = {

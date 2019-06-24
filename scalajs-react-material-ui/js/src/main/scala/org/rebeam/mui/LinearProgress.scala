@@ -83,7 +83,7 @@ object LinearProgress {
     classes: js.UndefOr[js.Object] = js.undefined,
     color: js.UndefOr[Color] = js.undefined,
     key: js.UndefOr[String] = js.undefined,
-    style: js.UndefOr[org.rebeam.mui.styles.Style] = js.undefined,
+    style: js.UndefOr[org.rebeam.react.Style] = js.undefined,
     value: js.UndefOr[Double] = js.undefined,
     valueBuffer: js.UndefOr[Double] = js.undefined,
     variant: js.UndefOr[Variant] = js.undefined,

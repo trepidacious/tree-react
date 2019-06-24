@@ -52,6 +52,35 @@ trait ViewPC[A] {
 }
 
 /**
+  * A "pure" View that does not access data context, except via a pair of Cursors, which
+  * also require a ReactTransactor.
+  *
+  * This provides three things relative to just using ScalaComponent.builder
+  * 1. Assumes immutable data in the Cursors and supplies suitable Reusability
+  * 2. Uses similar syntax to View
+  * 3. Allows Idea to quickly get the correct type annotation (this is just a bonus, not a factor in
+  *    deciding to have this trait available!)
+  * @tparam A The data type viewed via first Cursor
+  * @tparam B The data type viewed via second Cursor
+  **/
+trait ViewPC2[A, B] {
+  def apply(a: Cursor[A], b: Cursor[B])(implicit tx: ReactTransactor): VdomNode
+  def build(name: String, contexts: ReactDataContexts = ReactData.defaultContexts)(implicit irA: ImmutableReusability[A], irB: ImmutableReusability[B]): Component[(Cursor[A], Cursor[B]), Unit, Unit, CtorType.Props] = {
+    implicit val rA: Reusability[Cursor[A]] = irA.cursorReusability[A]
+    implicit val rB: Reusability[Cursor[B]] = irB.cursorReusability[B]
+
+    ScalaComponent.builder[(Cursor[A], Cursor[B])](name)
+      .render_P(
+        p => contexts.transactor.consume(
+          tx => this.apply(p._1, p._2)(tx)
+        )
+      )
+      .configure(Reusability.shouldComponentUpdate)
+      .build
+  }
+}
+
+/**
   * A "pure" View that does not access data context, but requires a ReactTransactor.
   *
   * This provides three things relative to just using ScalaComponent.builder

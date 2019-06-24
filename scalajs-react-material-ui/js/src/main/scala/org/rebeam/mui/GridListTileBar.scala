@@ -79,7 +79,7 @@ object GridListTileBar {
     className: js.UndefOr[String] = js.undefined,
     classes: js.UndefOr[js.Object] = js.undefined,
     key: js.UndefOr[String] = js.undefined,
-    style: js.UndefOr[org.rebeam.mui.styles.Style] = js.undefined,
+    style: js.UndefOr[org.rebeam.react.Style] = js.undefined,
     subtitle: js.UndefOr[VdomNode] = js.undefined,
     title: js.UndefOr[VdomNode] = js.undefined,
     titlePosition: js.UndefOr[TitlePosition] = js.undefined,

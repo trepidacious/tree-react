@@ -86,7 +86,7 @@ object Avatar {
     sizes: js.UndefOr[String] = js.undefined,
     src: js.UndefOr[String] = js.undefined,
     srcSet: js.UndefOr[String] = js.undefined,
-    style: js.UndefOr[org.rebeam.mui.styles.Style] = js.undefined,
+    style: js.UndefOr[org.rebeam.react.Style] = js.undefined,
     additionalProps: js.UndefOr[js.Object] = js.undefined
   )(children: VdomNode *) = {
 

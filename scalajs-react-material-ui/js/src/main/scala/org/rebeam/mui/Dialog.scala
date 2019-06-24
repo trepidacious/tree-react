@@ -227,7 +227,7 @@ object Dialog {
     onRendered: js.UndefOr[Callback] = js.undefined,
     open: Boolean,
     scroll: js.UndefOr[Scroll] = js.undefined,
-    style: js.UndefOr[org.rebeam.mui.styles.Style] = js.undefined,
+    style: js.UndefOr[org.rebeam.react.Style] = js.undefined,
     transitionDuration: js.UndefOr[js.Any] = js.undefined,
     additionalProps: js.UndefOr[js.Object] = js.undefined
   )(children: VdomNode *) = {

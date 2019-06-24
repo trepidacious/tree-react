@@ -81,7 +81,7 @@ object CardHeader {
     component: js.UndefOr[js.Any] = js.undefined,
     disableTypography: js.UndefOr[Boolean] = js.undefined,
     key: js.UndefOr[String] = js.undefined,
-    style: js.UndefOr[org.rebeam.mui.styles.Style] = js.undefined,
+    style: js.UndefOr[org.rebeam.react.Style] = js.undefined,
     subheader: js.UndefOr[VdomNode] = js.undefined,
     subheaderTypographyProps: js.UndefOr[js.Object] = js.undefined,
     title: js.UndefOr[VdomNode] = js.undefined,

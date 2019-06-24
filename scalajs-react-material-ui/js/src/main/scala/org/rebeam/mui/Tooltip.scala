@@ -141,7 +141,7 @@ object Tooltip {
     onOpen: js.UndefOr[Callback] = js.undefined,
     open: js.UndefOr[Boolean] = js.undefined,
     placement: js.UndefOr[Placement] = js.undefined,
-    style: js.UndefOr[org.rebeam.mui.styles.Style] = js.undefined,
+    style: js.UndefOr[org.rebeam.react.Style] = js.undefined,
     theme: js.Object,
     title: VdomNode,
     additionalProps: js.UndefOr[js.Object] = js.undefined

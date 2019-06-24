@@ -21,8 +21,7 @@ object Generate {
     ()
   }
 
-  def main(args: Array[String]): Unit = {
-
+  def generateSUI(): Unit = {
     val reflections = new Reflections("sui.componentExport", new ResourcesScanner)
     val componentJsonResources = reflections.getResources(Pattern.compile(".*\\.json"))
 
@@ -36,15 +35,31 @@ object Generate {
 
     val rawD = Map[String, Component](
       componentJsonResources.asScala.toList.flatMap( jsonResource => {
-        println(s"Trying $jsonResource")
         val s = scala.io.Source.fromInputStream(getClass.getResourceAsStream("/" + jsonResource), "utf-8").mkString
         decode[Component](s).toOption.map(c => c.displayName -> c)
       }): _*
     )
 
-//    val s = scala.io.Source.fromInputStream(getClass.getResourceAsStream("/sui/componentExport/Button.json"), "utf-8").mkString
+    val processedD = context.preprocessComponents(rawD)
 
-//    val rawD = Map("Button" -> decode[Component](s).toOption.get)
+    processedD.foreach{
+      case (path, c) => component(processedD, path, c)
+    }
+  }
+
+  def generateMUI(): Unit = {
+
+    implicit val context: DocGenContext = MaterialUiDocGenContext
+
+    def component(all: Map[String, Component], path: String, c: Component): Unit = {
+      val code = genComponent(all, path, c)
+      val name = c.displayName
+      code.foreach(s => writeToFile(s"./scalajs-react-material-ui/js/src/main/scala/org/rebeam/mui/$name.scala", s.replaceAllLiterally("\r\n", "\n")))
+    }
+
+    val s = scala.io.Source.fromInputStream(getClass.getResourceAsStream("/mui/muiapi.json"), "utf-8").mkString
+
+    val rawD = decode[Map[String, Component]](s).toOption.get
 
     val processedD = context.preprocessComponents(rawD)
 
@@ -52,5 +67,10 @@ object Generate {
       case (path, c) => component(processedD, path, c)
     }
 
+  }
+
+  def main(args: Array[String]): Unit = {
+    generateSUI()
+    generateMUI()
   }
 }

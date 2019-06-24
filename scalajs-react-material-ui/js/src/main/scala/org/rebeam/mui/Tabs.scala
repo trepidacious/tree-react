@@ -137,7 +137,7 @@ object Tabs {
     onChange: js.UndefOr[ReactEvent => Callback] = js.undefined,
     scrollButtons: js.UndefOr[ScrollButtons] = js.undefined,
     scrollable: js.UndefOr[Boolean] = js.undefined,
-    style: js.UndefOr[org.rebeam.mui.styles.Style] = js.undefined,
+    style: js.UndefOr[org.rebeam.react.Style] = js.undefined,
     textColor: js.UndefOr[TextColor] = js.undefined,
     theme: js.Object,
     value: js.UndefOr[js.Any] = js.undefined,

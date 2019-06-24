@@ -208,7 +208,7 @@ object BottomNavigationAction {
     role: js.UndefOr[String] = js.undefined,
     selected: js.UndefOr[Boolean] = js.undefined,
     showLabel: js.UndefOr[Boolean] = js.undefined,
-    style: js.UndefOr[org.rebeam.mui.styles.Style] = js.undefined,
+    style: js.UndefOr[org.rebeam.react.Style] = js.undefined,
     tabIndex: js.UndefOr[js.Any] = js.undefined,
     `type`: js.UndefOr[String] = js.undefined,
     value: js.UndefOr[js.Any] = js.undefined,

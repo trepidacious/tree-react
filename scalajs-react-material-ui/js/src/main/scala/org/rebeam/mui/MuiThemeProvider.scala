@@ -66,7 +66,7 @@ object MuiThemeProvider {
     key: js.UndefOr[String] = js.undefined,
     sheetsCache: js.UndefOr[js.Object] = js.undefined,
     sheetsManager: js.UndefOr[js.Object] = js.undefined,
-    style: js.UndefOr[org.rebeam.mui.styles.Style] = js.undefined,
+    style: js.UndefOr[org.rebeam.react.Style] = js.undefined,
     theme: js.Any,
     additionalProps: js.UndefOr[js.Object] = js.undefined
   )(children: VdomNode *) = {

@@ -107,7 +107,7 @@ object Popper {
     open: Boolean,
     placement: js.UndefOr[Placement] = js.undefined,
     popperOptions: js.UndefOr[js.Object] = js.undefined,
-    style: js.UndefOr[org.rebeam.mui.styles.Style] = js.undefined,
+    style: js.UndefOr[org.rebeam.react.Style] = js.undefined,
     transition: js.UndefOr[Boolean] = js.undefined,
     additionalProps: js.UndefOr[js.Object] = js.undefined
   )(children: VdomNode *) = {

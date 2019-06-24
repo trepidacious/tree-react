@@ -164,19 +164,16 @@ For example, `ListItem` is processed as follows:
 ### Todo
 
 1. Support `PropTypes.oneOfType`
-2. Better support and testing of array props
-3. Colors
-4. More testing/demos
-5. Aria properties
-6. id, ref, etc.
-7. Detect `classes` prop and accept an appropriate type?
-8. Consider changing PascalCase prop names to camelCase to be more idiomatic. Consider typing these based on a map from prop names to the Component name of the sub element. This would still allow use of a `js.Object` containing props, in an `additionalProps` field.
-9. Support component methods
-10. Support for withStyles?
-11. SUI: Better support for `as` property - detect the custom prop type and use a custom scala mapping?
-12. SUI: Use the component grouping information to replicate `List.Item` etc. via objects?
-13: SUI: Test components other than button!
-14. SUI: Document export process, move code to this project or submit pull request to semantic-ui-react?
+1. Support component methods
+1. SUI: Better support for `as` property - detect the custom prop type and use a custom scala mapping?
+1. SUI: Use the component grouping information to replicate `List.Item` etc. via objects?
+1: SUI: Test components other than button!
+1. SUI: Document export process, move code to this project or submit pull request to semantic-ui-react?
+1. sui-electron-app: Bundle with useYarn? 
+1. sui-electron-app: Bundle main process index.js as well? 
+1. sui-electron-app: Process semantic theme?
+1. MUI: Colors, more testing/demos, Aria properties, id, ref, etc., detect `classes` prop and accept an appropriate type? Support for withStyles?
+1. MUI: Consider changing PascalCase prop names to camelCase to be more idiomatic. Consider typing these based on a map from prop names to the Component name of the sub element. This would still allow use of a `js.Object` containing props, in an `additionalProps` field.
 
 ## scalajs-react-material-icons
 
