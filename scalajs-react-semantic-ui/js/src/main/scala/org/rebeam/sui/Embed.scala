@@ -20,7 +20,7 @@ object Embed {
   @js.native
   trait Props extends js.Object {
     var active: js.UndefOr[Boolean] = js.native
-    var as: js.UndefOr[js.Any] = js.native
+    var as: js.UndefOr[String] = js.native
     var aspectRatio: js.UndefOr[String] = js.native
     var autoplay: js.UndefOr[js.Any] = js.native
     var brandedUI: js.UndefOr[js.Any] = js.native
@@ -102,7 +102,7 @@ object Embed {
    */
   def apply(
     active: js.UndefOr[Boolean] = js.undefined,
-    as: js.UndefOr[js.Any] = js.undefined,
+    as: js.UndefOr[String] = js.undefined,
     aspectRatio: js.UndefOr[AspectRatio] = js.undefined,
     autoplay: js.UndefOr[js.Any] = js.undefined,
     brandedUI: js.UndefOr[js.Any] = js.undefined,

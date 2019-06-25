@@ -29,7 +29,7 @@ object Rating {
           
   @js.native
   trait Props extends js.Object {
-    var as: js.UndefOr[js.Any] = js.native
+    var as: js.UndefOr[String] = js.native
     var className: js.UndefOr[String] = js.native
     var clearable: js.UndefOr[js.Any] = js.native
     var defaultRating: js.UndefOr[js.Any] = js.native
@@ -90,7 +90,7 @@ object Rating {
    *        Since this is untyped, use with care - e.g. make sure props are in the correct format for JS components
    */
   def apply(
-    as: js.UndefOr[js.Any] = js.undefined,
+    as: js.UndefOr[String] = js.undefined,
     className: js.UndefOr[String] = js.undefined,
     clearable: js.UndefOr[js.Any] = js.undefined,
     defaultRating: js.UndefOr[js.Any] = js.undefined,

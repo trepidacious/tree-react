@@ -30,7 +30,7 @@ object Modal {
   @js.native
   trait Props extends js.Object {
     var actions: js.UndefOr[js.Any] = js.native
-    var as: js.UndefOr[js.Any] = js.native
+    var as: js.UndefOr[String] = js.native
     var basic: js.UndefOr[Boolean] = js.native
     var centered: js.UndefOr[Boolean] = js.native
     var className: js.UndefOr[String] = js.native
@@ -141,7 +141,7 @@ object Modal {
    */
   def apply(
     actions: js.UndefOr[js.Any] = js.undefined,
-    as: js.UndefOr[js.Any] = js.undefined,
+    as: js.UndefOr[String] = js.undefined,
     basic: js.UndefOr[Boolean] = js.undefined,
     centered: js.UndefOr[Boolean] = js.undefined,
     className: js.UndefOr[String] = js.undefined,

@@ -30,7 +30,7 @@ object Form {
   @js.native
   trait Props extends js.Object {
     var action: js.UndefOr[String] = js.native
-    var as: js.UndefOr[js.Any] = js.native
+    var as: js.UndefOr[String] = js.native
     var className: js.UndefOr[String] = js.native
     var error: js.UndefOr[Boolean] = js.native
     var inverted: js.UndefOr[Boolean] = js.native
@@ -105,7 +105,7 @@ object Form {
    */
   def apply(
     action: js.UndefOr[String] = js.undefined,
-    as: js.UndefOr[js.Any] = js.undefined,
+    as: js.UndefOr[String] = js.undefined,
     className: js.UndefOr[String] = js.undefined,
     error: js.UndefOr[Boolean] = js.undefined,
     inverted: js.UndefOr[Boolean] = js.undefined,

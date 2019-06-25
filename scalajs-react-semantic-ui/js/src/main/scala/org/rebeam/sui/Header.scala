@@ -55,7 +55,7 @@ object Header {
           
   @js.native
   trait Props extends js.Object {
-    var as: js.UndefOr[js.Any] = js.native
+    var as: js.UndefOr[String] = js.native
     var attached: js.UndefOr[js.Any] = js.native
     var block: js.UndefOr[Boolean] = js.native
     var className: js.UndefOr[String] = js.native
@@ -131,7 +131,7 @@ object Header {
    *        Since this is untyped, use with care - e.g. make sure props are in the correct format for JS components
    */
   def apply(
-    as: js.UndefOr[js.Any] = js.undefined,
+    as: js.UndefOr[String] = js.undefined,
     attached: js.UndefOr[js.Any] = js.undefined,
     block: js.UndefOr[Boolean] = js.undefined,
     className: js.UndefOr[String] = js.undefined,

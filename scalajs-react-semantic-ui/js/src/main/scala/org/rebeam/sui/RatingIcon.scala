@@ -12,7 +12,7 @@ object RatingIcon {
   @js.native
   trait Props extends js.Object {
     var active: js.UndefOr[Boolean] = js.native
-    var as: js.UndefOr[js.Any] = js.native
+    var as: js.UndefOr[String] = js.native
     var className: js.UndefOr[String] = js.native
     var index: js.UndefOr[Double] = js.native
     var key: js.UndefOr[String] = js.native
@@ -71,7 +71,7 @@ object RatingIcon {
    */
   def apply(
     active: js.UndefOr[Boolean] = js.undefined,
-    as: js.UndefOr[js.Any] = js.undefined,
+    as: js.UndefOr[String] = js.undefined,
     className: js.UndefOr[String] = js.undefined,
     index: js.UndefOr[Double] = js.undefined,
     key: js.UndefOr[String] = js.undefined,

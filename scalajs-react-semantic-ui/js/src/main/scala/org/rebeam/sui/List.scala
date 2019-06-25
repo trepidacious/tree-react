@@ -40,7 +40,7 @@ object List {
   @js.native
   trait Props extends js.Object {
     var animated: js.UndefOr[Boolean] = js.native
-    var as: js.UndefOr[js.Any] = js.native
+    var as: js.UndefOr[String] = js.native
     var bulleted: js.UndefOr[Boolean] = js.native
     var celled: js.UndefOr[Boolean] = js.native
     var className: js.UndefOr[String] = js.native
@@ -125,7 +125,7 @@ object List {
    */
   def apply(
     animated: js.UndefOr[Boolean] = js.undefined,
-    as: js.UndefOr[js.Any] = js.undefined,
+    as: js.UndefOr[String] = js.undefined,
     bulleted: js.UndefOr[Boolean] = js.undefined,
     celled: js.UndefOr[Boolean] = js.undefined,
     className: js.UndefOr[String] = js.undefined,

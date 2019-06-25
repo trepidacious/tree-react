@@ -20,7 +20,7 @@ object Tab {
   @js.native
   trait Props extends js.Object {
     var activeIndex: js.UndefOr[js.Any] = js.native
-    var as: js.UndefOr[js.Any] = js.native
+    var as: js.UndefOr[String] = js.native
     var defaultActiveIndex: js.UndefOr[js.Any] = js.native
     var grid: js.UndefOr[js.Object] = js.native
     var key: js.UndefOr[String] = js.native
@@ -83,7 +83,7 @@ object Tab {
    */
   def apply(
     activeIndex: js.UndefOr[js.Any] = js.undefined,
-    as: js.UndefOr[js.Any] = js.undefined,
+    as: js.UndefOr[String] = js.undefined,
     defaultActiveIndex: js.UndefOr[js.Any] = js.undefined,
     grid: js.UndefOr[js.Object] = js.undefined,
     key: js.UndefOr[String] = js.undefined,

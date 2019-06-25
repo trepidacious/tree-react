@@ -45,7 +45,7 @@ object Input {
   trait Props extends js.Object {
     var action: js.UndefOr[js.Any] = js.native
     var actionPosition: js.UndefOr[String] = js.native
-    var as: js.UndefOr[js.Any] = js.native
+    var as: js.UndefOr[String] = js.native
     var className: js.UndefOr[String] = js.native
     var disabled: js.UndefOr[Boolean] = js.native
     var error: js.UndefOr[Boolean] = js.native
@@ -144,7 +144,7 @@ object Input {
   def apply(
     action: js.UndefOr[js.Any] = js.undefined,
     actionPosition: js.UndefOr[ActionPosition] = js.undefined,
-    as: js.UndefOr[js.Any] = js.undefined,
+    as: js.UndefOr[String] = js.undefined,
     className: js.UndefOr[String] = js.undefined,
     disabled: js.UndefOr[Boolean] = js.undefined,
     error: js.UndefOr[Boolean] = js.undefined,

@@ -47,7 +47,7 @@ object Progress {
   @js.native
   trait Props extends js.Object {
     var active: js.UndefOr[Boolean] = js.native
-    var as: js.UndefOr[js.Any] = js.native
+    var as: js.UndefOr[String] = js.native
     var attached: js.UndefOr[String] = js.native
     var autoSuccess: js.UndefOr[Boolean] = js.native
     var className: js.UndefOr[String] = js.native
@@ -135,7 +135,7 @@ object Progress {
    */
   def apply(
     active: js.UndefOr[Boolean] = js.undefined,
-    as: js.UndefOr[js.Any] = js.undefined,
+    as: js.UndefOr[String] = js.undefined,
     attached: js.UndefOr[Attached] = js.undefined,
     autoSuccess: js.UndefOr[Boolean] = js.undefined,
     className: js.UndefOr[String] = js.undefined,

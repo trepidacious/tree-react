@@ -11,7 +11,7 @@ object TextArea {
   
   @js.native
   trait Props extends js.Object {
-    var as: js.UndefOr[js.Any] = js.native
+    var as: js.UndefOr[String] = js.native
     var key: js.UndefOr[String] = js.native
     var onChange: js.UndefOr[scalajs.js.Function1[ReactEvent, Unit]] = js.native
     var onInput: js.UndefOr[scalajs.js.Function0[Unit]] = js.native
@@ -57,7 +57,7 @@ object TextArea {
    *        Since this is untyped, use with care - e.g. make sure props are in the correct format for JS components
    */
   def apply(
-    as: js.UndefOr[js.Any] = js.undefined,
+    as: js.UndefOr[String] = js.undefined,
     key: js.UndefOr[String] = js.undefined,
     onChange: js.UndefOr[ReactEvent => Callback] = js.undefined,
     onInput: js.UndefOr[Callback] = js.undefined,

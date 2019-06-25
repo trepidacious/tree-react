@@ -132,6 +132,7 @@ object DocGenGen {
       case CustomType(raw) => "js.Any"
 
       case KnownFuncType(scalaType, _, _) => scalaType
+      case AnyComponentType => "String"
       case StyleType => "org.rebeam.react.Style"
     }
     if (p.required) t else s"js.UndefOr[$t]"
@@ -167,6 +168,7 @@ object DocGenGen {
       case CustomType(raw) => "js.Any"
 
       case KnownFuncType(_, jsType, _) => jsType
+      case AnyComponentType => "String"
       case StyleType => "js.Object"
     }
     if (p.required) t else s"js.UndefOr[$t]"
