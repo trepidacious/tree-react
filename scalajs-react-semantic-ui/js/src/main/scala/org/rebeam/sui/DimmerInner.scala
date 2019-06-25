@@ -19,7 +19,7 @@ object DimmerInner {
   @js.native
   trait Props extends js.Object {
     var active: js.UndefOr[Boolean] = js.native
-    var as: js.UndefOr[js.Any] = js.native
+    var as: js.UndefOr[String] = js.native
     var className: js.UndefOr[String] = js.native
     var content: js.UndefOr[js.Any] = js.native
     var disabled: js.UndefOr[Boolean] = js.native
@@ -86,7 +86,7 @@ object DimmerInner {
    */
   def apply(
     active: js.UndefOr[Boolean] = js.undefined,
-    as: js.UndefOr[js.Any] = js.undefined,
+    as: js.UndefOr[String] = js.undefined,
     className: js.UndefOr[String] = js.undefined,
     content: js.UndefOr[js.Any] = js.undefined,
     disabled: js.UndefOr[Boolean] = js.undefined,

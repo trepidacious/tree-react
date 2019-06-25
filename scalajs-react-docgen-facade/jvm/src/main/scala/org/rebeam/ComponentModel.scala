@@ -121,6 +121,12 @@ object ComponentModel {
   case class KnownFuncType(scalaType: String, jsType: String, assignment: String => String) extends PropType
 
   /**
+    * A prop accepting any acceptable Component - currently just a String, since it's hard to use a scala component
+    * this way. We might add js components later
+    */
+  case object AnyComponentType extends PropType
+
+  /**
    * Accepts a style, of type org.rebeam.react.Style
    */
   case object StyleType extends PropType

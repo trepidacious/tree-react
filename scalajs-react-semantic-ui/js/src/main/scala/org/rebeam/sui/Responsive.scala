@@ -11,7 +11,7 @@ object Responsive {
   
   @js.native
   trait Props extends js.Object {
-    var as: js.UndefOr[js.Any] = js.native
+    var as: js.UndefOr[String] = js.native
     var fireOnMount: js.UndefOr[Boolean] = js.native
     var getWidth: js.UndefOr[js.Any] = js.native
     var key: js.UndefOr[String] = js.native
@@ -61,7 +61,7 @@ object Responsive {
    *        Since this is untyped, use with care - e.g. make sure props are in the correct format for JS components
    */
   def apply(
-    as: js.UndefOr[js.Any] = js.undefined,
+    as: js.UndefOr[String] = js.undefined,
     fireOnMount: js.UndefOr[Boolean] = js.undefined,
     getWidth: js.UndefOr[js.Any] = js.undefined,
     key: js.UndefOr[String] = js.undefined,

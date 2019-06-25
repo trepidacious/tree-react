@@ -18,7 +18,7 @@ object Feed {
           
   @js.native
   trait Props extends js.Object {
-    var as: js.UndefOr[js.Any] = js.native
+    var as: js.UndefOr[String] = js.native
     var className: js.UndefOr[String] = js.native
     var events: js.UndefOr[js.Any] = js.native
     var key: js.UndefOr[String] = js.native
@@ -58,7 +58,7 @@ object Feed {
    *        Since this is untyped, use with care - e.g. make sure props are in the correct format for JS components
    */
   def apply(
-    as: js.UndefOr[js.Any] = js.undefined,
+    as: js.UndefOr[String] = js.undefined,
     className: js.UndefOr[String] = js.undefined,
     events: js.UndefOr[js.Any] = js.undefined,
     key: js.UndefOr[String] = js.undefined,

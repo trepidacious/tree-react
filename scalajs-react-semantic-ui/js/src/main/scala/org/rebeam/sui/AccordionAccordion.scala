@@ -12,7 +12,7 @@ object AccordionAccordion {
   @js.native
   trait Props extends js.Object {
     var activeIndex: js.UndefOr[js.Any] = js.native
-    var as: js.UndefOr[js.Any] = js.native
+    var as: js.UndefOr[String] = js.native
     var className: js.UndefOr[String] = js.native
     var defaultActiveIndex: js.UndefOr[js.Any] = js.native
     var exclusive: js.UndefOr[Boolean] = js.native
@@ -64,7 +64,7 @@ object AccordionAccordion {
    */
   def apply(
     activeIndex: js.UndefOr[js.Any] = js.undefined,
-    as: js.UndefOr[js.Any] = js.undefined,
+    as: js.UndefOr[String] = js.undefined,
     className: js.UndefOr[String] = js.undefined,
     defaultActiveIndex: js.UndefOr[js.Any] = js.undefined,
     exclusive: js.UndefOr[Boolean] = js.undefined,

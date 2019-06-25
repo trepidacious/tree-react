@@ -11,7 +11,7 @@ object DimmerDimmable {
   
   @js.native
   trait Props extends js.Object {
-    var as: js.UndefOr[js.Any] = js.native
+    var as: js.UndefOr[String] = js.native
     var blurring: js.UndefOr[Boolean] = js.native
     var className: js.UndefOr[String] = js.native
     var content: js.UndefOr[js.Any] = js.native
@@ -54,7 +54,7 @@ object DimmerDimmable {
    *        Since this is untyped, use with care - e.g. make sure props are in the correct format for JS components
    */
   def apply(
-    as: js.UndefOr[js.Any] = js.undefined,
+    as: js.UndefOr[String] = js.undefined,
     blurring: js.UndefOr[Boolean] = js.undefined,
     className: js.UndefOr[String] = js.undefined,
     content: js.UndefOr[js.Any] = js.undefined,

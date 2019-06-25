@@ -1304,7 +1304,7 @@ object Icon {
   trait Props extends js.Object {
     var `aria-hidden`: js.UndefOr[String] = js.native
     var `aria-label`: js.UndefOr[String] = js.native
-    var as: js.UndefOr[js.Any] = js.native
+    var as: js.UndefOr[String] = js.native
     var bordered: js.UndefOr[Boolean] = js.native
     var circular: js.UndefOr[Boolean] = js.native
     var className: js.UndefOr[String] = js.native
@@ -1382,7 +1382,7 @@ object Icon {
   def apply(
     ariaHidden: js.UndefOr[String] = js.undefined,
     ariaLabel: js.UndefOr[String] = js.undefined,
-    as: js.UndefOr[js.Any] = js.undefined,
+    as: js.UndefOr[String] = js.undefined,
     bordered: js.UndefOr[Boolean] = js.undefined,
     circular: js.UndefOr[Boolean] = js.undefined,
     className: js.UndefOr[String] = js.undefined,

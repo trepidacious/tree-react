@@ -165,7 +165,6 @@ For example, `ListItem` is processed as follows:
 
 1. Support `PropTypes.oneOfType`
 1. Support component methods
-1. SUI: Better support for `as` property - detect the custom prop type and use a custom scala mapping?
 1. SUI: Use the component grouping information to replicate `List.Item` etc. via objects?
 1: SUI: Test components other than button!
 1. SUI: Document export process, move code to this project or submit pull request to semantic-ui-react?

@@ -165,6 +165,9 @@ object SemanticUiDocGenContext extends DocGenContext {
     } else if (c.displayName == "Checkbox" && name == "onChange") {
       name -> prop.copy(propType = eventFuncWithProps("ReactEvent"))
 
+    } else if (prop.propType == CustomType("customPropTypes.as")) {
+      name -> prop.copy(propType = AnyComponentType)
+
     // Icon has some alternate string values with hyphens, which map to the
     // same sanitised enum object name in Scala - these represent the same
     // actual icons as the un-hyphenated version, so just remove them.

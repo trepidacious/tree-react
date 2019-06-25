@@ -56,7 +56,7 @@ object Segment {
           
   @js.native
   trait Props extends js.Object {
-    var as: js.UndefOr[js.Any] = js.native
+    var as: js.UndefOr[String] = js.native
     var attached: js.UndefOr[js.Any] = js.native
     var basic: js.UndefOr[Boolean] = js.native
     var circular: js.UndefOr[Boolean] = js.native
@@ -153,7 +153,7 @@ object Segment {
    *        Since this is untyped, use with care - e.g. make sure props are in the correct format for JS components
    */
   def apply(
-    as: js.UndefOr[js.Any] = js.undefined,
+    as: js.UndefOr[String] = js.undefined,
     attached: js.UndefOr[js.Any] = js.undefined,
     basic: js.UndefOr[Boolean] = js.undefined,
     circular: js.UndefOr[Boolean] = js.undefined,

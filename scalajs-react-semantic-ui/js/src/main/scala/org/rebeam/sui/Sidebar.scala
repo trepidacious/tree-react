@@ -41,7 +41,7 @@ object Sidebar {
   @js.native
   trait Props extends js.Object {
     var animation: js.UndefOr[String] = js.native
-    var as: js.UndefOr[js.Any] = js.native
+    var as: js.UndefOr[String] = js.native
     var className: js.UndefOr[String] = js.native
     var content: js.UndefOr[js.Any] = js.native
     var direction: js.UndefOr[String] = js.native
@@ -117,7 +117,7 @@ object Sidebar {
    */
   def apply(
     animation: js.UndefOr[Animation] = js.undefined,
-    as: js.UndefOr[js.Any] = js.undefined,
+    as: js.UndefOr[String] = js.undefined,
     className: js.UndefOr[String] = js.undefined,
     content: js.UndefOr[js.Any] = js.undefined,
     direction: js.UndefOr[Direction] = js.undefined,
