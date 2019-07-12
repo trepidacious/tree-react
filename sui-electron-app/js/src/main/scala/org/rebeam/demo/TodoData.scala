@@ -38,7 +38,6 @@ object TodoData {
 
   // We can edit a TodoItem by specifying a new value, or using a lens to get to completed or text fields
   implicit val todoItemDeltaCodec: DeltaCodec[TodoItem] =
-
     value[TodoItem] or
 //      lensOption("completed", TodoItem.completed) or  // completed is an Optional field, so use lensOption
       lens("text", TodoItem.text) or
@@ -52,14 +51,12 @@ object TodoData {
 
 //  implicit val otListCharCodec: DeltaCodec[OTList[Char]] = otList[Char]
 
-  // We can edit a TodoList by specifying a new value, or editing items
+  // We can edit a TodoList by specifying a new value, or editing items using their refs
   implicit val todoListDeltaCodec: DeltaCodec[TodoList] = value[TodoList] //or lens("name", TodoList.name)
 
   // Both TodoItem and TodoList can be referenced by Id, so we need IdCodecs
   implicit val todoItemIdCodec: IdCodec[TodoItem] = IdCodec[TodoItem]("TodoItem")
   implicit val todoListIdCodec: IdCodec[TodoList] = IdCodec[TodoList]("TodoList")
-
-//  implicit val charIdCodec: IdCodec[Char] = IdCodecBasic[Char](IdType("Char"), implicitly[Encoder[Char]], implicitly[Decoder[Char]], Codec.empty)
 
   // Transaction to build our initial example data
   object example extends Transaction {
@@ -72,8 +69,7 @@ object TodoData {
             item <- put[TodoItem](id => TodoItem(id, c.moment, None, s"Todo $i"))
           } yield item.id
         )
-//        name <- createOTList("Todo List".toList)
-        _ <- put[TodoList](TodoList(_, itemIds))//, name))
+        _ <- put[TodoList](TodoList(_, itemIds))
       } yield ()
     }
   }

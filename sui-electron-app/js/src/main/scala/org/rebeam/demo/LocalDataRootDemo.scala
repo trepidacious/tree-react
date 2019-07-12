@@ -69,25 +69,32 @@ object LocalDataRootDemo {
 
   }.build("stringView")
 
+  // A View accepting the Id of a TodoItem.
+  // This is a View so that it can use ReactViewOps to create a cursor at the id to view/edit the TodoItem.
+  // The view will be re-rendered whenever the data at the Id changes.
   val todoItemView: Component[Id[TodoItem], Unit, Unit, CtorType.Props] = new View[Id[TodoItem]] {
     private val logger = getLogger
 
     def apply[F[_]: Monad](id: Id[TodoItem])(implicit v: ReactViewOps[F], tx: ReactTransactor): F[VdomElement] = {
       logger.debug(s"View applying from $id")
+
       // By creating a cursor at the Id, we can enable navigation through the TodoItem
       v.cursorAt[TodoItem](id).map(
         cursor => {
-          val textCursor = cursor.zoom(TodoItem.text)
 
+          // We want to use a sui.Input directly below so we can pass in the checkbox as a label,
+          // so we need to handle changes here
+          val textCursor = cursor.zoom(TodoItem.text)
           def onChange(e: ReactEventFromInput): Callback = textCursor.set(e.target.value)
 
+          // Checkbox to use to complete/un-complete todo item
           val checkbox = sui.Checkbox(
-//            toggle = true: js.Any,
             checked = cursor.a.completed.isDefined,
-            onChange = (e: ReactEvent, p: sui.Checkbox.Props) =>
+            onChange = (_: ReactEvent, p: sui.Checkbox.Props) =>
               cursor.delta(TodoItemCompletion(p.checked.getOrElse(false)))
           )
 
+          // Actual display is a list item containing an input, with the checkbox as the input's label
           sui.ListItem()(
             sui.Input(
               fluid = true,
@@ -108,7 +115,6 @@ object LocalDataRootDemo {
   val todoListView: Component[TodoList, Unit, Unit, CtorType.Props] = new ViewP[TodoList] {
     override def apply(a: TodoList): VdomNode = {
       sui.List(
-//        divided = true,
         verticalAlign = sui.List.VerticalAlign.Middle,
         relaxed = true: js.Any
       )(
@@ -118,6 +124,7 @@ object LocalDataRootDemo {
   }.build("todoListView")
 
   // This component will manage and render an STM, initialised to the example data
+  // We only use the index for data, so the model is Unit
   val dataProvider = LocalDataRoot.component[Unit, TodoIndex](
     (_, index) =>
       <.div(
@@ -125,8 +132,8 @@ object LocalDataRootDemo {
         index.todoList.whenDefined(todoListView(_))
       )
   )(
-    todoIndexer,
-    example
+    todoIndexer,  //This indexer will provide the most recently added list
+    example       //This example Transaction populates the STM to display
   )
 
 }
