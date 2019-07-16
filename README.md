@@ -171,6 +171,7 @@ For example, `ListItem` is processed as follows:
 1. sui-electron-app: Bundle with useYarn? 
 1. sui-electron-app: Bundle main process index.js as well? 
 1. sui-electron-app: Process semantic theme?
+1. sui-electron-app: Use library bundling, see also https://github.com/rabejens/scalajs-bundler/blob/package_for_electron/manual/src/ornate/cookbook.md
 1. MUI: Colors, more testing/demos, Aria properties, id, ref, etc., detect `classes` prop and accept an appropriate type? Support for withStyles?
 1. MUI: Consider changing PascalCase prop names to camelCase to be more idiomatic. Consider typing these based on a map from prop names to the Component name of the sub element. This would still allow use of a `js.Object` containing props, in an `additionalProps` field.
 
