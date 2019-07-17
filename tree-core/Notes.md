@@ -30,12 +30,14 @@ The client edits the data by producing a sequence of transactions (the transacti
  12. Client removes the local transaction from the pending list, now it has been applied.
  13. Client produces a new optimistic data state using the new authoritative data state and any remaining pending local transactions.
  
-In theory the server can reject transactions and inform clients - in practice transactions should be designed so that they can always be attempted, and will do nothing if they cannot be applied. This is why they should carry the intent of the user rather than an exact delta to the data - they should be capable of observing the actual state of the data on the server when they are executed, and if necessary adapting to this new state. For example, if a transaction edits an element in a list, that element should be referenced by some persistent identifier, rather than as an index in teh list, so that if the list has been reordered, the correct element is still edited, rather than the element that happens to be at the same index. The implementation of this is left to individual transactions at present, however in future the system may also provide support for operational transformation, by allowing deltas to see remote deltas that have been applied between their original point of application on the client, and their new point of application on the server.
+In theory the server can reject transactions and inform clients - in practice transactions should be designed so that they can always be attempted, and will do nothing if they cannot be applied. This is why they should carry the intent of the user rather than an exact delta to the data - they should be capable of observing the actual state of the data on the server when they are executed, and if necessary adapting to this new state. For example, if a transaction edits an element in a list, that element should be referenced by some persistent identifier, rather than as an index in the list, so that if the list has been reordered, the correct element is still edited, rather than the element that happens to be at the same index. The implementation of this is left to individual transactions at present, however in future the system may also provide support for operational transformation, by allowing deltas to see remote deltas that have been applied between their original point of application on the client, and their new point of application on the server.
 Note this is NOT the same as an optimistic transaction system used for enhanced concurrency - the transactions are always applied exactly once on the server, and are not run concurrently by the server.
 The optimistic aspect of the application is on the clients - they initially assume that their transactions will be applied on the server exactly as they are on the client, with no other clients' transactions interleaved.
 This allows for apparently instant editing on each client. When interleaved remote transactions are received, the client state is updated to reflect this, and so data is eventually consistent on the server and client.
 
 Transactions must be designed so that they preserve the intent of the user when reordered, including doing nothing if the original intent is no longer possible (e.g. editing a deleted item).
+
+Note that in the Todos there is an item for dividing the operations that can be used to build a transaction into deterministic (essentially writing/creating data) and non-deterministic (reading data) operations, and ensuring that deterministic ops are run before any others, so that they will always produce the same result. This can then allow for repeatability on the client and server, as needed to produce "stable" Ids for later use.
 
 The system could be enhanced in future to support operational transformation - the server is responsible for sequencing transactions, and so may rewrite those transactions when sequencing them, and then relay the required transformed transaction to clients (possibly just the transformation to the originator).
 
@@ -86,7 +88,7 @@ Note that an update would also be triggered by a change to props, for example if
 ### STM ids.
  * Globally unique (with high probability) would be useful
  * NOT secure - may be easy to guess, having one cannot be used as permission to view it (need additional permissions layer for this)
- * Not ordered
+ * Not ordered (except for each session)
  * Probably not great for database key
  * Colour/pattern/text hash to allow user-visible difference between items
 
@@ -112,7 +114,7 @@ Approach 2 is the most flexible, but can lead to confusing issues - what if two 
 Practically, it is probably best to use references only where needed for:
 1. Deliberate sharing of data between different structures. For example, referencing the same user data from each post on a forum. That way, if they update their nickname it will be visible immediately on all posts.
 2. Segmenting data to allow viewing part of a large graph. In the forum example, including every possible linked data item for a post (e.g. every post of every user who comments) could generate a very large data set, potentially the entire forum. Using references allows for only the immediately visible parts of a data structure to be sent to a client. When a ref is followed by a renderer, it can be retrieved in the background.
-3. Making transactions preserve user intent. Using a `List[Ref[A]]` rather than a `List[A]` allows transactions to be "anchored" to a Ref, rather than (for example) to an index in the list. If the list is reordered on the server, before the transaction is applied, the same data will be edited. This could also be implemented by use of some "find" function to locate the correct data, using the contents of the list elements, however this may be less efficient, or may require introducing another, ad-hoc Id to find the item.
+3. Making transactions preserve user intent. Using a `List[Ref[A]]` rather than a `List[A]` allows transactions to be "anchored" to a Ref, rather than (for example) to an index in the list. If the list is reordered on the server, before the transaction is applied, the same data will be edited. This could also be implemented by use of some "find" function to locate the correct data, using the contents of the list elements, however this may be less efficient, or may require introducing another, ad-hoc Id to find the item. In future we might support OT for this use-case.
 4. Efficiency - the use of Ids and revisions allows us to quickly establish whether a value may have changed, without relying on equality.
 
 ## TODO

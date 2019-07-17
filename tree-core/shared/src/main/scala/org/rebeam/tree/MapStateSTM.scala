@@ -18,7 +18,11 @@ object MapStateSTM {
     def message: String = toString
   }
 
-//  case class OTListStateNotFoundError[A](list: OTList[A]) extends Error {
+  case class SequenceError[A](id: Id[A]) extends Error {
+    def message: String = toString
+  }
+
+  //  case class OTListStateNotFoundError[A](list: OTList[A]) extends Error {
 //    def message: String = toString
 //  }
 
@@ -39,7 +43,8 @@ object MapStateSTM {
 //      otMap: Map[Guid, ClientState[_]],
       random: PRandom,
       context: TransactionContext,
-      deltas: Vector[StateDelta[_]]
+      deltas: Vector[StateDelta[_]],
+      hasNOps: Boolean
   ) extends IdCodecs with DataSource {
 
     def getDataRevision[A](id: Id[A]): Option[DataRevision[A]] = map.get(id.guid).map(_.asInstanceOf[DataRevision[A]])
@@ -79,7 +84,8 @@ object MapStateSTM {
 //    Map.empty,
     PRandom(0),
     TransactionContext(Moment(0), Guid.first.transactionId),
-    Vector.empty
+    Vector.empty,
+    hasNOps = false
   )
 
   // An Error or an A
@@ -96,7 +102,11 @@ object MapStateSTM {
 
   implicit val stmInstance: STMOps[MapState] = new STMOps[MapState] {
 
+    private def recordNOp: MapState[Unit] = StateT.modify[ErrorOr, StateData](s => s.copy(hasNOps = true))
+
+    // N Op
     def get[A](id: Id[A]): MapState[A] =
+      recordNOp >>
       StateT.inspectF[ErrorOr, StateData, A](_.getData(id).toRight(IdNotFoundError(id)))
 
     private def getDataState[A](id: Id[A]): MapState[DataRevision[A]] =
@@ -110,7 +120,9 @@ object MapStateSTM {
       _ <- StateT.modify[ErrorOr, StateData](_.updated(id, a, RevId(revGuid)))
     } yield ()
 
+    // N Op
     def modifyF[A](id: Id[A], f: A => MapState[A]): MapState[A] = for {
+      _ <- recordNOp
       ds <- getDataState(id)
       newData <- f(ds.data)
       _ <- set[A](id, newData)(ds.idCodec)
@@ -126,6 +138,7 @@ object MapStateSTM {
 
     def context: MapState[TransactionContext] = StateT.inspect(_.context)
 
+    // D Op
     def createGuid: MapState[Guid] =
       StateT[ErrorOr, StateData, Guid](sd => {
         Right(
@@ -136,6 +149,7 @@ object MapStateSTM {
         )
       })
 
+    // D op, unless create is an N op, in which case it will call recordNOp itself
     def putF[A](create: Id[A] => MapState[A])(implicit idCodec: IdCodec[A]) : MapState[A] = for {
       id <- createGuid.map(guid => Id[A](guid))
       a <- create(id)
