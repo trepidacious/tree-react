@@ -32,9 +32,11 @@ import org.rebeam.tree.codec.IdCodec
   *
   * Once transactions are classified as stable or unstable, there are two approaches to dealing with
   * an unstable transaction:
-  * 1. Produce an error when executing on the client, and reject the transaction. This then becomes
-  *    a task for the user of tree to fix - all transactions must be adjusted to be stable. All
-  *    transactions can then be run concurrently/optimistically.
+  *
+  * 1. Produce an error when executing the transaction on the client, and reject it completely. This then becomes
+  *    a code problem for the user of tree to fix - all transactions must be adjusted to be stable. All transactions
+  *    can then be run concurrently/optimistically, giving good performance. Note that there may be a requirement
+  *    for complex transactions where this is not possible.
   *
   * 2. Execute the transaction, but then enter a synchronous mode - the client will not display the result
   *    of the transaction (since it may change), and will not accept new transactions, until a response
@@ -44,17 +46,40 @@ import org.rebeam.tree.codec.IdCodec
   *
   * It may also be reasonable to adapt approach 2, so that the result of the unstable transaction is not
   * displayed, but further transactions are accepted. This should work, since the unstable transaction
-  * essentially becomes equivalent to a remote transaction - its results are not visible until it is executed
-  * by the server. This reduces the impact of the synchronous execution - the user will only be delayed if
-  * they need to work with the data produced by the unstable transaction.
+  * essentially is treated like and becomes equivalent to a remote transaction - its results are not visible
+  * until it is executed by the server, and at this point any subsequent local client transactions will be re-run
+  * to take this into account. This reduces the impact of the synchronous execution - the user will only be delayed if
+  * they need to work with the data produced by the unstable transaction. This may be confusing to the user, and so
+  * it may be worth displaying a notification while such transactions are pending, if possible in the UI component
+  * that triggered the transaction, but otherwise globally.
   *
   * The algorithm for classifying transactions as stable or unstable is as follows:
-  * 1. Each operation is classified as N (for non-deterministic - operation itself may produce different results
-  *    on the server to the client), or D (for deterministic - operation produces results dependent only on
-  *    data outside the STM).
-  * 2.
   *
+  * 1. Some operations are classified as U - this means that they can produce unstable results themselves, and/or
+  *    cause subsequent operations to produce unstable results. These are essentially operations that can read state
+  *    from the STM, and so can be affected by previous transactions.
+  * 2. Some operations are classified as S - this means that we require them to produce the same results in order for
+  *    a transaction to be stable. These are operations that create GUIDs, and/or put new values to the STM. In future
+  *    this may also include operations that are subject to operational transformation.
+  * 4. Where an operation is "compound" - i.e. it makes use of/contains other operations, notably `putF`, we consider that
+  *    compound operation to inherit the U and S "flags" from those contained operations - it is U if any contained
+  *    operation is U, and S if any contained operation is S.
+  * 3. A transaction is stable if it contains no operations that are both U and S, and contains no U operations before
+  *    any S operation.
   *
+  * Hence we might have a sequence of operations that are S, S, U, U and this would be a stable transaction. Even a
+  * single operation that is U+S will make a transaction unstable (this will generally be a `putF` operation where
+  * the `create` parameter itself contains U operations, and it is inherently S itself because it puts a new value
+  * to the STM). A transaction containing operations that are say S, U, S will be unstable, since the last S operation
+  * occurs after a U operation.
+  *
+  * TODO - consider the status of "rand" operations in TransactionOps, these could be considered to be S operations
+  * if the user intends to rely on the results in later transactions - for example the user could (but shouldn't) use
+  * random values to produce a conventional UUID and use that to try to search for data in a later transaction.
+  * We could perhaps provide both S and non-S versions of the operations, making it clear that the use of non-S versions
+  * is only recommended when the data will be used only cosmetically (for example for assigning a random colour for
+  * display, where this does not need to be stable). Note that no operations in TransactionOps are considered to be U,
+  * since they do not use the STM at all.
   *
   * @tparam F The monad used to express operations
   */
@@ -63,7 +88,7 @@ abstract class STMOps[F[_]: Monad] extends TransactionOps {
   /**
     * Get data at an [[Id]]
     *
-    * N operation.
+    * U operation - makes STM data at id available to subsequent transactions.
     *
     * @param id   The data's [[Id]]
     * @tparam A   Type of data
@@ -74,7 +99,7 @@ abstract class STMOps[F[_]: Monad] extends TransactionOps {
   /**
     * Modify data at an [[Id]]
     *
-    * N operation.
+    * U operation - makes the original STM data at id, and modified data, available to subsequent transactions.
     *
     * @param id   The data's [[Id]]
     * @param f    Function to transform old value to new one, as an F[A]
@@ -88,8 +113,8 @@ abstract class STMOps[F[_]: Monad] extends TransactionOps {
     * Id, and this is used to create the data to add to the
     * STM (in case the data includes the Id).
     *
-    * D operation. Note that if create is an N operation, then this
-    * is also an N operation AS WELL AS a D operation.
+    * Always an S operation, since it puts a new value to the STM and creates a new Id.
+    * Note that if `create` contains any U operations, then this is also a U operation AS WELL AS an S operation.
     *
     * @param create   Function to create data from Id, as an F[A]
     * @param idCodec  Used to encode/decode data
@@ -104,7 +129,8 @@ abstract class STMOps[F[_]: Monad] extends TransactionOps {
     * Id, and this is used to create the data to add to the
     * STM (in case the data includes the Id).
     *
-    * D operation.
+    * Always an S operation, since it puts a new value to the STM and creats a new Id.
+    * Never a U operation, since `create` does not use the STM and so cannot contain U operations.
     *
     * @param create   Function to create data from Id, as an A
     * @param idCodec  Used to encode/decode data
@@ -117,7 +143,7 @@ abstract class STMOps[F[_]: Monad] extends TransactionOps {
   /**
     * Modify data at an [[Id]]
     *
-    * N operation.
+    * U operation - makes the original STM data at id, and modified data, available to subsequent transactions.
     *
     * @param id   The data's [[Id]]
     * @param f    Function to transform old value to new one, as an A
@@ -129,7 +155,7 @@ abstract class STMOps[F[_]: Monad] extends TransactionOps {
   /**
     * Create a new Guid for general-purpose use (e.g. for Logoot)
     *
-    * D operation.
+    * S operation, since it creates a new Guid.
     *
     * @return   The new Guid
     */
