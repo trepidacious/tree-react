@@ -73,13 +73,13 @@ import org.rebeam.tree.codec.IdCodec
   * to the STM). A transaction containing operations that are say S, U, S will be unstable, since the last S operation
   * occurs after a U operation.
   *
-  * TODO - consider the status of "rand" operations in TransactionOps, these could be considered to be S operations
+  * At present the "rand" operations in TransactionOps, are considered to be S operations. They need to be stable
   * if the user intends to rely on the results in later transactions - for example the user could (but shouldn't) use
   * random values to produce a conventional UUID and use that to try to search for data in a later transaction.
-  * We could perhaps provide both S and non-S versions of the operations, making it clear that the use of non-S versions
-  * is only recommended when the data will be used only cosmetically (for example for assigning a random colour for
-  * display, where this does not need to be stable). Note that no operations in TransactionOps are considered to be U,
-  * since they do not use the STM at all.
+  * TODO: We could perhaps provide additional non-S versions of the operations, making it clear that the use of
+  * non-S versions is only recommended when the data will be used only cosmetically (for example for assigning a
+  * random colour for display, where this does not need to be stable). Note that no operations in TransactionOps are
+  * considered to be U, since they do not use the STM at all.
   *
   * @tparam F The monad used to express operations
   */

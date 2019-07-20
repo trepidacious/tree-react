@@ -44,7 +44,8 @@ object MapStateSTM {
       random: PRandom,
       context: TransactionContext,
       deltas: Vector[StateDelta[_]],
-      hasNOps: Boolean
+      hasNOps: Boolean,
+      unstable: Boolean
   ) extends IdCodecs with DataSource {
 
     def getDataRevision[A](id: Id[A]): Option[DataRevision[A]] = map.get(id.guid).map(_.asInstanceOf[DataRevision[A]])
@@ -85,7 +86,8 @@ object MapStateSTM {
     PRandom(0),
     TransactionContext(Moment(0), Guid.first.transactionId),
     Vector.empty,
-    hasNOps = false
+    hasNOps = false,
+    unstable = false
   )
 
   // An Error or an A
@@ -94,41 +96,58 @@ object MapStateSTM {
   // A State using StateData, or an Error
   type MapState[A] = StateT[ErrorOr, StateData, A]
 
-  private def rand[A](rf: PRandom => (PRandom, A)): MapState[A] =
-    StateT[ErrorOr, StateData, A](sd => {
-      val (newRandom, a) = rf(sd.random)
-      Right((sd.copy(random = newRandom), a))
-    })
-
   implicit val stmInstance: STMOps[MapState] = new STMOps[MapState] {
 
-    private def recordNOp: MapState[Unit] = StateT.modify[ErrorOr, StateData](s => s.copy(hasNOps = true))
+    // S op
+    private def rand[A](rf: PRandom => (PRandom, A)): MapState[A] =
+      recordSOp >>
+      StateT[ErrorOr, StateData, A](sd => {
+        val (newRandom, a) = rf(sd.random)
+        Right((sd.copy(random = newRandom), a))
+      })
 
-    // N Op
+    /**
+      * Record a U operation in state
+      */
+    private def recordUOp: MapState[Unit] = StateT.modify[ErrorOr, StateData](s => s.copy(hasNOps = true))
+
+    /**
+      * Record an S operation in state - if there are any U ops recorded previously, the state
+      * will be marked as unstable, otherwise there is no effect.
+      * Note that when processing U+S operations, be sure to record any U operations before S operations
+      */
+    private def recordSOp: MapState[Unit] = StateT.modify[ErrorOr, StateData](
+      s => if (s.hasNOps) s.copy(unstable = true) else s
+    )
+
+    // U Op
     def get[A](id: Id[A]): MapState[A] =
-      recordNOp >>
+      recordUOp >>
       StateT.inspectF[ErrorOr, StateData, A](_.getData(id).toRight(IdNotFoundError(id)))
 
+    // Not classified as U/S itself - this is done on public operations only
     private def getDataState[A](id: Id[A]): MapState[DataRevision[A]] =
       StateT.inspectF[ErrorOr, StateData, DataRevision[A]](_.getDataRevision(id).toRight(IdNotFoundError(id)))
 
 //    private def getClientState[A](list: OTList[A]): MapState[ClientState[A]] =
 //      StateT.inspectF[ErrorOr, StateData, ClientState[A]](_.getClientState(list).toRight(OTListStateNotFoundError(list)))
 
+    // Not classified as U/S itself - this is done on public operations only
     private def set[A](id: Id[A], a: A)(implicit idCodec: IdCodec[A]): MapState[Unit] = for {
       revGuid <- createGuid
       _ <- StateT.modify[ErrorOr, StateData](_.updated(id, a, RevId(revGuid)))
     } yield ()
 
-    // N Op
+    // U Op
     def modifyF[A](id: Id[A], f: A => MapState[A]): MapState[A] = for {
-      _ <- recordNOp
+      _ <- recordUOp
       ds <- getDataState(id)
       newData <- f(ds.data)
       _ <- set[A](id, newData)(ds.idCodec)
       _ <- StateT.modify[ErrorOr, StateData](sd => sd.copy(deltas = sd.deltas :+ StateDelta.Modify(id, ds.data, newData)))
     } yield newData
 
+    // Note that all random ops are S, this is handled by `rand` function
     def randomInt: MapState[Int] = rand(_.int)
     def randomIntUntil(bound: Int): MapState[Int] = rand(_.intUntil(bound))
     def randomLong: MapState[Long] = rand(_.long)
@@ -136,10 +155,12 @@ object MapStateSTM {
     def randomFloat: MapState[Float] = rand(_.float)
     def randomDouble: MapState[Double] = rand(_.double)
 
+    // Neither U nor S - context is always the same, and does not read STM state
     def context: MapState[TransactionContext] = StateT.inspect(_.context)
 
-    // D Op
+    // S op
     def createGuid: MapState[Guid] =
+      recordSOp >>
       StateT[ErrorOr, StateData, Guid](sd => {
         Right(
           (
@@ -149,10 +170,16 @@ object MapStateSTM {
         )
       })
 
-    // D op, unless create is an N op, in which case it will call recordNOp itself
+    // Here we know we are an S operation, and we may also be a U operation - see notes below for
+    // correct sequence to ensure we do this properly
     def putF[A](create: Id[A] => MapState[A])(implicit idCodec: IdCodec[A]) : MapState[A] = for {
+      // NOTE: we don't recordSOp here - we must do this later to detect instability, see later notes
       id <- createGuid.map(guid => Id[A](guid))
+      // NOTE: Run create - this determines whether this is a U op
       a <- create(id)
+      // NOTE: Now we record S operation, so that if `create` contained a U op we can respond by
+      // flagging transaction as unstable
+      _ <- recordSOp
       _ <- set(id, a)
       _ <- StateT.modify[ErrorOr, StateData](sd => sd.copy(deltas = sd.deltas :+ StateDelta.Put(id, a)))
     } yield a
