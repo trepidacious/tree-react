@@ -642,5 +642,5 @@ lazy val antdElectronApp =
         "react" -> "16.8",
         "react-dom" -> "16.8",
       )
-    )
+    ).dependsOn(treeReactJS)
   
