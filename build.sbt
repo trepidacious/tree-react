@@ -24,12 +24,10 @@ scalacOptions in ThisBuild ++= Seq(
   "-Yno-adapted-args",
   // "-Ywarn-dead-code",  //TODO restore for JVM and shared only
   // "-Ywarn-numeric-widen",
-  "-Ywarn-value-discard",
+//  "-Ywarn-value-discard",
   "-Xfuture",
   //"-Yno-predef" ?
 
-  // in preparation for scala.js 1.0
-//  "-P:scalajs:sjsDefinedByDefault",
 )
 
 testOptions in Test += Tests.Argument(TestFrameworks.ScalaCheck, "-verbosity", "2")
@@ -54,6 +52,8 @@ lazy val scalacheckVersion          = "1.14.0"
 lazy val log4sVersion               = "1.6.1"
 lazy val kindProjectorVersion       = "0.9.8"
 
+lazy val slinkyVersion              = "0.6.2"
+
 lazy val scalajsReactDeps = Seq(
   libraryDependencies ++= Seq(
     "com.github.japgolly.scalajs-react" %%% "core" % scalajsReactVersion,
@@ -73,6 +73,16 @@ lazy val testDeps = Seq(
   )
 )
 
+lazy val slinkyDeps = Seq(
+  libraryDependencies ++= Seq(
+    "me.shadaj"                   %%% "slinky-core"                   % slinkyVersion, // core React functionality, no React DOM
+    "me.shadaj"                   %%% "slinky-web"                    % slinkyVersion, // React DOM, HTML and SVG tags
+//    "me.shadaj"                   %%% "slinky-native"                 % slinkyVersion, // React Native components
+//    "me.shadaj"                   %%% "slinky-hot"                    % slinkyVersion, // Hot loading, requires react-proxy package
+//    "me.shadaj"                   %%% "slinky-scalajsreact-interop"   % slinkyVersion, // Interop with japgolly/scalajs-react
+  )
+)
+
 /**
   * Custom task to start demo with webpack-dev-server, use as `<project>/start`.
   * Just `start` also works, and starts all frontend demos
@@ -86,6 +96,7 @@ lazy val start = TaskKey[Unit]("start")
   * `docs` for github publishing
   */
 lazy val dist = TaskKey[File]("dist")
+
 
 // Settings for a js-only project
 lazy val jsProject: Project => Project =
@@ -190,6 +201,7 @@ lazy val root = project.in(file(".")).
     treeCoreJS, treeCoreJVM,
     treeOTJS, treeOTJVM,
     treeReactJS, treeReactJVM,
+    treeSlinkyJS, treeSlinkyJVM,
     electronAppJS, electronAppJVM,
     suiElectronAppJS, suiElectronAppJVM,
     antdElectronApp
@@ -534,6 +546,36 @@ lazy val treeReact = crossProject(JSPlatform, JVMPlatform).in(file("tree-react")
 lazy val treeReactJVM = treeReact.jvm
 lazy val treeReactJS = treeReact.js
 
+
+////////////////
+// tree-slinky //
+////////////////
+lazy val treeSlinky = crossProject(JSPlatform, JVMPlatform).in(
+  file("tree-slinky")
+  //Settings for all projects
+).configure(
+  jsProject
+).settings(
+  name := "tree-slinky",
+  libraryDependencies += "org.log4s" %%% "log4s" % log4sVersion,
+  addCompilerPlugin(
+    "org.scalamacros" % "paradise" % "2.1.1" cross CrossVersion.patch
+  )
+).jvmSettings(
+
+).jsSettings(
+  //Scalajs dependencies that are used on the client only
+  resolvers += Resolver.jcenterRepo,
+
+  scalajsReactDeps,
+  slinkyDeps,
+
+  //Produce a module, so we can use @JSImport.
+  scalaJSLinkerConfig ~= { _.withModuleKind(ModuleKind.CommonJSModule) }
+).dependsOn(treeCore)
+
+lazy val treeSlinkyJVM = treeSlinky.jvm
+lazy val treeSlinkyJS = treeSlinky.js
 
 
   //////////////////
