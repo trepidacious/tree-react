@@ -1,20 +1,19 @@
-package org.rebeam.tree.slinky
+package org.rebeam.tree.slinkify
 
-import japgolly.scalajs.react.vdom.html_<^.VdomElement
 import org.rebeam.tree._
-
 import DataRenderer._
+import _root_.slinky.core.facade.ReactElement
 
 object DataRenderer {
   /**
-    * Result of a render - the actual Vdom, and the Ids for values in the
+    * Result of a render - the actual ReactElement, and the Ids for values in the
     * DataSource that we used to render. This can be used with a
     * new DataSource to see if any used values have changed.
     *
-    * @param v          Rendered Vdom
+    * @param v          Rendered ReactElement
     * @param usedIds    Guids from Ids of data retrieved from the DataSource and used to render
     */
-  case class Result(v: VdomElement, usedIds: Set[Guid])
+  case class Result(v: ReactElement, usedIds: Set[Guid])
 }
 
 /**

@@ -6,6 +6,10 @@ import slinky.web.ReactDOM
 import scala.scalajs.js
 import scala.scalajs.js.annotation.JSImport
 
+@JSImport("../../../../src/main/resources/index.css", JSImport.Namespace)
+@js.native
+object IndexCSS extends js.Object
+
 object Main {
   def main(args: Array[String]): Unit = {
     IndexCSS
@@ -22,6 +26,4 @@ object Main {
   }
 }
 
-@JSImport("../../../../src/main/resources/index.css", JSImport.Namespace)
-@js.native
-object IndexCSS extends js.Object
+

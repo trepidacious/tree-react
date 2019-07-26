@@ -5,6 +5,7 @@ import org.scalajs.dom.console
 import slinky.core._
 import slinky.core.annotations.react
 import slinky.core.facade.Hooks._
+import slinky.core.facade.{React, ReactContext}
 import slinky.web.html._
 import typings.antdLib.antdLibStrings
 import typings.reactLib.ScalableSlinky._
@@ -22,6 +23,27 @@ object CSS extends js.Any
   type Props = Unit
 
   private val css = CSS
+
+  val nameContext: ReactContext[String] = React.createContext[String]("default-name")
+
+  val contextComponent: FunctionalComponent[String] = FunctionalComponent[String] { props =>
+    val (state, updateState) = useState(0)
+    val name = useContext(nameContext)
+    div(
+      name,
+      props,
+      state/*,
+    button(
+      onClick := (event) => updateState(2)
+    )*/
+    )
+  }
+
+  val contextProviderComponent: FunctionalComponent[String] = FunctionalComponent[String] { props =>
+    nameContext.Provider(value = "Bob Bobsson")(
+      contextComponent(props)
+    )
+  }
 
   val component = FunctionalComponent[Props] { _ =>
     val (isModalVisible, updateIsModalVisible) = useState(false)
@@ -206,11 +228,14 @@ object CSS extends js.Any
       )("Show notification"),
     )
 
+    val renderContext = contextProviderComponent("Some props")
+
     div(className := "App")(
       renderIntro,
       Row(RowProps())(
         Col(ColProps(span = 2)),
         Col(ColProps(span = 20))(
+          renderContext,
           renderGrid,
           renderTag,
           renderTable,

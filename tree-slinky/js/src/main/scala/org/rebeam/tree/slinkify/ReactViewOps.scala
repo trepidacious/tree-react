@@ -1,4 +1,4 @@
-package org.rebeam.tree.slinky
+package org.rebeam.tree.slinkify
 
 import cats.Monad
 import cats.implicits._

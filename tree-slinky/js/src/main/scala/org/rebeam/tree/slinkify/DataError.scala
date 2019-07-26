@@ -1,4 +1,4 @@
-package org.rebeam.tree.slinky
+package org.rebeam.tree.slinkify
 
 import org.rebeam.tree.Guid
 

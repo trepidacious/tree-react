@@ -1,10 +1,9 @@
-package org.rebeam.tree.slinky
+package org.rebeam.tree.slinkify
 
-import japgolly.scalajs.react.Callback
 import monocle.{Lens, Optional, Prism}
 import org.rebeam.tree._
 
-// TODO: tree-view
+import Syntax._
 
 /**
   * Combine a data model with a DeltaCursor to produce a Cursor for

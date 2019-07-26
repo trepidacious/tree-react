@@ -1,10 +1,11 @@
-package org.rebeam.tree.slinky
+package org.rebeam.tree.slinkify
 
-import japgolly.scalajs.react.{Callback, React}
-import japgolly.scalajs.react.React.Context
 import org.log4s.getLogger
 import org.rebeam.tree._
+import _root_.slinky.core.facade._
 //import org.rebeam.tree.ot.{CursorUpdate, OTList}
+
+import Syntax._
 
 trait ReactTransactor {
   def transact(t: Transaction): Callback
@@ -26,12 +27,12 @@ object ReactData {
 
   private val emptyTransactor: ReactTransactor = t => Callback.warn(s"ReactData.emptyTransactor discards transaction: $t")
 
-  private val defaultContext: Context[ReactData] = React.createContext(emptyData)
+  private val defaultContext: ReactContext[ReactData] = React.createContext(emptyData)
 
-  private val defaultTransactorContext: Context[ReactTransactor] = React.createContext(emptyTransactor)
+  private val defaultTransactorContext: ReactContext[ReactTransactor] = React.createContext(emptyTransactor)
 
   // Move to own class, move defaultContexts to companion as just default
-  case class ReactDataContexts(data: Context[ReactData], transactor: Context[ReactTransactor])
+  case class ReactDataContexts(data: ReactContext[ReactData], transactor: ReactContext[ReactTransactor])
 
   val defaultContexts: ReactDataContexts = ReactDataContexts(defaultContext, defaultTransactorContext)
 
