@@ -4,16 +4,13 @@ import org.rebeam.tree._
 import org.log4s._
 import org.rebeam.tree.slinkify.DataComponent.logger
 import org.rebeam.tree.slinkify.ReactData.ReactDataContexts
-import slinky.core.StatelessComponent
+import org.rebeam.tree.slinkify.Syntax.BasicFunctionalComponent
+import slinky.core._
 import slinky.core.annotations.react
-import slinky.core.facade.Hooks.useContext
+import slinky.core.facade.Hooks._
 import slinky.core.facade.ReactElement
 
 case class ValueAndData[A](a: A, data: ReactData)
-
-object DataComponent {
-  val logger: Logger = getLogger
-}
 
 /**
   * This class provides for memoisation of a DataRenderer, working with the expected React lifecycle to
@@ -47,10 +44,7 @@ object DataComponent {
   * since it doesn't grow indefinitely, but it will be holding on to data that is not needed - we only need the
   * revision numbers of the values used by the last render for SCU).
   *
-  * TODO this can be improved by using React 16.6 contextType API to allow access to context from any lifecycle
-  * method, including SCU. This will need support from scalajs-react (which is on React 16.3 when this is written),
-  * or some kind of messing around with the raw component created by scalajs-react to add the contextType and
-  * access it from SCU.
+  * TODO this can be improved by using useContext in SCU of DataComponent - see TODO below
   */
 class DataRendererMemo[A: Reusability](r: DataRenderer[A]) {
   var lastProps: ValueAndData[A] = _
@@ -119,13 +113,13 @@ class DataRendererMemo[A: Reusability](r: DataRenderer[A]) {
     }
 }
 
-class DataComponentBFactory[A](r: DataRenderer[A])(implicit reusability: Reusability[A]) {
+class DataComponentB[A](r: DataRenderer[A])(implicit reusability: Reusability[A]) {
 
-  @react class DataComponentB extends StatelessComponent {
-
-    val dataRendererMemo = new DataRendererMemo[A](r)
+  @react class C extends StatelessComponent {
 
     type Props = ValueAndData[A]
+
+    val dataRendererMemo = new DataRendererMemo[A](r)
 
     override def shouldComponentUpdate(nextProps: ValueAndData[A], nextState: Unit): Boolean =
       dataRendererMemo.shouldComponentUpdate(props, nextProps)
@@ -134,32 +128,40 @@ class DataComponentBFactory[A](r: DataRenderer[A])(implicit reusability: Reusabi
       dataRendererMemo.render(props).v
   }
 
+  def apply(valueAndData: ValueAndData[A]): ReactElement = C(valueAndData)
+
 }
 
-object DataComponentBFactory {
-  def apply[A](r: DataRenderer[A])(implicit reusability: Reusability[A]) = new DataComponentBFactory[A](r)
-}
-
-class DataComponentFactory[A](
+class DataComponent[A](
   r: DataRenderer[A],
-  name: String,
   contexts: ReactDataContexts = ReactData.defaultContexts
-)(implicit reusability: Reusability[A]){
+)(implicit reusability: Reusability[A]) extends BasicFunctionalComponent[A] {
 
-  @react class DataComponent extends StatelessComponent {
+  @react class C extends StatelessComponent {
     type Props = A
 
-    private val b = DataComponentBFactory(r)
+    private val b = new DataComponentB[A](r)
 
     override def shouldComponentUpdate(nextProps: A, nextState: Unit): Boolean = {
+      //TODO should be able to use useContext here to run comparison without deferring to DataComponentB
       reusability.test(props, nextProps)
     }
 
     def render: ReactElement = {
       val data = useContext(contexts.data)
       logger.trace(s">>>dataComponent.render_P, data $data, a = $props")
-      b.DataComponentB(ValueAndData(props, data))
+      b(ValueAndData(props, data))
     }
   }
+
+  def apply(a: A): ReactElement = C(a)
+
+}
+
+object DataComponent {
+  val logger: Logger = getLogger
+
+  def apply[A](r: DataRenderer[A], contexts: ReactDataContexts = ReactData.defaultContexts)
+              (implicit reusability: Reusability[A]): BasicFunctionalComponent[A] = new DataComponent[A](r, contexts)
 }
 
