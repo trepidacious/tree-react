@@ -567,8 +567,9 @@ lazy val treeSlinky = crossProject(JSPlatform, JVMPlatform).in(
   //Scalajs dependencies that are used on the client only
   resolvers += Resolver.jcenterRepo,
 
-  scalajsReactDeps,
   slinkyDeps,
+
+//  scalacOptions += "-Ymacro-debug-lite",
 
   //Produce a module, so we can use @JSImport.
   scalaJSLinkerConfig ~= { _.withModuleKind(ModuleKind.CommonJSModule) }
@@ -684,5 +685,5 @@ lazy val antdElectronApp =
         "react" -> "16.8",
         "react-dom" -> "16.8",
       )
-    ).dependsOn(treeReactJS)
+    ).dependsOn(treeSlinkyJS)
   

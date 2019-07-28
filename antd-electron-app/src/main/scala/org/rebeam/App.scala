@@ -1,11 +1,12 @@
 package demo
 
+import org.rebeam.LocalDataRootDemo
 import typings.antdLib.AntdFacade.{List => _, _}
 import org.scalajs.dom.console
 import slinky.core._
 import slinky.core.annotations.react
 import slinky.core.facade.Hooks._
-import slinky.core.facade.{React, ReactContext}
+import slinky.core.facade.{React, ReactContext, ReactElement}
 import slinky.web.html._
 import typings.antdLib.antdLibStrings
 import typings.reactLib.ScalableSlinky._
@@ -18,6 +19,28 @@ import scala.scalajs.js.annotation.JSImport
 @JSImport("antd/dist/antd.css", JSImport.Default)
 @js.native
 object CSS extends js.Any
+
+object MyComponent extends ComponentWrapper {
+  case class Props(name: String, age: Int)
+  case class State(clicks: Int)
+
+  class Def(jsProps: js.Object) extends Definition(jsProps) {
+    def initialState: State = State(0)
+
+    def render: ReactElement = {
+      div(
+        props.name,
+        props.age,
+        state.clicks,
+        button(onClick := (_ => {
+          setState(State(state.clicks + 1))
+        }))(
+          "Click Me!"
+        )
+      )
+    }
+  }
+}
 
 @react object App {
   type Props = Unit
@@ -230,11 +253,16 @@ object CSS extends js.Any
 
     val renderContext = contextProviderComponent("Some props")
 
+    val renderNonMacro = MyComponent(MyComponent.Props("Bob", 100029))
+
+    val renderTodo = LocalDataRootDemo.dataProvider(())
+
     div(className := "App")(
       renderIntro,
       Row(RowProps())(
         Col(ColProps(span = 2)),
         Col(ColProps(span = 20))(
+          renderTodo,
           renderContext,
           renderGrid,
           renderTag,
@@ -248,7 +276,8 @@ object CSS extends js.Any
           renderPassword,
           renderSpin,
           renderForm,
-          renderNotification
+          renderNotification,
+          renderNonMacro
         ),
         Col(ColProps(span = 2))
       )
