@@ -204,7 +204,8 @@ lazy val root = project.in(file(".")).
     treeSlinkyJS, treeSlinkyJVM,
     electronAppJS, electronAppJVM,
     suiElectronAppJS, suiElectronAppJVM,
-    antdElectronApp
+    antdElectronApp,
+    suiApp
   ).settings(
     publish := {},
     publishLocal := {}
@@ -686,4 +687,19 @@ lazy val antdElectronApp =
         "react-dom" -> "16.8",
       )
     ).dependsOn(treeSlinkyJS)
-  
+
+lazy val suiApp =
+  project.in(file("sui-app"))
+    .configure(jsProject, bundlerSettings, browserProject, withCssLoading)
+    .settings(
+      scalaCSSDeps,
+      webpackDevServerPort := 8081,
+      addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.1" cross CrossVersion.full),
+      Compile / npmDependencies ++= Seq(
+        "downshift" -> "^2.1.5",
+        "react" -> "^16.5.1",
+        "react-dom" -> "^16.5.1",
+        "semantic-ui-css" -> "^2.4.1",
+        "semantic-ui-react" -> "^0.87.1"
+      )
+    ).dependsOn(treeReactJS, scalajsReactSemanticUIJS)
