@@ -28,7 +28,7 @@ object LocalDataRoot {
 
 //    override def getOTListCursorUpdate[A](list: OTList[A]): Option[CursorUpdate[A]] = sd.getOTListCursorUpdate(list)
 
-    override def revGuid(guid: Guid): Option[Guid] = sd.revGuid(guid)
+    override def revGuid(guid: Guid): Option[TransactionId] = sd.revGuid(guid)
     override def transact(t: Transaction): Callback = tx.transact(t)
 
     override def toString: String = s"LocalReactData(${sd.map.size} entries)"
@@ -45,10 +45,13 @@ object LocalDataRoot {
     )
 
     // Run the transaction on sdWithContext
-    val sdNew = t[MapState].run(sdWithContext)
+    val sdNew: ErrorOr[(StateData, Unit)] = t[MapState].run(sdWithContext)
+
+    // Promote unstable transaction to an error
+    val sdChecked = sdNew.ensure(UnstableError("LocalDataRoot cannot run unstable transactions."))(!_._1.unstable)
 
     // Map to a new State, updating the StateData to next transaction, and the indexer with deltas
-    sdNew.map{
+    sdChecked.map{
       case (newStateData, _) =>
         state.copy(sd = newStateData.nextTransaction, index = indexer.updated(state.index, newStateData.deltas))
     }

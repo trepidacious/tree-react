@@ -18,7 +18,7 @@ object MapStateSTM {
     def message: String = toString
   }
 
-  case class SequenceError[A](id: Id[A]) extends Error {
+  case class UnstableError[A](msg: String) extends Error {
     def message: String = toString
   }
 
@@ -65,7 +65,7 @@ object MapStateSTM {
 
     def getWithRev[A](id: Id[A]): Option[(A, RevId[A])] = getDataRevision(id).map(dr => (dr.data, dr.revId))
 
-    def revGuid(guid: Guid): Option[Guid] = map.get(guid).map(_.revId.guid)
+    def revGuid(guid: Guid): Option[TransactionId] = map.get(guid).map(_.revId.tid)
 
 //    def getOTListCursorUpdate[A](list: OTList[A]): Option[CursorUpdate[A]] = getClientState(list)
 
@@ -134,8 +134,7 @@ object MapStateSTM {
 
     // Not classified as U/S itself - this is done on public operations only
     private def set[A](id: Id[A], a: A)(implicit idCodec: IdCodec[A]): MapState[Unit] = for {
-      revGuid <- createGuid
-      _ <- StateT.modify[ErrorOr, StateData](_.updated(id, a, RevId(revGuid)))
+      _ <- StateT.modify[ErrorOr, StateData](s => s.updated(id, a, RevId(s.context.transactionId)))
     } yield ()
 
     // U Op
@@ -158,9 +157,9 @@ object MapStateSTM {
     // Neither U nor S - context is always the same, and does not read STM state
     def context: MapState[TransactionContext] = StateT.inspect(_.context)
 
-    // S op
-    def createGuid: MapState[Guid] =
-      recordSOp >>
+    // Internal op to create a plain guid - this is not considered to be an S op directly - other
+    // ops need to classify themselves as U or S
+    private def newGuid: MapState[Guid] =
       StateT[ErrorOr, StateData, Guid](sd => {
         Right(
           (
@@ -170,22 +169,29 @@ object MapStateSTM {
         )
       })
 
+    // S op
+    def createGuid: MapState[Guid] = recordSOp >> newGuid
+
     // Here we know we are an S operation, and we may also be a U operation - see notes below for
     // correct sequence to ensure we do this properly
-    def putF[A](create: Id[A] => MapState[A])(implicit idCodec: IdCodec[A]) : MapState[A] = for {
-      // NOTE: we don't recordSOp here - we must do this later to detect instability, see later notes
-      id <- createGuid.map(guid => Id[A](guid))
-      // NOTE: Run create - this determines whether this is a U op
-      a <- create(id)
-      // NOTE: Now we record S operation, so that if `create` contained a U op we can respond by
-      // flagging transaction as unstable
-      _ <- recordSOp
-      _ <- set(id, a)
-      _ <- StateT.modify[ErrorOr, StateData](sd => sd.copy(deltas = sd.deltas :+ StateDelta.Put(id, a)))
-    } yield a
+    def putF[A](create: Id[A] => MapState[A])(implicit idCodec: IdCodec[A]) : MapState[A] = {
+      println("putF")
+      for {
+        // NOTE: we don't recordSOp here - we must do this later to detect instability, see later notes
+        // Also note we use createPlainGuid to avoid recordSOp
+        id <- newGuid.map(guid => Id[A](guid))
+        // NOTE: Run create - this determines whether this is a U op
+        a <- create(id)
+        // NOTE: Now we record S operation, so that if `create` contained a U op we can respond by
+        // flagging transaction as unstable
+        _ <- recordSOp
+        _ <- set(id, a)
+        _ <- StateT.modify[ErrorOr, StateData](sd => sd.copy(deltas = sd.deltas :+ StateDelta.Put(id, a)))
+      } yield a
+    }
 
 //    def createOTListF[A](create: MapState[List[A]])(implicit idCodec: IdCodec[A]): MapState[OTList[A]] = for {
-//      id <- createGuid
+//      id <- newGuid
 //      a <- create
 //      // Local data root handles a single client only - priority 0, starts up to date with server rev 0
 //      newCs = ClientState(priority = 0, server = ListRev(a, Rev(0)), local = a, pendingOp = None, buffer = None, previousLocalUpdate = None)

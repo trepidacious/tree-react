@@ -34,7 +34,7 @@ object LocalDataRoot {
 
     //    override def getOTListCursorUpdate[A](list: OTList[A]): Option[CursorUpdate[A]] = sd.getOTListCursorUpdate(list)
 
-    override def revGuid(guid: Guid): Option[Guid] = sd.revGuid(guid)
+    override def revGuid(guid: Guid): Option[TransactionId] = sd.revGuid(guid)
 
     override def transact(t: Transaction): Callback = tx.transact(t)
 
