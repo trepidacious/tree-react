@@ -70,9 +70,9 @@ object MapStateSTM {
 
     def get[A](id: Id[A]): Option[A] = getData(id)
 
-    def getWithRev[A](id: Id[A]): Option[(A, TransactionId)] = getDataRevision(id).map(dr => (dr.data, dr.transactionId))
+    def getWithTransactionId[A](id: Id[A]): Option[(A, TransactionId)] = getDataRevision(id).map(dr => (dr.data, dr.transactionId))
 
-    def revGuid(guid: Guid): Option[TransactionId] = map.get(guid).map(_.transactionId)
+    def getTransactionIdFromGuid(guid: Guid): Option[TransactionId] = map.get(guid).map(_.transactionId)
 
 //    def getOTListCursorUpdate[A](list: OTList[A]): Option[CursorUpdate[A]] = getClientState(list)
 

@@ -4,7 +4,7 @@ package org.rebeam.tree
 
 trait DataSource {
   def get[A](id: Id[A]): Option[A]
-  def getWithRev[A](id: Id[A]): Option[(A, TransactionId)]
-  def revGuid(guid: Guid): Option[TransactionId]
+  def getWithTransactionId[A](id: Id[A]): Option[(A, TransactionId)]
+  def getTransactionIdFromGuid(guid: Guid): Option[TransactionId]
 //  def getOTListCursorUpdate[A](list: OTList[A]): Option[CursorUpdate[A]]
 }

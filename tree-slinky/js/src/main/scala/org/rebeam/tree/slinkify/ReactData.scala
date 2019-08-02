@@ -19,8 +19,8 @@ object ReactData {
 
   private val emptyData: ReactData = new ReactData {
     override def get[A](id: Id[A]): Option[A] = None
-    override def getWithRev[A](id: Id[A]): Option[(A, TransactionId)] = None
-    override def revGuid(guid: Guid): Option[TransactionId] = None
+    override def getWithTransactionId[A](id: Id[A]): Option[(A, TransactionId)] = None
+    override def getTransactionIdFromGuid(guid: Guid): Option[TransactionId] = None
 //    override def getOTListCursorUpdate[A](list: OTList[A]): Option[CursorUpdate[A]] = None
     def transact(t: Transaction): Callback = Callback{logger.warn(s"ReactData.empty discards transaction $t")}
   }

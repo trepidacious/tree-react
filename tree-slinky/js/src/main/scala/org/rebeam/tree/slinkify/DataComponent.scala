@@ -63,7 +63,7 @@ class DataRendererMemo[A: Reusability](r: DataRenderer[A]) {
   // currentData and nextData.
   def valuesChanged(guids: Set[Guid], currentData: DataSource, nextData: DataSource): Boolean = guids.exists(
     // Note that if both are None, this is not counted as a change (data is still missing)
-    guid => currentData.revGuid(guid) != nextData.revGuid(guid)
+    guid => currentData.getTransactionIdFromGuid(guid) != nextData.getTransactionIdFromGuid(guid)
   )
 
   def shouldComponentUpdate(currentProps: ValueAndData[A], nextProps: ValueAndData[A]): Boolean =
