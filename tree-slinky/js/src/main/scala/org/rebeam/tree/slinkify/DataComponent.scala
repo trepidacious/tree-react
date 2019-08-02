@@ -113,6 +113,7 @@ class DataRendererMemo[A: Reusability](r: DataRenderer[A]) {
     }
 }
 
+
 class DataComponentB[A](r: DataRenderer[A])(implicit reusability: Reusability[A]) {
 
   @react class C extends StatelessComponent {

@@ -11,6 +11,7 @@ import org.rebeam.tree.slinkify._
 import scala.scalajs.js
 import scala.scalajs.js.annotation.JSGlobal
 import org.rebeam.tree.slinkify.Syntax._
+import slinky.core.FunctionalComponent
 import slinky.core.facade.ReactElement
 import slinky.web.html._
 
@@ -42,7 +43,7 @@ object LocalDataRootDemo {
   }
 
 
-  val stringView: BasicFunctionalComponent[Cursor[String]] = new ViewPC[String] {
+  val stringView: FunctionalComponent[Cursor[String]] = new ViewPC[String] {
     private val logger = getLogger
 
     override def apply(a: Cursor[String])(implicit tx: ReactTransactor): ReactElement = {
@@ -112,7 +113,7 @@ object LocalDataRootDemo {
   // referenced by that Id changes.
   // Note that this does not need to be a View itself since it doesn't actually get the data by id - the child views
   // can still get data from the Context provided by dataProvider, so this can be a ViewP
-  val todoListView: BasicFunctionalComponent[TodoList] = new ViewP[TodoList] {
+  val todoListView: FunctionalComponent[TodoList] = new ViewP[TodoList] {
     override def apply(a: TodoList): ReactElement = {
       ul(
 //        verticalAlign = sui.List.VerticalAlign.Middle,
@@ -125,11 +126,11 @@ object LocalDataRootDemo {
 
   // This component will manage and render an STM, initialised to the example data
   // We only use the index for data, so the model is Unit
-  val dataProvider: BasicFunctionalComponent[Unit] = LocalDataRoot.component[Unit, TodoIndex](
+  val dataProvider: FunctionalComponent[Unit] = LocalDataRoot.component[Unit, TodoIndex](
     (_, index) =>
       div(
         // When we have an indexed TodoList, display it
-        index.todoList.map(l => todoListView(l)).getOrElse(span()("Empty"))
+        index.todoList.map[ReactElement](l => todoListView(l)).getOrElse(span()("Empty"))
       ),
     todoIndexer,  //This indexer will provide the most recently added list
     example       //This example Transaction populates the STM to display
