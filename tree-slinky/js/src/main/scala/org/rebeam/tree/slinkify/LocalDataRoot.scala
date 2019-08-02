@@ -30,7 +30,7 @@ object LocalDataRoot {
   private case class LocalReactData(sd: StateData, tx: ReactTransactor) extends ReactData {
     override def get[A](id: Id[A]): Option[A] = sd.get(id)
 
-    override def getWithRev[A](id: Id[A]): Option[(A, RevId[A])] = sd.getWithRev(id)
+    override def getWithRev[A](id: Id[A]): Option[(A, TransactionId)] = sd.getWithRev(id)
 
     //    override def getOTListCursorUpdate[A](list: OTList[A]): Option[CursorUpdate[A]] = sd.getOTListCursorUpdate(list)
 

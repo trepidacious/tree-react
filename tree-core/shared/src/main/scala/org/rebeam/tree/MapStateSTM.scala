@@ -26,7 +26,14 @@ object MapStateSTM {
 //    def message: String = toString
 //  }
 
-  case class DataRevision[A](data: A, revId: RevId[A], idCodec: IdCodec[A])
+  /**
+    * A data item, and the most recent transaction that update its value
+    * @param data           The data value just after the transaction
+    * @param transactionId  The transaction in which the value was set
+    * @param idCodec        IdCodec for A
+    * @tparam A             The type of data
+    */
+  case class DataRevision[A](data: A, transactionId: TransactionId, idCodec: IdCodec[A])
 
   sealed trait StateDelta[A] {
     def id: Id[A]
@@ -54,8 +61,8 @@ object MapStateSTM {
 
     def getData[A](id: Id[A]): Option[A] = getDataRevision(id).map(_.data)
 
-    def updated[A](id: Id[A], a: A, revId: RevId[A])(implicit mCodecA: IdCodec[A]): StateData = {
-      copy(map = map.updated(id.guid, DataRevision(a, revId, mCodecA)))
+    def updated[A](id: Id[A], a: A, transactionId: TransactionId)(implicit mCodecA: IdCodec[A]): StateData = {
+      copy(map = map.updated(id.guid, DataRevision(a, transactionId, mCodecA)))
     }
 
     override def codecFor[A](id: Id[A]): Option[IdCodec[A]] =
@@ -63,9 +70,9 @@ object MapStateSTM {
 
     def get[A](id: Id[A]): Option[A] = getData(id)
 
-    def getWithRev[A](id: Id[A]): Option[(A, RevId[A])] = getDataRevision(id).map(dr => (dr.data, dr.revId))
+    def getWithRev[A](id: Id[A]): Option[(A, TransactionId)] = getDataRevision(id).map(dr => (dr.data, dr.transactionId))
 
-    def revGuid(guid: Guid): Option[TransactionId] = map.get(guid).map(_.revId.tid)
+    def revGuid(guid: Guid): Option[TransactionId] = map.get(guid).map(_.transactionId)
 
 //    def getOTListCursorUpdate[A](list: OTList[A]): Option[CursorUpdate[A]] = getClientState(list)
 
@@ -134,7 +141,7 @@ object MapStateSTM {
 
     // Not classified as U/S itself - this is done on public operations only
     private def set[A](id: Id[A], a: A)(implicit idCodec: IdCodec[A]): MapState[Unit] = for {
-      _ <- StateT.modify[ErrorOr, StateData](s => s.updated(id, a, RevId(s.context.transactionId)))
+      _ <- StateT.modify[ErrorOr, StateData](s => s.updated(id, a, s.context.transactionId))
     } yield ()
 
     // U Op
@@ -174,8 +181,7 @@ object MapStateSTM {
 
     // Here we know we are an S operation, and we may also be a U operation - see notes below for
     // correct sequence to ensure we do this properly
-    def putF[A](create: Id[A] => MapState[A])(implicit idCodec: IdCodec[A]) : MapState[A] = {
-      println("putF")
+    def putF[A](create: Id[A] => MapState[A])(implicit idCodec: IdCodec[A]) : MapState[A] =
       for {
         // NOTE: we don't recordSOp here - we must do this later to detect instability, see later notes
         // Also note we use createPlainGuid to avoid recordSOp
@@ -188,7 +194,6 @@ object MapStateSTM {
         _ <- set(id, a)
         _ <- StateT.modify[ErrorOr, StateData](sd => sd.copy(deltas = sd.deltas :+ StateDelta.Put(id, a)))
       } yield a
-    }
 
 //    def createOTListF[A](create: MapState[List[A]])(implicit idCodec: IdCodec[A]): MapState[OTList[A]] = for {
 //      id <- newGuid
