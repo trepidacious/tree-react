@@ -120,6 +120,7 @@ object DataComponent {
     val memo: ReactRef[DataRendererMemo[A]] = useRef(new DataRendererMemo[A](r))
 
     val data = useContext(contexts.data)
+    println("data " +data)
 
     val inner = FunctionalComponent[ValueAndData[A]](
       props => memo.current.render(props).v

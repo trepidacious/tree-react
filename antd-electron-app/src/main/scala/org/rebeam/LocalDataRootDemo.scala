@@ -102,7 +102,7 @@ object LocalDataRootDemo {
 //              onChange = onChange(_)
 //            )()
 //          )
-          li(key := id.toString, cursor.a.toString)
+          li(cursor.a.toString)
         }
       )
     }
@@ -118,7 +118,7 @@ object LocalDataRootDemo {
 //        verticalAlign = sui.List.VerticalAlign.Middle,
 //        relaxed = true: js.Any
       )(
-        a.items.map(id => todoItemView(id))
+        a.items.map(id => todoItemView(id).withKey(id.toString))
       )
     }
   }.build
