@@ -4,7 +4,7 @@ import cats.Monad
 import cats.data.StateT
 import cats.implicits._
 import org.rebeam.tree._
-import org.rebeam.tree.slinkify.Syntax.BasicFunctionalComponent
+import slinky.core.FunctionalComponent
 import slinky.core.facade.ReactElement
 import slinky.web.html._
 //import org.rebeam.tree.ot.{CursorUpdate, OTList}
@@ -115,7 +115,7 @@ trait View[A] extends ViewFunction[A] {
              name: String,
              contexts: ReactDataContexts = ReactData.defaultContexts,
              onError: DataError => ReactElement = View.defaultError
-           )(implicit ir: Reusability[A]): BasicFunctionalComponent[A] = {
+           )(implicit ir: Reusability[A]): FunctionalComponent[A] = {
     val renderer = new DataRenderer[A] {
       override def apply(a: A, data: ReactData, tx: ReactTransactor): DataRenderer.Result =
         View.Ops.render(View.this, onError, a, data)(tx)
@@ -138,7 +138,7 @@ trait ViewC[A] extends ViewFunction[Cursor[A]] {
              name: String,
              contexts: ReactDataContexts = ReactData.defaultContexts,
              onError: DataError => ReactElement = View.defaultError
-           )(implicit ir: Reusability[A]): BasicFunctionalComponent[Cursor[A]] = {
+           )(implicit ir: Reusability[A]): FunctionalComponent[Cursor[A]] = {
 
     val renderer = new DataRenderer[Cursor[A]] {
       override def apply(a: Cursor[A], data: ReactData, tx: ReactTransactor): DataRenderer.Result =

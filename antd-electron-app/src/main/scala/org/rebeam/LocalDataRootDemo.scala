@@ -10,7 +10,6 @@ import org.rebeam.tree.slinkify._
 
 import scala.scalajs.js
 import scala.scalajs.js.annotation.JSGlobal
-import org.rebeam.tree.slinkify.Syntax._
 import slinky.core.FunctionalComponent
 import slinky.core.facade.ReactElement
 import slinky.web.html._
@@ -72,7 +71,7 @@ object LocalDataRootDemo {
   // A View accepting the Id of a TodoItem.
   // This is a View so that it can use ReactViewOps to create a cursor at the id to view/edit the TodoItem.
   // The view will be re-rendered whenever the data at the Id changes.
-  val todoItemView: BasicFunctionalComponent[Id[TodoItem]] = new View[Id[TodoItem]] {
+  val todoItemView: FunctionalComponent[Id[TodoItem]] = new View[Id[TodoItem]] {
     private val logger = getLogger
 
     def apply[F[_]: Monad](id: Id[TodoItem])(implicit v: ReactViewOps[F], tx: ReactTransactor): F[ReactElement] = {

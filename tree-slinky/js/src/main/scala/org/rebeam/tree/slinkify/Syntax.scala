@@ -1,7 +1,6 @@
 package org.rebeam.tree.slinkify
 
 import org.scalajs.dom.console
-import slinky.core.facade.ReactElement
 
 import scalajs.js
 
@@ -28,10 +27,6 @@ object Syntax {
       */
     def warn(message: js.Any, optionalParams: js.Any*): Callback =
       Callback(console.warn(message, optionalParams: _*))
-  }
-
-  trait BasicFunctionalComponent[A] {
-    def apply(a: A): ReactElement
   }
 
 }
