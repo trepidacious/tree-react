@@ -128,7 +128,9 @@ object DataComponent {
           props => memo.render(props).v
         )
 
-        val memoInner = React.memo(inner, (a: ValueAndData[A], b: ValueAndData[A]) => memo.shouldComponentUpdate(a, b))
+        // Note that for React.memo we are returning whether the values are the same - this is the inverse of
+        // SCU, hence the `!`
+        val memoInner = React.memo(inner, (a: ValueAndData[A], b: ValueAndData[A]) => !memo.shouldComponentUpdate(a, b))
 
         memoInner
       }

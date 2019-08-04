@@ -36,7 +36,7 @@ object LocalDataRoot {
 
     override def transact(t: Transaction): Callback = tx.transact(t)
 
-    override def toString: String = s"LocalReactData(${sd.map.size} entries)"
+    override def toString: String = s"LocalReactData($sd)"
   }
 
   //NOTE: This is not pure - gets the time for the transaction
@@ -68,7 +68,7 @@ object LocalDataRoot {
   ): FunctionalComponent[A] = {
 
     FunctionalComponent[A] {
-          
+
       props => {
 
         val (state, setState) = useState[S[I]]{
@@ -76,7 +76,7 @@ object LocalDataRoot {
           runTransaction(empty, initialTransaction, indexer).getOrElse(empty)
         }
 
-        val tx = useRef {
+        val tx = //useRef {
           // Transactor that will run log transactions to demonstrate encoding, then run them against our local STM,
           // then either log a warning on transaction failure or set the resulting new STM into our state for children
           // to render.
@@ -100,14 +100,14 @@ object LocalDataRoot {
               }
             }
           }
-        }
+        //}
 
-        val txContext = useRef {
-          contexts.transactor.Provider(value = tx.current)
-        }
+        val txContext = //useRef {
+          contexts.transactor.Provider(value = tx)
+        //}
 
-        txContext.current(
-          contexts.data.Provider(value = LocalReactData(state.sd, tx.current))(
+        txContext(
+          contexts.data.Provider(value = LocalReactData(state.sd, tx))(
             {
               println("Providing " + state.sd)
               r(props, state.index)
