@@ -1,12 +1,12 @@
 package demo
 
 import org.rebeam.LocalDataRootDemo
-import typings.antdLib.AntdFacade.{List => _, _}
+import typings.antdLib.AntdFacade.{List => AntList, _}
 import org.scalajs.dom.console
 import slinky.core._
 import slinky.core.annotations.react
 import slinky.core.facade.Hooks._
-import slinky.core.facade.{React, ReactContext, ReactElement}
+import slinky.core.facade.{React, ReactContext}
 import slinky.web.html._
 import typings.antdLib.antdLibStrings
 import typings.reactLib.ScalableSlinky._
@@ -20,53 +20,12 @@ import scala.scalajs.js.annotation.JSImport
 @js.native
 object CSS extends js.Any
 
-object MyComponent extends ComponentWrapper {
-  case class Props(name: String, age: Int)
-  case class State(clicks: Int)
-
-  class Def(jsProps: js.Object) extends Definition(jsProps) {
-    def initialState: State = State(0)
-
-    def render: ReactElement = {
-      div(
-        props.name,
-        props.age,
-        state.clicks,
-        button(onClick := (_ => {
-          setState(State(state.clicks + 1))
-        }))(
-          "Click Me!"
-        )
-      )
-    }
-  }
-}
-
 @react object App {
   type Props = Unit
 
   private val css = CSS
 
   val nameContext: ReactContext[String] = React.createContext[String]("default-name")
-
-  val contextComponent: FunctionalComponent[String] = FunctionalComponent[String] { props =>
-    val (state, updateState) = useState(0)
-    val name = useContext(nameContext)
-    div(
-      name,
-      props,
-      state/*,
-    button(
-      onClick := (event) => updateState(2)
-    )*/
-    )
-  }
-
-  val contextProviderComponent: FunctionalComponent[String] = FunctionalComponent[String] { props =>
-    nameContext.Provider(value = "Bob Bobsson")(
-      contextComponent(props)
-    )
-  }
 
   val component = FunctionalComponent[Props] { _ =>
     val (isModalVisible, updateIsModalVisible) = useState(false)
@@ -251,11 +210,40 @@ object MyComponent extends ComponentWrapper {
       )("Show notification"),
     )
 
-    val renderContext = contextProviderComponent("Some props")
-
-    val renderNonMacro = MyComponent(MyComponent.Props("Bob", 100029))
-
     val renderTodo = LocalDataRootDemo.dataProvider(())
+
+    val renderList = section(
+      h2("List"),
+      AntList(ListProps())(
+        Item(ItemProps())(
+          Meta(MetaProps(
+            title = "Title",
+            description = "Description"
+          ))
+        ),
+        Item(ItemProps())(
+          Meta(MetaProps(
+            title = "Title 2",
+            description = "Description 2"
+          ))
+        )
+      )
+    )
+
+    val renderCheckboxInput = section(
+      h2("Input with Checkbox"),
+      Input(
+        InputProps(
+          placeholder = "input email",
+//          addonBefore = div(className := "checkbox__container", Checkbox(CheckboxProps())()).toST,
+          addonBefore = Switch(SwitchProps(size = typings.antdLib.antdLibStrings.small))().toST,
+        )
+      )
+    )
+
+    val renderEnd = section(
+      h2("That's all folks!")
+    )
 
     div(className := "App")(
       renderIntro,
@@ -263,7 +251,6 @@ object MyComponent extends ComponentWrapper {
         Col(ColProps(span = 2)),
         Col(ColProps(span = 20))(
           renderTodo,
-          renderContext,
           renderGrid,
           renderTag,
           renderTable,
@@ -277,7 +264,9 @@ object MyComponent extends ComponentWrapper {
           renderSpin,
           renderForm,
           renderNotification,
-          renderNonMacro
+          renderList,
+          renderCheckboxInput,
+          renderEnd
         ),
         Col(ColProps(span = 2))
       )

@@ -13,6 +13,11 @@ import scala.scalajs.js.annotation.JSGlobal
 import slinky.core.FunctionalComponent
 import slinky.core.facade.ReactElement
 import slinky.web.html._
+import typings.antdLib.AntdFacade.{List => _, _}
+import typings.reactLib.reactMod.ChangeEvent
+import typings.stdLib
+//import typings.antdLib.antdLibStrings
+import typings.reactLib.ScalableSlinky._
 
 @js.native
 @JSGlobal
@@ -84,6 +89,7 @@ object LocalDataRootDemo {
           // We want to use a sui.Input directly below so we can pass in the checkbox as a label,
           // so we need to handle changes here
           val textCursor = cursor.zoom(TodoItem.text)
+
 //          def onChange(e: ReactEventFromInput): Callback = textCursor.set(e.target.value)
 
 //          // Checkbox to use to complete/un-complete todo item
@@ -102,7 +108,22 @@ object LocalDataRootDemo {
 //              onChange = onChange(_)
 //            )()
 //          )
-          li(cursor.a.toString)
+//          li(cursor.a.toString)
+
+          Input(
+            InputProps(
+              placeholder = "Todo item",
+              value = textCursor.a,
+              onChange = (e: ChangeEvent[stdLib.HTMLInputElement]) => textCursor.set(e.target_ChangeEvent.value).apply(),
+              //          addonBefore = div(className := "checkbox__container", Checkbox(CheckboxProps())()).toST,
+              addonBefore = Switch(SwitchProps(
+                size = typings.antdLib.antdLibStrings.small,
+                checked = cursor.a.completed.isDefined,
+                onChange = (b: Boolean, _) => cursor.delta(TodoItemCompletion(b)).apply()
+              ))().toST,
+            )
+          )
+
         }
       )
     }
@@ -114,7 +135,7 @@ object LocalDataRootDemo {
   // can still get data from the Context provided by dataProvider, so this can be a ViewP
   val todoListView: FunctionalComponent[TodoList] = new ViewP[TodoList] {
     override def apply(a: TodoList): ReactElement = {
-      ul(
+      div(
 //        verticalAlign = sui.List.VerticalAlign.Middle,
 //        relaxed = true: js.Any
       )(

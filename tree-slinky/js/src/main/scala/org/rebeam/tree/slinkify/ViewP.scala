@@ -46,9 +46,10 @@ trait ViewPC[A] {
     implicit val r: Reusability[Cursor[A]] = ir.cursorReusability[A]
 
     val c = FunctionalComponent[Cursor[A]] {
-      props =>
+      props => {
         val tx = useContext(contexts.transactor)
         ViewPC.this.apply(props)(tx)
+      }
     }
 
     React.memo(c, (a, b) => r.test(a, b))
@@ -76,9 +77,10 @@ trait ViewPC2[A, B] {
     implicit val rB: Reusability[Cursor[B]] = irB.cursorReusability[B]
 
     val c = FunctionalComponent[(Cursor[A], Cursor[B])] {
-      props =>
+      props => {
         val tx = useContext(contexts.transactor)
         ViewPC2.this.apply(props._1, props._2)(tx)
+      }
     }
 
     React.memo(c, (a, b) => rA.test(a._1, b._1) && rB.test(a._2, b._2))
@@ -102,9 +104,10 @@ trait ViewPT[A] {
            (implicit ir: Reusability[A]): FunctionalComponent[A] = {
 
     val c = FunctionalComponent[A] {
-      props =>
+      props => {
         val tx = useContext(contexts.transactor)
         ViewPT.this.apply(props)(tx)
+      }
     }
 
     // SAM implementation of BasicFunctionalComponent

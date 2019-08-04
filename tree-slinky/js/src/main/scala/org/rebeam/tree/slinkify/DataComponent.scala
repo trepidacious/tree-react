@@ -6,7 +6,7 @@ import org.rebeam.tree.slinkify.DataComponent.logger
 import org.rebeam.tree.slinkify.ReactData.ReactDataContexts
 import slinky.core._
 import slinky.core.facade.Hooks._
-import slinky.core.facade.{React, ReactRef}
+import slinky.core.facade.React
 
 case class ValueAndData[A](a: A, data: ReactData)
 
@@ -42,7 +42,6 @@ case class ValueAndData[A](a: A, data: ReactData)
   * since it doesn't grow indefinitely, but it will be holding on to data that is not needed - we only need the
   * revision numbers of the values used by the last render for SCU).
   *
-  * TODO this can be improved by using useContext in SCU of DataComponent - see TODO below
   */
 class DataRendererMemo[A: Reusability](r: DataRenderer[A]) {
   var lastProps: ValueAndData[A] = _
@@ -117,67 +116,26 @@ object DataComponent {
 
   def apply[A](r: DataRenderer[A], contexts: ReactDataContexts = ReactData.defaultContexts)
                       (implicit reusability: Reusability[A]): FunctionalComponent[A] = FunctionalComponent[A] {
-    val memo: ReactRef[DataRendererMemo[A]] = useRef(new DataRendererMemo[A](r))
+    props => {
 
-    val inner = FunctionalComponent[ValueAndData[A]](
-      props => memo.current.render(props).v
-    )
+      // Each instance of DataComponent needs its own inner render component instance. This is is because it
+      // needs a separate DataRendererMemo, and this memo then needs to be used to optimise redrawing of
+      // the inner render component.
+      val renderComponent = useRef {
+        val memo = new DataRendererMemo[A](r)
 
-    val memoInner = React.memo(inner, (a: ValueAndData[A], b: ValueAndData[A]) => memo.current.shouldComponentUpdate(a, b))
+        val inner = FunctionalComponent[ValueAndData[A]](
+          props => memo.render(props).v
+        )
 
-    props => memoInner(ValueAndData(props, useContext(contexts.data)))
+        val memoInner = React.memo(inner, (a: ValueAndData[A], b: ValueAndData[A]) => memo.shouldComponentUpdate(a, b))
+
+        memoInner
+      }
+
+      // The actual render just gets data from context and passes (with props) to the render component
+      val data = useContext(contexts.data)
+      renderComponent.current(ValueAndData(props, data))
+    }
   }
 }
-
-//class DataComponentB[A](r: DataRenderer[A])(implicit reusability: Reusability[A]) {
-//
-//  @react class C extends StatelessComponent {
-//
-//    type Props = ValueAndData[A]
-//
-//    val dataRendererMemo = new DataRendererMemo[A](r)
-//
-//    override def shouldComponentUpdate(nextProps: ValueAndData[A], nextState: Unit): Boolean =
-//      dataRendererMemo.shouldComponentUpdate(props, nextProps)
-//
-//    def render: ReactElement =
-//      dataRendererMemo.render(props).v
-//  }
-//
-//  def apply(valueAndData: ValueAndData[A]): ReactElement = C(valueAndData)
-//
-//}
-//
-//class DataComponent[A](
-//  r: DataRenderer[A],
-//  contexts: ReactDataContexts = ReactData.defaultContexts
-//)(implicit reusability: Reusability[A]) extends BasicFunctionalComponent[A] {
-//
-//  @react class C extends StatelessComponent {
-//    type Props = A
-//
-//    private val b = new DataComponentB[A](r)
-//
-//    override def shouldComponentUpdate(nextProps: A, nextState: Unit): Boolean = {
-//      //TODO should be able to use useContext here to run comparison without deferring to DataComponentB
-//      reusability.test(props, nextProps)
-//    }
-//
-//    def render: ReactElement = {
-//      val data = useContext(contexts.data)
-//      logger.trace(s">>>dataComponent.render_P, data $data, a = $props")
-//      b(ValueAndData(props, data))
-//    }
-//  }
-//
-//  def apply(a: A): ReactElement = C(a)
-//
-//}
-//
-//object DataComponent {
-//  val logger: Logger = getLogger
-//
-//  def apply[A](r: DataRenderer[A], contexts: ReactDataContexts = ReactData.defaultContexts)
-//              (implicit reusability: Reusability[A]): BasicFunctionalComponent[A] = new DataComponent[A](r, contexts)
-//}
-

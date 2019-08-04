@@ -28,3 +28,7 @@ div.blue2 {
 section {
   margin-top: 20px;
 }
+
+.checkbox__container {
+  padding-top: 2px;
+}

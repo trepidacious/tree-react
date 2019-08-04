@@ -68,42 +68,44 @@ object LocalDataRoot {
   ): FunctionalComponent[A] = {
 
     FunctionalComponent[A] {
-      val (state, setState) = useState[S[I]]{
-        val empty = S(emptyState, indexer.initial)
-        runTransaction(empty, initialTransaction, indexer).getOrElse(empty)
-      }
+          
+      props => {
 
-      val tx = useRef {
-        // Transactor that will run log transactions to demonstrate encoding, then run them against our local STM,
-        // then either log a warning on transaction failure or set the resulting new STM into our state for children
-        // to render.
-        new ReactTransactor {
-          override def transact(t: Transaction): Callback = Callback {
-            logger.info(
-              transactionCodec
-                .encoder(t)(state.sd)
-                .map(_.toString).getOrElse(s"Could not encode transaction $t")
-            )
+        val (state, setState) = useState[S[I]]{
+          val empty = S(emptyState, indexer.initial)
+          runTransaction(empty, initialTransaction, indexer).getOrElse(empty)
+        }
 
-            // Run the transaction
-            val s = runTransaction(state, t, indexer)
+        val tx = useRef {
+          // Transactor that will run log transactions to demonstrate encoding, then run them against our local STM,
+          // then either log a warning on transaction failure or set the resulting new STM into our state for children
+          // to render.
+          new ReactTransactor {
+            override def transact(t: Transaction): Callback = Callback {
+              logger.info(
+                transactionCodec
+                  .encoder(t)(state.sd)
+                  .map(_.toString).getOrElse(s"Could not encode transaction $t")
+              )
 
-            // Deal with result of transaction
-            s match {
-              // Error - we leave state alone, but log error
-              case Left(error) => logger.warn(s"Failed transaction: $error")
-              // We have a new state
-              case Right(newState) => setState(newState) // >> Callback{logger.info(s"Applied transaction: $t")}
+              // Run the transaction
+              val s = runTransaction(state, t, indexer)
+
+              // Deal with result of transaction
+              s match {
+                // Error - we leave state alone, but log error
+                case Left(error) => logger.warn(s"Failed transaction: $error")
+                // We have a new state
+                case Right(newState) => setState(newState) // >> Callback{logger.info(s"Applied transaction: $t")}
+              }
             }
           }
         }
-      }
 
-      val txContext = useRef {
-        contexts.transactor.Provider(value = tx.current)
-      }
+        val txContext = useRef {
+          contexts.transactor.Provider(value = tx.current)
+        }
 
-      props => {
         txContext.current(
           contexts.data.Provider(value = LocalReactData(state.sd, tx.current))(
             {
