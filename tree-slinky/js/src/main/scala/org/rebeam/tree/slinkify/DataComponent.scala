@@ -119,16 +119,13 @@ object DataComponent {
                       (implicit reusability: Reusability[A]): FunctionalComponent[A] = FunctionalComponent[A] {
     val memo: ReactRef[DataRendererMemo[A]] = useRef(new DataRendererMemo[A](r))
 
-    val data = useContext(contexts.data)
-    println("data " +data)
-
     val inner = FunctionalComponent[ValueAndData[A]](
       props => memo.current.render(props).v
     )
 
     val memoInner = React.memo(inner, (a: ValueAndData[A], b: ValueAndData[A]) => memo.current.shouldComponentUpdate(a, b))
 
-    props => memoInner(ValueAndData(props, data))
+    props => memoInner(ValueAndData(props, useContext(contexts.data)))
   }
 }
 

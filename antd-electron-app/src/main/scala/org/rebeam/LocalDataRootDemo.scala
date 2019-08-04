@@ -106,7 +106,7 @@ object LocalDataRootDemo {
         }
       )
     }
-  }.build("todoItemView")
+  }.build("todoItemView", onError = e => li(e.toString))
 
   // This component uses a child view for each item in the list, each of these will update only when the TodoItem
   // referenced by that Id changes.
@@ -125,12 +125,14 @@ object LocalDataRootDemo {
 
   // This component will manage and render an STM, initialised to the example data
   // We only use the index for data, so the model is Unit
-  val dataProvider: FunctionalComponent[Unit] = LocalDataRoot.component[Unit, TodoIndex](
-    (_, index) =>
+  val dataProvider: FunctionalComponent[Unit] = LocalDataRoot[Unit, TodoIndex](
+    (_, index) =>{
+      println("LocalDataRootDemo dataProvider.render")
       div(
         // When we have an indexed TodoList, display it
         index.todoList.map[ReactElement](l => todoListView(l)).getOrElse(span()("Empty"))
-      ),
+      )
+    },
     todoIndexer,  //This indexer will provide the most recently added list
     example       //This example Transaction populates the STM to display
   )

@@ -23,6 +23,7 @@ object ReactData {
     override def getTransactionIdFromGuid(guid: Guid): Option[TransactionId] = None
 //    override def getOTListCursorUpdate[A](list: OTList[A]): Option[CursorUpdate[A]] = None
     def transact(t: Transaction): Callback = Callback{logger.warn(s"ReactData.empty discards transaction $t")}
+    override def toString: String = "ReactData.emptyData"
   }
 
   private val emptyTransactor: ReactTransactor = t => Callback.warn(s"ReactData.emptyTransactor discards transaction: $t")
