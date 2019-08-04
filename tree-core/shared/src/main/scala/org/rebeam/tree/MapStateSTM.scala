@@ -81,9 +81,13 @@ object MapStateSTM {
       copy(
         nextGuid = ng,
         random = PRandom(ng),
-        deltas = Vector.empty
+        deltas = Vector.empty,
+        hasNOps = false,
+        unstable = false
       )
     }
+
+    override def toString: String = s"StateData(${map.map{ case (k, v) => s"$k -> ${v.data} @ ${v.transactionId}"}})"
   }
 
   def emptyState: StateData = StateData(
