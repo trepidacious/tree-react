@@ -92,20 +92,14 @@ class DataRendererMemo[A: Reusability](r: DataRenderer[A]) {
       logger.trace("DataRendererMemo.shouldComponentUpdate - UPDATE: new data value revision(s)")
       true
 
-      // Data and props will produce the same result from renderer. Note we update lastProps to
-      // nextProps - we have established that they produce the same result from the DataRenderer,
-      // but note above that we require lastProps eq currentProps, so we need to update to allow the
-      // next call to SCU to work, since nexProps may have different data contents (that are still
-      // equivalent for our DataRenderer). This assumes that React will set the component's props
-      // to nextProps, so we will see this as currentProps on the next call. If this is not the case
-      // we will detect it this as `lastProps ne currentProps` when we are next called, and will return
-      // true for safety
+      // Data and props will produce the same result from renderer. Note we leave last props alone, since
+      // React.memo seems to keep the old ones around
 
     } else {
       logger.trace(
-        s"DataRendererMemo.shouldComponentUpdate - skip: updating lastProps from $lastProps to nextProps $nextProps"
+        s"DataRendererMemo.shouldComponentUpdate - >>>>>>>skip: doing nothing"
       )
-      lastProps = nextProps
+//      lastProps = nextProps
       false
     }
 }

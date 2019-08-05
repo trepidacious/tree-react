@@ -63,7 +63,7 @@ object TodoData {
     def apply[F[_] : Monad](implicit stm: STMOps[F]): F[Unit] = {
       import stm._
       for {
-        itemIds <- (1 to 1).toList.traverse(i =>
+        itemIds <- (1 to 5).toList.traverse(i =>
           for {
             c <- context
             item <- put[TodoItem](id => TodoItem(id, c.moment, None, s"Todo $i"))

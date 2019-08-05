@@ -76,12 +76,12 @@ object LocalDataRoot {
           runTransaction(empty, initialTransaction, indexer).getOrElse(empty)
         }
 
-        val tx = useMemo (
+        val tx = //useMemo (
           // Transactor that will run log transactions to demonstrate encoding, then run them against our local STM,
           // then either log a warning on transaction failure or set the resulting new STM into our state for children
           // to render.
-          () => {
-            println("New ReactTransactor")
+          //() => {
+            //println("New ReactTransactor")
             new ReactTransactor {
               override def transact(t: Transaction): Callback = Callback {
                 logger.info(
@@ -102,9 +102,9 @@ object LocalDataRoot {
                 }
               }
             }
-          },
-          Nil
-        )
+          //},
+          //List(state, setState)
+        //)
 
         val txContext = //useMemo (
           //() =>
