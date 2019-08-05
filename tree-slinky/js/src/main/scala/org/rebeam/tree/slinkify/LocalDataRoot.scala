@@ -76,35 +76,41 @@ object LocalDataRoot {
           runTransaction(empty, initialTransaction, indexer).getOrElse(empty)
         }
 
-        val tx = //useRef {
+        val tx = useMemo (
           // Transactor that will run log transactions to demonstrate encoding, then run them against our local STM,
           // then either log a warning on transaction failure or set the resulting new STM into our state for children
           // to render.
-          new ReactTransactor {
-            override def transact(t: Transaction): Callback = Callback {
-              logger.info(
-                transactionCodec
-                  .encoder(t)(state.sd)
-                  .map(_.toString).getOrElse(s"Could not encode transaction $t")
-              )
+          () => {
+            println("New ReactTransactor")
+            new ReactTransactor {
+              override def transact(t: Transaction): Callback = Callback {
+                logger.info(
+                  transactionCodec
+                    .encoder(t)(state.sd)
+                    .map(_.toString).getOrElse(s"Could not encode transaction $t")
+                )
 
-              // Run the transaction
-              val s = runTransaction(state, t, indexer)
+                // Run the transaction
+                val s = runTransaction(state, t, indexer)
 
-              // Deal with result of transaction
-              s match {
-                // Error - we leave state alone, but log error
-                case Left(error) => logger.warn(s"Failed transaction: $error")
-                // We have a new state
-                case Right(newState) => setState(newState) // >> Callback{logger.info(s"Applied transaction: $t")}
+                // Deal with result of transaction
+                s match {
+                  // Error - we leave state alone, but log error
+                  case Left(error) => logger.warn(s"Failed transaction: $error")
+                  // We have a new state
+                  case Right(newState) => setState(newState) // >> Callback{logger.info(s"Applied transaction: $t")}
+                }
               }
             }
-          }
-        //}
+          },
+          Nil
+        )
 
-        val txContext = //useRef {
-          contexts.transactor.Provider(value = tx)
-        //}
+        val txContext = //useMemo (
+          //() =>
+            contexts.transactor.Provider(value = tx)
+          //, Nil
+        //)
 
         txContext(
           contexts.data.Provider(value = LocalReactData(state.sd, tx))(
