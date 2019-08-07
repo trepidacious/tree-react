@@ -18,6 +18,13 @@ object View {
     */
   object Ops {
 
+    /**
+      * The data for a StateT monad that will run ReactViewOps
+      * @param dataSource     The source of data
+      * @param viewedGuids    The set of Guids from Refs used to view (get) data
+      * @param missingGuids   The set of Guids from Refs used to attempt to view data, where the data
+      *                       is currently missing (e.g. not locally cached).
+      */
     case class StateData(
       dataSource: DataSource,
       viewedGuids: Set[Guid] = Set.empty,

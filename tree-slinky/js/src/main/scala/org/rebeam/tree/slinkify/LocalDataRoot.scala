@@ -71,53 +71,76 @@ object LocalDataRoot {
 
       props => {
 
-        val (state, setState) = useState[S[I]]{
+        // The following approach to accessing the "current" state from the ReactTransactor seems to match this:
+        // https://reactjs.org/docs/hooks-faq.html#why-am-i-seeing-stale-props-or-state-inside-my-function
+        // The ReactTransactor is equivalent to "some asynchronous callback" as described in that FAQ.
+        // There is a similar approach in a different use case here: https://github.com/facebook/react/issues/16091
+        // TODO: We could factor out the useState and useRef to useCurrentState?
+
+        // Our state contains the complete STM, initialised with the initialTransaction if possible
+        // Note that this will return a new actual state on every call, so we will use it in a ref below.
+        val state = useState[S[I]]{
           val empty = S(emptyState, indexer.initial)
+          // TODO: Note that if the initial transaction fails we currently just leave the STM empty.
           runTransaction(empty, initialTransaction, indexer).getOrElse(empty)
         }
 
-        val tx = //useMemo (
+        // We use a reference to give a stable point to access state, so we can memoize tx and avoid an update
+        // to all ReactTransactor users whenever the state changes
+        // We update the reference in an effect since it should not be updated by the render itself. This means
+        // that stateRef is only updated when a render commits, which should make this work with concurrent rendering.
+        val stateRef = useRef(state)
+        useEffect(
+          () => stateRef.current = state,
+          List(state)   // Update ref only when state tuple changes (although this is probably the case for most
+                        // renders, it might not be for e.g. concurrent rendering?)
+        )
+
+        // Finally, useMemo to keep hold of a single ReactTransactor, tx. Since this uses the stateRef, it will always
+        // use the current state value and setter from useState.
+        val tx = useMemo (
           // Transactor that will run log transactions to demonstrate encoding, then run them against our local STM,
           // then either log a warning on transaction failure or set the resulting new STM into our state for children
           // to render.
-          //() => {
-            //println("New ReactTransactor")
+          () => {
             new ReactTransactor {
               override def transact(t: Transaction): Callback = Callback {
                 logger.info(
                   transactionCodec
-                    .encoder(t)(state.sd)
+                    .encoder(t)(stateRef.current._1.sd)
                     .map(_.toString).getOrElse(s"Could not encode transaction $t")
                 )
 
                 // Run the transaction
-                val s = runTransaction(state, t, indexer)
+                val s = runTransaction(stateRef.current._1, t, indexer)
 
                 // Deal with result of transaction
                 s match {
                   // Error - we leave state alone, but log error
                   case Left(error) => logger.warn(s"Failed transaction: $error")
                   // We have a new state
-                  case Right(newState) => setState(newState) // >> Callback{logger.info(s"Applied transaction: $t")}
+                  case Right(newState) => stateRef.current._2(newState) // >> Callback{logger.info(s"Applied transaction: $t")}
                 }
               }
             }
-          //},
-          //List(state, setState)
-        //)
+          },
+          List(stateRef)  // In case we get a new ref from useRef (this probably doesn't happen)
+        )
 
-        val txContext = //useMemo (
-          //() =>
-            contexts.transactor.Provider(value = tx)
-          //, Nil
-        //)
+        // Now we can always provide the same value (by reference equality) to this Provider. This prevents
+        // unnecessary renders of ViewPC, ViewPC2, ViewPT and any other components that just use this context.
+        // Oddly, useMemo seems to upset slinky, which might be worth looking into in itself.
+        val txContext = contexts.transactor.Provider(value = tx)
 
         txContext(
-          contexts.data.Provider(value = LocalReactData(state.sd, tx))(
-            {
-              println("Providing " + state.sd)
-              r(props, state.index)
-            }
+          // We don't memoise this provider or the LocalReactData, since it needs to change on every state
+          // change anyway.
+          contexts.data.Provider(value = LocalReactData(state._1.sd, tx))(
+            // TODO according to https://frontarm.com/james-k-nelson/react-context-performance/
+            // we should accept a children prop rather than a render prop, so that children can be identical
+            // between renders. This would require us to remove the props and index, which should be fine for
+            // most uses?
+            r(props, state._1.index)
           )
         )
       }
