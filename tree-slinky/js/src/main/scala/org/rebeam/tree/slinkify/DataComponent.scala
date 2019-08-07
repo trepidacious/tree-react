@@ -51,7 +51,7 @@ class DataRendererMemo[A: Reusability](r: DataRenderer[A]) {
     val drr = r(p.a, p.data, p.data)
     lastProps = p
     lastUsedIds = drr.usedIds
-    logger.trace(s"DataRendererMemo.render($p) gives used ids ${drr.usedIds}")
+    logger.trace(s"DataRendererMemo.render(${p.a}) gives used ids ${drr.usedIds}")
     drr
   }
 
@@ -116,23 +116,26 @@ object DataComponent {
       // Each instance of DataComponent needs its own inner render component instance. This is is because it
       // needs a separate DataRendererMemo, and this memo then needs to be used to optimise redrawing of
       // the inner render component.
-      val renderComponent = useRef {
-        val memo = new DataRendererMemo[A](r)
+      val renderComponent = useMemo(
+        () => {
+          val memo = new DataRendererMemo[A](r)
 
-        val inner = FunctionalComponent[ValueAndData[A]](
-          props => memo.render(props).v
-        )
+          val inner = FunctionalComponent[ValueAndData[A]](
+            props => memo.render(props).v
+          )
 
-        // Note that for React.memo we are returning whether the values are the same - this is the inverse of
-        // SCU, hence the `!`
-        val memoInner = React.memo(inner, (a: ValueAndData[A], b: ValueAndData[A]) => !memo.shouldComponentUpdate(a, b))
+          // Note that for React.memo we are returning whether the values are the same - this is the inverse of
+          // SCU, hence the `!`
+          val memoInner = React.memo(inner, (a: ValueAndData[A], b: ValueAndData[A]) => !memo.shouldComponentUpdate(a, b))
 
-        memoInner
-      }
+          memoInner
+        },
+        Nil
+      )
 
       // The actual render just gets data from context and passes (with props) to the render component
       val data = useContext(contexts.data)
-      renderComponent.current(ValueAndData(props, data))
+      renderComponent(ValueAndData(props, data))
     }
   }
 }

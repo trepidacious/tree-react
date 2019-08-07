@@ -54,9 +54,21 @@ This is still in progress, see [notes](https://github.com/trepidacious/tree-reac
 
 ## tree-react
 
-React components for use with tree-core.
+Scalajs-react components for use with tree-core.
 
 Also still in progress, there is an example of current functionality in electron-app.
+
+## tree-slinky
+
+Slinky React components for use with tree-core.
+
+Still in progress.
+
+### TODO
+
+1. Check that viewPC, ViewPC2, ViewPT etc. are not re-rendered on STM update (i.e. check that the transactor context
+   is not updated pointlessly).
+2. Extended demo   
 
 ## scalajs-react-material-ui
 
