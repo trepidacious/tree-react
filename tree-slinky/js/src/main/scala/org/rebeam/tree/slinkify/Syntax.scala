@@ -4,6 +4,10 @@ import org.scalajs.dom.console
 
 import scalajs.js
 
+import typings.reactLib.reactMod.ChangeEvent
+import typings.stdLib
+//import typings.antdLib.antdLibStrings
+
 object Syntax {
   type Callback = () => Unit
 
@@ -28,5 +32,13 @@ object Syntax {
     def warn(message: js.Any, optionalParams: js.Any*): Callback =
       Callback(console.warn(message, optionalParams: _*))
   }
+
+  /**
+    * Wrapper for onChange on an Input in scalablyTyped react facade
+    * @param f  The function to handle the new input value
+    * @return   An appropriately typed function for onChange
+    */
+  def onInputValueChange(f: String => Unit): ChangeEvent[stdLib.HTMLInputElement] => Unit =
+    e => f(e.target_ChangeEvent.value)
 
 }

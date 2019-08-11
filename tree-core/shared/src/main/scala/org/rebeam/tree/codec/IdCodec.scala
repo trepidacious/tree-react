@@ -1,8 +1,10 @@
 package org.rebeam.tree.codec
 
-import io.circe.{Decoder, Encoder}
+import io.circe.{ArrayEncoder, Decoder, Encoder, Json}
+import org.rebeam.tree.Id
 import org.rebeam.tree.codec.Codec.DeltaCodec
-import org.rebeam.tree.ot.OTCodecs
+import org.rebeam.tree.ot.{OTCodecs, OTList}
+import io.circe.syntax._
 
 /**
   * Represents a type of data referenced by [[org.rebeam.tree.Id]] in an STM
@@ -27,12 +29,26 @@ object IdCodec {
     (implicit encoder: Encoder[A], decoder: Decoder[A], deltaCodec: DeltaCodec[A]): IdCodec[A] =
     IdCodecBasic(IdType(idType), encoder, decoder, deltaCodec)
 
-  def otList[A](aCodec: IdCodec[A]): IdCodec[List[A]] = IdCodecBasic(
-    IdType(s"List[${aCodec.idType.name}]"),
-    Encoder.encodeList(aCodec.encoder),
-    Decoder.decodeList(aCodec.decoder),
-    OTCodecs.otDeltaCodec
-  )
+  def otList[A](implicit aCodec: IdCodec[A]): IdCodec[OTList[A]] = {
+    implicit val listEncoder: ArrayEncoder[List[A]] = Encoder.encodeList[A](aCodec.encoder)
+    implicit val listDecoder: Decoder[List[A]] = Decoder.decodeList[A](aCodec.decoder)
+    IdCodecBasic(
+      IdType(s"OTList[${aCodec.idType.name}]"),
+      Encoder.instance(l =>
+        Json.obj(
+          "id" -> l.id.asJson,
+          "list" ->l.list.asJson
+        )
+      ),
+      Decoder.instance(
+        c => for {
+          id <- c.downField("id").as[Id[OTList[A]]]
+          list <- c.downField("list").as[List[A]]
+        } yield OTList[A](id, list)
+      ),
+      OTCodecs.otDeltaCodec
+    )
+  }
 }
 
 case class IdCodecBasic[A](idType: IdType, encoder: Encoder[A], decoder: Decoder[A], deltaCodec: DeltaCodec[A]) extends IdCodec[A]

@@ -17,6 +17,14 @@ object Diff {
 
   /**
     * Generate a diff between two lists, as an Operation
+    * Note: This uses a simple algorithm - it just finds the shared prefix and suffix of the lists (i.e. the
+    * sections at the start and end of the two lists that are the same, if any), and retains these. Then it
+    * deletes and inserts as necessary to make the middle match.
+    * This will always generate a operation that will "work", but may generate a larger change than is needed. However
+    * in the cases of a single (or contiguous) insert, delete or alteration it will produce the "optimum" operation.
+    * This will work well for user editing of a string via typing, deletion, cutting and pasting, including doing
+    * those operations after selecting a contiguous range. Ideally browsers would all give a reasonable representation
+    * of such edits we could use directly, but unfortunately at the moment they don't seem to.
     * @param o    The old list
     * @param n    The new list
     * @tparam A   The type of element

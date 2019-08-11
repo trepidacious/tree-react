@@ -569,7 +569,11 @@ lazy val treeSlinky = crossProject(JSPlatform, JVMPlatform).in(
   resolvers += Resolver.jcenterRepo,
 
   slinkyDeps,
-
+  
+  libraryDependencies ++= Seq(
+    ScalablyTyped.A.`antd-slinky-facade`,
+    ScalablyTyped.R.`react-dom`,
+  ),
 //  scalacOptions += "-Ymacro-debug-lite",
 
   //Produce a module, so we can use @JSImport.

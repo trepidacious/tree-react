@@ -4,8 +4,10 @@ import cats.Monad
 import cats.implicits._
 import org.log4s.getLogger
 import org.rebeam.TodoData._
+import org.rebeam.tree.Delta.OTListDelta
 import org.rebeam.tree.MapStateSTM.StateDelta
 import org.rebeam.tree._
+import org.rebeam.tree.ot.{Diff, OTList}
 import org.rebeam.tree.slinkify._
 
 import scala.scalajs.js
@@ -14,10 +16,10 @@ import slinky.core.FunctionalComponent
 import slinky.core.facade.ReactElement
 import slinky.web.html._
 import typings.antdLib.AntdFacade.{List => _, _}
-import typings.reactLib.reactMod.ChangeEvent
-import typings.stdLib
-//import typings.antdLib.antdLibStrings
+
 import typings.reactLib.ScalableSlinky._
+
+import org.rebeam.tree.slinkify.Syntax._
 
 @js.native
 @JSGlobal
@@ -50,7 +52,7 @@ object LocalDataRootDemo {
   val stringView: FunctionalComponent[Cursor[String]] = new ViewPC[String] {
     private val logger = getLogger
 
-    override def apply(a: Cursor[String])(implicit tx: ReactTransactor): ReactElement = {
+    override def apply(c: Cursor[String])(implicit tx: ReactTransactor): ReactElement = {
 
       logger.debug(s"stringView applying from $a, transactor $tx")
 
@@ -59,18 +61,40 @@ object LocalDataRootDemo {
       // a Transaction from the delta using the context provided by the cursor, and
       // then uses the implicit ReactTransactor to convert the Transactor to a Callback
       // we can give to React.
+      Input(
+        InputProps(
+          value = c.a,
+          onChange = onInputValueChange(s => c.set(s).apply())
+        )
+      )
 
-      // Note we can use e.target.value directly - set accepts a plain value, not a function,
-      // so we don't have to worry about the event being reused. Of course the Callback produced
-      // will not be used until later.
-//      def onChange(e: ReactEventFromInput): Callback = a.set(e.target.value)
-
-      input(
-        value := a.a,
-//        onChange := onChange(_)
-      )()
     }
 
+  }.build()
+
+  val stringOTView: FunctionalComponent[Cursor[OTList[Char]]] = new ViewPC[OTList[Char]] {
+    private val logger = getLogger
+
+    override def apply(c: Cursor[OTList[Char]])(implicit tx: ReactTransactor): ReactElement = {
+      logger.debug(s"stringOTView applying from ${c.a}, transactor $tx")
+
+      Input(
+        InputProps(
+//          placeholder = "Todo item",
+          value = c.a.list.mkString,
+          onChange = onInputValueChange(
+            s => {
+              val o = c.a.list
+              val n = s.toList
+              val d = Diff(o, n)
+              println(s"'$o' -> '$n' by $d")
+              c.delta(OTListDelta(d)).apply()
+            }
+          )
+        )
+      )
+
+    }
   }.build()
 
   // A View accepting the Id of a TodoItem.
@@ -90,32 +114,11 @@ object LocalDataRootDemo {
           // so we need to handle changes here
           val textCursor = cursor.zoom(TodoItem.text)
 
-//          def onChange(e: ReactEventFromInput): Callback = textCursor.set(e.target.value)
-
-//          // Checkbox to use to complete/un-complete todo item
-//          val checkbox = sui.Checkbox(
-//            checked = cursor.a.completed.isDefined,
-//            onChange = (_: ReactEvent, p: sui.Checkbox.Props) =>
-//              cursor.delta(TodoItemCompletion(p.checked.getOrElse(false)))
-//          )
-//
-//          // Actual display is a list item containing an input, with the checkbox as the input's label
-//          sui.ListItem()(
-//            sui.Input(
-//              fluid = true,
-//              label = checkbox.raw, // Note we need to pass raw component, since we are going straight to JS property
-//              value = textCursor.a,
-//              onChange = onChange(_)
-//            )()
-//          )
-//          li(cursor.a.toString)
-
           Input(
             InputProps(
               placeholder = "Todo item",
               value = textCursor.a,
-              onChange = (e: ChangeEvent[stdLib.HTMLInputElement]) => textCursor.set(e.target_ChangeEvent.value).apply(),
-              //          addonBefore = div(className := "checkbox__container", Checkbox(CheckboxProps())()).toST,
+              onChange = onInputValueChange(s => textCursor.set(s).apply()),
               addonBefore = Switch(SwitchProps(
                 size = typings.antdLib.antdLibStrings.small,
                 checked = cursor.a.completed.isDefined,
@@ -129,6 +132,28 @@ object LocalDataRootDemo {
     }
   }.build("todoItemView", onError = e => li(e.toString))
 
+  // A View accepting the Id of a TodoItem.
+  // This is a View so that it can use ReactViewOps to create a cursor at the id to view/edit the TodoItem.
+  // The view will be re-rendered whenever the data at the Id changes.
+  val todoListSummaryView: FunctionalComponent[Id[TodoList]] = new View[Id[TodoList]] {
+    private val logger = getLogger
+
+    def apply[F[_]: Monad](id: Id[TodoList])(implicit v: ReactViewOps[F], tx: ReactTransactor): F[ReactElement] = {
+      logger.debug(s"View applying from $id")
+
+      // By creating a cursor at the Id, we can enable navigation through the TodoItem
+      v.cursorAt[TodoList](id).map(
+        cursor => {
+
+          // We want to use a sui.Input directly below so we can pass in the checkbox as a label,
+          // so we need to handle changes here
+          val textCursor = cursor.zoom(TodoList.name)
+          stringOTView(textCursor)
+        }
+      )
+    }
+  }.build("todoItemView", onError = e => li(e.toString))
+
   // This component uses a child view for each item in the list, each of these will update only when the TodoItem
   // referenced by that Id changes.
   // Note that this does not need to be a View itself since it doesn't actually get the data by id - the child views
@@ -136,10 +161,13 @@ object LocalDataRootDemo {
   val todoListView: FunctionalComponent[TodoList] = new ViewP[TodoList] {
     override def apply(a: TodoList): ReactElement = {
       div(
-//        verticalAlign = sui.List.VerticalAlign.Middle,
-//        relaxed = true: js.Any
-      )(
-        a.items.map(id => todoItemView(id).withKey(id.toString))
+        todoListSummaryView(a.id),
+        div(
+  //        verticalAlign = sui.List.VerticalAlign.Middle,
+  //        relaxed = true: js.Any
+        )(
+          a.items.map(id => todoItemView(id).withKey(id.toString))
+        )
       )
     }
   }.build

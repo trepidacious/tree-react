@@ -106,31 +106,31 @@ object LocalDataRootDemo {
 
   }.build("stringView")
 
-//  val stringOTView: Component[Cursor[OTList[Char]], Unit, Unit, CtorType.Props] = new ViewPC[OTList[Char]] {
-//    private val logger = getLogger
-//
-//    override def apply(c: Cursor[OTList[Char]])(implicit tx: ReactTransactor): VdomNode = {
-//      logger.debug(s"stringOTView applying from ${c.a}, transactor $tx")
-//
-//
-//      // Diff the old and new contents of the input, as an operation,
-//      // and then apply this as an OTListDelta using the cursor
-//      def onChange(e: ReactEventFromInput) = {
-//        val o = c.a.list
-//        val n = e.target.value.toList
-//        val d = Diff(o, n)
-//        println(s"'$o' -> '$n' by $d")
-//        c.delta(OTListDelta(d))
-//      }
-//
-//      <.input(
-//        ^.value := c.a.list.mkString,
-//        ^.onChange ==> onChange,
-//        ^.margin := "10px"
-//      )
-//    }
-//
-//  }.build("stringView")
+  //  val stringOTView: Component[Cursor[OTList[Char]], Unit, Unit, CtorType.Props] = new ViewPC[OTList[Char]] {
+  //    private val logger = getLogger
+  //
+  //    override def apply(c: Cursor[OTList[Char]])(implicit tx: ReactTransactor): VdomNode = {
+  //      logger.debug(s"stringOTView applying from ${c.a}, transactor $tx")
+  //
+  //
+  //      // Diff the old and new contents of the input, as an operation,
+  //      // and then apply this as an OTListDelta using the cursor
+  //      def onChange(e: ReactEventFromInput) = {
+  //        val o = c.a.list
+  //        val n = e.target.value.toList
+  //        val d = Diff(o, n)
+  //        println(s"'$o' -> '$n' by $d")
+  //        c.delta(OTListDelta(d))
+  //      }
+  //
+  //      <.input(
+  //        ^.value := c.a.list.mkString,
+  //        ^.onChange ==> onChange,
+  //        ^.margin := "10px"
+  //      )
+  //    }
+  //
+  //  }.build("stringView")
 
   val todoItemView: Component[Id[TodoItem], Unit, Unit, CtorType.Props] = new View[Id[TodoItem]] {
     private val logger = getLogger

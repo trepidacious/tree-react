@@ -2,7 +2,7 @@ package org.rebeam.tree
 
 import cats.Monad
 import org.rebeam.tree.codec.IdCodec
-//import org.rebeam.tree.ot.{OTList, Operation}
+import org.rebeam.tree.ot.{OTList, Operation}
 
 /**
   * Operations on a software-transactional memory.
@@ -78,8 +78,7 @@ import org.rebeam.tree.codec.IdCodec
   * random values to produce a conventional UUID and use that to try to search for data in a later transaction.
   * TODO: We could perhaps provide additional non-S versions of the operations, making it clear that the use of
   * non-S versions is only recommended when the data will be used only cosmetically (for example for assigning a
-  * random colour for display, where this does not need to be stable). Note that no operations in TransactionOps are
-  * considered to be U, since they do not use the STM at all.
+  * random colour for display, where this does not need to be stable).
   *
   * @tparam F The monad used to express operations
   */
@@ -161,42 +160,42 @@ abstract class STMOps[F[_]: Monad] extends TransactionOps {
     */
   def createGuid: F[Guid]
 
-//  /**
-//    * Put a new List value into the STM, with operational transformation
-//    * support.
-//    * This will create a new Id, and this is used to create the data to add to the
-//    * STM (in case the data includes the Id).
-//    *
-//    * @param create   Function to create data as an `F[List[A]]`
-//    * @param idCodec  Used to encode/decode data
-//    *                 and deltas
-//    * @tparam A       The type of data in the List
-//    * @return         The created List
-//    */
-//  def createOTListF[A](create: F[List[A]])(implicit idCodec: IdCodec[A]): F[OTList[A]]
-//
-//  /**
-//    * Put a new List value into the STM, with operational transformation
-//    * support.
-//    * This will create a new Id, and this is used to create the data to add to the
-//    * STM (in case the data includes the Id).
-//    *
-//    * @param create   Function to create data from Id, as a `List[A]`
-//    * @param idCodec  Used to encode/decode data
-//    *                 and deltas
-//    * @tparam A       The type of data in the List
-//    * @return         The created List
-//    */
-//  def createOTList[A](create: List[A])(implicit idCodec: IdCodec[A]): F[OTList[A]] = createOTListF(pure(create))
-//
-//  /**
-//    * Apply an OT operation to an OTlist.
-//    * @param list The OTList
-//    * @param op   The operation to apply
-//    * @tparam A   The type of data in the list
-//    * @return     The new list contents
-//    */
-//  def otListOperation[A](list: OTList[A], op: Operation[A]): F[OTList[A]]
+  /**
+    * Put a new List value into the STM, with operational transformation
+    * support.
+    * This will create a new Id, and this is used to create the data to add to the
+    * STM (in case the data includes the Id).
+    *
+    * @param create   Function to create data as an `F[List[A]]`
+    * @param idCodec  Used to encode/decode data
+    *                 and deltas
+    * @tparam A       The type of data in the List
+    * @return         The created List
+    */
+  def createOTListF[A](create: F[List[A]])(implicit idCodec: IdCodec[OTList[A]]): F[OTList[A]]
+
+  /**
+    * Put a new List value into the STM, with operational transformation
+    * support.
+    * This will create a new Id, and this is used to create the data to add to the
+    * STM (in case the data includes the Id).
+    *
+    * @param create   Function to create data from Id, as a `List[A]`
+    * @param idCodec  Used to encode/decode data
+    *                 and deltas
+    * @tparam A       The type of data in the List
+    * @return         The created List
+    */
+  def createOTList[A](create: List[A])(implicit idCodec: IdCodec[OTList[A]]): F[OTList[A]] = createOTListF(pure(create))
+
+  /**
+    * Apply an OT operation to an OTlist.
+    * @param list The OTList
+    * @param op   The operation to apply
+    * @tparam A   The type of data in the list
+    * @return     The new list contents
+    */
+  def otListOperation[A](list: OTList[A], op: Operation[A]): F[OTList[A]]
 
 }
 
