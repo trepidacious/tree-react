@@ -3,7 +3,7 @@ package org.rebeam.tree.slinkify
 import org.log4s.getLogger
 import org.rebeam.tree._
 import _root_.slinky.core.facade._
-//import org.rebeam.tree.ot.{CursorUpdate, OTList}
+import org.rebeam.tree.ot.{CursorUpdate, OTList}
 
 import Syntax._
 
@@ -21,7 +21,7 @@ object ReactData {
     override def get[A](id: Id[A]): Option[A] = None
     override def getWithTransactionId[A](id: Id[A]): Option[(A, TransactionId)] = None
     override def getTransactionIdFromGuid(guid: Guid): Option[TransactionId] = None
-//    override def getOTListCursorUpdate[A](list: OTList[A]): Option[CursorUpdate[A]] = None
+    override def getOTListCursorUpdate[A](list: OTList[A]): Option[CursorUpdate[A]] = None
     def transact(t: Transaction): Callback = Callback{logger.warn(s"ReactData.empty discards transaction $t")}
     override def toString: String = "ReactData.emptyData"
   }

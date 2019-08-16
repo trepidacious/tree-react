@@ -2,7 +2,7 @@ package org.rebeam.tree
 
 import cats.data.StateT
 import cats.implicits._
-//import org.rebeam.tree.ot.{CursorUpdate, OTList}
+import org.rebeam.tree.ot.{CursorUpdate, OTList}
 
 /**
   * Implementation of ViewOps using a DataSource
@@ -52,10 +52,10 @@ object DataSourceViewOps {
         )
       })
 
-//    def getOTListCursorUpdate[A](list: OTList[A]): S[Option[CursorUpdate[A]]] =
-//      StateT[ErrorOr, StateData, Option[CursorUpdate[A]]](sd => {
-//        Right((sd, sd.dataSource.getOTListCursorUpdate(list)))
-//      })
+    def getOTListCursorUpdate[A](list: OTList[A]): S[Option[CursorUpdate[A]]] =
+      StateT[ErrorOr, StateData, Option[CursorUpdate[A]]](sd => {
+        Right((sd.viewed(list.id.guid), sd.dataSource.getOTListCursorUpdate(list)))
+      })
 
   }
 }

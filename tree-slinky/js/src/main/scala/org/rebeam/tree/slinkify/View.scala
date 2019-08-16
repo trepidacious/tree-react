@@ -7,7 +7,7 @@ import org.rebeam.tree._
 import slinky.core.FunctionalComponent
 import slinky.core.facade.ReactElement
 import slinky.web.html._
-//import org.rebeam.tree.ot.{CursorUpdate, OTList}
+import org.rebeam.tree.ot.{CursorUpdate, OTList}
 import ReactData.ReactDataContexts
 
 object View {
@@ -63,10 +63,11 @@ object View {
             a => Right((sd.viewed(id.guid), Some(a)))
           )
         })
-//      def getOTListCursorUpdate[A](list: OTList[A]): S[Option[CursorUpdate[A]]] =
-//        StateT[ErrorOr, StateData, Option[CursorUpdate[A]]](sd => {
-//          Right((sd, sd.dataSource.getOTListCursorUpdate(list)))
-//        })
+
+      def getOTListCursorUpdate[A](list: OTList[A]): S[Option[CursorUpdate[A]]] =
+        StateT[ErrorOr, StateData, Option[CursorUpdate[A]]](sd => {
+          Right((sd.viewed(list.id.guid), sd.dataSource.getOTListCursorUpdate(list)))
+        })
     }
 
     def render[A](
