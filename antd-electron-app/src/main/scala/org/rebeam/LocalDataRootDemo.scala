@@ -97,6 +97,42 @@ object LocalDataRootDemo {
     }
   }.build()
 
+  val stringOTView2: FunctionalComponent[Cursor[OTList[Char]]] = new ViewC[OTList[Char]] {
+    private val logger = getLogger
+
+    override def apply[F[_] : Monad](c: Cursor[OTList[Char]])
+      (implicit v: ReactViewOps[F], tx: ReactTransactor): F[ReactElement] = {
+
+      import v._
+
+      logger.debug(s"stringOTView applying from ${c.a}, transactor $tx")
+
+      for {
+        cursorUpdate <- getOTListCursorUpdate(c.a)
+      } yield {
+        div()(
+          span(cursorUpdate.map(u => s"${u.clientRev} ${u.previousLocalUpdate}").getOrElse(" - "): String),
+          Input(
+            InputProps(
+              //          placeholder = "Todo item",
+              value = c.a.list.mkString,
+              onChange = onInputValueChange(
+                s => {
+                  val o = c.a.list
+                  val n = s.toList
+                  val d = Diff(o, n)
+                  println(s"'$o' -> '$n' by $d")
+                  c.delta(OTListDelta(d)).apply()
+                }
+              )
+            )
+          )
+        )
+
+      }
+    }
+  }.build("stringOTView2")
+
   // A View accepting the Id of a TodoItem.
   // This is a View so that it can use ReactViewOps to create a cursor at the id to view/edit the TodoItem.
   // The view will be re-rendered whenever the data at the Id changes.
@@ -148,7 +184,7 @@ object LocalDataRootDemo {
           // We want to use a sui.Input directly below so we can pass in the checkbox as a label,
           // so we need to handle changes here
           val textCursor = cursor.zoom(TodoList.name)
-          stringOTView(textCursor)
+          stringOTView2(textCursor)
         }
       )
     }

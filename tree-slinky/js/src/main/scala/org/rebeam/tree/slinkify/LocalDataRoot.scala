@@ -8,7 +8,7 @@ import org.rebeam.tree.codec.TransactionCodec
 import slinky.core._
 import slinky.core.facade.Hooks._
 import slinky.core.facade.ReactElement
-//import org.rebeam.tree.ot.{CursorUpdate, OTList}
+import org.rebeam.tree.ot.{CursorUpdate, OTList}
 import ReactData.ReactDataContexts
 
 import Syntax._
@@ -30,7 +30,7 @@ object LocalDataRoot {
 
     override def getWithTransactionId[A](id: Id[A]): Option[(A, TransactionId)] = sd.getWithTransactionId(id)
 
-    //    override def getOTListCursorUpdate[A](list: OTList[A]): Option[CursorUpdate[A]] = sd.getOTListCursorUpdate(list)
+    override def getOTListCursorUpdate[A](list: OTList[A]): Option[CursorUpdate[A]] = sd.getOTListCursorUpdate(list)
 
     override def getTransactionIdFromGuid(guid: Guid): Option[TransactionId] = sd.getTransactionIdFromGuid(guid)
 
