@@ -228,7 +228,10 @@ object MapStateSTM {
       // no state so is not a U op
       _ <- recordSOp
       cs <- getClientState(list)
-      newCs = cs.withClientOp(op)._1.withServerConfirmation._1
+      // We act as a "disconnected" client, since we have no server-side. Just apply the operation locally.
+      // If there was a server, we would send the operation as well, and then expect later to get a confirmation
+      // which would result in `confirmedCs = newCs.withServerConfirmation._1`
+      newCs = cs.withClientOp(op)._1
       newData = newCs.local
       _ <- StateT.modify[ErrorOr, StateData](sd =>
         sd.copy(
