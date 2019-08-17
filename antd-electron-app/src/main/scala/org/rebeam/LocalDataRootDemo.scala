@@ -12,15 +12,16 @@ import org.rebeam.tree.slinkify._
 
 import scala.scalajs.js
 import scala.scalajs.js.annotation.JSGlobal
-import slinky.core.FunctionalComponent
 import slinky.core.facade.ReactElement
-import slinky.web.html._
 import typings.antdLib.AntdFacade.{List => _, _}
-
 import typings.reactLib.ScalableSlinky._
-
 import org.rebeam.tree.slinkify.Syntax._
 //import slinky.core.facade.Hooks._
+
+import slinky.core.{FunctionalComponent, SyntheticEvent}
+import slinky.web.html._
+import org.scalajs.dom.{html, Event}
+
 
 @js.native
 @JSGlobal
@@ -77,7 +78,7 @@ object LocalDataRootDemo {
     private val logger = getLogger
 
     override def apply(c: Cursor[OTList[Char]])(implicit tx: ReactTransactor): ReactElement = {
-      logger.debug(s"stringOTView applying from ${c.a}, transactor $tx")
+//      logger.debug(s"stringOTView applying from ${c.a}, transactor $tx")
 
       Input(
         InputProps(
@@ -88,7 +89,6 @@ object LocalDataRootDemo {
               val o = c.a.list
               val n = s.toList
               val d = Diff(o, n)
-              println(s"'$o' -> '$n' by $d")
               c.delta(OTListDelta(d)).apply()
             }
           )
@@ -106,13 +106,13 @@ object LocalDataRootDemo {
 
       import v._
 
-      logger.debug(s"stringOTView applying from ${c.a}, transactor $tx")
+//      logger.debug(s"stringOTView applying from ${c.a}, transactor $tx")
 
       for {
-        cursorUpdate <- getOTListCursorUpdate(c.a)
+        u <- getOTListCursorUpdate(c.a)
       } yield {
         div()(
-          span(cursorUpdate.map(u => s"${u.clientRev} ${u.previousLocalUpdate}").getOrElse(" - "): String),
+          span(s"${u.clientRev} ${u.previousLocalUpdate}"),
           Input(
             InputProps(
               //          placeholder = "Todo item",
@@ -122,7 +122,6 @@ object LocalDataRootDemo {
                   val o = c.a.list
                   val n = s.toList
                   val d = Diff(o, n)
-                  println(s"'$o' -> '$n' by $d")
                   c.delta(OTListDelta(d)).apply()
                 }
               )
@@ -133,6 +132,39 @@ object LocalDataRootDemo {
       }
     }
   }.build("stringOTView2")
+
+  val stringOTView3: FunctionalComponent[Cursor[OTList[Char]]] = new ViewC[OTList[Char]] {
+    private val logger = getLogger
+
+    override def apply[F[_] : Monad](c: Cursor[OTList[Char]])
+                                    (implicit v: ReactViewOps[F], tx: ReactTransactor): F[ReactElement] = {
+
+      import v._
+
+//      logger.debug(s"stringOTView applying from ${c.a}, transactor $tx")
+
+      def handleChange(e: SyntheticEvent[html.Input, Event]): Unit = {
+        val s = e.target.value
+        val o = c.a.list
+        val n = s.toList
+        val d = Diff(o, n)
+        c.delta(OTListDelta(d)).apply()
+      }
+
+      for {
+        u <- getOTListCursorUpdate(c.a)
+      } yield {
+        div()(
+          span(s"${u.clientRev} ${u.previousLocalUpdate}"),
+          input(
+            value := c.a.list.mkString,
+            onChange := (handleChange(_))
+          )
+        )
+
+      }
+    }
+  }.build("stringOTView3")
 
   // A View accepting the Id of a TodoItem.
   // This is a View so that it can use ReactViewOps to create a cursor at the id to view/edit the TodoItem.
@@ -185,7 +217,7 @@ object LocalDataRootDemo {
           // We want to use a sui.Input directly below so we can pass in the checkbox as a label,
           // so we need to handle changes here
           val textCursor = cursor.zoom(TodoList.name)
-          stringOTView2(textCursor)
+          stringOTView3(textCursor)
         }
       )
     }

@@ -41,12 +41,22 @@ abstract class ViewOps[F[_]: Monad] {
   def pure[A](a: A): F[A] = implicitly[Monad[F]].pure(a)
 
   /**
-    * Get any available cursor update for an OTList
+    * Get the most recent cursor update for an OTList.
+    * This will cause ViewOps to fail if the OTList does not exist in the STM.
     * @param list The list
     * @tparam A   Type of data in list
-    * @return     The [[CursorUpdate]] for the list, if any is needed
+    * @return     The [[CursorUpdate]] for the list
     */
-  def getOTListCursorUpdate[A](list: OTList[A]): F[Option[CursorUpdate[A]]]
+  def getOTListCursorUpdate[A](list: OTList[A]): F[CursorUpdate[A]]
+
+  /**
+    * Get the most recent cursor update for an OTList.
+    * This will cause ViewOps to fail if the OTList does not exist in the STM.
+    * @param list The list
+    * @tparam A   Type of data in list
+    * @return     The [[CursorUpdate]] for the list, if the list is in the STM
+    */
+  def getOTListCursorUpdateOption[A](list: OTList[A]): F[Option[CursorUpdate[A]]]
 
 }
 

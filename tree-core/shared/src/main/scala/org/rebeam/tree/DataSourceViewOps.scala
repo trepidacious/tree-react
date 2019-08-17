@@ -29,6 +29,9 @@ object DataSourceViewOps {
 
   implicit val viewOpsInstance: ViewOps[S] = new ViewOps[S] {
 
+    // TODO use same code for get and getOTListCursorUpdate (and for optional versions), using a
+    // type B that is A or CursorUpdate[A], and a function from StateData to B
+
     def get[A](id: Id[A]): S[A] =
       StateT[ErrorOr, StateData, A](sd => {
         //Get data as an option, map this to an Option[(StateData, A)] by adding a new state
@@ -52,9 +55,27 @@ object DataSourceViewOps {
         )
       })
 
-    def getOTListCursorUpdate[A](list: OTList[A]): S[Option[CursorUpdate[A]]] =
+    def getOTListCursorUpdate[A](list: OTList[A]): S[CursorUpdate[A]] =
+      StateT[ErrorOr, StateData, CursorUpdate[A]](sd => {
+        //Get update as an option, map this to an Option[(StateData, CursorUpdate[A])] by adding a new state
+        //updated to record viewing the id, then convert to an ErrorOr with appropriate
+        //Error on missing data. This is the S => F[S, CursorUpdate[A]] required by StateT.
+        sd.dataSource.getOTListCursorUpdate(list)
+          .map((sd.viewed(list.id.guid), _))
+          .toRight(Error(
+            list.id.guid,
+            sd.viewedGuids + list.id.guid,
+            sd.missingGuids + list.id.guid
+          ))
+      })
+
+    def getOTListCursorUpdateOption[A](list: OTList[A]): S[Option[CursorUpdate[A]]] =
       StateT[ErrorOr, StateData, Option[CursorUpdate[A]]](sd => {
-        Right((sd.viewed(list.id.guid), sd.dataSource.getOTListCursorUpdate(list)))
+        sd.dataSource.getOTListCursorUpdate(list).fold[ErrorOr[(StateData, Option[CursorUpdate[A]])]](
+          Right((sd.missed(list.id.guid).viewed(list.id.guid), None))
+        )(
+          a => Right((sd.viewed(list.id.guid), Some(a)))
+        )
       })
 
   }
