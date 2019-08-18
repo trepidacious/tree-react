@@ -13,10 +13,11 @@ import org.rebeam.tree.slinkify._
 import scala.scalajs.js
 import scala.scalajs.js.annotation.JSGlobal
 import slinky.core.facade.ReactElement
+//import slinky.core.facade.React
 import typings.antdLib.AntdFacade.{List => _, _}
 import typings.reactLib.ScalableSlinky._
 import org.rebeam.tree.slinkify.Syntax._
-//import slinky.core.facade.Hooks._
+import slinky.core.facade.Hooks._
 
 import slinky.core.{FunctionalComponent, SyntheticEvent}
 import slinky.web.html._
@@ -31,6 +32,8 @@ class InputEvent extends js.Object {
 }
 
 object LocalDataRootDemo {
+
+  private val logger = getLogger
 
   // Our index is simple - just store the most recently added list.
   // The index lets us access this list by retrieving its Id from the TodoList in the index.
@@ -166,6 +169,38 @@ object LocalDataRootDemo {
     }
   }.build("stringOTView3")
 
+  val stringOTView4: FunctionalComponent[Cursor[OTList[Char]]] = new ViewPC[OTList[Char]] {
+    private val logger = getLogger
+
+
+    override def apply(c: Cursor[OTList[Char]])(implicit tx: ReactTransactor): ReactElement = {
+      //      logger.debug(s"stringOTView applying from ${c.a}, transactor $tx")
+
+//      val inputRef = useRef[html.Input](null)
+
+      val inputRef = useCallback(node => {
+
+      }, Nil)
+
+      def handleChange(e: SyntheticEvent[html.Input, Event]): Unit = {
+        println(s"${e.target.selectionStart} to ${e.target.selectionEnd}")
+        println(inputRef.current)
+        val s = e.target.value
+        val o = c.a.list
+        val n = s.toList
+        val d = Diff(o, n)
+        c.delta(OTListDelta(d)).apply()
+      }
+
+      input(
+        value := c.a.list.mkString,
+        onChange := (handleChange(_)),
+        ref := inputRef
+      )
+
+    }
+  }.build()
+
   // A View accepting the Id of a TodoItem.
   // This is a View so that it can use ReactViewOps to create a cursor at the id to view/edit the TodoItem.
   // The view will be re-rendered whenever the data at the Id changes.
@@ -217,7 +252,7 @@ object LocalDataRootDemo {
           // We want to use a sui.Input directly below so we can pass in the checkbox as a label,
           // so we need to handle changes here
           val textCursor = cursor.zoom(TodoList.name)
-          stringOTView3(textCursor)
+          stringOTView4(textCursor)
         }
       )
     }
@@ -245,7 +280,7 @@ object LocalDataRootDemo {
   // We only use the index for data, so the model is Unit
   val dataProvider: FunctionalComponent[Unit] = LocalDataRoot[Unit, TodoIndex](
     (_, index) =>{
-      println("LocalDataRootDemo dataProvider.render")
+      logger.debug("LocalDataRootDemo dataProvider.render")
       div(
         // When we have an indexed TodoList, display it
         index.todoList.map[ReactElement](l => todoListView(l)).getOrElse(span()("Empty"))

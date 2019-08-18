@@ -475,7 +475,8 @@ lazy val treeCore = crossProject(JSPlatform, JVMPlatform).in(file("tree-core")).
     "com.github.julien-truffaut"  %%% "monocle-macro"     % monocleVersion,
     "com.github.julien-truffaut"  %%% "monocle-state"     % monocleVersion,
     "com.github.julien-truffaut"  %%% "monocle-refined"   % monocleVersion,
-    "com.github.julien-truffaut"  %%% "monocle-law"       % monocleVersion      % "test"
+    "com.github.julien-truffaut"  %%% "monocle-law"       % monocleVersion      % "test",
+    "org.log4s" %%% "log4s" % log4sVersion,
   ),
 
   addCompilerPlugin(

@@ -83,11 +83,10 @@ object LocalDataRoot {
         // Details are here:
         // https://reactjs.org/docs/hooks-faq.html#what-can-i-do-if-my-effect-dependencies-change-too-often
         val tx = useMemo (() => {
-//          println(">>>>>>>>>>>>>>>>>>>>> New ReactTransactor!")
           new ReactTransactor {
             override def transact(t: Transaction): Callback = Callback {
               setState((currentState: S[I]) => {
-                logger.info(
+                logger.debug(
                   transactionCodec
                     .encoder(t)(currentState.sd)
                     .map(_.toString).getOrElse(s"Could not encode transaction $t")
