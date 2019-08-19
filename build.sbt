@@ -51,8 +51,9 @@ lazy val scalatestVersion           = "3.0.5"
 lazy val scalacheckVersion          = "1.14.0"
 lazy val log4sVersion               = "1.6.1"
 lazy val kindProjectorVersion       = "0.9.8"
-
 lazy val slinkyVersion              = "0.6.2"
+
+//lazy val slinkyForkMaster = ProjectRef(uri("https://github.com/trepidacious/slinky.git#master"), "slinky")
 
 lazy val scalajsReactDeps = Seq(
   libraryDependencies ++= Seq(

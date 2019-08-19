@@ -9,6 +9,7 @@ import org.rebeam.tree.MapStateSTM.StateDelta
 import org.rebeam.tree._
 import org.rebeam.tree.ot.{Diff, OTList}
 import org.rebeam.tree.slinkify._
+import slinky.core.AttrPair
 
 import scala.scalajs.js
 import scala.scalajs.js.annotation.JSGlobal
@@ -172,30 +173,48 @@ object LocalDataRootDemo {
   val stringOTView4: FunctionalComponent[Cursor[OTList[Char]]] = new ViewPC[OTList[Char]] {
     private val logger = getLogger
 
-
     override def apply(c: Cursor[OTList[Char]])(implicit tx: ReactTransactor): ReactElement = {
       //      logger.debug(s"stringOTView applying from ${c.a}, transactor $tx")
 
 //      val inputRef = useRef[html.Input](null)
 
-      val inputRef = useCallback(node => {
+//      println("stringOTView 4 rendering")
 
+//      val (s, ss) = useState(0)
+
+      val inputRef = useRef[html.Input](null)
+
+      val inputCallback = ExtraHooks.useCallback[html.Input](input => {
+        println(s">>>>>> ExtraHooks.useCallback($input)")
+        inputRef.current = input
+        if (input != null) input.setSelectionRange(2, 3)
       }, Nil)
 
       def handleChange(e: SyntheticEvent[html.Input, Event]): Unit = {
-        println(s"${e.target.selectionStart} to ${e.target.selectionEnd}")
-        println(inputRef.current)
+        println(s"${e.target.selectionStart} to ${e.target.selectionEnd}")  // Note this is the selection AFTER the change
+//        println(inputRef.current)
         val s = e.target.value
         val o = c.a.list
         val n = s.toList
         val d = Diff(o, n)
         c.delta(OTListDelta(d)).apply()
+//        ss(s => s+1)
       }
 
-      input(
-        value := c.a.list.mkString,
-        onChange := (handleChange(_)),
-        ref := inputRef
+      val newValue = c.a.list.mkString
+      val oldValue = if (inputRef.current != null) inputRef.current.value else null
+      println(s"Rendering, '$oldValue' -> '$newValue'")
+
+      // TODO if we are changing the value, update cursor. Can do this with an effect? Or maybe the callback can
+      // read a required selection change from a ref?
+
+      div(
+//        span(s),
+        input(
+          value := newValue,
+          onChange := (handleChange(_)),
+          new AttrPair[input.tag.type]("ref", inputCallback) // TODO work out how to do this using `:=`
+        )
       )
 
     }
