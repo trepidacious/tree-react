@@ -243,9 +243,18 @@ object LocalDataRootDemo {
 
   val stringOTInnerView: FunctionalComponent[InnerProps] = FunctionalComponent[InnerProps] {
     p => {
+
+      // This contains the required cursor range to be set after a render, or null if no
+      // range needs to be set
       val requiredCursorRange = useRef[(Int, Int)](null)
 
+      // This contains the currently displayed input, if we know it, null otherwise
       val inputRef = useRef[html.Input](null)
+
+      // This contains the previous client rev we used to update cursor position, null if
+      // we don't have a (reliable) revision for this. This is used to ensure we only update the
+      // cursor if we see consecutive operations
+      val previousClientRev = useRef[Int](null.asInstanceOf[Int])
 
       // Keep track of the input in inputRef, and apply required cursor range changes
       val inputCallback = ExtraHooks.useCallback[html.Input](input => {
@@ -268,6 +277,12 @@ object LocalDataRootDemo {
       val currentInput = scala.Option(inputRef.current)
 
       val newValue = p.s
+
+      val previousRev = previousClientRev.current
+      val currentRev = p.cursorUpdate.clientRev
+      previousClientRev.current = currentRev
+
+      println(s"Revs $previousRev => $currentRev")
 
       // TODO track client rev in case we fall out of sync
       currentInput.foreach(
