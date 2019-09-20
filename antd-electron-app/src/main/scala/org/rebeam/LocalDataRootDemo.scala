@@ -15,8 +15,8 @@ import scala.scalajs.js
 import scala.scalajs.js.annotation.JSGlobal
 import slinky.core.facade.ReactElement
 //import slinky.core.facade.React
-import typings.antdLib.AntdFacade.{List => _, _}
-import typings.reactLib.ScalableSlinky._
+import typings.antd.AntdFacade.{List => _, _}
+import typings.react.ScalableSlinky._
 import org.rebeam.tree.slinkify.Syntax._
 import slinky.core.facade.Hooks._
 
@@ -347,7 +347,7 @@ object LocalDataRootDemo {
               value = textCursor.a,
               onChange = onInputValueChange(s => textCursor.set(s).apply()),
               addonBefore = Switch(SwitchProps(
-                size = typings.antdLib.antdLibStrings.small,
+                size = typings.antd.antdStrings.small,
                 checked = cursor.a.completed.isDefined,
                 onChange = (b: Boolean, _) => cursor.delta(TodoItemCompletion(b)).apply()
               ))().toST,

@@ -1,17 +1,17 @@
 package demo
 
 import org.rebeam.LocalDataRootDemo
-import typings.antdLib.AntdFacade.{List => AntList, _}
+import typings.antd.AntdFacade.{List => AntList, _}
 import org.scalajs.dom.console
 import slinky.core._
 import slinky.core.annotations.react
 import slinky.core.facade.Hooks._
 import slinky.core.facade.{React, ReactContext}
 import slinky.web.html._
-import typings.antdLib.antdLibStrings
-import typings.reactLib.ScalableSlinky._
-import typings.reactLib.reactMod.{FormEvent, MouseEvent}
-import typings.antdLib.esNotificationMod.^.{default => Notification}
+import typings.antd.antdStrings
+import typings.react.ScalableSlinky._
+import typings.react.reactMod.{FormEvent, MouseEvent}
+import typings.antd.esNotificationMod.^.{default => Notification}
 
 import scala.scalajs.js
 import scala.scalajs.js.annotation.JSImport
@@ -95,14 +95,14 @@ object CSS extends js.Any
         AlertProps(
           message     = "Success Tips",
           description = "Detailed description and advice about successful copywriting.",
-          `type`      = antdLibStrings.success,
+          `type`      = antdStrings.success,
           showIcon    = true
         )
       )
     )
 
     val renderButton =
-      section(h2("Button"), Button(ButtonProps(icon = "download", `type` = antdLibStrings.primary))("Download"))
+      section(h2("Button"), Button(ButtonProps(icon = "download", `type` = antdStrings.primary))("Download"))
 
     val renderModal = section(
       h2("Modal"),
@@ -150,11 +150,11 @@ object CSS extends js.Any
 
     val renderSpin = section(
       h2("Spin"),
-      Spin(SpinProps(size = antdLibStrings.large, spinning = true))(
+      Spin(SpinProps(size = antdStrings.large, spinning = true))(
         Alert(
           AlertProps(message     = "Alert message title",
                      description = "Further details about the context of this alert.",
-                     `type`      = antdLibStrings.info,
+                     `type`      = antdStrings.info,
                      showIcon    = true)
         )
       )
@@ -170,7 +170,7 @@ object CSS extends js.Any
           Input(
             InputProps(
               placeholder = "input email",
-              addonBefore = Icon(IconProps(`type` = "mail", theme = antdLibStrings.twoTone)).toST,
+              addonBefore = Icon(IconProps(`type` = "mail", theme = antdStrings.twoTone)).toST,
             )
           )
         ),
@@ -178,15 +178,15 @@ object CSS extends js.Any
           Password(
             PasswordProps(
               placeholder = "input password",
-              addonBefore = Icon(IconProps(`type` = "lock", theme = antdLibStrings.twoTone)).toST,
+              addonBefore = Icon(IconProps(`type` = "lock", theme = antdStrings.twoTone)).toST,
             )
           )
         ),
         FormItem(FormItemProps())(
           Button(
             ButtonProps(
-              `type`   = antdLibStrings.primary,
-              htmlType = antdLibStrings.submit
+              `type`   = antdStrings.primary,
+              htmlType = antdStrings.submit
             )
           )("Log in")
         )
@@ -203,7 +203,7 @@ object CSS extends js.Any
                 message = "Notification Title",
                 description =
                   "This is the content of the notification. This is the content of the notification. This is the content of the notification.",
-                `type` = antdLibStrings.success
+                `type` = antdStrings.success
               )
           )
         )
@@ -236,7 +236,7 @@ object CSS extends js.Any
         InputProps(
           placeholder = "input email",
 //          addonBefore = div(className := "checkbox__container", Checkbox(CheckboxProps())()).toST,
-          addonBefore = Switch(SwitchProps(size = typings.antdLib.antdLibStrings.small))().toST,
+          addonBefore = Switch(SwitchProps(size = typings.antd.antdStrings.small))().toST,
         )
       )
     )

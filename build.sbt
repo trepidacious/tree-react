@@ -5,7 +5,7 @@ import java.nio.file.StandardCopyOption.REPLACE_EXISTING
 name := "tree-react root project"
 version in ThisBuild := "0.0.1-SNAPSHOT"
 organization in ThisBuild := "org.rebeam"
-scalaVersion in ThisBuild := "2.12.8"
+scalaVersion in ThisBuild := "2.12.9"
 // crossScalaVersions in ThisBuild := Seq("2.11.12", "2.12.6")
 
 scalacOptions in ThisBuild ++= Seq(
@@ -688,9 +688,10 @@ lazy val antdElectronApp =
         ScalablyTyped.R.`react-dom`,
       ),
       Compile / npmDependencies ++= Seq(
-        "antd" -> "3.20.1",
+        // "antd" -> "3.20.1",
         "react" -> "16.8",
         "react-dom" -> "16.8",
+        "prop-types" -> "^15.0.0",
       )
     ).dependsOn(treeSlinkyJS)
 
@@ -707,5 +708,6 @@ lazy val suiApp =
         "react-dom" -> "^16.5.1",
         "semantic-ui-css" -> "^2.4.1",
         "semantic-ui-react" -> "^0.87.1"
+        
       )
     ).dependsOn(treeReactJS, scalajsReactSemanticUIJS)

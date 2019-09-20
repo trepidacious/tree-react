@@ -4,8 +4,8 @@ import org.scalajs.dom.console
 
 import scalajs.js
 
-import typings.reactLib.reactMod.ChangeEvent
-import typings.stdLib
+import typings.react.reactMod.ChangeEvent
+import typings.std
 //import typings.antdLib.antdLibStrings
 
 object Syntax {
@@ -38,7 +38,7 @@ object Syntax {
     * @param f  The function to handle the new input value
     * @return   An appropriately typed function for onChange
     */
-  def onInputValueChange(f: String => Unit): ChangeEvent[stdLib.HTMLInputElement] => Unit =
+  def onInputValueChange(f: String => Unit): ChangeEvent[std.HTMLInputElement] => Unit =
     e => f(e.target_ChangeEvent.value)
 
 }
