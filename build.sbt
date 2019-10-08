@@ -205,7 +205,7 @@ lazy val root = project.in(file(".")).
     treeSlinkyJS, treeSlinkyJVM,
     electronAppJS, electronAppJVM,
     suiElectronAppJS, suiElectronAppJVM,
-    antdElectronApp,
+    antdApp,
     suiApp
   ).settings(
     publish := {},
@@ -677,8 +677,8 @@ lazy val suiElectronApp = crossProject(JSPlatform, JVMPlatform).in(file("sui-ele
 lazy val suiElectronAppJVM = suiElectronApp.jvm
 lazy val suiElectronAppJS = suiElectronApp.js
 
-lazy val antdElectronApp =
-  project.in(file("antd-electron-app"))
+lazy val antdApp =
+  project.in(file("antd-app"))
     .configure(jsProject, bundlerSettings, browserProject, withCssLoading)
     .settings(
       webpackDevServerPort := 8080,
@@ -688,7 +688,6 @@ lazy val antdElectronApp =
         ScalablyTyped.R.`react-dom`,
       ),
       Compile / npmDependencies ++= Seq(
-        // "antd" -> "3.20.1",
         "react" -> "16.8",
         "react-dom" -> "16.8",
         "prop-types" -> "^15.0.0",
