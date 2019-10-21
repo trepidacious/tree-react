@@ -10,10 +10,9 @@ import org.rebeam.tree.ot.{OTList, Operation}
   * Note that there are restrictions on the sequence of operations within a transaction, in order
   * for that transaction to be considered "stable".
   *
-  * A stable transaction is one that will always put the same type of data to the same new Id's
-  * when run on a client (optimistically, and concurrently with other transactions on other clients)
-  * as it will when it is run on the server. Note that we don't require that the exact same data is put
-  * to each Id.
+  * A stable transaction is one that will always put the same type of data to the same new Ids
+  * when run on a client (optimistically/concurrently with other transactions on other clients)
+  * as it will when it is run on the server. Note that we don't require that the exact same data is put to each Id.
   *
   * In addition a stable transaction will always execute the same exact operational transformations in the same
   * order on the client as on the server, to allow us to produce a consistent OT history on all clients and the server.
@@ -369,6 +368,7 @@ abstract class STMOps[F[_]: Monad] extends TransactionOps {
    * @return     The new list contents
    */
   def otListOperationUnit[A](list: OTList[A], op: Operation[A]): F[Unit]
+
 }
 
 
