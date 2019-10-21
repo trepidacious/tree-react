@@ -10,42 +10,51 @@ import org.rebeam.tree.ot.{OTList, Operation}
   * Note that there are restrictions on the sequence of operations within a transaction, in order
   * for that transaction to be considered "stable".
   *
-  * A stable transaction is one that will always put the same data to the same new Id's
+  * A stable transaction is one that will always put the same type of data to the same new Id's
   * when run on a client (optimistically, and concurrently with other transactions on other clients)
-  * as it will  as when it is run on the server. In the future if we implement operational transformations
-  * we may also extend the definition of a stable transaction to require that it will always execute
-  * the same exact operational transformations in the same order on the client as on the server, to allow
-  * us to produce a consistent OT history on all clients and the server.
+  * as it will when it is run on the server. Note that we don't require that the exact same data is put
+  * to each Id.
   *
-  * It is desirable to have stable transactions so that we can safely use the literal values of Ids
+  * In addition a stable transaction will always execute the same exact operational transformations in the same
+  * order on the client as on the server, to allow us to produce a consistent OT history on all clients and the server.
+  * Note that this is stricter than the requirement for non-OT data; we require that when creating an OT List, a stable
+  * transaction will always create the same exact data, so as to be compatible with future operations.
+  *
+  * It is desirable to have stable transactions for Ids so that we can safely use the literal values of Ids
   * (for example Id(Guid(1,1,1)) on the client side, even before they are confirmed by the server. If we
   * were to use Id's from an unstable transaction on the client side before confirmation, we might then
   * find that on the server, and interleaved transaction from another client caused the transaction to
-  * produce a different result, with a different set of Ids and data contents. We might even find that
-  * on the server history, Id(Guid(1,1,1)) is never produced. When the client received this new history
-  * from the server, it would be left with dangling literal Ids.
+  * produce a different result, with a different set of Ids and/or data
+  * types for those Ids. We might even find that on the server history, Id(Guid(1,1,1)) is never produced.
+  * When the client received this new history from the server, it would be left with dangling literal Ids. Since
+  * we know that the STM data for a given Id may change at any point, and allow for this, we do not require that
+  * the client (when running optimistically) and server produce the same data for a given Id, so they may disagree
+  * on the initial value of the data (until synchronised), but never its type or existence.
   *
-  * In the future, for OT, we will also be able to ensure that when transactions are interleaved on the
+  * For OT, we also need to ensure that when transactions are interleaved on the
   * server, each Operation will only ever see additional Operations inserted before it - we will not "lose"
   * Operations from stable transactions. This allows us to operate with a simpler OT implementation
-  * having only the "after" transformation, without needing "before".
+  * having only the "after" transformation, without needing "before". Therefore we require that OT operations are
+  * exactly the same whenever a transaction is run, on the server or client (before the actual operational
+  * transformation step). We also require that the initial data state is identical, so that the same operations can
+  * be applied.
   *
   * Once transactions are classified as stable or unstable, there are two approaches to dealing with
   * an unstable transaction:
   *
   * 1. Produce an error when executing the transaction on the client, and reject it completely. This then becomes
   *    a code problem for the user of tree to fix - all transactions must be adjusted to be stable. All transactions
-  *    can then be run concurrently/optimistically, giving good performance. Note that there may be a requirement
-  *    for complex transactions where this is not possible.
+  *    can then be run concurrently/optimistically, giving good performance. Note however that there may be cases where
+  *    where a user wishes to implement complex transactions that cannot be made stable.
   *
-  * 2. Execute the transaction, but then enter a synchronous mode - the client will not display the result
-  *    of the transaction (since it may change), and will not accept new transactions, until a response
+  * 2. Accept the unstable transaction, but then enter a synchronous mode - the client will not execute the transaction
+  *    (since it may change when executed on the server), and will not accept new transactions, until a response
   *    is received from the server including the unstable transaction. At this point the server result
   *    is known, and can be used as the authoritative result for further transactions. The client can display
   *    this state with some kind of spinner.
   *
-  * It may also be reasonable to adapt approach 2, so that the result of the unstable transaction is not
-  * displayed, but further transactions are accepted. This should work, since the unstable transaction
+  * It may also be reasonable to adapt approach 2, so that the unstable transaction is executed on the client but the
+  * results are not displayed, while further transactions are accepted. This should work, since the unstable transaction
   * essentially is treated like and becomes equivalent to a remote transaction - its results are not visible
   * until it is executed by the server, and at this point any subsequent local client transactions will be re-run
   * to take this into account. This reduces the impact of the synchronous execution - the user will only be delayed if
@@ -56,18 +65,24 @@ import org.rebeam.tree.ot.{OTList, Operation}
   * The algorithm for classifying transactions as stable or unstable is as follows:
   *
   * 1. Some operations are classified as U - this means that they can produce unstable results themselves, and/or
-  *    cause subsequent operations to produce unstable results. These are essentially operations that can read state
-  *    from the STM, and so can be affected by previous transactions, and expose state within the execution of later
-  *    stages of the Monad that will allow those later stages to be affected by previous transactions.
+  *    cause subsequent operations to produce unstable results. These are essentially operations that:
+  *    * can read state from the STM, and so can be affected by previous transactions that have altered that state, and
+  *    * expose that state within the execution of later stages of the Monad that will allow those later stages to be
+  *      affected by previous transactions - i.e. they return data that is influenced by the STM state they read.
+  *
   * 2. Some operations are classified as S - this means that we require them to produce the same results, regardless
   *    of STM state, in order for a transaction to be stable. These are operations that create GUIDs, and/or put new
-  *    id-value pairs to the STM, and/or make use of operational transformation (OT data is both stored in the STM, and
-  *    requires that all operations form a consistent history - once an operation occurs on the client, it must also
-  *    occur on the server, in order to allow transformation to work on that consistent history).
-  * 4. Where an operation is "compound" - i.e. it makes use of/contains other operations, notably `putF`, we consider
-  *    that compound operation to inherit the U and S "flags" from those contained operations - it is U if any contained
-  *    operation is U, and S if any contained operation is S.
-  * 3. A transaction is stable if it contains no U operations before any S operation. Operations that are both U and
+  *    id-value pairs to the STM, and/or make use of operational transformation, as described above.
+  *
+  * 3. Where an operation is "compound" - i.e. it calls "inner" operations (notably `putF`, which uses an inner `create`
+  *    operation), we consider that compound operation to inherit the U and S "flags" from the inner operations - it is
+  *    U if any inner operation is U, and S if any inner operation is S.
+  *    However note that there are exceptions here - if the compound operation takes care to discard any data read from
+  *    the STM by the inner operation, so that it is not visible to later operations, then it may also ignore the
+  *    U state of the inner operation. However if the inner operation is itself inherently unstable then the compound
+  *    operation is unstable.
+  *
+  * 4. A transaction is stable if it contains no U operations before any S operation. Operations that are both U and
   *    S are a special case - we must consider them on a case-by-case basis to see whether the S parts of the
   *    transaction can be influenced by the U part. So for example in the case of `putF`, it is valid to use a create
   *    function that reads STM state, since the S operation (putting a new value to the STM) will proceed regardless
@@ -148,20 +163,32 @@ abstract class STMOps[F[_]: Monad] extends TransactionOps {
    * @tparam A   Type of data
    * @return     The modified data
    */
-  def modify[A](id: Id[A], f: A => A): F[A] = modifyF(id, f.andThen(pure))
+  def modify[A](id: Id[A], f: A => A): F[A] =
+    modifyF(id, f.andThen(pure))
 
   /**
    * Modify data at an [[Id]] using a pure function
    *
    * This version does not return the modified result - this means that this operation is not U, since it does
-   * not expose the result of the modification to later operations. It will also never make a transaction unstable.
+   * not expose the result of the modification to later operations. It will also never make a transaction unstable,
+   * since a pure function cannot be S.
    *
    * @param id   The data's [[Id]]
    * @param f    Function to transform old value to new one, as an A
    * @tparam A   Type of data
    * @return     Unit - if you require the result of the modification, use [[modifyF]] instead.
    */
-  def modifyUnit[A](id: Id[A], f: A => A): F[Unit] = modifyFUnit(id, f.andThen(pure))
+  def modifyUnit[A](id: Id[A], f: A => A): F[Unit] =
+    modifyFUnit(id, f.andThen(pure))
+
+  /**
+    * Create a new Guid for general-purpose use (e.g. for Logoot)
+    *
+    * S operation, since it creates a new Guid.
+    *
+    * @return   The new Guid
+    */
+  def createGuid: F[Guid]
 
   /**
    * Put a new value into the STM. This will create a new
@@ -185,12 +212,6 @@ abstract class STMOps[F[_]: Monad] extends TransactionOps {
    */
   def putFWithId[A](create: Id[A] => F[A])(implicit idCodec: IdCodec[A]): F[(A, Id[A])]
 
-//  implementations of Unit versions must record U state before executing the subtransaction, and then restore U state
-//  afterwards. This way, if subtransaction is unstable in itself then this will still be flagged, but if subtransaction
-//  is just U, and data is tehn discarded by the Unit operation, the U property does not need to be passed on, and so
-//  we can reset the U property to its original value (not to false - previous operations may still have passed on their
-//  STM data, thus sitll rendering the transaction U)
-
   /**
     * Put a new value into the STM. This will create a new
     * Id, and this is used to create the data to add to the
@@ -211,7 +232,8 @@ abstract class STMOps[F[_]: Monad] extends TransactionOps {
     * @tparam A       The type of data
     * @return         The created data
     */
-  def putF[A](create: Id[A] => F[A])(implicit idCodec: IdCodec[A]): F[A] = implicitly[Monad[F]].map(putFWithId(create))(_._1) // Why won't this work with just .map(_._1)?
+  def putF[A](create: Id[A] => F[A])(implicit idCodec: IdCodec[A]): F[A] =
+    implicitly[Monad[F]].map(putFWithId(create))(_._1) // Why won't this work with just .map(_._1)?
 
   /**
    * Put a new value into the STM. This will create a new
@@ -232,7 +254,7 @@ abstract class STMOps[F[_]: Monad] extends TransactionOps {
    * @tparam A       The type of data
    * @return         The created data
    */
-  def putFJustId[A](create: Id[A] => F[A])(implicit idCodec: IdCodec[A]): F[Id[A]]// = implicitly[Monad[F]].map(putFWithId(create))(_._2) // Why won't this work with just .map(_._2)?
+  def putFJustId[A](create: Id[A] => F[A])(implicit idCodec: IdCodec[A]): F[Id[A]]
 
   /**
     * Put a new value into the STM. This will create a new
@@ -250,16 +272,8 @@ abstract class STMOps[F[_]: Monad] extends TransactionOps {
     * @tparam A       The type of data
     * @return         The created data
     */
-  def put[A](create: Id[A] => A)(implicit idCodec: IdCodec[A]): F[A] = putF(create.andThen(pure))
-
-  /**
-    * Create a new Guid for general-purpose use (e.g. for Logoot)
-    *
-    * S operation, since it creates a new Guid.
-    *
-    * @return   The new Guid
-    */
-  def createGuid: F[Guid]
+  def put[A](create: Id[A] => A)(implicit idCodec: IdCodec[A]): F[A] =
+    putF(create.andThen(pure))
 
   /**
     * Put a new List value into the STM, with operational transformation
@@ -285,28 +299,11 @@ abstract class STMOps[F[_]: Monad] extends TransactionOps {
     */
   def createOTListF[A](create: F[List[A]])(implicit idCodec: IdCodec[OTList[A]]): F[OTList[A]]
 
-  /**
-   * Put a new List value into the STM, with operational transformation
-   * support.
-   *
-   * This will create a new Id, and this is used to create the data to add to the
-   * STM (in case the data includes the Id).
-   *
-   * Note that this is a special case for stability - even if the create function is U, this operation does not
-   * render the transaction unstable, since it will always create a value in the STM with the same Id, of the same
-   * type, meeting the requirements for stability.
-   *
-   * Always an S operation, since it puts a new value to the STM and creates a new Id. This does not return the
-   * value that has been put (just the Id), and so is not U, even if the create function is U.
-   *
-   * @param create   Function to create data as an `F[List[A]]`
-   * @param idCodec  Used to encode/decode data
-   *                 and deltas
-   * @tparam A       The type of data in the List
-   * @return         The created OTList's Id
-   */
-  def createOTListFJustId[A](create: F[List[A]])(implicit idCodec: IdCodec[OTList[A]]): F[Id[OTList[A]]]// =
-//    implicitly[Monad[F]].map(createOTListF(create))(_.id) // Why won't this work with just .map(_.id)?
+  // Note there is no createOTListFJustId function because any createOTListF call where `create` is U will make
+  // the transaction unstable immediately (since OTLists must always be created with the exact same contents on client
+  // and server)- there is no benefit in trying not to pass on the created data to later operations.
+
+  // Note there is no createOTListFWithId since OTList contains its own Id
 
   /**
     * Put a new List value into the STM, with operational transformation
@@ -325,7 +322,8 @@ abstract class STMOps[F[_]: Monad] extends TransactionOps {
     * @tparam A       The type of data in the List
     * @return         The created List
     */
-  def createOTList[A](create: List[A])(implicit idCodec: IdCodec[OTList[A]]): F[OTList[A]] = createOTListF(pure(create))
+  def createOTList[A](create: List[A])(implicit idCodec: IdCodec[OTList[A]]): F[OTList[A]] =
+    createOTListF(pure(create))
 
   /**
     * Apply an OT operation to an OTlist.
@@ -336,7 +334,6 @@ abstract class STMOps[F[_]: Monad] extends TransactionOps {
     * contents.
     *
     * U operation - makes the original STM data at id, and modified data, available to subsequent transactions.
-    *
     *
     * @param list The OTList
     * @param op   The operation to apply
@@ -361,7 +358,6 @@ abstract class STMOps[F[_]: Monad] extends TransactionOps {
    * @return     The new list contents
    */
   def otListOperationUnit[A](list: OTList[A], op: Operation[A]): F[Unit]
-//    implicitly[Monad[F]].map(otListOperation(list, op))(_ => ()) // Why won't this work with just .map(_.id)?
 }
 
 

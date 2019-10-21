@@ -11,7 +11,7 @@ import slinky.web.html._
 import typings.antd.antdStrings
 import typings.react.ScalableSlinky._
 import typings.react.reactMod.{FormEvent, MouseEvent}
-import typings.antd.esNotificationMod.^.{default => Notification}
+import typings.antd.esNotificationMod.{default => Notification}
 
 import scala.scalajs.js
 import scala.scalajs.js.annotation.JSImport

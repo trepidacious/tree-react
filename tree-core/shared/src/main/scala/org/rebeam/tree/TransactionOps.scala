@@ -59,7 +59,9 @@ abstract class TransactionOps[F[_]: Monad] {
   /**
     * Get the TransactionContext for this transaction
     *
-    * This is neither a U nor an S operation - see STMOps docs for details
+    * This is neither a U nor an S operation - see STMOps docs for details of what is meant by this terminology.
+    * FIXME this should maybe be U - it provides the Moment, which could then be used to drive differences in
+    * execution. However transactionId is fine - split these up?
     */
   def context: F[TransactionContext]
 
