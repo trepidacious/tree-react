@@ -74,13 +74,21 @@ import org.rebeam.tree.ot.{OTList, Operation}
   *    of STM state, in order for a transaction to be stable. These are operations that create GUIDs, and/or put new
   *    id-value pairs to the STM, and/or make use of operational transformation, as described above.
   *
-  * 3. Where an operation is "compound" - i.e. it calls "inner" operations (notably `putF`, which uses an inner `create`
-  *    operation), we consider that compound operation to inherit the U and S "flags" from the inner operations - it is
-  *    U if any inner operation is U, and S if any inner operation is S.
-  *    However note that there are exceptions here - if the compound operation takes care to discard any data read from
-  *    the STM by the inner operation, so that it is not visible to later operations, then it may also ignore the
-  *    U state of the inner operation. However if the inner operation is itself inherently unstable then the compound
-  *    operation is unstable.
+  * 3. Each transaction, when run, will result in a sequence of operations. Some operations implement nesting, by
+  *    containing an inner transaction as part of themselves (for example putF, modifyF and createOTListF, and
+  *    variants). In this case we "flatten" the execution for the purposes of monitoring stability, and
+  *    simply track the operations of the inner transaction as part of the whole transaction sequence.
+  *    So the inner transaction's operations will run after previous operations in the outer transaction - if the outer
+  *    transaction has already executed U operations, then any S operations in the inner transaction will result in
+  *    an unstable outer transaction. Similarly, any U operations performed in the inner transaction will be considered
+  *    to have run before any later operations in the outer transaction. However there are some exceptions to
+  *    this last point - since the inner transaction is isolated by being run inside an operation, implementations
+  *    of STMOps can ensure that no data from the inner transaction is available outside that inner transaction - this
+  *    is done by simply discarding the return value of the inner transaction, within the implementation of the
+  *    operation. The STMOps with a "Unit" suffix must do this, and as a result will not be U, even if the inner
+  *    transaction they execute is U. This may be useful to allow producing stable transactions for more complex
+  *    use cases, although where possible it is simpler to just use the non-"F" versions of the operations, which
+  *    use pure functions instead of inner transactions.
   *
   * 4. A transaction is stable if it contains no U operations before any S operation. Operations that are both U and
   *    S are a special case - we must consider them on a case-by-case basis to see whether the S parts of the
@@ -90,6 +98,9 @@ import org.rebeam.tree.ot.{OTList, Operation}
   *    achieve a stable call to `putF`. However since the `putF` transaction will return the new data, potentially
   *    containing STM data, we must still classify the transaction as U (as well as S), and so no further S operations
   *    can be performed in a transaction including the putF. This logic must be handled by implementations of STMOps.
+  *    Note that `createListOTF` is classified as unstable if the `create` function is U, since we require that
+  *    OTLists are created with exactly the same data on the client and server, to support a single oeprational
+  *    transformation history.
   *
   * Hence we might have a sequence of operations that are S, S, U, U and this would be a stable transaction.
   * A transaction containing operations that are say S, U, S will be unstable, since the last S operation
@@ -105,7 +116,7 @@ import org.rebeam.tree.ot.{OTList, Operation}
   * random colour for display, where this does not need to be stable).
   *
   * Some operations are generally potentially U, but also exist as a safe, non-U form.
-  * For example `modifyF` reads a value from the STM, modifies it (using a sub-transaction that may also read data
+  * For example modifyF` reads a value from the STM, modifies it (using a sub-transaction that may also read data
   * from the STM) and returns the new value. Since this new value may contain data from the STM the operation is
   * U. However the `modifyFUnit` version of this operation does not return the modified data, and so is not U. Note
   * however that if the sub-transaction it runs is itself unstable, the modifyFUnit will also render a transaction
