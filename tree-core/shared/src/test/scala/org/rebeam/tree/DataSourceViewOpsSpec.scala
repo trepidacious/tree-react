@@ -15,11 +15,11 @@ class DataSourceViewOpsSpec extends WordSpec with Matchers with Checkers {
   val idInfinity: Id[Int] = Id[Int](guid(42, 42, 42))
   val idInfinitySquared: Id[Int] = Id[Int](guid(84, 84, 84))
 
-  val rev0: RevId[Int] = RevId[Int](guid(0, 0, 100))
-  val rev1: RevId[Int] = RevId[Int](guid(0, 0, 101))
-  val rev2: RevId[String] = RevId[String](guid(0, 0, 102))
-  val revInfinity: RevId[Int] = RevId[Int](guid(42, 42, 142))
-  val revInfinitySquared: RevId[Int] = RevId[Int](guid(84, 84, 184))
+  val rev0: TransactionId = TransactionId.raw(0, 0)
+  val rev1: TransactionId = TransactionId.raw(0, 0)
+  val rev2: TransactionId = TransactionId.raw(0, 0)
+  val revInfinity: TransactionId = TransactionId.raw(42, 42)
+  val revInfinitySquared: TransactionId = TransactionId.raw(84, 84)
 
   val dataSource: DataSource =
     MapDataSource.empty

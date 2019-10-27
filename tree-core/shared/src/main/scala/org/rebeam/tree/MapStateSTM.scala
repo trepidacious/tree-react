@@ -112,18 +112,21 @@ object MapStateSTM {
 
   implicit val stmInstance: STMOps[MapState] = new STMOps[MapState] {
 
-    // S op
-    private def rand[A](rf: PRandom => (PRandom, A)): MapState[A] =
-      recordSOp >>
-      StateT[ErrorOr, StateData, A](sd => {
-        val (newRandom, a) = rf(sd.random)
-        Right((sd.copy(random = newRandom), a))
-      })
-
     /**
       * Record a U operation in state
       */
     private def recordUOp: MapState[Unit] = StateT.modify[ErrorOr, StateData](s => s.copy(hasNOps = true))
+
+    /**
+      * Inspect state for U operations
+      * @return True if state has recorded U operations
+      */
+    private def inspectHasUOps: MapState[Boolean] = StateT.inspect[ErrorOr, StateData, Boolean](_.hasNOps)
+
+    /**
+      * Restore state of U operation tracking in state
+      */
+    private def restoreHasUOps(hasUOps: Boolean): MapState[Unit] = StateT.modify[ErrorOr, StateData](s => s.copy(hasNOps = hasUOps))
 
     /**
       * Record an S operation in state - if there are any U ops recorded previously, the state
@@ -134,31 +137,13 @@ object MapStateSTM {
       s => if (s.hasNOps) s.copy(unstable = true) else s
     )
 
-    // U Op
-    def get[A](id: Id[A]): MapState[A] =
-      recordUOp >>
-      StateT.inspectF[ErrorOr, StateData, A](_.getData(id).toRight(IdNotFoundError(id)))
-
-    // Not classified as U/S itself - this is done on public operations only
-    private def getDataState[A](id: Id[A]): MapState[DataRevision[A]] =
-      StateT.inspectF[ErrorOr, StateData, DataRevision[A]](_.getDataRevision(id).toRight(IdNotFoundError(id)))
-
-    private def getClientState[A](list: OTList[A]): MapState[ClientState[A]] =
-      StateT.inspectF[ErrorOr, StateData, ClientState[A]](_.getClientState(list).toRight(OTListStateNotFoundError(list)))
-
-    // Not classified as U/S itself - this is done on public operations only
-    private def set[A](id: Id[A], a: A)(implicit idCodec: IdCodec[A]): MapState[Unit] = for {
-      _ <- StateT.modify[ErrorOr, StateData](s => s.updated(id, a, s.context.transactionId))
-    } yield ()
-
-    // U Op
-    def modifyF[A](id: Id[A], f: A => MapState[A]): MapState[A] = for {
-      _ <- recordUOp
-      ds <- getDataState(id)
-      newData <- f(ds.data)
-      _ <- set[A](id, newData)(ds.idCodec)
-      _ <- StateT.modify[ErrorOr, StateData](sd => sd.copy(deltas = sd.deltas :+ StateDelta.Modify(id, ds.data, newData)))
-    } yield newData
+    // S op, to support the randomXXX ops in TransactionOps, which are all S.
+    private def rand[A](rf: PRandom => (PRandom, A)): MapState[A] =
+      recordSOp >>
+      StateT[ErrorOr, StateData, A](sd => {
+        val (newRandom, a) = rf(sd.random)
+        Right((sd.copy(random = newRandom), a))
+      })
 
     // Note that all random ops are S, this is handled by `rand` function
     def randomInt: MapState[Int] = rand(_.int)
@@ -169,7 +154,58 @@ object MapStateSTM {
     def randomDouble: MapState[Double] = rand(_.double)
 
     // Neither U nor S - context is always the same, and does not read STM state
+    // FIXME consider Moment value, which changes from client to server
     def context: MapState[TransactionContext] = StateT.inspect(_.context)
+
+
+    // U Op - getting data is always U, and has no point otherwise
+    override def get[A](id: Id[A]): MapState[A] =
+      recordUOp >>
+      StateT.inspectF[ErrorOr, StateData, A](_.getData(id).toRight(IdNotFoundError(id)))
+
+    // Not classified as U/S itself - public operations are responsible for classifying
+    private def getDataState[A](id: Id[A]): MapState[DataRevision[A]] =
+      StateT.inspectF[ErrorOr, StateData, DataRevision[A]](_.getDataRevision(id).toRight(IdNotFoundError(id)))
+
+    // Not classified as U/S itself - public operations are responsible for classifying
+    private def getClientState[A](list: OTList[A]): MapState[ClientState[A]] =
+      StateT.inspectF[ErrorOr, StateData, ClientState[A]](_.getClientState(list).toRight(OTListStateNotFoundError(list)))
+
+    // Not classified as U/S itself - public operations are responsible for classifying
+    private def set[A](id: Id[A], a: A)(implicit idCodec: IdCodec[A]): MapState[Unit] = for {
+      _ <- StateT.modify[ErrorOr, StateData](s => s.updated(id, a, s.context.transactionId))
+    } yield ()
+
+    // U Op
+    override def modifyF[A](id: Id[A], f: A => MapState[A]): MapState[A] = for {
+      _ <- recordUOp
+      ds <- getDataState(id)
+      newData <- f(ds.data)
+      _ <- set[A](id, newData)(ds.idCodec)
+      _ <- StateT.modify[ErrorOr, StateData](sd => sd.copy(deltas = sd.deltas :+ StateDelta.Modify(id, ds.data, newData)))
+    } yield newData
+
+    // We discard the results of an operation, and use this to prevent any information read from the STM during the
+    // operation from being passed to further operations. This means that the discard operation itself is not U.
+    // Note that we still check whether f itself is unstable, this is done in the normal way as it runs, using
+    // the existing hasUOps value of MapState.
+    // We implement this by inspecting the hasUOps state before running f, then restoring the state afterwards.
+    // We might expose this as a public operation in future, however it's not clear at the moment that it has
+    // any uses except for modifyFUnit.
+    private def discard[A](f: MapState[A]): MapState[Unit] = for {
+      previouslyU <- inspectHasUOps
+      _ <- f
+      // Here we discard the value we created - it is still in the STM, but not exposed to subsequent operations
+      _ <- restoreHasUOps(previouslyU)
+    } yield ()
+
+    // This is not a U op - we preserve the hasUOps state before running the modification, then
+    // can restore the state again afterwards because we discard the result of modifyF(id, f). If modifyF(id, f) is
+    // unstable, we will still flag the transaction as unstable as that op executes, but from the perspective of later
+    // operations, it doesn't otherwise matter whether modifyF(id, f) reads STM state, since that state is discarded
+    // by this function. Note that the state could later be read from the STM, e.g. using get, but of course this get
+    // would be recorded as a U op itself.
+    override def modifyFUnit[A](id: Id[A], f: A => MapState[A]): MapState[Unit] = discard(modifyF[A](id, f))
 
     // Internal op to create a plain guid - this is not considered to be an S op directly - other
     // ops need to classify themselves as U or S
@@ -186,25 +222,37 @@ object MapStateSTM {
     // S op
     def createGuid: MapState[Guid] = recordSOp >> newGuid
 
-    // Here we know we are an S operation, and we may also be a U operation - see notes below for
-    // correct sequence to ensure we do this properly
-    def putF[A](create: Id[A] => MapState[A])(implicit idCodec: IdCodec[A]) : MapState[A] =
+    // Here we know we are an S operation because we put a value, and we may also be a U operation from running
+    // the create MapState - see notes below for correct sequence to ensure we do this properly
+    override def putFWithId[A](create: Id[A] => MapState[A])(implicit idCodec: IdCodec[A]) : MapState[(A, Id[A])] =
       for {
-        // NOTE: we don't recordSOp here - we must do this later to detect instability, see later notes
-        // Also note we use createPlainGuid to avoid recordSOp
-        id <- newGuid.map(guid => Id[A](guid))
-        // NOTE: Run create - this determines whether this is a U op
+        // NOTE: we use createGuid, and so flag the S operation at this point. We know that regardless of what
+        // is done by `create`, we will put a value into the STM using this Guid, and data of type `A`, so only
+        // U operations before this point can affect this.
+        id <- createGuid.map(guid => Id[A](guid))
+        // NOTE: Run create - this determines whether this is a U op, since any STM state read by `create` can
+        // be exposed to later operations via the returned instance of A
         a <- create(id)
-        // NOTE: Now we record S operation, so that if `create` contained a U op we can respond by
-        // flagging transaction as unstable
-        _ <- recordSOp
         _ <- set(id, a)
         _ <- StateT.modify[ErrorOr, StateData](sd => sd.copy(deltas = sd.deltas :+ StateDelta.Put(id, a)))
-      } yield a
+      } yield (a, id)
+
+    // This is not a U op - we preserve the hasUOps state before running the modification, then
+    // can restore the state again afterwards because we discard the result of create. If create is itself
+    // unstable, we will still flag the transaction as unstable as that op executes, but from the perspective of later
+    // operations, it doesn't otherwise matter whether create reads STM state, since that state is discarded
+    // by this function. Note that the state could later be read from the STM, e.g. using get, but of course this get
+    // would be recorded as a U op itself.
+    def putFJustId[A](create: Id[A] => MapState[A])(implicit idCodec: IdCodec[A]): MapState[Id[A]] = for {
+      previouslyU <- inspectHasUOps
+      // Here we discard the value we created - it is still in the STM, but not exposed to subsequent operations
+      id <- putFWithId(create).map(_._2)
+      _ <- restoreHasUOps(previouslyU)
+    } yield id
 
     def createOTListF[A](create: MapState[List[A]])(implicit idCodec: IdCodec[OTList[A]]): MapState[OTList[A]] = for {
-      // NOTE: we don't recordSOp here - we must do this later to detect instability, see later notes
-      // Also note we use createPlainGuid to avoid recordSOp
+      // NOTE: we don't recordSOp here (by using newGuid rather than createGuid) - we must do this later to detect
+      // instability, see later notes
       id <- newGuid.map(guid => Id[OTList[A]](guid))
       // NOTE: Run create - this determines whether this is a U op
       a <- create
@@ -216,7 +264,8 @@ object MapStateSTM {
         )
       )
       // NOTE: Now we record S operation, so that if `create` contained a U op we can respond by
-      // flagging transaction as unstable
+      // flagging transaction as unstable. This is because we require that createOTListF always creates exactly
+      // the same data as an initial state
       _ <- recordSOp
       otList = OTList(id, a)
       // OTLists are still STM cells, they just have additional client state to permit operations to be applied,
@@ -254,5 +303,8 @@ object MapStateSTM {
       newList
     }
 
+    def otListOperationUnit[A](list: OTList[A], op: Operation[A]): MapState[Unit] = discard(otListOperation(list, op))
+
   }
+
 }

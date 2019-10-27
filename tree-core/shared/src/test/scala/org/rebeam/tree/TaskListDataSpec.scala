@@ -27,8 +27,8 @@ class TaskListDataSpec extends WordSpec with Matchers with Checkers {
       val (s1, taskList) = taskListResult
 
       assert(taskList == TaskList(taskListId, "Task List", List(Task("task 1", done = false), Task("task 2", done = true))))
-      assert(s1.getDataRevision(taskListId).contains(DataRevision(taskList, RevId(guid(0, 0, 1)), taskListIdCodec)))
-      assert(s1.nextGuid ==guid(0, 0, 2))
+      assert(s1.getDataRevision(taskListId).contains(DataRevision(taskList, TransactionId.raw(0, 0), taskListIdCodec)))
+      assert(s1.nextGuid == guid(0, 0, 1)) // A single guid, (0, 0, 0) is used for the TaskList's Id
     }
 
     "use cursor to task list name" in {
