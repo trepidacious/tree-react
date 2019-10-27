@@ -99,7 +99,9 @@ import org.rebeam.tree.ot.{OTList, Operation}
   *    can be performed in a transaction including the putF. This logic must be handled by implementations of STMOps.
   *    Note that `createListOTF` is classified as unstable if the `create` function is U, since we require that
   *    OTLists are created with exactly the same data on the client and server, to support a single oeprational
-  *    transformation history.
+  *    transformation history. otListOperation is both S (since OT operations must be stable) and U (since it returns
+  *    the (modified) state of the OTList it operates on - however it does not depend itself on that state - it always
+  *    adds the same OT operation, regardless of the state it makes available.
   *
   * Hence we might have a sequence of operations that are S, S, U, U and this would be a stable transaction.
   * A transaction containing operations that are say S, U, S will be unstable, since the last S operation
@@ -309,15 +311,14 @@ abstract class STMOps[F[_]: Monad] extends TransactionOps {
     * This will create a new Id, and this is used to create the data to add to the
     * STM (in case the data includes the Id).
     *
-    * Note that this is a special case for stability - even if the create function is U, this operation does not
-    * render the transaction unstable, since it will always create a value in the STM with the same Id, of the same
-    * type, meeting the requirements for stability.
-    *
     * Always an S operation, since it puts a new value to the STM and creates a new Id.
     *
-    * Note that if create contains any U operations, then this is also a U operation AS WELL AS an S operation
+    * Note that if `create` contains any U operations, then this is also a U operation AS WELL AS an S operation
     * (and in this case the data read from the STM may be present in the returned data - otherwise the data
-    * will contain no STM data, just data from the create function itself).
+    * will contain no STM data, just data from the create function itself). In this case createOTListF itself will
+    * be unstable, because we require that createOTListF always creates exactly the same data for the initial state of
+    * the OTList. This is different to putF, which just requires that some data of the correct type is always created
+    * by a transaction, for it to be stable.
     *
     * @param create   Function to create data as an `F[List[A]]`
     * @param idCodec  Used to encode/decode data
@@ -361,7 +362,9 @@ abstract class STMOps[F[_]: Monad] extends TransactionOps {
     * a text edit based on user input, deleting an item from an OTList, or inserting a new item not based on the STM
     * contents.
     *
-    * U operation - makes the original STM data at id, and modified data, available to subsequent transactions.
+    * U operation - makes the original STM data at id (the list), and modified data, available to subsequent
+    * transactions. However since this state does not influence the operation itself, this operation is not itself
+    * unstable.
     *
     * @param list The OTList
     * @param op   The operation to apply
@@ -378,7 +381,7 @@ abstract class STMOps[F[_]: Monad] extends TransactionOps {
    * a text edit based on user input, deleting an item from an OTList, or inserting a new item not based on the STM
    * contents.
    *
-   * This does not return the modified OTList, and so is not a U operation
+   * This does not return the modified OTList, and so is not a U operation.
    *
    * @param list The OTList
    * @param op   The operation to apply

@@ -48,14 +48,14 @@ object MapStateSTM {
   }
 
   case class StateData (
-      nextGuid: Guid,
-      map: Map[Guid, DataRevision[_]],
-      otMap: Map[Guid, ClientState[_]],
-      random: PRandom,
-      context: TransactionContext,
-      deltas: Vector[StateDelta[_]],
-      hasNOps: Boolean,
-      unstable: Boolean
+                         nextGuid: Guid,
+                         map: Map[Guid, DataRevision[_]],
+                         otMap: Map[Guid, ClientState[_]],
+                         random: PRandom,
+                         context: TransactionContext,
+                         deltas: Vector[StateDelta[_]],
+                         hasUOps: Boolean,
+                         unstable: Boolean
   ) extends IdCodecs with DataSource {
 
     def getDataRevision[A](id: Id[A]): Option[DataRevision[A]] = map.get(id.guid).map(_.asInstanceOf[DataRevision[A]])
@@ -85,7 +85,7 @@ object MapStateSTM {
         nextGuid = ng,
         random = PRandom(ng),
         deltas = Vector.empty,
-        hasNOps = false,
+        hasUOps = false,
         unstable = false
       )
     }
@@ -100,7 +100,7 @@ object MapStateSTM {
     PRandom(0),
     TransactionContext(Moment(0), Guid.first.transactionId),
     Vector.empty,
-    hasNOps = false,
+    hasUOps = false,
     unstable = false
   )
 
@@ -115,18 +115,18 @@ object MapStateSTM {
     /**
       * Record a U operation in state
       */
-    private def recordUOp: MapState[Unit] = StateT.modify[ErrorOr, StateData](s => s.copy(hasNOps = true))
+    private def recordUOp: MapState[Unit] = StateT.modify[ErrorOr, StateData](s => s.copy(hasUOps = true))
 
     /**
       * Inspect state for U operations
       * @return True if state has recorded U operations
       */
-    private def inspectHasUOps: MapState[Boolean] = StateT.inspect[ErrorOr, StateData, Boolean](_.hasNOps)
+    private def inspectHasUOps: MapState[Boolean] = StateT.inspect[ErrorOr, StateData, Boolean](_.hasUOps)
 
     /**
       * Restore state of U operation tracking in state
       */
-    private def restoreHasUOps(hasUOps: Boolean): MapState[Unit] = StateT.modify[ErrorOr, StateData](s => s.copy(hasNOps = hasUOps))
+    private def restoreHasUOps(hasUOps: Boolean): MapState[Unit] = StateT.modify[ErrorOr, StateData](s => s.copy(hasUOps = hasUOps))
 
     /**
       * Record an S operation in state - if there are any U ops recorded previously, the state
@@ -134,7 +134,7 @@ object MapStateSTM {
       * Note that when processing U+S operations, be sure to record any U operations before S operations
       */
     private def recordSOp: MapState[Unit] = StateT.modify[ErrorOr, StateData](
-      s => if (s.hasNOps) s.copy(unstable = true) else s
+      s => if (s.hasUOps) s.copy(unstable = true) else s
     )
 
     // S op, to support the randomXXX ops in TransactionOps, which are all S.
@@ -276,9 +276,12 @@ object MapStateSTM {
 
 
     def otListOperation[A](list: OTList[A], op: Operation[A]): MapState[OTList[A]] = for {
-      // Note that this is an S op since we require OT operations to be stable, but reads
-      // no state so is not a U op
+      // Note that this is an S op since we require OT operations to be stable, and also
+      // provides the (modified) OTList as a return, so is a U op. Record S Op first so we
+      // don't make the operation automatically unstable - it is only unstable if there is a
+      // previous U op,
       _ <- recordSOp
+      _ <- recordUOp
       cs <- getClientState(list)
       // We act as a "disconnected" client, since we have no server-side. Just apply the operation locally.
       // If there was a server, we would send the operation as well, and then expect later to get a confirmation
