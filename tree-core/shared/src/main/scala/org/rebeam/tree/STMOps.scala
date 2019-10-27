@@ -267,6 +267,24 @@ abstract class STMOps[F[_]: Monad] extends TransactionOps {
   def putFJustId[A](create: Id[A] => F[A])(implicit idCodec: IdCodec[A]): F[Id[A]]
 
   /**
+   * Put a new value into the STM. This will create a new
+   * Id, and this is used to create the data to add to the
+   * STM (in case the data includes the Id).
+   *
+   * Always an S operation, since it puts a new value to the STM and creates a new Id.
+   * Never a U operation, since `create` does not use the STM and so cannot contain U operations (and for
+   * this reason the returned data contains no STM data that might change - only data created by the create
+   * function).
+   *
+   * @param create   Function to create data from Id, as an A
+   * @param idCodec  Used to encode/decode data
+   *                 and deltas
+   * @tparam A       The type of data
+   * @return         The created data, and its Id
+   */
+  def putWithId[A](create: Id[A] => A)(implicit idCodec: IdCodec[A]): F[(A, Id[A])] = putFWithId(create.andThen(pure))
+
+  /**
     * Put a new value into the STM. This will create a new
     * Id, and this is used to create the data to add to the
     * STM (in case the data includes the Id).

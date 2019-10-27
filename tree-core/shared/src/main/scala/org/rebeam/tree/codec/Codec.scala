@@ -53,6 +53,7 @@ object Codec {
     val decoder: Decoder[Delta[A]] = Decoder.failedWithMessage("Empty delta codec")
   }
 
+  implicit val charDeltaCodec: DeltaCodec[Char] = value[Char]
   implicit val stringDeltaCodec: DeltaCodec[String] = value[String]
   implicit val booleanDeltaCodec: DeltaCodec[Boolean] = value[Boolean]
   implicit val byteDeltaCodec: DeltaCodec[Byte] = value[Byte]
