@@ -185,12 +185,6 @@ abstract class STMOps[F[_]: Monad] extends TransactionOps {
    */
   def putFWithId[A](create: Id[A] => F[A])(implicit idCodec: IdCodec[A]): F[(A, Id[A])]
 
-//  implementations of Unit versions must record U state before executing the subtransaction, and then restore U state
-//  afterwards. This way, if subtransaction is unstable in itself then this will still be flagged, but if subtransaction
-//  is just U, and data is tehn discarded by the Unit operation, the U property does not need to be passed on, and so
-//  we can reset the U property to its original value (not to false - previous operations may still have passed on their
-//  STM data, thus sitll rendering the transaction U)
-
   /**
     * Put a new value into the STM. This will create a new
     * Id, and this is used to create the data to add to the
