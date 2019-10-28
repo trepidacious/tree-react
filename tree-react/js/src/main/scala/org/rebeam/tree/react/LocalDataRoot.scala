@@ -8,6 +8,7 @@ import org.log4s._
 import org.rebeam.tree.MapStateSTM._
 import org.rebeam.tree._
 import org.rebeam.tree.codec.TransactionCodec
+import org.rebeam.tree.ot.{CursorUpdate, OTList}
 //import org.rebeam.tree.ot.{CursorUpdate, OTList}
 import org.rebeam.tree.react.ReactData.ReactDataContexts
 
@@ -24,14 +25,16 @@ object LocalDataRoot {
 
   case class LocalReactData(sd: StateData, tx: ReactTransactor) extends ReactData {
     override def get[A](id: Id[A]): Option[A] = sd.get(id)
+
     override def getWithTransactionId[A](id: Id[A]): Option[(A, TransactionId)] = sd.getWithTransactionId(id)
 
-//    override def getOTListCursorUpdate[A](list: OTList[A]): Option[CursorUpdate[A]] = sd.getOTListCursorUpdate(list)
+    override def getOTListCursorUpdate[A](list: OTList[A]): Option[CursorUpdate[A]] = sd.getOTListCursorUpdate(list)
 
     override def getTransactionIdFromGuid(guid: Guid): Option[TransactionId] = sd.getTransactionIdFromGuid(guid)
+
     override def transact(t: Transaction): Callback = tx.transact(t)
 
-    override def toString: String = s"LocalReactData(${sd.map.size} entries)"
+    override def toString: String = s"LocalReactData($sd)"
   }
 
   //NOTE: This is not pure - gets the time for the transaction
