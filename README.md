@@ -1,3 +1,7 @@
+# Scalably-typed
+
+If you get errors on libraries from scalably typed, you need to visit [oyvindberg/ScalablyTyped](https://github.com/oyvindberg/ScalablyTyped) and find the section on `project/plugins.sbt`, then update the version (in DDDDMMYY format) in that file of this project.
+
 # tree-react
 Utilities and facades for use of react and electron libraries in scalajs-react
 
