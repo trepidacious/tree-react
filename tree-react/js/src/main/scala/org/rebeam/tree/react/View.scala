@@ -7,7 +7,7 @@ import japgolly.scalajs.react._
 import japgolly.scalajs.react.component.Scala.Component
 import japgolly.scalajs.react.vdom.html_<^._
 import org.rebeam.tree._
-//import org.rebeam.tree.ot.{CursorUpdate, OTList}
+import org.rebeam.tree.ot.{CursorUpdate, OTList}
 import org.rebeam.tree.react.ReactData.ReactDataContexts
 
 object View {
@@ -56,6 +56,30 @@ object View {
             a => Right((sd.viewed(id.guid), Some(a)))
           )
         })
+
+      def getOTListCursorUpdate[A](list: OTList[A]): S[CursorUpdate[A]] =
+        StateT[ErrorOr, StateData, CursorUpdate[A]](sd => {
+          //Get update as an option, map this to an Option[(StateData, CursorUpdate[A])] by adding a new state
+          //updated to record viewing the id, then convert to an ErrorOr with appropriate
+          //Error on missing data. This is the S => F[S, CursorUpdate[A]] required by StateT.
+          sd.dataSource.getOTListCursorUpdate(list)
+            .map((sd.viewed(list.id.guid), _))
+            .toRight(DataError(
+              list.id.guid,
+              sd.viewedGuids + list.id.guid,
+              sd.missingGuids + list.id.guid
+            ))
+        })
+
+      def getOTListCursorUpdateOption[A](list: OTList[A]): S[Option[CursorUpdate[A]]] =
+        StateT[ErrorOr, StateData, Option[CursorUpdate[A]]](sd => {
+          sd.dataSource.getOTListCursorUpdate(list).fold[ErrorOr[(StateData, Option[CursorUpdate[A]])]](
+            Right((sd.missed(list.id.guid).viewed(list.id.guid), None))
+          )(
+            a => Right((sd.viewed(list.id.guid), Some(a)))
+          )
+        })
+
 //      def getOTListCursorUpdate[A](list: OTList[A]): S[Option[CursorUpdate[A]]] =
 //        StateT[ErrorOr, StateData, Option[CursorUpdate[A]]](sd => {
 //          Right((sd, sd.dataSource.getOTListCursorUpdate(list)))

@@ -4,7 +4,7 @@ import japgolly.scalajs.react.{Callback, React}
 import japgolly.scalajs.react.React.Context
 import org.log4s.getLogger
 import org.rebeam.tree._
-//import org.rebeam.tree.ot.{CursorUpdate, OTList}
+import org.rebeam.tree.ot.{CursorUpdate, OTList}
 
 trait ReactTransactor {
   def transact(t: Transaction): Callback
@@ -20,7 +20,7 @@ object ReactData {
     override def get[A](id: Id[A]): Option[A] = None
     override def getWithTransactionId[A](id: Id[A]): Option[(A, TransactionId)] = None
     override def getTransactionIdFromGuid(guid: Guid): Option[TransactionId] = None
-//    override def getOTListCursorUpdate[A](list: OTList[A]): Option[CursorUpdate[A]] = None
+    override def getOTListCursorUpdate[A](list: OTList[A]): Option[CursorUpdate[A]] = None
     def transact(t: Transaction): Callback = Callback{logger.warn(s"ReactData.empty discards transaction $t")}
   }
 
