@@ -2,16 +2,13 @@ package org.rebeam
 
 import cats.Monad
 import cats.implicits._
-import io.circe.Decoder
 import org.rebeam.tree.ot.OTList
-//import io.circe.{Decoder, Encoder}
 import io.circe.generic.JsonCodec
 import monocle.macros.Lenses
 import org.rebeam.tree._
 import org.rebeam.tree.codec.Codec._
 import org.rebeam.tree.codec._
-//import org.rebeam.tree.ot.OTList
-//import org.rebeam.tree.ot.OTCodecs._
+import org.rebeam.tree.ot.OTCodecs._
 
 object TodoData {
 
@@ -28,9 +25,7 @@ object TodoData {
     override def apply[F[_] : Monad](a: TodoItem)(implicit stm: STMOps[F]): F[TodoItem] = {
       import stm._
       if (complete) {
-        for {
-          c <- context
-        } yield a.copy(completed = Some(c.moment))
+        context.map(c => a.copy(completed = Some(c.moment)))
       } else {
         pure(a.copy(completed = None))
       }
@@ -43,23 +38,11 @@ object TodoData {
   implicit val todoItemDeltaCodec: DeltaCodec[TodoItem] =
     value[TodoItem] or
 //      lensOption("completed", TodoItem.completed) or  // completed is an Optional field, so use lensOption
-      lens("text", TodoItem.text) or
-      action[TodoItem, TodoItemCompletion]("completion"){
-        case a:TodoItemCompletion => a
-      }
+    lens("text", TodoItem.text) or
+    action[TodoItem, TodoItemCompletion]("completion"){
+      case a:TodoItemCompletion => a
+    }
 
-
-
-  //TODO neaten up everything around OTList[Char]...
-  implicit val charDeltaCodec: DeltaCodec[Char] = new DeltaCodec[Char] {
-    val encoder: PartialEncoder[Delta[Char]] = _ => None
-    val decoder: Decoder[Delta[Char]] =
-      Decoder.failedWithMessage("Char does not support deltas")
-  }
-  implicit val charIdCodec: IdCodec[Char] = IdCodec[Char]("Char")
-  implicit val otListCharCodec: DeltaCodec[OTList[Char]] = otList[Char]
-  implicit val otListCharIdCodec: IdCodec[OTList[Char]] = IdCodec.otList[Char]
-  import org.rebeam.tree.ot.OTCodecs._
 
   @JsonCodec
   @Lenses
@@ -83,7 +66,7 @@ object TodoData {
             item <- put[TodoItem](id => TodoItem(id, c.moment, None, s"Todo $i"))
           } yield item.id
         )
-        name <- createOTList("Todos".toList)
+        name <- createOTString("Todos")
         _ <- put[TodoList](TodoList(_, itemIds, name))
       } yield ()
     }

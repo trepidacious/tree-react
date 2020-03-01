@@ -1,6 +1,7 @@
 package org.rebeam.tree
 
 import cats.Monad
+import cats.syntax.functor._
 import org.rebeam.tree.codec.IdCodec
 import org.rebeam.tree.ot.{OTList, Operation}
 
@@ -353,6 +354,51 @@ abstract class STMOps[F[_]: Monad] extends TransactionOps {
     */
   def createOTList[A](create: List[A])(implicit idCodec: IdCodec[OTList[A]]): F[OTList[A]] =
     createOTListF(pure(create))
+
+  /**
+   * Put a new List value into the STM, with operational transformation
+   * support.
+   * This will create a new Id, and this is used to create the data to add to the
+   * STM (in case the data includes the Id).
+   *
+   * This accepts a `create` function returning `String`, which will be converted to a `List[Char]`
+   *
+   * Always an S operation, since it puts a new value to the STM and creates a new Id.
+   *
+   * Note that if `create` contains any U operations, then this is also a U operation AS WELL AS an S operation
+   * (and in this case the data read from the STM may be present in the returned data - otherwise the data
+   * will contain no STM data, just data from the create function itself). In this case createOTListF itself will
+   * be unstable, because we require that createOTListF always creates exactly the same data for the initial state of
+   * the OTList. This is different to putF, which just requires that some data of the correct type is always created
+   * by a transaction, for it to be stable.
+   *
+   * @param create   Function to create data as an `F[List[A]]`
+   * @param idCodec  Used to encode/decode data
+   *                 and deltas
+   * @return         The created List
+   */
+  def createOTStringF(create: F[String])(implicit idCodec: IdCodec[OTList[Char]]): F[OTList[Char]] = createOTListF[Char](create.map(_.toList))
+
+  /**
+   * Put a new List value into the STM, with operational transformation
+   * support.
+   * This will create a new Id, and this is used to create the data to add to the
+   * STM (in case the data includes the Id)
+   *
+   * This accepts a `create` function returning `String`, which will be converted to a `List[Char]`
+   *
+   * Always an S operation, since it puts a new value to the STM and creates a new Id.
+   * Never a U operation, since `create` does not use the STM and so cannot contain U operations (and for
+   * this reason the returned data contains no STM data that might change - only data created by the create
+   * function).
+   *
+   * @param create   Function to create data from Id, as a `List[A]`
+   * @param idCodec  Used to encode/decode data
+   *                 and deltas
+   * @return         The created List
+   */
+  def createOTString(create: String)(implicit idCodec: IdCodec[OTList[Char]]): F[OTList[Char]] =
+    createOTStringF(pure(create))
 
   /**
     * Apply an OT operation to an OTlist.

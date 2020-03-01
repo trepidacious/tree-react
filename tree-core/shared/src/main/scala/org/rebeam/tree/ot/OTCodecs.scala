@@ -3,11 +3,10 @@ package org.rebeam.tree.ot
 import io.circe._
 import io.circe.generic.semiauto._
 import _root_.org.rebeam.tree.Delta
-import _root_.org.rebeam.tree.codec.Codec.DeltaCodec
-import _root_.org.rebeam.tree.codec.PartialEncoder
+import _root_.org.rebeam.tree.codec.Codec.{DeltaCodec, otList}
+import _root_.org.rebeam.tree.codec.{IdCodec, PartialEncoder}
 
 object OTCodecs {
-
 
   implicit def atomEncoder[A: Encoder]: Encoder[Atom[A]] = deriveEncoder[Atom[A]]
   implicit def atomDecoder[A: Decoder]: Decoder[Atom[A]] = deriveDecoder[Atom[A]]
@@ -19,9 +18,12 @@ object OTCodecs {
   def otDeltaCodec[A]: DeltaCodec[OTList[A]] = new DeltaCodec[OTList[A]] {
 
     val encoder: PartialEncoder[Delta[OTList[A]]] = _ => None
-
     val decoder: Decoder[Delta[OTList[A]]] =
       Decoder.failedWithMessage("Operational Transformation List does not support deltas")
-
   }
+
+  implicit val charIdCodec: IdCodec[Char] = IdCodec[Char]("Char")
+  implicit val otListCharCodec: DeltaCodec[OTList[Char]] = otList[Char]
+  implicit val otListCharIdCodec: IdCodec[OTList[Char]] = IdCodec.otList[Char]
+
 }

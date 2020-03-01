@@ -16,7 +16,9 @@ Includes and replaces several originally separate projects:
 tree-react is in early development - the best current demo is in the antdApp project, to run:
  
 1. Install [sbt](https://www.scala-sbt.org/) and [yarn](https://yarnpkg.com/).
-2. Run `sbt antdApp/start`.
+2. Run `sbt`.
+3. In sbt, run `antdApp/start`
+3. To update, run `antdApp/fastOptJS` - this should be picked up automatically, and app will reload````
 
 The project started out using the scalajs-react react bindings, however we are moving over to slinky for new work, at the moment we have an interface from the core tree data system to both scalajs-react and slinky, but the scalajs-react interface may not have all functionality. 
 

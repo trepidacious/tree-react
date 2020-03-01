@@ -11,8 +11,8 @@ import org.rebeam.tree.ot.{CursorUpdate, Diff, OTList, Operation}
 import org.rebeam.tree.slinkify._
 import slinky.core.AttrPair
 
-import scala.scalajs.js
-import scala.scalajs.js.annotation.JSGlobal
+//import scala.scalajs.js
+//import scala.scalajs.js.annotation.JSGlobal
 import slinky.core.facade.ReactElement
 //import slinky.core.facade.React
 import typings.antd.AntdFacade.{List => _, _}
@@ -25,12 +25,12 @@ import slinky.web.html._
 import org.scalajs.dom.{html, Event}
 
 
-@js.native
-@JSGlobal
-class InputEvent extends js.Object {
-  def dataTransfer: js.Any = js.native
-  def getTargetRanges(): js.Any = js.native
-}
+//@js.native
+//@JSGlobal
+//class InputEvent extends js.Object {
+//  def dataTransfer: js.Any = js.native
+//  def getTargetRanges(): js.Any = js.native
+//}
 
 object LocalDataRootDemo {
 
@@ -350,7 +350,7 @@ object LocalDataRootDemo {
                 size = typings.antd.antdStrings.small,
                 checked = cursor.a.completed.isDefined,
                 onChange = (b: Boolean, _) => cursor.delta(TodoItemCompletion(b)).apply()
-              ))().toST,
+              ))().toST,  //toST because we are passing as a ReactNode to InputProps
             )
           )
 
@@ -408,6 +408,7 @@ object LocalDataRootDemo {
     (_, index) =>{
       logger.debug("LocalDataRootDemo dataProvider.render")
       div(
+        span()("Hi there!"),
         // When we have an indexed TodoList, display it
         index.todoList.map[ReactElement](l => todoListView(l)).getOrElse(span()("Empty"))
       )
