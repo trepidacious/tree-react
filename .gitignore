@@ -42,3 +42,4 @@ tree-test/
 # Metals
 .metals/
 .bloop/
+project/metals.sbt
