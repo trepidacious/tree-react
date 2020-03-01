@@ -11,10 +11,7 @@ import org.rebeam.tree.ot.{CursorUpdate, Diff, OTList, Operation}
 import org.rebeam.tree.slinkify._
 import slinky.core.AttrPair
 
-//import scala.scalajs.js
-//import scala.scalajs.js.annotation.JSGlobal
 import slinky.core.facade.ReactElement
-//import slinky.core.facade.React
 import typings.antd.AntdFacade.{List => _, _}
 import typings.react.ScalableSlinky._
 import org.rebeam.tree.slinkify.Syntax._
@@ -23,14 +20,6 @@ import slinky.core.facade.Hooks._
 import slinky.core.{FunctionalComponent, SyntheticEvent}
 import slinky.web.html._
 import org.scalajs.dom.{html, Event}
-
-
-//@js.native
-//@JSGlobal
-//class InputEvent extends js.Object {
-//  def dataTransfer: js.Any = js.native
-//  def getTargetRanges(): js.Any = js.native
-//}
 
 object LocalDataRootDemo {
 
@@ -78,150 +67,7 @@ object LocalDataRootDemo {
 
   }.build()
 
-  val stringOTView: FunctionalComponent[Cursor[OTList[Char]]] = new ViewPC[OTList[Char]] {
-    private val logger = getLogger
-
-    override def apply(c: Cursor[OTList[Char]])(implicit tx: ReactTransactor): ReactElement = {
-//      logger.debug(s"stringOTView applying from ${c.a}, transactor $tx")
-
-      Input(
-        InputProps(
-//          placeholder = "Todo item",
-          value = c.a.list.mkString,
-          onChange = onInputValueChange(
-            s => {
-              val o = c.a.list
-              val n = s.toList
-              val d = Diff(o, n)
-              c.delta(OTListDelta(d)).apply()
-            }
-          )
-        )
-      )
-
-    }
-  }.build()
-
-  val stringOTView2: FunctionalComponent[Cursor[OTList[Char]]] = new ViewC[OTList[Char]] {
-    private val logger = getLogger
-
-    override def apply[F[_] : Monad](c: Cursor[OTList[Char]])
-      (implicit v: ReactViewOps[F], tx: ReactTransactor): F[ReactElement] = {
-
-      import v._
-
-//      logger.debug(s"stringOTView applying from ${c.a}, transactor $tx")
-
-      for {
-        u <- getOTListCursorUpdate(c.a)
-      } yield {
-        div()(
-          span(s"${u.clientRev} ${u.previousLocalUpdate}"),
-          Input(
-            InputProps(
-              //          placeholder = "Todo item",
-              value = c.a.list.mkString,
-              onChange = onInputValueChange(
-                s => {
-                  val o = c.a.list
-                  val n = s.toList
-                  val d = Diff(o, n)
-                  c.delta(OTListDelta(d)).apply()
-                }
-              )
-            )
-          )
-        )
-
-      }
-    }
-  }.build("stringOTView2")
-
-  val stringOTView3: FunctionalComponent[Cursor[OTList[Char]]] = new ViewC[OTList[Char]] {
-    private val logger = getLogger
-
-    override def apply[F[_] : Monad](c: Cursor[OTList[Char]])
-                                    (implicit v: ReactViewOps[F], tx: ReactTransactor): F[ReactElement] = {
-
-      import v._
-
-//      logger.debug(s"stringOTView applying from ${c.a}, transactor $tx")
-
-      def handleChange(e: SyntheticEvent[html.Input, Event]): Unit = {
-        val s = e.target.value
-        val o = c.a.list
-        val n = s.toList
-        val d = Diff(o, n)
-        c.delta(OTListDelta(d)).apply()
-      }
-
-      for {
-        u <- getOTListCursorUpdate(c.a)
-      } yield {
-        div()(
-          span(s"${u.clientRev} ${u.previousLocalUpdate}"),
-          input(
-            value := c.a.list.mkString,
-            onChange := (handleChange(_))
-          )
-        )
-
-      }
-    }
-  }.build("stringOTView3")
-
-
-  val stringOTView4: FunctionalComponent[Cursor[OTList[Char]]] = new ViewPC[OTList[Char]] {
-    private val logger = getLogger
-
-    override def apply(c: Cursor[OTList[Char]])(implicit tx: ReactTransactor): ReactElement = {
-      //      logger.debug(s"stringOTView applying from ${c.a}, transactor $tx")
-
-      //      val inputRef = useRef[html.Input](null)
-
-      //      println("stringOTView 4 rendering")
-
-      //      val (s, ss) = useState(0)
-
-      val inputRef = useRef[html.Input](null)
-
-      val inputCallback = ExtraHooks.useCallback[html.Input](input => {
-        println(s">>>>>> ExtraHooks.useCallback($input)")
-        inputRef.current = input
-        if (input != null) input.setSelectionRange(2, 3)
-      }, Nil)
-
-      def handleChange(e: SyntheticEvent[html.Input, Event]): Unit = {
-        println(s"${e.target.selectionStart} to ${e.target.selectionEnd}")  // Note this is the selection AFTER the change
-        //        println(inputRef.current)
-        val s = e.target.value
-        val o = c.a.list
-        val n = s.toList
-        val d = Diff(o, n)
-        c.delta(OTListDelta(d)).apply()
-        //        ss(s => s+1)
-      }
-
-      val newValue = c.a.list.mkString
-      val oldValue = if (inputRef.current != null) inputRef.current.value else null
-      println(s"Rendering, '$oldValue' -> '$newValue'")
-
-      // TODO if we are changing the value, update cursor. Can do this with an effect? Or maybe the callback can
-      // read a required selection change from a ref?
-
-      div(
-        //        span(s),
-        input(
-          value := newValue,
-          onChange := (handleChange(_)),
-          new AttrPair[input.tag.type]("ref", inputCallback) // TODO work out how to do this using `:=`
-        )
-      )
-
-    }
-  }.build()
-
-  val stringOTOuterView: FunctionalComponent[Cursor[OTList[Char]]] = new ViewC[OTList[Char]] {
+  val stringOTView: FunctionalComponent[Cursor[OTList[Char]]] = new ViewC[OTList[Char]] {
     private val logger = getLogger
 
     override def apply[F[_] : Monad](c: Cursor[OTList[Char]])
@@ -237,7 +83,7 @@ object LocalDataRootDemo {
         stringOTInnerView(InnerProps(c.a.list.mkString, edit, u))
       }
     }
-  }.build("stringOTOuterView")
+  }.build("stringOTView")
 
   case class InnerProps(s: String, edit: Operation[Char] => Unit, cursorUpdate: CursorUpdate[Char])
 
@@ -376,8 +222,8 @@ object LocalDataRootDemo {
           // so we need to handle changes here
           val textCursor = cursor.zoom(TodoList.name)
           div(
-            stringOTOuterView(textCursor),
-            stringOTOuterView(textCursor)
+            stringOTView(textCursor),
+            stringOTView(textCursor)
           )
         }
       )
