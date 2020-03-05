@@ -4,22 +4,19 @@ import cats.Monad
 import cats.implicits._
 import org.log4s.getLogger
 import org.rebeam.TodoData._
-import org.rebeam.tree.Delta.OTListDelta
 import org.rebeam.tree.MapStateSTM.StateDelta
 import org.rebeam.tree._
-import org.rebeam.tree.ot.{CursorUpdate, Diff, OTList, Operation}
 import org.rebeam.tree.slinkify._
-import slinky.core.AttrPair
 
 import slinky.core.facade.ReactElement
 import typings.antd.AntdFacade.{List => _, _}
 import typings.react.ScalableSlinky._
 import org.rebeam.tree.slinkify.Syntax._
-import slinky.core.facade.Hooks._
 
-import slinky.core.{FunctionalComponent, SyntheticEvent}
+import slinky.core.FunctionalComponent
 import slinky.web.html._
-import org.scalajs.dom.{html, Event}
+
+import StringOTView._
 
 object LocalDataRootDemo {
 
@@ -40,133 +37,6 @@ object LocalDataRootDemo {
           case _ => i
         }
       }
-    }
-  }
-
-
-  val stringView: FunctionalComponent[Cursor[String]] = new ViewPC[String] {
-    private val logger = getLogger
-
-    override def apply(c: Cursor[String])(implicit tx: ReactTransactor): ReactElement = {
-
-      logger.debug(s"stringView applying from $a, transactor $tx")
-
-      // Editing the value is straightforward - just call set on the cursor. The cursor
-      // creates a ValueDelta that will set the String directly to a new value, makes
-      // a Transaction from the delta using the context provided by the cursor, and
-      // then uses the implicit ReactTransactor to convert the Transactor to a Callback
-      // we can give to React.
-      Input(
-        InputProps(
-          value = c.a,
-          onChange = onInputValueChange(s => c.set(s).apply())
-        )
-      )
-
-    }
-
-  }.build()
-
-  val stringOTView: FunctionalComponent[Cursor[OTList[Char]]] = new ViewC[OTList[Char]] {
-    private val logger = getLogger
-
-    override def apply[F[_] : Monad](c: Cursor[OTList[Char]])
-                                    (implicit v: ReactViewOps[F], tx: ReactTransactor): F[ReactElement] = {
-      import v._
-
-      def edit(o: Operation[Char]): Unit =
-        c.delta(OTListDelta(o)).apply()
-
-      for {
-        u <- getOTListCursorUpdate(c.a)
-      } yield {
-        stringOTInnerView(InnerProps(c.a.list.mkString, edit, u))
-      }
-    }
-  }.build("stringOTView")
-
-  case class InnerProps(s: String, edit: Operation[Char] => Unit, cursorUpdate: CursorUpdate[Char])
-
-  val stringOTInnerView: FunctionalComponent[InnerProps] = FunctionalComponent[InnerProps] {
-    p => {
-
-      // This contains the required cursor range to be set after a render, or null if no
-      // range needs to be set
-      val requiredCursorRange = useRef[(Int, Int)](null)
-
-      // This contains the currently displayed input, if we know it, null otherwise
-      val inputRef = useRef[html.Input](null)
-
-      // This contains the previous client rev we used to update cursor position, null if
-      // we don't have a (reliable) revision for this. This is used to ensure we only update the
-      // cursor if we see consecutive operations
-      val previousClientRev = useRef[Int](null.asInstanceOf[Int])
-
-      // Keep track of the input in inputRef, and apply required cursor range changes
-      val inputCallback = ExtraHooks.useCallback[html.Input](input => {
-        inputRef.current = input
-        val rcr = requiredCursorRange.current
-        if (input != null && rcr != null) {
-          input.setSelectionRange(rcr._1, rcr._2)
-          requiredCursorRange.current = null
-        }
-      }, Nil)
-
-      def handleChange(e: SyntheticEvent[html.Input, Event]): Unit = {
-        val s = e.target.value
-        val o = p.s.toList
-        val n = s.toList
-        val d = Diff(o, n)
-        p.edit(d)
-      }
-
-      val currentInput = scala.Option(inputRef.current)
-
-      val newValue = p.s
-
-      val previousRev = previousClientRev.current
-      val currentRev = p.cursorUpdate.clientRev
-      previousClientRev.current = currentRev
-
-      println(s"Revs $previousRev => $currentRev")
-
-      // TODO track client rev in case we fall out of sync
-      currentInput.foreach(
-        i => {
-          val oldValue = i.value
-          println(s"Rendering with a current input, '$oldValue' -> '$newValue'...")
-          if (oldValue != newValue) {
-            println("  Updated value - must not be our change.")
-            p.cursorUpdate.previousLocalUpdate.foreach(u => {
-              // Use isEditor false - the input that is actually editing the value skips this logic since
-              // the input control updates its own cursor position
-              def update(index: Int) = u.op.transformCursor(index, isEditor = false)
-              val current = (i.selectionStart, i.selectionEnd)
-              val next = current.bimap(update, update)
-
-              // We always update the cursor range range - otherwise it will set itself to the end of the input
-              // automatically
-              requiredCursorRange.current = next
-              if (next != current){
-                println(s"  Selection should change from $current to $next")
-              } else {
-                println(s"  Selection stays at $current")
-              }
-            })
-          }
-        }
-      )
-
-
-      div(
-        span(currentInput.map(i => s"${i.selectionStart} to ${i.selectionEnd}")),
-        input(
-          value := newValue,
-          onChange := (handleChange(_)),
-          new AttrPair[input.tag.type]("ref", inputCallback) // TODO work out how to do this using `:=`
-        )
-      )
-
     }
   }
 

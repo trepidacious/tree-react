@@ -203,6 +203,7 @@ lazy val root = project.in(file(".")).
     treeOTJS, treeOTJVM,
     treeReactJS, treeReactJVM,
     treeSlinkyJS, treeSlinkyJVM,
+    treeSlinkyExtraJS, treeSlinkyExtraJVM,
     electronAppJS, electronAppJVM,
     suiElectronAppJS, suiElectronAppJVM,
     antdApp,
@@ -550,8 +551,8 @@ lazy val treeReactJVM = treeReact.jvm
 lazy val treeReactJS = treeReact.js
 
 
-////////////////
-// tree-slinky //
+  ////////////////
+ // tree-slinky //
 ////////////////
 lazy val treeSlinky = crossProject(JSPlatform, JVMPlatform).in(
   file("tree-slinky")
@@ -585,6 +586,29 @@ lazy val treeSlinky = crossProject(JSPlatform, JVMPlatform).in(
 lazy val treeSlinkyJVM = treeSlinky.jvm
 lazy val treeSlinkyJS = treeSlinky.js
 
+  ///////////////////////
+ // tree-slinky-extra //
+///////////////////////
+lazy val treeSlinkyExtra = crossProject(JSPlatform, JVMPlatform).in(
+  file("tree-slinky-extra")
+  //Settings for all projects
+).configure(
+  jsProject
+).settings(
+  name := "tree-slinky-extra",
+  libraryDependencies += "org.log4s" %%% "log4s" % log4sVersion,
+  addCompilerPlugin(
+    "org.scalamacros" % "paradise" % "2.1.1" cross CrossVersion.patch
+  )
+).jvmSettings(
+
+).jsSettings(
+  //Produce a module, so we can use @JSImport.
+  scalaJSLinkerConfig ~= { _.withModuleKind(ModuleKind.CommonJSModule) }
+).dependsOn(treeSlinky)
+
+lazy val treeSlinkyExtraJVM = treeSlinkyExtra.jvm
+lazy val treeSlinkyExtraJS = treeSlinkyExtra.js
 
   //////////////////
  // electron-app //
@@ -692,7 +716,7 @@ lazy val antdApp =
         "react-dom" -> "16.8",
         "prop-types" -> "^15.0.0",
       )
-    ).dependsOn(treeSlinkyJS)
+    ).dependsOn(treeSlinkyJS, treeSlinkyExtraJS)
 
 lazy val suiApp =
   project.in(file("sui-app"))

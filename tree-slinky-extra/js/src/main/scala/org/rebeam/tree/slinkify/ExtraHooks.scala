@@ -1,8 +1,8 @@
-package org.rebeam
+package org.rebeam.tree.slinkify
 
 import scala.scalajs.js
-import scala.scalajs.js.annotation.JSImport
 import scala.scalajs.js.JSConverters._
+import scala.scalajs.js.annotation.JSImport
 
 object ExtraHooks {
 
