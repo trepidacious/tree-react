@@ -5,7 +5,7 @@ import java.nio.file.StandardCopyOption.REPLACE_EXISTING
 name := "tree-react root project"
 version in ThisBuild := "0.0.1-SNAPSHOT"
 organization in ThisBuild := "org.rebeam"
-scalaVersion in ThisBuild := "2.12.9"
+scalaVersion in ThisBuild := "2.12.11"
 // crossScalaVersions in ThisBuild := Seq("2.11.12", "2.12.6")
 
 scalacOptions in ThisBuild ++= Seq(
@@ -234,7 +234,7 @@ lazy val scalajsReactMaterialUI = crossProject(JSPlatform, JVMPlatform).in(file(
     ),
 
     //For Circe
-    addCompilerPlugin("org.scalamacros" %% "paradise" % "2.1.0" cross CrossVersion.patch)
+    addCompilerPlugin("org.scalamacros" %% "paradise" % "2.1.1" cross CrossVersion.patch)
 
   ).jsSettings(
     //Scalajs dependencies that are used on the client only
