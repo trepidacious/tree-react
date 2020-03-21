@@ -45,7 +45,7 @@ abstract class ViewOps[F[_]: Monad] {
     * This will cause ViewOps to fail if the OTList does not exist in the STM.
     * @param list The list
     * @tparam A   Type of data in list
-    * @return     The [[CursorUpdate]] for the list
+    * @return     The CursorUpdate for the list
     */
   def getOTListCursorUpdate[A](list: OTList[A]): F[CursorUpdate[A]]
 
@@ -54,7 +54,7 @@ abstract class ViewOps[F[_]: Monad] {
     * This will cause ViewOps to fail if the OTList does not exist in the STM.
     * @param list The list
     * @tparam A   Type of data in list
-    * @return     The [[CursorUpdate]] for the list, if the list is in the STM
+    * @return     The CursorUpdate for the list, if the list is in the STM
     */
   def getOTListCursorUpdateOption[A](list: OTList[A]): F[Option[CursorUpdate[A]]]
 
