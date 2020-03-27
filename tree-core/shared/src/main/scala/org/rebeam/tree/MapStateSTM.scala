@@ -4,14 +4,11 @@ import cats.data.StateT
 import cats.implicits._
 import org.rebeam.tree.codec._
 import org.rebeam.tree.ot.{ClientState, CursorUpdate, ListRev, OTList, Operation, Rev}
-import org.log4s.getLogger
 
 /**
   * Implementation of STM using a Map and PRandom as State, intended for client-side operation
   */
 object MapStateSTM {
-
-  val logger = getLogger
 
   sealed trait Error {
     def message: String
@@ -302,7 +299,7 @@ object MapStateSTM {
         sd.copy(deltas = sd.deltas :+ StateDelta.Modify(list.id, ds.data, newList))
       )
     } yield {
-      logger.debug(s"Applied $op to get $newData")
+      scribe.debug(s"Applied $op to get $newData")
       newList
     }
 

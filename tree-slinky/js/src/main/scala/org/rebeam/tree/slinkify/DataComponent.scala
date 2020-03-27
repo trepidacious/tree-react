@@ -1,8 +1,6 @@
 package org.rebeam.tree.slinkify
 
 import org.rebeam.tree._
-import org.log4s._
-import org.rebeam.tree.slinkify.DataComponent.logger
 import org.rebeam.tree.slinkify.ReactData.ReactDataContexts
 import slinky.core._
 import slinky.core.facade.Hooks._
@@ -51,7 +49,7 @@ class DataRendererMemo[A: Reusability](r: DataRenderer[A]) {
     val drr = r(p.a, p.data, p.data)
     lastProps = p
     lastUsedIds = drr.usedIds
-    logger.trace(s"DataRendererMemo.render(${p.a}) gives used ids ${drr.usedIds}")
+    scribe.trace(s"DataRendererMemo.render(${p.a}) gives used ids ${drr.usedIds}")
     drr
   }
 
@@ -67,7 +65,7 @@ class DataRendererMemo[A: Reusability](r: DataRenderer[A]) {
     // This shouldn't happen, since we should have render called before SCU, but if it happens
     // just permit the update to get our first memoised render.
     if (lastProps == null || lastUsedIds == null) {
-      logger.trace("DataRendererMemo.shouldComponentUpdate - UPDATE: first render")
+      scribe.trace("DataRendererMemo.shouldComponentUpdate - UPDATE: first render")
       true
 
 
@@ -75,28 +73,28 @@ class DataRendererMemo[A: Reusability](r: DataRenderer[A]) {
     // We do not expect this to happen, based on lifecycle in the DataRendererMemo scaladoc, but if something
     // unexpected happens it's safer to just update, this will refresh the cache when render is called.
     } else if (lastProps ne currentProps) {
-      logger.trace(
+      scribe.trace(
         s"DataRendererMemo.shouldComponentUpdate - UPDATE: lastProps $lastProps ne currentProps $currentProps"
       )
       true
 
     // If the instance of A in the props has changed, we should update
     } else if (!implicitly[Reusability[A]].test(currentProps.a, nextProps.a)) {
-      logger.trace(
+      scribe.trace(
         s"DataRendererMemo.shouldComponentUpdate - UPDATE: props not reusable, ($currentProps.a -> $nextProps.a)"
       )
       true
 
     // If any values used in the memoised render have changed in the new data, can't reuse
     } else if (valuesChanged(lastUsedIds, currentProps.data, nextProps.data)) {
-      logger.trace("DataRendererMemo.shouldComponentUpdate - UPDATE: new data value revision(s)")
+      scribe.trace("DataRendererMemo.shouldComponentUpdate - UPDATE: new data value revision(s)")
       true
 
     // Data and props will produce the same result from renderer, so skip the update. Note we leave last props alone,
     // since React.memo seems to keep the old ones around, unlike SCU. Presumably it holds on to the last props that
     // triggered an update
     } else {
-      logger.trace(
+      scribe.trace(
         s"DataRendererMemo.shouldComponentUpdate - >>>>>>>skip: doing nothing"
       )
       false
@@ -104,8 +102,6 @@ class DataRendererMemo[A: Reusability](r: DataRenderer[A]) {
 }
 
 object DataComponent {
-
-  val logger: Logger = getLogger
 
   def apply[A](r: DataRenderer[A], contexts: ReactDataContexts = ReactData.defaultContexts)
                       (implicit reusability: Reusability[A]): FunctionalComponent[A] = FunctionalComponent[A] {

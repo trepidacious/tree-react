@@ -1,7 +1,6 @@
 package org.rebeam.tree.slinkify
 
 import cats.implicits._
-import org.log4s._
 import org.rebeam.tree.MapStateSTM._
 import org.rebeam.tree._
 import org.rebeam.tree.codec.TransactionCodec
@@ -20,8 +19,6 @@ object LocalDataRoot {
 
     def updated(index: I, deltas: Seq[StateDelta[_]]): I
   }
-
-  private val logger = getLogger
 
   case class S[I](sd: StateData, index: I)
 
@@ -86,7 +83,7 @@ object LocalDataRoot {
           new ReactTransactor {
             override def transact(t: Transaction): Callback = Callback {
               setState((currentState: S[I]) => {
-                logger.debug(
+                scribe.debug(
                   transactionCodec
                     .encoder(t)(currentState.sd)
                     .map(_.toString).getOrElse(s"Could not encode transaction $t")
@@ -99,7 +96,7 @@ object LocalDataRoot {
                 s match {
                   // Error - we leave state alone, but log error
                   case Left(error) => {
-                    logger.warn(s"Failed transaction: $error")
+                    scribe.warn(s"Failed transaction: $error")
                     currentState
                   }
                   // We have a new state

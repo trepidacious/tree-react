@@ -38,21 +38,21 @@ resolvers ++= Seq(
   Resolver.sonatypeRepo("snapshots")
 )
 
-lazy val catsVersion                = "2.0.0"
+lazy val catsVersion                = "2.1.1"
 lazy val catsEffectVersion          = "2.1.2"
 lazy val scalajsReactVersion        = "1.6.0"
-lazy val circeVersion               = "0.12.3"
+lazy val circeVersion               = "0.13.0"
 // lazy val nodejsVersion              = "0.4.2"
 // lazy val scalacssVersion            = "0.5.3"
 lazy val shapelessVersion           = "2.3.3"
-lazy val monocleVersion             = "2.0.0"
+lazy val monocleVersion             = "2.0.4"
 lazy val scalacticVersion           = "3.1.1" // Needed?
 lazy val scalatestVersion           = "3.1.1"
 lazy val scalatestPlusScalacheckVersion           = "3.1.1.1"
 lazy val scalacheckVersion          = "1.14.3"
-lazy val log4sVersion               = "1.8.2"
 lazy val kindProjectorVersion       = "0.11.0"
 lazy val slinkyVersion              = "0.6.4"
+lazy val scribeVersion              = "2.7.12"
 
 //lazy val slinkyForkMaster = ProjectRef(uri("https://github.com/trepidacious/slinky.git#master"), "slinky")
 
@@ -85,6 +85,15 @@ lazy val slinkyDeps = Seq(
   )
 )
 
+lazy val loggingDeps = Seq(
+  libraryDependencies ++= Seq(
+    "com.outr" %%% "scribe" % scribeVersion
+  )
+)
+
+
+
+
 /**
   * Custom task to start demo with webpack-dev-server, use as `<project>/start`.
   * Just `start` also works, and starts all frontend demos
@@ -105,16 +114,18 @@ lazy val jsProject: Project => Project =
   _.enablePlugins(
     ScalaJSPlugin
   ).settings(
-    scalacOptions += "-P:scalajs:sjsDefinedByDefault"
+    // scalacOptions += "-P:scalajs:sjsDefinedByDefault"
   )
 
 // Settings for a js application project
 lazy val application: Project => Project =
   _.settings(
     scalaJSUseMainModuleInitializer := true,
+    //FIXME reinstate?
     /* disabled because it somehow triggers many warnings */
-    emitSourceMaps := false,
-    scalaJSModuleKind := ModuleKind.CommonJSModule,
+    // emitSourceMaps := false,
+    //scalaJSModuleKind := ModuleKind.CommonJSModule,
+    scalaJSLinkerConfig ~= { _.withModuleKind(ModuleKind.CommonJSModule) },
   )
 
 // Settings for a js project using scalajs-bundler
@@ -457,6 +468,7 @@ lazy val treeCore = crossProject(JSPlatform, JVMPlatform).in(file("tree-core")).
   name := "tree-core",
 
   testDeps,
+  loggingDeps,
 
    //  libraryDependencies += "org.scalactic" %% "scalactic" % "3.0.5",
   libraryDependencies ++= Seq(
@@ -464,7 +476,7 @@ lazy val treeCore = crossProject(JSPlatform, JVMPlatform).in(file("tree-core")).
     "io.circe"                    %%% "circe-generic"     % circeVersion,
     "io.circe"                    %%% "circe-parser"      % circeVersion,
 
-    "org.typelevel"               %%% "cats-free"         % catsVersion,
+    "org.typelevel"               %%% "cats-core"         % catsVersion,
 
     "com.chuusai"                 %%% "shapeless"         % shapelessVersion,
 
@@ -474,7 +486,6 @@ lazy val treeCore = crossProject(JSPlatform, JVMPlatform).in(file("tree-core")).
     "com.github.julien-truffaut"  %%% "monocle-state"     % monocleVersion,
     "com.github.julien-truffaut"  %%% "monocle-refined"   % monocleVersion,
     "com.github.julien-truffaut"  %%% "monocle-law"       % monocleVersion      % "test",
-    "org.log4s" %%% "log4s" % log4sVersion,
   ),
 
   addCompilerPlugin("org.typelevel" %% "kind-projector" % kindProjectorVersion cross CrossVersion.full)
@@ -502,7 +513,7 @@ lazy val treeOT = crossProject(JSPlatform, JVMPlatform).in(file("tree-ot")).
   testDeps,
    
   libraryDependencies ++= Seq(
-    "org.typelevel"               %%% "cats-free"         % catsVersion,
+    "org.typelevel"               %%% "cats-core"         % catsVersion,
   ),
 ).jvmSettings(
 
@@ -523,7 +534,7 @@ lazy val treeReact = crossProject(JSPlatform, JVMPlatform).in(file("tree-react")
   //Settings for all projects
   settings(
   name := "tree-react",
-  libraryDependencies += "org.log4s" %%% "log4s" % log4sVersion
+  loggingDeps,
 
  ).jvmSettings(
 
@@ -551,7 +562,7 @@ lazy val treeSlinky = crossProject(JSPlatform, JVMPlatform).in(
   jsProject
 ).settings(
   name := "tree-slinky",
-  libraryDependencies += "org.log4s" %%% "log4s" % log4sVersion,
+  loggingDeps,
 ).jvmSettings(
 
 ).jsSettings(
@@ -582,7 +593,7 @@ lazy val treeSlinkyJS = treeSlinky.js
 //   jsProject
 // ).settings(
 //   name := "tree-slinky-extra",
-//   libraryDependencies += "org.log4s" %%% "log4s" % log4sVersion,
+//   loggingDeps,
 // ).jvmSettings(
 
 // ).jsSettings(
