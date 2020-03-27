@@ -1,14 +1,16 @@
 package org.rebeam.tree.ot
 
+import org.scalatest.matchers.should.Matchers
 import org.scalatest._
-import org.scalatest.prop.Checkers
+import org.scalatestplus.scalacheck.Checkers
+
 import Atom._
 import org.scalacheck.Prop._
 import org.rebeam.tree.ot.OTGen._
 
 import scala.annotation.tailrec
 
-class OTSpec extends WordSpec with Matchers with Checkers {
+class OTSpec extends wordspec.AnyWordSpec with Matchers with Checkers {
 
   // Initial text
   val input1 = "Hello World!"

@@ -13,11 +13,13 @@ import org.rebeam.tree.RefTaskListData._
 //import org.rebeam.tree.Transaction._
 //import org.rebeam.tree.codec.Codec._
 //import org.rebeam.tree.codec._
+import org.scalatest.matchers.should.Matchers
 import org.scalatest._
-import org.scalatest.prop.Checkers
+import org.scalatestplus.scalacheck.Checkers
+
 import SpecUtils._
 
-class RefTaskListDataSpec extends WordSpec with Matchers with Checkers {
+class RefTaskListDataSpec extends wordspec.AnyWordSpec with Matchers with Checkers {
 
   private def taskListResult = runS(createTaskList[MapState])
 

@@ -1,7 +1,9 @@
 package org.rebeam.tree
 
+import org.scalatest.matchers.should.Matchers
 import org.scalatest._
-import org.scalatest.prop.Checkers
+import org.scalatestplus.scalacheck.Checkers
+
 
 // Note we use Random imperatively to compare to PRandom results
 import java.util.Random
@@ -12,7 +14,7 @@ import org.scalacheck.Gen
 import org.scalacheck.Prop.forAll
 import org.scalacheck.Arbitrary._
 
-class PRandomSpec extends WordSpec with Matchers with Checkers {
+class PRandomSpec extends wordspec.AnyWordSpec with Matchers with Checkers {
 
   def sameResults(seed: Long): Unit = {
 

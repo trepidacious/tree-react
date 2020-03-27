@@ -88,7 +88,7 @@ object DocGenGen {
     // c.props.exists(_._1 == "children")
   }
 
-  def initialUpper(s: String): String = s.head.toUpper + s.tail 
+  def initialUpper(s: String): String = s"${s.head.toUpper}${s.tail}"
 
   def sanitiseIdentifier(s: String, isObject: Boolean): String = {
     val words = s.replace(':','_').split('-').flatMap(_.split(' ')).filterNot(_.isEmpty).toList

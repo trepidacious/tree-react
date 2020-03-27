@@ -7,12 +7,14 @@ import org.rebeam.tree.SpecUtils._
 import org.rebeam.tree.TaskListData._
 import org.rebeam.tree.codec.Codec.{DeltaCodec, otList}
 import org.rebeam.tree.codec.IdCodec
+import org.scalatest.matchers.should.Matchers
 import org.scalatest._
-import org.scalatest.prop.Checkers
+import org.scalatestplus.scalacheck.Checkers
+
 import org.rebeam.tree.codec.IdCodecs._
 import org.rebeam.tree.ot.{OTList, OperationBuilder}
 
-class MapStateSTMSpec extends WordSpec with Matchers with Checkers {
+class MapStateSTMSpec extends wordspec.AnyWordSpec with Matchers with Checkers {
 
   def putTaskList[F[_]: Monad](implicit stm: STMOps[F]): F[TaskList] = {
     import stm._
@@ -45,8 +47,8 @@ class MapStateSTMSpec extends WordSpec with Matchers with Checkers {
   lazy implicit val otListCharCodec: DeltaCodec[OTList[Char]] = otList[Char]
   lazy implicit val otListCharIdCodec: IdCodec[OTList[Char]] = IdCodec.otList[Char]
 
-  def assertStable(s: StateData): Assertion = assert(!s.unstable)
-  def assertUnstable(s: StateData): Assertion = assert(s.unstable)
+  private def assertStable(s: StateData) = assert(!s.unstable)
+  private def assertUnstable(s: StateData) = assert(s.unstable)
 
   "MapStateSTM" should {
     "consider put stable" in {

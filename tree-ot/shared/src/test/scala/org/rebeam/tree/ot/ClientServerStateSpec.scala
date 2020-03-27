@@ -1,8 +1,9 @@
 package org.rebeam.tree.ot
 
 import org.rebeam.tree.ot.Atom._
+import org.scalatest.matchers.should.Matchers
 import org.scalatest._
-import org.scalatest.prop.Checkers
+import org.scalatestplus.scalacheck.Checkers
 import NetworkModel._
 import org.scalacheck.Prop._
 import OTGen._
@@ -10,7 +11,7 @@ import OTGen._
 /**
   * Test ClientState and ServerState together
   */
-class ClientServerStateSpec extends WordSpec with Matchers with Checkers {
+class ClientServerStateSpec extends wordspec.AnyWordSpec with Matchers with Checkers {
 
   "Client and Server network model" should {
 

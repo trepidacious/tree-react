@@ -2,7 +2,7 @@ package org.rebeam.tree.react
 
 import japgolly.scalajs.react._
 import japgolly.scalajs.react.component.Scala.Component
-import japgolly.scalajs.react.extra.Reusability
+import japgolly.scalajs.react.Reusability
 import japgolly.scalajs.react.vdom.html_<^._
 import org.rebeam.tree._
 import org.log4s._

@@ -6,7 +6,7 @@ import scalajs.js
 import scalajs.js.annotation.JSImport
 import scalajs.js.JSConverters._
 
-import japgolly.scalajs.react.vdom.html_<^._
+// import japgolly.scalajs.react.vdom.html_<^._
 
 object Tab {
   

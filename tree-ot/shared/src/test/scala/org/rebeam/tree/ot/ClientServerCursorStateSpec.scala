@@ -3,13 +3,14 @@ package org.rebeam.tree.ot
 import cats.data.State
 import org.rebeam.tree.ot.Atom._
 import org.rebeam.tree.ot.NetworkModel._
+import org.scalatest.matchers.should.Matchers
 import org.scalatest._
-import org.scalatest.prop.Checkers
+import org.scalatestplus.scalacheck.Checkers
 
 /**
   * Test CursorState using network model
   */
-class ClientServerCursorStateSpec extends WordSpec with Matchers with Checkers {
+class ClientServerCursorStateSpec extends wordspec.AnyWordSpec with Matchers with Checkers {
 
   "CursorState" should {
 

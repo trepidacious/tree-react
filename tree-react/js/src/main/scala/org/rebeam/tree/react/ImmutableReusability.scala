@@ -1,6 +1,6 @@
 package org.rebeam.tree.react
 
-import japgolly.scalajs.react.extra.Reusability
+import japgolly.scalajs.react.Reusability
 
 
 /**

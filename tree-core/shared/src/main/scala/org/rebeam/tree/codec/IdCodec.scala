@@ -1,6 +1,6 @@
 package org.rebeam.tree.codec
 
-import io.circe.{ArrayEncoder, Decoder, Encoder, Json}
+import io.circe.{Decoder, Encoder, Json}
 import org.rebeam.tree.Id
 import org.rebeam.tree.codec.Codec.DeltaCodec
 import org.rebeam.tree.ot.{OTCodecs, OTList}
@@ -30,7 +30,7 @@ object IdCodec {
     IdCodecBasic(IdType(idType), encoder, decoder, deltaCodec)
 
   def otList[A](implicit aCodec: IdCodec[A]): IdCodec[OTList[A]] = {
-    implicit val listEncoder: ArrayEncoder[List[A]] = Encoder.encodeList[A](aCodec.encoder)
+    implicit val listEncoder: Encoder.AsArray[List[A]] = Encoder.encodeList[A](aCodec.encoder)
     implicit val listDecoder: Decoder[List[A]] = Decoder.decodeList[A](aCodec.decoder)
     IdCodecBasic(
       IdType(s"OTList[${aCodec.idType.name}]"),
