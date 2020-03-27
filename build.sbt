@@ -17,7 +17,6 @@ scalacOptions in ThisBuild ++= Seq(
   "-Xcheckinit",
   "-Xlint:-unused",
   "-Ywarn-unused:imports",
-  // "-Ypartial-unification",
   "-language:existentials",
   "-language:higherKinds",
   "-Xlint:adapted-args",
@@ -33,14 +32,13 @@ scalacOptions in ThisBuild ++= Seq(
 testOptions in Test += Tests.Argument(TestFrameworks.ScalaCheck, "-verbosity", "2")
 
 resolvers ++= Seq(
-  Resolver.bintrayRepo("oyvindberg", "ScalablyTyped"),
   Resolver.sonatypeRepo("releases"),
   Resolver.sonatypeRepo("snapshots")
 )
 
 lazy val catsVersion                = "2.1.1"
 lazy val catsEffectVersion          = "2.1.2"
-lazy val scalajsReactVersion        = "1.6.0"
+// lazy val scalajsReactVersion        = "1.6.0"
 lazy val circeVersion               = "0.13.0"
 // lazy val nodejsVersion              = "0.4.2"
 // lazy val scalacssVersion            = "0.5.3"
@@ -56,11 +54,11 @@ lazy val scribeVersion              = "2.7.12"
 
 //lazy val slinkyForkMaster = ProjectRef(uri("https://github.com/trepidacious/slinky.git#master"), "slinky")
 
-lazy val scalajsReactDeps = Seq(
-  libraryDependencies ++= Seq(
-    "com.github.japgolly.scalajs-react" %%% "core" % scalajsReactVersion,
-  )
-)
+// lazy val scalajsReactDeps = Seq(
+//   libraryDependencies ++= Seq(
+//     "com.github.japgolly.scalajs-react" %%% "core" % scalajsReactVersion,
+//   )
+// )
 
 // lazy val scalaCSSDeps = Seq(
 //   libraryDependencies += "com.github.japgolly.scalacss"      %%% "ext-react" % scalacssVersion
@@ -527,29 +525,29 @@ lazy val treeOTJS = treeOT.js
 
 
 
-  ////////////////
- // tree-react //
-////////////////
-lazy val treeReact = crossProject(JSPlatform, JVMPlatform).in(file("tree-react")).
-  //Settings for all projects
-  settings(
-  name := "tree-react",
-  loggingDeps,
+//   ////////////////
+//  // tree-react //
+// ////////////////
+// lazy val treeReact = crossProject(JSPlatform, JVMPlatform).in(file("tree-react")).
+//   //Settings for all projects
+//   settings(
+//   name := "tree-react",
+//   loggingDeps,
 
- ).jvmSettings(
+//  ).jvmSettings(
 
-).jsSettings(
-  //Scalajs dependencies that are used on the client only
-  resolvers += Resolver.jcenterRepo,
+// ).jsSettings(
+//   //Scalajs dependencies that are used on the client only
+//   resolvers += Resolver.jcenterRepo,
    
-  scalajsReactDeps,
+//   scalajsReactDeps,
 
-  //Produce a module, so we can use @JSImport.
-  scalaJSLinkerConfig ~= { _.withModuleKind(ModuleKind.CommonJSModule) }
-).dependsOn(treeCore)
+//   //Produce a module, so we can use @JSImport.
+//   scalaJSLinkerConfig ~= { _.withModuleKind(ModuleKind.CommonJSModule) }
+// ).dependsOn(treeCore)
 
-lazy val treeReactJVM = treeReact.jvm
-lazy val treeReactJS = treeReact.js
+// lazy val treeReactJVM = treeReact.jvm
+// lazy val treeReactJS = treeReact.js
 
 
   ////////////////
