@@ -3,7 +3,7 @@ package org.rebeam.tree.slinkify
 import monocle.{Lens, Optional, Prism}
 import org.rebeam.tree._
 
-import Syntax._
+import org.rebeam.tree.slinkify.Syntax._
 
 /**
   * Combine a data model with a DeltaCursor to produce a Cursor for

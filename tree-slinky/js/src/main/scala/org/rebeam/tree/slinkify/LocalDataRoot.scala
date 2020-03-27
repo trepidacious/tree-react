@@ -11,7 +11,7 @@ import slinky.core.facade.ReactElement
 import org.rebeam.tree.ot.{CursorUpdate, OTList}
 import ReactData.ReactDataContexts
 
-import Syntax._
+import org.rebeam.tree.slinkify.Syntax._
 
 object LocalDataRoot {
 

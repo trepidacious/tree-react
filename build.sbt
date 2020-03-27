@@ -203,7 +203,7 @@ lazy val root = project.in(file(".")).
     treeCoreJS, treeCoreJVM,
     treeOTJS, treeOTJVM,
     // treeReactJS, treeReactJVM,
-    // treeSlinkyJS, treeSlinkyJVM,
+    treeSlinkyJS, treeSlinkyJVM,
     // treeSlinkyExtraJS, treeSlinkyExtraJVM,
     // electronAppJS, electronAppJVM,
     // suiElectronAppJS, suiElectronAppJVM,
@@ -541,36 +541,36 @@ lazy val treeReactJVM = treeReact.jvm
 lazy val treeReactJS = treeReact.js
 
 
-//   ////////////////
-//  // tree-slinky //
-// ////////////////
-// lazy val treeSlinky = crossProject(JSPlatform, JVMPlatform).in(
-//   file("tree-slinky")
-//   //Settings for all projects
-// ).configure(
-//   jsProject
-// ).settings(
-//   name := "tree-slinky",
-//   libraryDependencies += "org.log4s" %%% "log4s" % log4sVersion,
-// ).jvmSettings(
+  ////////////////
+ // tree-slinky //
+////////////////
+lazy val treeSlinky = crossProject(JSPlatform, JVMPlatform).in(
+  file("tree-slinky")
+  //Settings for all projects
+).configure(
+  jsProject
+).settings(
+  name := "tree-slinky",
+  libraryDependencies += "org.log4s" %%% "log4s" % log4sVersion,
+).jvmSettings(
 
-// ).jsSettings(
-//   //Scalajs dependencies that are used on the client only
-//   resolvers += Resolver.jcenterRepo,
+).jsSettings(
+  //Scalajs dependencies that are used on the client only
+  resolvers += Resolver.jcenterRepo,
 
-//   slinkyDeps,
+  slinkyDeps,
   
-//   libraryDependencies ++= Seq(
-//     ScalablyTyped.A.`antd-slinky-facade`,
-//     ScalablyTyped.R.`react-dom`,
-//   ),
+  // libraryDependencies ++= Seq(
+  //   ScalablyTyped.A.`antd-slinky-facade`,
+  //   ScalablyTyped.R.`react-dom`,
+  // ),
 
-//   //Produce a module, so we can use @JSImport.
-//   scalaJSLinkerConfig ~= { _.withModuleKind(ModuleKind.CommonJSModule) }
-// ).dependsOn(treeCore)
+  //Produce a module, so we can use @JSImport.
+  scalaJSLinkerConfig ~= { _.withModuleKind(ModuleKind.CommonJSModule) }
+).dependsOn(treeCore)
 
-// lazy val treeSlinkyJVM = treeSlinky.jvm
-// lazy val treeSlinkyJS = treeSlinky.js
+lazy val treeSlinkyJVM = treeSlinky.jvm
+lazy val treeSlinkyJS = treeSlinky.js
 
 //   ///////////////////////
 //  // tree-slinky-extra //

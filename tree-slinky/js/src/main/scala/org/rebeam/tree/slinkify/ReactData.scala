@@ -5,7 +5,7 @@ import org.rebeam.tree._
 import _root_.slinky.core.facade._
 import org.rebeam.tree.ot.{CursorUpdate, OTList}
 
-import Syntax._
+import org.rebeam.tree.slinkify.Syntax._
 
 trait ReactTransactor {
   def transact(t: Transaction): Callback
