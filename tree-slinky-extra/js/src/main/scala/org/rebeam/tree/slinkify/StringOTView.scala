@@ -2,7 +2,6 @@ package org.rebeam.tree.slinkify
 
 import cats.Monad
 import cats.implicits._
-import org.log4s.getLogger
 import org.rebeam.tree.Delta.OTListDelta
 import org.rebeam.tree.ot.{CursorUpdate, Diff, OTList, Operation}
 import org.scalajs.dom.{Event, html}
@@ -20,7 +19,6 @@ object StringOTView {
    * an edit function to a stringOTInnerView.
    */
   val stringOTView: FunctionalComponent[Cursor[OTList[Char]]] = new ViewC[OTList[Char]] {
-    private val logger = getLogger
 
     override def apply[F[_] : Monad](c: Cursor[OTList[Char]])
                                     (implicit v: ReactViewOps[F], tx: ReactTransactor): F[ReactElement] = {

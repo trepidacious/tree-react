@@ -1,7 +1,6 @@
 package org.rebeam.tree.slinkify
 
-import org.log4s.getLogger
-import org.rebeam.tree.slinkify.Syntax.onInputValueChange
+// import org.rebeam.tree.slinkify.Syntax.onInputValueChange
 import slinky.core.FunctionalComponent
 import slinky.core.facade.ReactElement
 import typings.antd.AntdFacade.{Input, InputProps}
@@ -9,7 +8,6 @@ import typings.antd.AntdFacade.{Input, InputProps}
 object StringView {
 
   val stringView: FunctionalComponent[Cursor[String]] = new ViewPC[String] {
-    private val logger = getLogger
 
     override def apply(c: Cursor[String])(implicit tx: ReactTransactor): ReactElement = {
 

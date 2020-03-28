@@ -1,33 +1,12 @@
-import sbtcrossproject.CrossPlugin.autoImport.crossProject
 import java.nio.file.Files
 import java.nio.file.StandardCopyOption.REPLACE_EXISTING
 
 name := "tree-react root project"
-version in ThisBuild := "0.0.1-SNAPSHOT"
-organization in ThisBuild := "org.rebeam"
-scalaVersion in ThisBuild := "2.13.1"
 
-scalacOptions in ThisBuild ++= Seq(
-  "-feature",
-  "-deprecation",
-  "-encoding", "UTF-8",
-  "-unchecked",
-  "-Xfatal-warnings",
-  "-Xlint",
-  "-Xcheckinit",
-  "-Xlint:-unused",
-  "-Ywarn-unused:imports",
-  "-language:existentials",
-  "-language:higherKinds",
-  "-Xlint:adapted-args",
-  // "-Yno-adapted-args",
-  // "-Ywarn-dead-code",  //TODO restore for JVM and shared only
-  // "-Ywarn-numeric-widen",
-//  "-Ywarn-value-discard",
-  // "-Xfuture",
-  //"-Yno-predef"
-  "-Ymacro-annotations",
-)
+ThisBuild / version := "0.0.1-SNAPSHOT"
+ThisBuild / organization := "org.rebeam"
+ThisBuild / scalaVersion := "2.13.1"
+ThisBuild / scalacOptions ++= ScalacOptions.flags
 
 testOptions in Test += Tests.Argument(TestFrameworks.ScalaCheck, "-verbosity", "2")
 
@@ -36,61 +15,15 @@ resolvers ++= Seq(
   Resolver.sonatypeRepo("snapshots")
 )
 
-lazy val catsVersion                = "2.1.1"
-lazy val catsEffectVersion          = "2.1.2"
-// lazy val scalajsReactVersion        = "1.6.0"
-lazy val circeVersion               = "0.13.0"
-// lazy val nodejsVersion              = "0.4.2"
-// lazy val scalacssVersion            = "0.5.3"
-lazy val shapelessVersion           = "2.3.3"
-lazy val monocleVersion             = "2.0.4"
-lazy val scalacticVersion           = "3.1.1" // Needed?
-lazy val scalatestVersion           = "3.1.1"
-lazy val scalatestPlusScalacheckVersion           = "3.1.1.1"
-lazy val scalacheckVersion          = "1.14.3"
-lazy val kindProjectorVersion       = "0.11.0"
-lazy val slinkyVersion              = "0.6.4"
-lazy val scribeVersion              = "2.7.12"
+// both intellij and ci needs this to not OOM during initial import since we have so many projects
+Global / concurrentRestrictions ++= {
+  val gigabytes = (java.lang.Runtime.getRuntime.maxMemory) / (1000 * 1000 * 1000)
+  val numParallel = Math.max(1, gigabytes.toInt)
+  List(Tags.limit(ScalablyTypedTag, numParallel))
+}
 
-//lazy val slinkyForkMaster = ProjectRef(uri("https://github.com/trepidacious/slinky.git#master"), "slinky")
-
-// lazy val scalajsReactDeps = Seq(
-//   libraryDependencies ++= Seq(
-//     "com.github.japgolly.scalajs-react" %%% "core" % scalajsReactVersion,
-//   )
-// )
-
-// lazy val scalaCSSDeps = Seq(
-//   libraryDependencies += "com.github.japgolly.scalacss"      %%% "ext-react" % scalacssVersion
-// )
-
-lazy val testDeps = Seq(
-  libraryDependencies ++= Seq(
-    "org.scalactic"               %%% "scalactic"         % scalacticVersion                  % "test",
-    "org.scalatest"               %%% "scalatest"         % scalatestVersion                  % "test",
-    "org.scalatestplus"           %%% "scalacheck-1-14"   % scalatestPlusScalacheckVersion    % "test",      // See https://github.com/scalatest/scalatestplus-scalacheck/issues/28
-    "org.scalacheck"              %%% "scalacheck"        % scalacheckVersion                 % "test"
-  )
-)
-
-lazy val slinkyDeps = Seq(
-  libraryDependencies ++= Seq(
-    "me.shadaj"                   %%% "slinky-core"                   % slinkyVersion, // core React functionality, no React DOM
-    "me.shadaj"                   %%% "slinky-web"                    % slinkyVersion, // React DOM, HTML and SVG tags
-//    "me.shadaj"                   %%% "slinky-native"                 % slinkyVersion, // React Native components
-//    "me.shadaj"                   %%% "slinky-hot"                    % slinkyVersion, // Hot loading, requires react-proxy package
-//    "me.shadaj"                   %%% "slinky-scalajsreact-interop"   % slinkyVersion, // Interop with japgolly/scalajs-react
-  )
-)
-
-lazy val loggingDeps = Seq(
-  libraryDependencies ++= Seq(
-    "com.outr" %%% "scribe" % scribeVersion
-  )
-)
-
-
-
+// Uncomment if you want to remove debug output
+//Global / stQuiet := true
 
 /**
   * Custom task to start demo with webpack-dev-server, use as `<project>/start`.
@@ -106,52 +39,55 @@ lazy val start = TaskKey[Unit]("start")
   */
 lazy val dist = TaskKey[File]("dist")
 
+lazy val baseSettings: Project => Project =
+  _.enablePlugins(ScalaJSPlugin)
+    .settings(
+      // version := "0.1-SNAPSHOT",
+      // scalaVersion := "2.13.1",
+      // scalacOptions ++= ScalacOptions.flags,
+      scalaJSUseMainModuleInitializer := true,
+      scalaJSLinkerConfig ~= (/* disabled because it somehow triggers many warnings */
+      _.withSourceMap(false)
+        .withModuleKind(ModuleKind.CommonJSModule)),
+      /* for slinky */
+      // libraryDependencies ++= Seq("me.shadaj" %%% "slinky-hot" % "0.6.4+2-3c8aef65"),
+    )
+
+lazy val bundlerSettings: Project => Project =
+  _.enablePlugins(ScalablyTypedConverterPlugin)
+    .settings(
+      Compile / fastOptJS / webpackExtraArgs += "--mode=development",
+      Compile / fullOptJS / webpackExtraArgs += "--mode=production",
+      Compile / fastOptJS / webpackDevServerExtraArgs += "--mode=development",
+      Compile / fullOptJS / webpackDevServerExtraArgs += "--mode=production",
+      useYarn := true
+    )
 
 // Settings for a js-only project
 lazy val jsProject: Project => Project =
   _.enablePlugins(
     ScalaJSPlugin
-  ).settings(
-    // scalacOptions += "-P:scalajs:sjsDefinedByDefault"
   )
 
-// Settings for a js application project
-lazy val application: Project => Project =
+lazy val reactNpmDeps: Project => Project =
   _.settings(
-    scalaJSUseMainModuleInitializer := true,
-    //FIXME reinstate?
-    /* disabled because it somehow triggers many warnings */
-    // emitSourceMaps := false,
-    //scalaJSModuleKind := ModuleKind.CommonJSModule,
-    scalaJSLinkerConfig ~= { _.withModuleKind(ModuleKind.CommonJSModule) },
+    Compile / npmDependencies ++= Seq(
+      "react" -> "16.13",
+      "react-dom" -> "16.13",
+      "@types/react" -> "16.9.23"
+    )
   )
 
-// Settings for a js project using scalajs-bundler
-lazy val bundlerSettings: Project => Project =
-  _.enablePlugins(ScalaJSBundlerPlugin)
-    .configure(application)
-    .settings(
-      /* Specify current versions and modes */
-      startWebpackDevServer / version := "3.1.10",
-      webpack / version := "4.26.1",
-      Compile / fastOptJS / webpackExtraArgs += "--mode=development",
-      Compile / fullOptJS / webpackExtraArgs += "--mode=production",
-      Compile / fastOptJS / webpackDevServerExtraArgs += "--mode=development",
-      Compile / fullOptJS / webpackDevServerExtraArgs += "--mode=production",
-      useYarn := true,
-    )
-
-// Settings for a js project using scalajs-bundler and resource loaders
 lazy val withCssLoading: Project => Project =
   _.settings(
     /* custom webpack file to include css */
     webpackConfigFile := Some((ThisBuild / baseDirectory).value / "custom.webpack.config.js"),
     Compile / npmDevDependencies ++= Seq(
-      "webpack-merge" -> "4.1",
-      "css-loader" -> "2.1.0",
-      "style-loader" -> "0.23.1",
-      "file-loader" -> "3.0.1",
-      "url-loader" -> "1.1.2",
+      "webpack-merge" -> "4.2.2",
+      "css-loader" -> "3.4.2",
+      "style-loader" -> "1.1.3",
+      "file-loader" -> "5.1.0",
+      "url-loader" -> "3.0.0"
     )
   )
 
@@ -164,13 +100,13 @@ lazy val browserProject: Project => Project =
     start := {
       (Compile / fastOptJS / startWebpackDevServer).value
       val indexFrom = baseDirectory.value / "assets/index.html"
-      val indexTo   = (Compile / fastOptJS / crossTarget).value / "index.html"
+      val indexTo = (Compile / fastOptJS / crossTarget).value / "index.html"
       Files.copy(indexFrom.toPath, indexTo.toPath, REPLACE_EXISTING)
     },
     dist := {
-      val artifacts      = (Compile / fullOptJS / webpack).value
+      val artifacts = (Compile / fullOptJS / webpack).value
       val artifactFolder = (Compile / fullOptJS / crossTarget).value
-      val distFolder     = (ThisBuild / baseDirectory).value / "docs" / moduleName.value
+      val distFolder = (ThisBuild / baseDirectory).value / "docs" / moduleName.value
 
       distFolder.mkdirs()
       artifacts.foreach { artifact =>
@@ -183,7 +119,7 @@ lazy val browserProject: Project => Project =
       }
 
       val indexFrom = baseDirectory.value / "assets/index.html"
-      val indexTo   = distFolder / "index.html"
+      val indexTo = distFolder / "index.html"
 
       val indexPatchedContent = {
         import collection.JavaConverters._
@@ -201,292 +137,38 @@ lazy val browserProject: Project => Project =
 
 lazy val root = project.in(file(".")).
   aggregate(
-    // scalajsReactSemanticUIJS, scalajsReactSemanticUIJVM,
-    // scalajsReactMaterialUIJS, scalajsReactMaterialUIJVM,
-    // scalajsReactDocgenFacadeJS, scalajsReactDocgenFacadeJVM,
-    // scalajsReactMaterialIconsJS, scalajsReactMaterialIconsJVM,
-    // scalajsReactDownshiftJS, scalajsReactDownshiftJVM, 
-    // scalajsReactMaterialUIExtraJS, scalajsReactMaterialUIExtraJVM,
-    // scalajsElectronJS, scalajsElectronJVM,
-    // scalajsElectronReactJS, scalajsElectronReactJVM,
     treeCoreJS, treeCoreJVM,
     treeOTJS, treeOTJVM,
-    // treeReactJS, treeReactJVM,
     treeSlinkyJS, treeSlinkyJVM,
+    // antdApp,
+    // scalajsElectronJS, scalajsElectronJVM,
+    // scalajsElectronReactJS, scalajsElectronReactJVM,
     // treeSlinkyExtraJS, treeSlinkyExtraJVM,
     // electronAppJS, electronAppJVM,
     // suiElectronAppJS, suiElectronAppJVM,
-    // antdApp,
     // suiApp
   ).settings(
     publish := {},
     publishLocal := {}
   )
 
-
-//   ///////////////////////////////
-//  // scalajs-react-material-ui //
-// ///////////////////////////////
-// lazy val scalajsReactMaterialUI = crossProject(JSPlatform, JVMPlatform).in(file("scalajs-react-material-ui")).
-//   settings(
-//     name := "scalajs-react-material-ui"
-
-//   ).jvmSettings(
-//     mainClass := Some("org.rebeam.Generate"),
-
-//     libraryDependencies ++= Seq(
-//       "io.circe"                    %%% "circe-core"        % circeVersion,
-//       "io.circe"                    %%% "circe-generic"     % circeVersion,
-//       "io.circe"                    %%% "circe-parser"      % circeVersion,
-
-//       "org.typelevel"               %%% "cats-core"         % catsVersion,
-//       "org.typelevel"               %%% "cats-effect"       % catsEffectVersion
-//     ),
-
-//   ).jsSettings(
-//     //Scalajs dependencies that are used on the client only
-//     resolvers += Resolver.jcenterRepo,
-
-//     scalajsReactDeps,
-    
-//     //Produce a module, so we can use @JSImport on material-ui
-//     scalaJSLinkerConfig ~= { _.withModuleKind(ModuleKind.CommonJSModule) }
-//   ).dependsOn(scalajsReactCommon)
-
-// lazy val scalajsReactMaterialUIJVM = scalajsReactMaterialUI.jvm
-// lazy val scalajsReactMaterialUIJS = scalajsReactMaterialUI.js
-
-// ///////////////////////////////
-// // scalajs-react-material-ui //
-// ///////////////////////////////
-// lazy val scalajsReactDocgenFacade = crossProject(JSPlatform, JVMPlatform).in(file("scalajs-react-docgen-facade")).
-//   settings(
-//     name := "scalajs-react-docgen-facade"
-
-//   ).jvmSettings(
-//   mainClass := Some("org.rebeam.Generate"),
-
-//   libraryDependencies ++= Seq(
-//     "io.circe"                    %%% "circe-core"        % circeVersion,
-//     "io.circe"                    %%% "circe-generic"     % circeVersion,
-//     "io.circe"                    %%% "circe-parser"      % circeVersion,
-
-//     "org.typelevel"               %%% "cats-core"         % catsVersion,
-//     "org.typelevel"               %%% "cats-effect"       % catsEffectVersion,
-//     "org.reflections"             % "reflections"         % "0.9.11"
-//   ),
-
-// ).jsSettings(
-//   //Scalajs dependencies that are used on the client only
-//   resolvers += Resolver.jcenterRepo,
-
-//   scalajsReactDeps,
-
-//   //Produce a module, so we can use @JSImport on material-ui
-//   scalaJSLinkerConfig ~= { _.withModuleKind(ModuleKind.CommonJSModule) }
-// ).dependsOn(scalajsReactCommon)
-
-// lazy val scalajsReactDocgenFacadeJVM = scalajsReactDocgenFacade.jvm
-// lazy val scalajsReactDocgenFacadeJS = scalajsReactDocgenFacade.js
-
-// ///////////////////////////////
-// // scalajs-react-semantic-ui //
-// ///////////////////////////////
-// lazy val scalajsReactSemanticUI = crossProject(JSPlatform, JVMPlatform).in(file("scalajs-react-semantic-ui")).
-//   settings(
-//     name := "scalajs-react-semantic-ui"
-
-//   ).jsSettings(
-//     //Scalajs dependencies that are used on the client only
-//     resolvers += Resolver.jcenterRepo,
-
-//     scalajsReactDeps,
-
-//     //Produce a module, so we can use @JSImport on material-ui
-//     scalaJSLinkerConfig ~= { _.withModuleKind(ModuleKind.CommonJSModule) }
-//   ).dependsOn(scalajsReactCommon)
-
-// lazy val scalajsReactSemanticUIJVM = scalajsReactSemanticUI.jvm
-// lazy val scalajsReactSemanticUIJS = scalajsReactSemanticUI.js
-
-// ///////////////////////////////
-// // scalajs-react-common //
-// ///////////////////////////////
-// lazy val scalajsReactCommon = crossProject(JSPlatform, JVMPlatform).in(file("scalajs-react-common")).
-//   settings(
-//     name := "scalajs-react-common"
-
-//   ).jsSettings(
-//   //Scalajs dependencies that are used on the client only
-//   resolvers += Resolver.jcenterRepo,
-
-//   scalajsReactDeps,
-
-//   //Produce a module, so we can use @JSImport on material-ui
-//   scalaJSLinkerConfig ~= { _.withModuleKind(ModuleKind.CommonJSModule) }
-// )
-
-// lazy val scalajsReactCommonJVM = scalajsReactCommon.jvm
-// lazy val scalajsReactCommonJS = scalajsReactCommon.js
-
-
-//   //////////////////////////////////
-//  // scalajs-react-material-icons //
-// //////////////////////////////////
-// lazy val scalajsReactMaterialIcons = crossProject(JSPlatform, JVMPlatform).in(file("scalajs-react-material-icons")).
-//   //Settings for all projects
-//   settings(
-//     name := "scalajs-react-material-icons",
-
-//   ).jvmSettings(
-//       mainClass := Some("org.rebeam.Generate")
-
-//   ).jsSettings(
-//     //Scalajs dependencies that are used on the client only
-//     resolvers += Resolver.jcenterRepo,
-
-//     scalajsReactDeps,
-    
-//     //Produce a module, so we can use @JSImport.
-//     scalaJSLinkerConfig ~= { _.withModuleKind(ModuleKind.CommonJSModule) }
-//   )
-
-// lazy val scalajsReactMaterialIconsJVM = scalajsReactMaterialIcons.jvm
-// lazy val scalajsReactMaterialIconsJS = scalajsReactMaterialIcons.js
-
-
-
-//   /////////////////////////////
-//  // scalajs-react-downshift //
-// /////////////////////////////
-// lazy val scalajsReactDownshift = crossProject(JSPlatform, JVMPlatform).in(file("scalajs-react-downshift")).
-//   //Settings for all projects
-//   settings(
-//     name := "scalajs-react-downshift"
-
-//   ).jvmSettings(
-
-//   ).jsSettings(
-//     //Scalajs dependencies that are used on the client only
-//     resolvers += Resolver.jcenterRepo,
-
-//     scalajsReactDeps,
-    
-//     //Produce a module, so we can use @JSImport.
-//     scalaJSLinkerConfig ~= { _.withModuleKind(ModuleKind.CommonJSModule) }
-//   )
-
-// lazy val scalajsReactDownshiftJVM = scalajsReactDownshift.jvm
-// lazy val scalajsReactDownshiftJS = scalajsReactDownshift.js
-
-
-
-  /////////////////////////////////////
- // scalajs-react-material-ui-extra //
-/////////////////////////////////////
-// lazy val scalajsReactMaterialUIExtra = crossProject(JSPlatform, JVMPlatform).in(file("scalajs-react-material-ui-extra")).
-//   //Settings for all projects
-//   settings(
-//     name := "scalajs-react-material-ui-extra"
-
-//   ).jvmSettings(
-
-//   ).jsSettings(
-
-//      //Scalajs dependencies that are used on the client only
-//      resolvers += Resolver.jcenterRepo,
-
-//     scalajsReactDeps,
-//     scalaCSSDeps,
-
-//     //Produce a module, so we can use @JSImport.
-//     scalaJSLinkerConfig ~= { _.withModuleKind(ModuleKind.CommonJSModule) }
-
-//   ).dependsOn(scalajsReactMaterialUI, scalajsReactMaterialIcons, scalajsReactDownshift)
-
-// lazy val scalajsReactMaterialUIExtraJVM = scalajsReactMaterialUIExtra.jvm
-// lazy val scalajsReactMaterialUIExtraJS = scalajsReactMaterialUIExtra.js
-
-
-
-  //////////////////////
- // scalajs-electron //
-//////////////////////
-// TODO use scalablyt-typed node project instead of nodejs?
-// lazy val scalajsElectron = crossProject(JSPlatform, JVMPlatform).in(file("scalajs-electron")).
-//   //Settings for all projects
-//   settings(
-//     name := "scalajs-electron"
-
-//   ).jvmSettings(
-
-//   ).jsSettings(
-//     libraryDependencies ++= Seq(
-//       "org.typelevel"               %%% "cats-core"         % catsVersion,
-//       "org.typelevel"               %%% "cats-effect"       % catsEffectVersion,
-//       "io.scalajs"                  %%% "nodejs"            % nodejsVersion
-//     ),
-
-//     //Produce a module, so we can use @JSImport.
-//     scalaJSLinkerConfig ~= { _.withModuleKind(ModuleKind.CommonJSModule) }
-//   )
-
-// lazy val scalajsElectronJVM = scalajsElectron.jvm
-// lazy val scalajsElectronJS = scalajsElectron.js
-
-
-
-  /////////////////////////////
- // scalajs-electron-react //
-////////////////////////////
-// lazy val scalajsElectronReact = crossProject(JSPlatform, JVMPlatform).in(file("scalajs-electron-react")).
-//   //Settings for all projects
-//   settings(
-//     name := "scalajs-electron-react"
-
-//   ).jvmSettings(
-
-//   ).jsSettings(
-//     //Produce a module, so we can use @JSImport.
-//     scalaJSLinkerConfig ~= { _.withModuleKind(ModuleKind.CommonJSModule) }
-
-//   ).dependsOn(scalajsElectron, scalajsReactMaterialUIExtra)
-
-// lazy val scalajsElectronReactJVM = scalajsElectronReact.jvm
-// lazy val scalajsElectronReactJS = scalajsElectronReact.js
-
-
-
   ////////////////
  // tree-core //
 ///////////////
-lazy val treeCore = crossProject(JSPlatform, JVMPlatform).in(file("tree-core")).
-  //Settings for all projects
-  settings(
+lazy val treeCore = crossProject(JSPlatform, JVMPlatform).in(
+  file("tree-core")
+//Settings for all projects
+).settings(
   name := "tree-core",
 
-  testDeps,
-  loggingDeps,
+  Deps.test,
+  Deps.logging,
+  Deps.circe,
+  Deps.cats,
+  Deps.shapeless,
+  Deps.monocle,
 
-   //  libraryDependencies += "org.scalactic" %% "scalactic" % "3.0.5",
-  libraryDependencies ++= Seq(
-    "io.circe"                    %%% "circe-core"        % circeVersion,
-    "io.circe"                    %%% "circe-generic"     % circeVersion,
-    "io.circe"                    %%% "circe-parser"      % circeVersion,
-
-    "org.typelevel"               %%% "cats-core"         % catsVersion,
-
-    "com.chuusai"                 %%% "shapeless"         % shapelessVersion,
-
-    "com.github.julien-truffaut"  %%% "monocle-core"      % monocleVersion,
-    "com.github.julien-truffaut"  %%% "monocle-generic"   % monocleVersion,
-    "com.github.julien-truffaut"  %%% "monocle-macro"     % monocleVersion,
-    "com.github.julien-truffaut"  %%% "monocle-state"     % monocleVersion,
-    "com.github.julien-truffaut"  %%% "monocle-refined"   % monocleVersion,
-    "com.github.julien-truffaut"  %%% "monocle-law"       % monocleVersion      % "test",
-  ),
-
-  addCompilerPlugin("org.typelevel" %% "kind-projector" % kindProjectorVersion cross CrossVersion.full)
+  Deps.kindProjector,
 
 ).jvmSettings(
 
@@ -498,8 +180,6 @@ lazy val treeCore = crossProject(JSPlatform, JVMPlatform).in(file("tree-core")).
 lazy val treeCoreJVM = treeCore.jvm
 lazy val treeCoreJS = treeCore.js
 
-
-
   /////////////
  // tree-ot //
 /////////////
@@ -508,11 +188,9 @@ lazy val treeOT = crossProject(JSPlatform, JVMPlatform).in(file("tree-ot")).
   settings(
   name := "tree-ot",
 
-  testDeps,
-   
-  libraryDependencies ++= Seq(
-    "org.typelevel"               %%% "cats-core"         % catsVersion,
-  ),
+  Deps.test,
+  Deps.cats, 
+  
 ).jvmSettings(
 
 ).jsSettings(
@@ -524,50 +202,29 @@ lazy val treeOTJVM = treeOT.jvm
 lazy val treeOTJS = treeOT.js
 
 
-
-//   ////////////////
-//  // tree-react //
-// ////////////////
-// lazy val treeReact = crossProject(JSPlatform, JVMPlatform).in(file("tree-react")).
-//   //Settings for all projects
-//   settings(
-//   name := "tree-react",
-//   loggingDeps,
-
-//  ).jvmSettings(
-
-// ).jsSettings(
-//   //Scalajs dependencies that are used on the client only
-//   resolvers += Resolver.jcenterRepo,
-   
-//   scalajsReactDeps,
-
-//   //Produce a module, so we can use @JSImport.
-//   scalaJSLinkerConfig ~= { _.withModuleKind(ModuleKind.CommonJSModule) }
-// ).dependsOn(treeCore)
-
-// lazy val treeReactJVM = treeReact.jvm
-// lazy val treeReactJS = treeReact.js
-
-
   ////////////////
  // tree-slinky //
 ////////////////
 lazy val treeSlinky = crossProject(JSPlatform, JVMPlatform).in(
   file("tree-slinky")
   //Settings for all projects
+).enablePlugins(
+  ScalablyTypedConverterPlugin
+
 ).configure(
   jsProject
+
 ).settings(
   name := "tree-slinky",
-  loggingDeps,
+  Deps.logging,
+
 ).jvmSettings(
 
 ).jsSettings(
   //Scalajs dependencies that are used on the client only
   resolvers += Resolver.jcenterRepo,
 
-  slinkyDeps,
+  Deps.slinky,
   
   // libraryDependencies ++= Seq(
   //   ScalablyTyped.A.`antd-slinky-facade`,
@@ -596,11 +253,88 @@ lazy val treeSlinkyJS = treeSlinky.js
 
 // ).jsSettings(
 //   //Produce a module, so we can use @JSImport.
-//   scalaJSLinkerConfig ~= { _.withModuleKind(ModuleKind.CommonJSModule) }
+//   scalaJSLinkerConfig ~= { _.withModuleKind(ModuleKind.CommonJSModule) },
+//   stFlavour := Flavour.Slinky,
+//   Compile / npmDependencies ++= Seq("antd" -> "3.26.0")
 // ).dependsOn(treeSlinky)
 
 // lazy val treeSlinkyExtraJVM = treeSlinkyExtra.jvm
 // lazy val treeSlinkyExtraJS = treeSlinkyExtra.js
+
+
+lazy val antd =
+  project
+    .configure(baseSettings, bundlerSettings, browserProject, withCssLoading, reactNpmDeps)
+    .settings(
+      webpackDevServerPort := 8006,
+      stFlavour := Flavour.Slinky,
+      Compile / npmDependencies ++= Seq("antd" -> "3.26.0")
+    )
+
+
+
+// lazy val antdApp =
+//   project.in(file("antd-app"))
+//     .configure(jsProject, bundlerSettings, browserProject, withCssLoading)
+//     .settings(
+//       webpackDevServerPort := 8080,
+//       libraryDependencies ++= Seq(
+//         ScalablyTyped.A.`antd-slinky-facade`,
+//         ScalablyTyped.R.`react-dom`,
+//       ),
+//       Compile / npmDependencies ++= Seq(
+//         "react" -> "16.8",
+//         "react-dom" -> "16.8",
+//         "prop-types" -> "^15.0.0",
+//       )
+//     ).dependsOn(treeSlinkyJS, treeSlinkyExtraJS)
+
+
+  //////////////////////
+ // scalajs-electron //
+//////////////////////
+// TODO use scalablyt-typed node project instead of nodejs?
+// lazy val scalajsElectron = crossProject(JSPlatform, JVMPlatform).in(file("scalajs-electron")).
+//   //Settings for all projects
+//   settings(
+//     name := "scalajs-electron"
+
+//   ).jvmSettings(
+
+//   ).jsSettings(
+//     libraryDependencies ++= Seq(
+//       "org.typelevel"               %%% "cats-core"         % catsVersion,
+//       "org.typelevel"               %%% "cats-effect"       % catsEffectVersion,
+//       "io.scalajs"                  %%% "nodejs"            % nodejsVersion
+//     ),
+
+//     //Produce a module, so we can use @JSImport.
+//     scalaJSLinkerConfig ~= { _.withModuleKind(ModuleKind.CommonJSModule) }
+//   )
+
+// lazy val scalajsElectronJVM = scalajsElectron.jvm
+// lazy val scalajsElectronJS = scalajsElectron.js
+
+
+  /////////////////////////////
+ // scalajs-electron-react //
+////////////////////////////
+// lazy val scalajsElectronReact = crossProject(JSPlatform, JVMPlatform).in(file("scalajs-electron-react")).
+//   //Settings for all projects
+//   settings(
+//     name := "scalajs-electron-react"
+
+//   ).jvmSettings(
+
+//   ).jsSettings(
+//     //Produce a module, so we can use @JSImport.
+//     scalaJSLinkerConfig ~= { _.withModuleKind(ModuleKind.CommonJSModule) }
+
+//   ).dependsOn(scalajsElectron, scalajsReactMaterialUIExtra)
+
+// lazy val scalajsElectronReactJVM = scalajsElectronReact.jvm
+// lazy val scalajsElectronReactJS = scalajsElectronReact.js
+
 
   //////////////////
  // electron-app //
