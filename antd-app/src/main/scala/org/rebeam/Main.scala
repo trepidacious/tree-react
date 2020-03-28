@@ -1,6 +1,5 @@
 package demo
 
-import org.log4s.{Info, Log4sConfig}
 import org.scalajs.dom
 import slinky.web.ReactDOM
 
@@ -14,11 +13,9 @@ object IndexCSS extends js.Object
 object Main {
 
   def initLogging(): Unit = {
-    import Log4sConfig._
-
     // Set `org.rebeam` and any children to log only Info or higher
-    setLoggerThreshold("org.rebeam", Info)
-    //    setLoggerThreshold("org.rebeam", AllThreshold)
+    // setLoggerThreshold("org.rebeam", Info)
+    // setLoggerThreshold("org.rebeam", AllThreshold)
   }
 
   def main(args: Array[String]): Unit = {

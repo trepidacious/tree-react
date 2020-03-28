@@ -2,16 +2,15 @@ package org.rebeam
 
 import cats.Monad
 import cats.implicits._
-import org.log4s.getLogger
 import org.rebeam.TodoData._
 import org.rebeam.tree.MapStateSTM.StateDelta
 import org.rebeam.tree._
 import org.rebeam.tree.slinkify._
 
+import slinky.web.html._
 import slinky.core.facade.ReactElement
-import typings.antd.AntdFacade.{List => _, _}
-import typings.react.ScalableSlinky._
-import org.rebeam.tree.slinkify.Syntax._
+import typings.antd.components.{List => _, _}
+import typings.antd.antdStrings
 
 import slinky.core.FunctionalComponent
 import slinky.web.html._
@@ -19,8 +18,6 @@ import slinky.web.html._
 import StringOTView._
 
 object LocalDataRootDemo {
-
-  private val logger = getLogger
 
   // Our index is simple - just store the most recently added list.
   // The index lets us access this list by retrieving its Id from the TodoList in the index.
@@ -44,10 +41,9 @@ object LocalDataRootDemo {
   // This is a View so that it can use ReactViewOps to create a cursor at the id to view/edit the TodoItem.
   // The view will be re-rendered whenever the data at the Id changes.
   val todoItemView: FunctionalComponent[Id[TodoItem]] = new View[Id[TodoItem]] {
-    private val logger = getLogger
 
     def apply[F[_]: Monad](id: Id[TodoItem])(implicit v: ReactViewOps[F], tx: ReactTransactor): F[ReactElement] = {
-      logger.debug(s"View applying from $id")
+      scribe.debug(s"View applying from $id")
 
       // By creating a cursor at the Id, we can enable navigation through the TodoItem
       v.cursorAt[TodoItem](id).map(
@@ -58,18 +54,17 @@ object LocalDataRootDemo {
           val textCursor = cursor.zoom(TodoItem.text)
 
           Input(
-            InputProps(
-              placeholder = "Todo item",
-              value = textCursor.a,
-              onChange = onInputValueChange(s => textCursor.set(s).apply()),
-              addonBefore = Switch(SwitchProps(
-                size = typings.antd.antdStrings.small,
-                checked = cursor.a.completed.isDefined,
-                onChange = (b: Boolean, _) => cursor.delta(TodoItemCompletion(b)).apply()
-              ))().toST,  //toST because we are passing as a ReactNode to InputProps
-            )
+            addonBefore = Switch(
+              size = antdStrings.small,
+              onChange = (b: Boolean, _) => cursor.delta(TodoItemCompletion(b)).apply()
+            )(
+              checked := cursor.a.completed.isDefined
+            ),
+          )(
+            placeholder := "Todo item",
+            value := textCursor.a,
+            onChange := (event => textCursor.set(event.target.value).apply())
           )
-
         }
       )
     }
@@ -79,10 +74,9 @@ object LocalDataRootDemo {
   // This is a View so that it can use ReactViewOps to create a cursor at the id to view/edit the TodoItem.
   // The view will be re-rendered whenever the data at the Id changes.
   val todoListSummaryView: FunctionalComponent[Id[TodoList]] = new View[Id[TodoList]] {
-    private val logger = getLogger
 
     def apply[F[_]: Monad](id: Id[TodoList])(implicit v: ReactViewOps[F], tx: ReactTransactor): F[ReactElement] = {
-      logger.debug(s"View applying from $id")
+      scribe.debug(s"View applying from $id")
 
       // By creating a cursor at the Id, we can enable navigation through the TodoItem
       v.cursorAt[TodoList](id).map(
@@ -122,7 +116,7 @@ object LocalDataRootDemo {
   // We only use the index for data, so the model is Unit
   val dataProvider: FunctionalComponent[Unit] = LocalDataRoot[Unit, TodoIndex](
     (_, index) =>{
-      logger.debug("LocalDataRootDemo dataProvider.render")
+      scribe.debug("LocalDataRootDemo dataProvider.render")
       div(
         span()("Hi there!"),
         // When we have an indexed TodoList, display it

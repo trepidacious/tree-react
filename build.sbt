@@ -135,15 +135,18 @@ lazy val browserProject: Project => Project =
     }
   )
 
+
+
+
 lazy val root = project.in(file(".")).
   aggregate(
     treeCoreJS, treeCoreJVM,
     treeOTJS, treeOTJVM,
-    treeSlinkyJS, treeSlinkyJVM,
-    // antdApp,
+    treeSlinky,
+    treeSlinkyExtra,
+    antdApp,
     // scalajsElectronJS, scalajsElectronJVM,
     // scalajsElectronReactJS, scalajsElectronReactJVM,
-    // treeSlinkyExtraJS, treeSlinkyExtraJVM,
     // electronAppJS, electronAppJVM,
     // suiElectronAppJS, suiElectronAppJVM,
     // suiApp
@@ -201,42 +204,35 @@ lazy val treeOT = crossProject(JSPlatform, JVMPlatform).in(file("tree-ot")).
 lazy val treeOTJVM = treeOT.jvm
 lazy val treeOTJS = treeOT.js
 
-
-  ////////////////
- // tree-slinky //
-////////////////
-lazy val treeSlinky = crossProject(JSPlatform, JVMPlatform).in(
+lazy val treeSlinky = project.in(
   file("tree-slinky")
-  //Settings for all projects
-).enablePlugins(
-  ScalablyTypedConverterPlugin
-
 ).configure(
-  jsProject
-
+  baseSettings
 ).settings(
   name := "tree-slinky",
   Deps.logging,
+  Deps.slinky
+).dependsOn(treeCoreJS)
 
-).jvmSettings(
-
-).jsSettings(
-  //Scalajs dependencies that are used on the client only
-  resolvers += Resolver.jcenterRepo,
-
+lazy val treeSlinkyExtra = project.in(
+  file("tree-slinky-extra")
+).configure(
+  baseSettings, bundlerSettings, browserProject, withCssLoading, reactNpmDeps
+).settings(
+  name := "tree-slinky-extra",
+  Deps.logging,
   Deps.slinky,
-  
-  // libraryDependencies ++= Seq(
-  //   ScalablyTyped.A.`antd-slinky-facade`,
-  //   ScalablyTyped.R.`react-dom`,
-  // ),
+  stFlavour := Flavour.Slinky,
+  Compile / npmDependencies ++= Seq("antd" -> "3.26.0")
+).dependsOn(treeSlinky)
 
-  //Produce a module, so we can use @JSImport.
-  scalaJSLinkerConfig ~= { _.withModuleKind(ModuleKind.CommonJSModule) }
-).dependsOn(treeCore)
-
-lazy val treeSlinkyJVM = treeSlinky.jvm
-lazy val treeSlinkyJS = treeSlinky.js
+lazy val antdApp = project.in(
+    file("antd-app")
+  ).configure(
+    baseSettings, bundlerSettings, browserProject, withCssLoading, reactNpmDeps
+  ).settings(
+    webpackDevServerPort := 8080,
+  ).dependsOn(treeSlinkyExtra)
 
 //   ///////////////////////
 //  // tree-slinky-extra //
@@ -273,21 +269,6 @@ lazy val antd =
 
 
 
-// lazy val antdApp =
-//   project.in(file("antd-app"))
-//     .configure(jsProject, bundlerSettings, browserProject, withCssLoading)
-//     .settings(
-//       webpackDevServerPort := 8080,
-//       libraryDependencies ++= Seq(
-//         ScalablyTyped.A.`antd-slinky-facade`,
-//         ScalablyTyped.R.`react-dom`,
-//       ),
-//       Compile / npmDependencies ++= Seq(
-//         "react" -> "16.8",
-//         "react-dom" -> "16.8",
-//         "prop-types" -> "^15.0.0",
-//       )
-//     ).dependsOn(treeSlinkyJS, treeSlinkyExtraJS)
 
 
   //////////////////////

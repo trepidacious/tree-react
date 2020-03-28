@@ -33,13 +33,4 @@ object Syntax {
       Callback(console.warn(message, optionalParams: _*))
   }
 
-  //FIXME restore
-  // /**
-  //   * Wrapper for onChange on an Input in scalablyTyped react facade
-  //   * @param f  The function to handle the new input value
-  //   * @return   An appropriately typed function for onChange
-  //   */
-  // def onInputValueChange(f: String => Unit): ChangeEvent[std.HTMLInputElement] => Unit =
-  //   e => f(e.target_ChangeEvent.value)
-
 }
