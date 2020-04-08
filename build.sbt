@@ -270,7 +270,7 @@ lazy val scalajsReactDocgenFacade = crossProject(JSPlatform, JVMPlatform).in(fil
   ),
 
   //For Circe
-  addCompilerPlugin("org.scalamacros" %% "paradise" % "2.1.0" cross CrossVersion.patch)
+  addCompilerPlugin("org.scalamacros" %% "paradise" % "2.1.1" cross CrossVersion.patch)
 
 ).jsSettings(
   //Scalajs dependencies that are used on the client only
