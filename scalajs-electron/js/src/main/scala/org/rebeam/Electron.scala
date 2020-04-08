@@ -27,6 +27,27 @@ trait App extends js.Object {
 }
 
 @js.native
+trait OpenDialogResult extends js.Object {
+  /**
+    * @return whether or not the dialog was canceled
+    */
+  val cancelled: Boolean = js.native
+
+  /**
+    * @return An array of file paths chosen by the user. If the dialog is cancelled this will be an empty array.
+    */
+  val filePaths: js.Array[String] = js.native
+
+  /**
+    * macOS only
+    * @return An array matching the filePaths array of base64 encoded strings which contains security scoped 
+    * bookmark data. securityScopedBookmarks must be enabled for this to be populated. (For return values, see table here:
+    * https://www.electronjs.org/docs/api/dialog#bookmarks-array)
+    */
+  val bookmarks: js.UndefOr[js.Array[String]] = js.native
+}
+
+@js.native
 trait Dialog extends js.Object {
   /**
     * Show an open dialog
@@ -34,17 +55,11 @@ trait Dialog extends js.Object {
     *
     * @param browserWindow The browserWindow argument allows the dialog to attach itself to a parent window, making it modal.
     * @param options       Options for dialog
-    * @param callback      If provided, receives the selected files, and showOpenDialiog will return undefined
-    *                      First parameter - filePaths String[] - An array of file paths chosen by the user
-    *                      Second parameter - bookmarks String[] macOS mas - An array matching the filePaths array of base64
-    *                      encoded strings which contains security scoped bookmark data. securityScopedBookmarks must be enabled
-    *                      for this to be populated.
+    * @return              js.Promise of an OpenDialogResult
     */
   def showOpenDialog(
     browserWindow: js.UndefOr[BrowserWindow],
-    options: DialogOptions,
-    callback: js.UndefOr[js.Function2[js.UndefOr[js.Array[String]], js.UndefOr[js.Array[String]], Unit]]) :
-  js.UndefOr[js.Array[String]] = js.native
+    options: DialogOptions) : js.Promise[OpenDialogResult] = js.native
 }
 
 @js.native

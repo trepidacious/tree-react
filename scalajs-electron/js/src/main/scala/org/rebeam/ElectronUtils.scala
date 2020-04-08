@@ -5,6 +5,7 @@ import io.scalajs.nodejs.os._
 import scala.scalajs.js
 import scala.util.Try
 import js.JSConverters._
+import scala.concurrent.Future
 
 object ElectronUtils {
 
@@ -121,16 +122,19 @@ object ElectronUtils {
   }
 
   def showOpenDialog(
-    title: js.UndefOr[String] = js.undefined,
-    defaultPath: js.UndefOr[String] = js.undefined,
-    buttonLabel: js.UndefOr[String] = js.undefined,
-    filters: List[DialogFileFilter] = Nil,
-    properties: Set[DialogProperty] = Set.empty,
-    message: js.UndefOr[String] = js.undefined,
-    securityScopedBookmarks: js.UndefOr[Boolean] = js.undefined
-  ): List[String] = {
+                      title: js.UndefOr[String] = js.undefined,
+                      defaultPath: js.UndefOr[String] = js.undefined,
+                      buttonLabel: js.UndefOr[String] = js.undefined,
+                      filters: List[DialogFileFilter] = Nil,
+                      properties: Set[DialogProperty] = Set.empty,
+                      message: js.UndefOr[String] = js.undefined,
+                      securityScopedBookmarks: js.UndefOr[Boolean] = js.undefined
+                    ): Future[OpenDialogResult] = {
     val p = options(title, defaultPath, buttonLabel, filters, properties, message, securityScopedBookmarks)
-    Electron.remote.dialog.showOpenDialog(Electron.remote.getCurrentWindow(), p, js.undefined).toList.flatMap(_.toList)
+    Electron.remote.dialog.showOpenDialog(
+      Electron.remote.getCurrentWindow(),
+      p
+    ).toFuture
   }
 
   def showOpenDialogAsync(
@@ -143,15 +147,9 @@ object ElectronUtils {
                       securityScopedBookmarks: js.UndefOr[Boolean] = js.undefined,
                       callback: List[String] => Unit
                     ): Unit = {
-    val p = options(title, defaultPath, buttonLabel, filters, properties, message, securityScopedBookmarks)
-    Electron.remote.dialog.showOpenDialog(
-      Electron.remote.getCurrentWindow(),
-      p,
-      js.defined((filenames: js.UndefOr[js.Array[String]], _: js.UndefOr[js.Array[String]]) =>
-        callback(filenames.toList.flatMap(_.toList)))
-    ).toList.flatMap(_.toList)
-
-    ()
+    import scala.concurrent.ExecutionContext.Implicits.global
+    showOpenDialog(title, defaultPath, buttonLabel, filters, properties, message, securityScopedBookmarks)
+      .foreach(r => callback(r.filePaths.toList))
   }
 
 }
