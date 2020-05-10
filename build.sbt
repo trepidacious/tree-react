@@ -234,6 +234,19 @@ lazy val antdApp = project.in(
     webpackDevServerPort := 8080,
   ).dependsOn(treeSlinkyExtra)
 
+
+
+lazy val bootstrapApp = project.in(
+    file("bootstrap-app")
+  ).configure(
+    baseSettings, bundlerSettings, browserProject, withCssLoading, reactNpmDeps
+  ).settings(
+    webpackDevServerPort := 8080,
+    stFlavour := Flavour.Slinky,
+    Compile / npmDependencies ++= Seq("react-bootstrap" -> "1.0.0", "bootstrap" -> "4.4.1")
+  ).dependsOn(treeSlinky)
+
+
 //   ///////////////////////
 //  // tree-slinky-extra //
 // ///////////////////////
