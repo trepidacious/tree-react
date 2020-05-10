@@ -223,7 +223,7 @@ lazy val treeSlinkyExtra = project.in(
   Deps.logging,
   Deps.slinky,
   stFlavour := Flavour.Slinky,
-  Compile / npmDependencies ++= Seq("antd" -> "3.26.0")
+  Compile / npmDependencies ++= Seq("antd" -> "4.2.0")
 ).dependsOn(treeSlinky)
 
 lazy val antdApp = project.in(

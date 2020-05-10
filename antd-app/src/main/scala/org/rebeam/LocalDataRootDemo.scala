@@ -16,7 +16,11 @@ import slinky.core.FunctionalComponent
 import slinky.web.html._
 
 import StringOTView._
+import typings.antd.menuMod.MenuMode
+import typings.antd.menuContextMod.MenuTheme
+import org.scalablytyped.runtime.StringDictionary
 
+import scala.scalajs.js
 object LocalDataRootDemo {
 
   // Our index is simple - just store the most recently added list.
@@ -86,8 +90,8 @@ object LocalDataRootDemo {
           // so we need to handle changes here
           val textCursor = cursor.zoom(TodoList.name)
           div(
-            stringOTView(textCursor),
-            stringOTView(textCursor)
+            p(stringOTView(textCursor)),
+            p(stringOTView(textCursor))
           )
         }
       )
@@ -106,10 +110,51 @@ object LocalDataRootDemo {
   //        verticalAlign = sui.List.VerticalAlign.Middle,
   //        relaxed = true: js.Any
         )(
-          a.items.map(id => todoItemView(id).withKey(id.toString))
+          a.items.map(id => p(todoItemView(id).withKey(id.toString)))
         )
       )
     }
+  }.build
+
+  val layoutView: FunctionalComponent[TodoList] = new ViewP[TodoList] {
+    override def apply(a: TodoList): ReactElement = {
+      // div()
+      Layout(_overrides = StringDictionary("className" -> "layout"))(
+        LayoutHeader()(
+          Menu(mode = MenuMode.horizontal, theme = MenuTheme.dark, defaultSelectedKeys = js.Array("1"))(
+            MenuItem().withKey("1")("Home"),
+            // MenuItem().withKey("2")("Projects"),
+            // MenuItem().withKey("3")("Blog")
+          )
+        ),
+        LayoutContent()(
+          PageHeader(title = "Demo", subTitle = "Shows OT String editing and simple todo view")(
+            todoListView(a),
+            (1 to 200).map(i => p()(s"Line number $i"))
+          )
+          
+        )
+      )
+      //   <Header>
+      //     <div className="logo" />
+      //     <Menu theme="dark" mode="horizontal" defaultSelectedKeys={['2']}>
+      //       <Menu.Item key="1">nav 1</Menu.Item>
+      //       <Menu.Item key="2">nav 2</Menu.Item>
+      //       <Menu.Item key="3">nav 3</Menu.Item>
+      //     </Menu>
+      //   </Header>
+      //   <Content style={{ padding: '0 50px' }}>
+      //     <Breadcrumb style={{ margin: '16px 0' }}>
+      //       <Breadcrumb.Item>Home</Breadcrumb.Item>
+      //       <Breadcrumb.Item>List</Breadcrumb.Item>
+      //       <Breadcrumb.Item>App</Breadcrumb.Item>
+      //     </Breadcrumb>
+      //     <div className="site-layout-content">Content</div>
+      //   </Content>
+      //   <Footer style={{ textAlign: 'center' }}>Ant Design ©2018 Created by Ant UED</Footer>
+      // </Layout>,
+    }
+
   }.build
 
   // This component will manage and render an STM, initialised to the example data
@@ -117,11 +162,9 @@ object LocalDataRootDemo {
   val dataProvider: FunctionalComponent[Unit] = LocalDataRoot[Unit, TodoIndex](
     (_, index) =>{
       scribe.debug("LocalDataRootDemo dataProvider.render")
-      div(
-        span()("Hi there!"),
-        // When we have an indexed TodoList, display it
-        index.todoList.map[ReactElement](l => todoListView(l)).getOrElse(span()("Empty"))
-      )
+      // layoutView("Hello")
+      // When we have an indexed TodoList, display it
+      index.todoList.map[ReactElement](l => layoutView(l)).getOrElse(span()("Empty"))
     },
     todoIndexer,  //This indexer will provide the most recently added list
     example       //This example Transaction populates the STM to display
