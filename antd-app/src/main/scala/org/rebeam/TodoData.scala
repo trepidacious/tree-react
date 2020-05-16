@@ -48,8 +48,23 @@ object TodoData {
   @Lenses
   case class TodoList(id: Id[TodoList], items: List[Id[TodoItem]], name: OTList[Char])
 
-  // We can edit a TodoList by specifying a new value, or via a lens to the list's name
-  implicit val todoListDeltaCodec: DeltaCodec[TodoList] = value[TodoList] or lens("name", TodoList.name)
+  // Action to add a new TodoItem to a TodoList
+  @JsonCodec
+  case class TodoListAdd(name: String) extends Delta[TodoList] {
+    override def apply[F[_] : Monad](a: TodoList)(implicit stm: STMOps[F]): F[TodoList] = {
+      import stm._
+      for {
+        c <- context
+        item <- put[TodoItem](id => TodoItem(id, c.moment, None, name))
+      } yield a.copy(items = item.id :: a.items)
+    }
+  }
+
+  // We can edit a TodoList by specifying a new value, or via a lens to the list's name, or by adding a todo item
+  implicit val todoListDeltaCodec: DeltaCodec[TodoList] = 
+    value[TodoList] or 
+    lens("name", TodoList.name) or 
+    action[TodoList, TodoListAdd]("todoListAdd"){ case a: TodoListAdd => a }
 
   // Both TodoItem and TodoList can be referenced by Id, so we need IdCodecs
   implicit val todoItemIdCodec: IdCodec[TodoItem] = IdCodec[TodoItem]("TodoItem")

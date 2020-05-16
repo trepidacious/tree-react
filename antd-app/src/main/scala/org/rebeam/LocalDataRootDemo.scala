@@ -7,12 +7,13 @@ import org.rebeam.tree.MapStateSTM.StateDelta
 import org.rebeam.tree._
 import org.rebeam.tree.slinkify._
 
+import slinky.core._
 import slinky.web.html._
+
 import slinky.core.facade.ReactElement
 import typings.antd.components.{List => _, _}
 import typings.antd.antdStrings
 
-import slinky.core.FunctionalComponent
 import slinky.web.html._
 
 import StringOTView._
@@ -21,6 +22,10 @@ import typings.antd.menuContextMod.MenuTheme
 import org.scalablytyped.runtime.StringDictionary
 
 import scala.scalajs.js
+import typings.antDesignIcons.components.PlusCircleFilled
+
+import org.rebeam.tree.slinkify.Implicits._
+
 object LocalDataRootDemo {
 
   // Our index is simple - just store the most recently added list.
@@ -85,13 +90,13 @@ object LocalDataRootDemo {
       // By creating a cursor at the Id, we can enable navigation through the TodoItem
       v.cursorAt[TodoList](id).map(
         cursor => {
-
-          // We want to use a sui.Input directly below so we can pass in the checkbox as a label,
-          // so we need to handle changes here
           val textCursor = cursor.zoom(TodoList.name)
           div(
             p(stringOTView(textCursor)),
-            p(stringOTView(textCursor))
+            p(stringOTView(textCursor)),
+            p(
+              Button(`type` = antdStrings.primary, icon = PlusCircleFilled.plain, onClick = _ => cursor.delta(TodoListAdd("New Todo")).apply())("Add Todo")
+            )
           )
         }
       )
@@ -129,30 +134,10 @@ object LocalDataRootDemo {
         ),
         LayoutContent()(
           PageHeader(title = "Demo", subTitle = "Shows OT String editing and simple todo view")(
-            todoListView(a),
-            (1 to 200).map(i => p()(s"Line number $i"))
+            todoListView(a)
           )
-          
         )
       )
-      //   <Header>
-      //     <div className="logo" />
-      //     <Menu theme="dark" mode="horizontal" defaultSelectedKeys={['2']}>
-      //       <Menu.Item key="1">nav 1</Menu.Item>
-      //       <Menu.Item key="2">nav 2</Menu.Item>
-      //       <Menu.Item key="3">nav 3</Menu.Item>
-      //     </Menu>
-      //   </Header>
-      //   <Content style={{ padding: '0 50px' }}>
-      //     <Breadcrumb style={{ margin: '16px 0' }}>
-      //       <Breadcrumb.Item>Home</Breadcrumb.Item>
-      //       <Breadcrumb.Item>List</Breadcrumb.Item>
-      //       <Breadcrumb.Item>App</Breadcrumb.Item>
-      //     </Breadcrumb>
-      //     <div className="site-layout-content">Content</div>
-      //   </Content>
-      //   <Footer style={{ textAlign: 'center' }}>Ant Design ©2018 Created by Ant UED</Footer>
-      // </Layout>,
     }
 
   }.build
