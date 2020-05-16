@@ -60,11 +60,25 @@ object TodoData {
     }
   }
 
+  @JsonCodec
+  case class TodoListClearCompleted() extends Delta[TodoList] {
+    override def apply[F[_] : Monad](a: TodoList)(implicit stm: STMOps[F]): F[TodoList] = {
+      import stm._
+      for {
+        // Traverse with get to get F[List[TodoItem]], then we map the List[TodoItem] to a List[Boolean], by mapping the List itself
+        completedList <- a.items.traverse(get).map(_.map(_.completed.isDefined))
+
+      // Then just need to filter the items by whether they are completed
+      } yield a.copy(items = a.items.zip(completedList).filterNot(_._2).map(_._1))
+    }
+  }
+
   // We can edit a TodoList by specifying a new value, or via a lens to the list's name, or by adding a todo item
   implicit val todoListDeltaCodec: DeltaCodec[TodoList] = 
     value[TodoList] or 
     lens("name", TodoList.name) or 
     action[TodoList, TodoListAdd]("todoListAdd"){ case a: TodoListAdd => a }
+    action[TodoList, TodoListClearCompleted]("todoListClearCompleted"){ case a: TodoListClearCompleted => a }
 
   // Both TodoItem and TodoList can be referenced by Id, so we need IdCodecs
   implicit val todoItemIdCodec: IdCodec[TodoItem] = IdCodec[TodoItem]("TodoItem")

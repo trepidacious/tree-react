@@ -16,7 +16,7 @@ import typings.antd.antdStrings
 
 import slinky.web.html._
 
-import StringOTView._
+// import StringOTView._
 import typings.antd.menuMod.MenuMode
 import typings.antd.menuContextMod.MenuTheme
 import org.scalablytyped.runtime.StringDictionary
@@ -25,6 +25,8 @@ import scala.scalajs.js
 import typings.antDesignIcons.components.PlusCircleFilled
 
 import org.rebeam.tree.slinkify.Implicits._
+import typings.antDesignIcons.components.MinusCircleFilled
+import typings.antd.antdStrings.vertical
 
 object LocalDataRootDemo {
 
@@ -91,13 +93,14 @@ object LocalDataRootDemo {
       v.cursorAt[TodoList](id).map(
         cursor => {
           val textCursor = cursor.zoom(TodoList.name)
-          div(
-            p(stringOTView(textCursor)),
-            p(stringOTView(textCursor)),
-            p(
-              Button(`type` = antdStrings.primary, icon = PlusCircleFilled.plain, onClick = _ => cursor.delta(TodoListAdd("New Todo")).apply())("Add Todo")
+          // div(
+          //   p(stringOTView(textCursor)),
+          //   p(stringOTView(textCursor)),
+            Space(
+              Button(`type` = antdStrings.primary, icon = PlusCircleFilled.plain, onClick = _ => cursor.delta(TodoListAdd("New todo")).apply())("Add todo"),
+              Button(icon = MinusCircleFilled.plain, onClick = _ => cursor.delta(TodoListClearCompleted()).apply())("Clear completed")
             )
-          )
+          // )
         }
       )
     }
@@ -109,14 +112,11 @@ object LocalDataRootDemo {
   // can still get data from the Context provided by dataProvider, so this can be a ViewP
   val todoListView: FunctionalComponent[TodoList] = new ViewP[TodoList] {
     override def apply(a: TodoList): ReactElement = {
-      div(
+      Space(
+        direction = vertical
+      )(
         todoListSummaryView(a.id),
-        div(
-  //        verticalAlign = sui.List.VerticalAlign.Middle,
-  //        relaxed = true: js.Any
-        )(
-          a.items.map(id => p(todoItemView(id).withKey(id.toString)))
-        )
+        a.items.map(id => todoItemView(id).withKey(id.toString))
       )
     }
   }.build
