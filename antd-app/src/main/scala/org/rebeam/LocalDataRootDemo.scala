@@ -97,8 +97,8 @@ object LocalDataRootDemo {
           //   p(stringOTView(textCursor)),
           //   p(stringOTView(textCursor)),
             Space(
-              Button(`type` = antdStrings.primary, icon = PlusCircleFilled.plain, onClick = _ => cursor.delta(TodoListAdd("New todo")).apply())("Add todo"),
-              Button(icon = MinusCircleFilled.plain, onClick = _ => cursor.delta(TodoListClearCompleted()).apply())("Clear completed")
+              Button(shape = antdStrings.round, `type` = antdStrings.primary, icon = PlusCircleFilled.plain, onClick = _ => cursor.delta(TodoListAdd("New todo")).apply())("Add todo"),
+              Button(shape = antdStrings.round, icon = MinusCircleFilled.plain, onClick = _ => cursor.delta(TodoListClearCompleted()).apply())("Clear completed")
             )
           // )
         }
