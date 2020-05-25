@@ -23,26 +23,31 @@ object TodoData {
   @JsonCodec
   case class TodoItemCompletion(complete: Boolean) extends Delta[TodoItem] {
     override def apply[F[_] : Monad](a: TodoItem)(implicit stm: STMOps[F]): F[TodoItem] = {
+      // Import STMOps to use in our delta
       import stm._
       if (complete) {
+        // Get the context, c, and get the current time, c.moment to make an updated, completed copy of the TodoItem
         context.map(c => a.copy(completed = Some(c.moment)))
       } else {
+        // Just make an updated, incomplete copy of the TodoItem - pure since we don't need any STMOps
         pure(a.copy(completed = None))
       }
     }
   }
 
 
-  // We can edit a TodoItem by specifying a new value, or using a lens to get to text field, or by
+  // We can edit a TodoItem by specifying a new value, or using a lens to get to text field or completed time, or by
   // using the TodoItemCompletion delta as an action
   implicit val todoItemDeltaCodec: DeltaCodec[TodoItem] =
     value[TodoItem] or
-//      lensOption("completed", TodoItem.completed) or  // completed is an Optional field, so use lensOption
+    lensOption("completed", TodoItem.completed) or  // completed is an Optional field, so use lensOption
     lens("text", TodoItem.text) or
-    action[TodoItem, TodoItemCompletion]("completion"){
+    // Action requires the type it operates on, the Delta to 
+    // apply the action, a name (often the type name), and a partial 
+    // function to identify the delta when serialising
+    action[TodoItem, TodoItemCompletion]("TodoItemCompletion"){ 
       case a:TodoItemCompletion => a
     }
-
 
   @JsonCodec
   @Lenses
@@ -54,22 +59,23 @@ object TodoData {
     override def apply[F[_] : Monad](a: TodoList)(implicit stm: STMOps[F]): F[TodoList] = {
       import stm._
       for {
-        c <- context
-        item <- put[TodoItem](id => TodoItem(id, c.moment, None, name))
-      } yield a.copy(items = item.id :: a.items)
+        c <- context  // Get context, we need c.moment for the current time in the TodoItem's created field
+        item <- put[TodoItem](id => TodoItem(id, c.moment, None, name)) // put a new TodoItem - we receive an Id[TodoItem], and build the TodoItem
+      } yield a.copy(items = item.id :: a.items)  // Make an updated TodoList with the new TodoItem prepended
     }
   }
 
+  // Action to clear all completed TodoItems from TodoList
   @JsonCodec
   case class TodoListClearCompleted() extends Delta[TodoList] {
     override def apply[F[_] : Monad](a: TodoList)(implicit stm: STMOps[F]): F[TodoList] = {
       import stm._
       for {
-        // Traverse with get to get F[List[TodoItem]], then we map the List[TodoItem] to a List[Boolean], by mapping the List itself
-        completedList <- a.items.traverse(get).map(_.map(_.completed.isDefined))
+        // Traverse with get to yield a F[List[TodoItem]], and map the contained List[TodoItem] by filtering for incomplete items
+        incompleteItems <- a.items.traverse(get).map(_.filter(_.completed.isEmpty))
 
-      // Then just need to filter the items by whether they are completed
-      } yield a.copy(items = a.items.zip(completedList).filterNot(_._2).map(_._1))
+      // Make the updated TodoList using ids of the incomplete items
+      } yield a.copy(items = incompleteItems.map(_.id))
     }
   }
 
@@ -77,8 +83,8 @@ object TodoData {
   implicit val todoListDeltaCodec: DeltaCodec[TodoList] = 
     value[TodoList] or 
     lens("name", TodoList.name) or 
-    action[TodoList, TodoListAdd]("todoListAdd"){ case a: TodoListAdd => a }
-    action[TodoList, TodoListClearCompleted]("todoListClearCompleted"){ case a: TodoListClearCompleted => a }
+    action[TodoList, TodoListAdd]("TodoListAdd"){ case a: TodoListAdd => a }
+    action[TodoList, TodoListClearCompleted]("TodoListClearCompleted"){ case a: TodoListClearCompleted => a }
 
   // Both TodoItem and TodoList can be referenced by Id, so we need IdCodecs
   implicit val todoItemIdCodec: IdCodec[TodoItem] = IdCodec[TodoItem]("TodoItem")

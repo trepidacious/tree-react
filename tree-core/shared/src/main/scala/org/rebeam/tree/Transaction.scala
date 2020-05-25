@@ -4,7 +4,7 @@ import cats.Monad
 import cats.implicits._
 
 /**
-  * A Transaction can produce an effect and a result using STMOps. This represents
+  * A Transaction can produce an effect using STMOps. This represents
   * an atomic operation performed using the STMOps, getting/setting data, etc.
   * Using a wrapper allows for use of different effects, and serialisation.
   */

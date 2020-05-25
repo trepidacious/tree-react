@@ -1,7 +1,7 @@
 package org.rebeam.tree
 
-import io.circe.{Decoder, DecodingFailure, Encoder, Json}
-import org.rebeam.tree.Guid.{SessionId, SessionTransactionId, TransactionClock}
+import io.circe._
+import org.rebeam.tree.Guid._
 
 import scala.util.Try
 import scala.util.matching.Regex
@@ -38,6 +38,11 @@ object Ref {
   implicit def encodeRef[A]: Encoder[Ref[A]] = Encoder.instance(
     r => Json.fromString(toString(r))
   )
+
+  //Key encoder and decoder using plain string format for ref
+  implicit def refKeyEncoder[A]: KeyEncoder[Ref[A]] = KeyEncoder.instance(Ref.toString[A])
+  implicit def refKeyDecoder[A]: KeyDecoder[Ref[A]] = KeyDecoder.instance(Ref.fromString[A])
+
 }
 
 

@@ -8,3 +8,7 @@ main.ant-layout-content {
   padding: 0 26px;
   margin-top: 64px;
 }
+
+section.ant-layout {
+  background: #fff;
+}

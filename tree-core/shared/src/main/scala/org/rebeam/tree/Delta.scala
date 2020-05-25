@@ -57,17 +57,18 @@ object Delta {
       )
   }
 
-//  case class SeqIndexDelta[A](index: Int, delta: Delta[A]) extends Delta[Seq[A]] {
-//    override def apply[F[_] : Monad](s: Seq[A])(implicit stm: STMOps[F]): F[Seq[A]] =
-//      s.lift(index).fold(
-//        stm.pure(s)
-//      )(
-//        delta[F](_).map(a => s.updated(index, a))
-//      )
-//  }
-
+  /**
+    * A Delta[T[A]] on a some collection T with Traverse (e.g. a List).
+    * This applies the provided Delta[A] to the element at specified index (if it exists),
+    * and leaves other elements unaltered.
+    *
+    * @param index  The index of the element to which to apply delta
+    * @param delta  The delta to apply at index
+    */
   case class TraversableIndexDelta[T[_]: Traverse, A](index: Int, delta: Delta[A]) extends Delta[T[A]] {
     override def apply[F[_] : Monad](s: T[A])(implicit stm: STMOps[F]): F[T[A]] =
+      // This maps the provided (A, Int) => F[A] over each pair of (element: A and index), 
+      // and turns the resulting T[F[A]] inside out to an F[T[A]]
       s.traverseWithIndexM {
         case (a, i) if i == index => delta[F](a)
         case (a, _) => stm.pure(a)

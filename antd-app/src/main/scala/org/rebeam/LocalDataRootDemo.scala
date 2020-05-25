@@ -30,24 +30,6 @@ import typings.antd.antdStrings.vertical
 
 object LocalDataRootDemo {
 
-  // Our index is simple - just store the most recently added list.
-  // The index lets us access this list by retrieving its Id from the TodoList in the index.
-  // Otherwise we wouldn't know the Id, since we don't get any return value from the exampleData Transaction.
-  case class TodoIndex(todoList: Option[TodoList])
-
-  // This indexer will just keep the last put or modified TodoList
-  val todoIndexer: LocalDataRoot.Indexer[TodoIndex] = new LocalDataRoot.Indexer[TodoIndex] {
-    def initial: TodoIndex = TodoIndex(None)
-    def updated(index: TodoIndex, deltas: Seq[StateDelta[_]]): TodoIndex = {
-      deltas.foldRight(index){
-        case (delta, i) => delta.a match {
-          case tl: TodoList => TodoIndex(Some(tl))
-          case _ => i
-        }
-      }
-    }
-  }
-
   // A View accepting the Id of a TodoItem.
   // This is a View so that it can use ReactViewOps to create a cursor at the id to view/edit the TodoItem.
   // The view will be re-rendered whenever the data at the Id changes.
@@ -141,6 +123,27 @@ object LocalDataRootDemo {
     }
 
   }.build
+
+  // When creating a LocalDataRoot to manage an STM, we need an Indexer that will give us an
+  // index into the data - a way to get the Id of useful data. Otherwise we wouldn't know the
+  // Id of any data in the STM, since Transactions do not return values (at the moment). 
+  // We can then navigate to other data from the index and Refs.
+  //
+  // Our example index is simple - just store the most recently added TodoList.
+  case class TodoIndex(todoList: Option[TodoList])
+
+  // This indexer will just keep the last put or modified TodoList
+  val todoIndexer: LocalDataRoot.Indexer[TodoIndex] = new LocalDataRoot.Indexer[TodoIndex] {
+    def initial: TodoIndex = TodoIndex(None)
+    def updated(index: TodoIndex, deltas: Seq[StateDelta[_]]): TodoIndex = {
+      deltas.foldRight(index){
+        case (delta, i) => delta.a match {
+          case tl: TodoList => TodoIndex(Some(tl))
+          case _ => i
+        }
+      }
+    }
+  }
 
   // This component will manage and render an STM, initialised to the example data
   // We only use the index for data, so the model is Unit
