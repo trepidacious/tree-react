@@ -11,7 +11,7 @@ import slinky.core._
 import slinky.web.html._
 
 import slinky.core.facade.ReactElement
-import typings.antd.components.{List => _, _}
+import typings.antd.components.{List => AntList, _}
 import typings.antd.antdStrings
 
 import slinky.web.html._
@@ -22,11 +22,13 @@ import typings.antd.menuContextMod.MenuTheme
 import org.scalablytyped.runtime.StringDictionary
 
 import scala.scalajs.js
+import js.JSConverters._
 import typings.antDesignIcons.components.PlusCircleFilled
 
 import org.rebeam.tree.slinkify.Implicits._
 import typings.antDesignIcons.components.MinusCircleFilled
 import typings.antd.antdStrings.vertical
+import typings.antd.paginationPaginationMod.PaginationConfig
 
 object LocalDataRootDemo {
 
@@ -98,7 +100,8 @@ object LocalDataRootDemo {
         direction = vertical
       )(
         todoListSummaryView(a.id),
-        a.items.map(id => todoItemView(id).withKey(id.toString))
+        AntList[Id[TodoItem]](pagination = PaginationConfig(), dataSource = a.items.toJSArray, renderItem = (id: Id[TodoItem], index: Double) => todoItemView(id).withKey(id.toString))
+        // a.items.map(id => todoItemView(id).withKey(id.toString))
       )
     }
   }.build
