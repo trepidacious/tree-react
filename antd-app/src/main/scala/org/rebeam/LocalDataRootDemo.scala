@@ -58,7 +58,8 @@ object LocalDataRootDemo {
           )(
             placeholder := "Todo item",
             value := textCursor.a,
-            onChange := (event => textCursor.set(event.target.value).apply())
+            onChange := (event => textCursor.set(event.target.value).apply()),
+            className := "todo-item"
           )
         }
       )

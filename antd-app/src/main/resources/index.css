@@ -12,3 +12,7 @@ main.ant-layout-content {
 section.ant-layout {
   background: #fff;
 }
+
+.todo-item {
+  margin-bottom: 8px;
+}
