@@ -101,7 +101,11 @@ object LocalDataRootDemo {
         direction = vertical
       )(
         todoListSummaryView(a.id),
-        AntList[Id[TodoItem]](pagination = PaginationConfig(), dataSource = a.items.toJSArray, renderItem = (id: Id[TodoItem], index: Double) => todoItemView(id).withKey(id.toString))
+        AntList[Id[TodoItem]](
+          pagination = PaginationConfig(), 
+          dataSource = a.items.toJSArray, 
+          renderItem = (id, index) => todoItemView(id).withKey(id.toString)
+        )
         // a.items.map(id => todoItemView(id).withKey(id.toString))
       )
     }

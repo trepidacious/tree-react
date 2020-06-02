@@ -13,6 +13,6 @@ section.ant-layout {
   background: #fff;
 }
 
-.todo-item {
+.todo-item:not(:last-child) {
   margin-bottom: 8px;
 }
