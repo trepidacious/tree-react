@@ -28,3 +28,9 @@ trait STMFunction0[A] {
   }
 
 }
+
+object STMFunction0 {
+  def pure[A](a: A) = new STMFunction0[A] {
+    def apply[F[_]: Monad](implicit stm: STMOps[F]): F[A] = stm.pure(a)
+  }
+}
