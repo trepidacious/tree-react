@@ -16,7 +16,7 @@ import org.rebeam.tree.ot.{OTList, OperationBuilder}
 
 class MapStateSTMSpec extends wordspec.AnyWordSpec with Matchers with Checkers {
 
-  def putTaskList[F[_]: Monad](implicit stm: STMOps[F]): F[TaskList] = {
+  def putTaskList[F[_]: Monad](implicit stm: EditOps[F]): F[TaskList] = {
     import stm._
     put[TaskList](
       TaskList(
@@ -30,14 +30,14 @@ class MapStateSTMSpec extends wordspec.AnyWordSpec with Matchers with Checkers {
     )
   }
 
-  def putInt[F[_]: Monad](implicit stm: STMOps[F]): F[Id[Int]] = {
+  def putInt[F[_]: Monad](implicit stm: EditOps[F]): F[Id[Int]] = {
     import stm._
     putWithId[Int](_ => 42).map(_._2)
   }
 
   val (exampleIntState, exampleIntId) = runS(putInt[MapState])
 
-  def createExampleOTList[F[_]: Monad](implicit stm: STMOps[F]): F[OTList[Char]] = {
+  def createExampleOTList[F[_]: Monad](implicit stm: EditOps[F]): F[OTList[Char]] = {
     import stm._
     createOTList[Char]("Hello".toList)
   }

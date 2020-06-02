@@ -264,7 +264,7 @@ object Logoot {
       * @return           A DeltaIO producing a Position > p and < q and meeting invariants
       */
     @tailrec
-    private[logoot] def positionBetweenRec[F[_]: Monad](p: Position, q: Position, r: Position, SessionId: SessionId)(implicit stm: STMOps[F]): F[Position] = {
+    private[logoot] def positionBetweenRec[F[_]: Monad](p: Position, q: Position, r: Position, SessionId: SessionId)(implicit stm: EditOps[F]): F[Position] = {
 
       import stm._
 
@@ -364,7 +364,7 @@ object Logoot {
       * @param q  Second position, p < q
       * @return   New position r s.t. p < r < q
       */
-    private[logoot] def between[F[_]: Monad](p: Position, q: Position)(implicit stm: STMOps[F]): F[Position] = {
+    private[logoot] def between[F[_]: Monad](p: Position, q: Position)(implicit stm: EditOps[F]): F[Position] = {
 //      println(s">>> between $p and $q")
       for {
         context <- stm.context
@@ -460,7 +460,7 @@ object Logoot {
       * @param index  The insertion index
       * @return       A DeltaIO producing a suitable insertion position
       */
-    def insertionPosition[F[_]: Monad](index: Int)(implicit stm: STMOps[F]): F[Position] = {
+    def insertionPosition[F[_]: Monad](index: Int)(implicit stm: EditOps[F]): F[Position] = {
       // Constrain index to 0 to size of sequence (i.e. appending to end).
       val i = Math.min(Math.max(index, 0), pids.size)
 
@@ -491,7 +491,7 @@ object Logoot {
       * @param index  The insertion index
       * @return       A DeltaIO producing a suitable insertion position id
       */
-    def insertionPositionId[F[_]: Monad](index: Int)(implicit stm: STMOps[F]): F[PositionId] = for {
+    def insertionPositionId[F[_]: Monad](index: Int)(implicit stm: EditOps[F]): F[PositionId] = for {
       p <- insertionPosition[F](index)
       id <- stm.createGuid
     } yield PositionId(p, id)

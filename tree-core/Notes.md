@@ -51,7 +51,7 @@ At the top level, we have a key-value store, where all keys are identifiers of t
 
 Instances of this store are immutable, and transactions produce new instances of the store. These are termed revisions. Each value is annotated with the last revision where it was altered, allowing us to efficiently check whether a value has changed, for example when rendering with React.
 
-This store is essentially an STM (software transactional memory). Transactions operate on this using an algebra `STMOps`, using:
+This store is essentially an STM (software transactional memory). Transactions operate on this using an algebra `EditOps`, using:
  1. put: Put a new value into the store, with an automatically produced new id.
  2. get: Get the value for an id
  2. modify: Modify the value for an id, essentially using a transformation `A => A` (actually `A=>F[A]`, more details later)
@@ -62,7 +62,7 @@ Deltas can be transformed neatly using a `Lens` - given a `Delta[A]` and a `Lens
 
 We can easily convert a `Delta[A]` to a transaction just by associating it with an `Id` - this produces a transaction modifying the value at that `Id` with the `Delta`.
 
-The `STMOps` algebra is implemented in a tagless style using a Monad. This means that `Delta[A]` actually provides `A=>F[A]`, and this is accepted by `STMOps.modify`.
+The `EditOps` algebra is implemented in a tagless style using a Monad. This means that `Delta[A]` actually provides `A=>F[A]`, and this is accepted by `EditOps.modify`.
 
 ### Functional UI
 

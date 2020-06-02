@@ -107,7 +107,7 @@ object MapStateSTM {
   // A State using StateData, or an Error
   type MapState[A] = StateT[ErrorOr, StateData, A]
 
-  implicit val stmInstance: STMOps[MapState] = new STMOps[MapState] {
+  implicit val stmInstance: EditOps[MapState] = new EditOps[MapState] {
 
     /**
       * Record a U operation in state

@@ -23,7 +23,7 @@ object TodoData {
   // This needs a JsonCodec
   @JsonCodec
   case class TodoItemCompletion(complete: Boolean) extends Delta[TodoItem] {
-    override def apply[F[_] : Monad](a: TodoItem)(implicit stm: STMOps[F]): F[TodoItem] = {
+    override def apply[F[_] : Monad](a: TodoItem)(implicit stm: EditOps[F]): F[TodoItem] = {
       import stm._
       if (complete) {
         for {
@@ -63,7 +63,7 @@ object TodoData {
 
   // Transaction to build our initial example data
   object example extends Transaction {
-    def apply[F[_] : Monad](implicit stm: STMOps[F]): F[Unit] = {
+    def apply[F[_] : Monad](implicit stm: EditOps[F]): F[Unit] = {
       import stm._
       for {
         itemIds <- (1 to 10).toList.traverse(i =>

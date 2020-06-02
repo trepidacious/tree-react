@@ -30,7 +30,7 @@ object Implicits {
   def prismFromOptional[S, A <: S](f: S => Option[A]): Prism[S, A] = Prism(f)(a => a: S)
 
   implicit class RefList[A](l: List[Ref[A]]) {
-    def deref[F[_]: Monad](implicit stm: STMOps[F]): F[List[A]] =
+    def deref[F[_]: Monad](implicit stm: EditOps[F]): F[List[A]] =
       l.traverse[F, A](ref => stm.get(ref.id))
   }
 

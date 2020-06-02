@@ -83,9 +83,9 @@ import org.rebeam.tree.ot.{OTList, Operation}
   *    an unstable outer transaction. Similarly, any U operations performed in the inner transaction will be considered
   *    to have run before any later operations in the outer transaction. However there are some exceptions to
   *    this last point - since the inner transaction is isolated by being run inside an operation, implementations
-  *    of STMOps can ensure that no data from the inner transaction is available outside that inner transaction - this
+  *    of EditOps can ensure that no data from the inner transaction is available outside that inner transaction - this
   *    is done by simply discarding the return value of the inner transaction, within the implementation of the
-  *    operation. The STMOps with a "Unit" suffix must do this, and as a result will not be U, even if the inner
+  *    operation. The EditOps with a "Unit" suffix must do this, and as a result will not be U, even if the inner
   *    transaction they execute is U. This may be useful to allow producing stable transactions for more complex
   *    use cases, although where possible it is simpler to just use the non-"F" versions of the operations, which
   *    use pure functions instead of inner transactions.
@@ -97,7 +97,7 @@ import org.rebeam.tree.ot.{OTList, Operation}
   *    of the state read from the STM, and the data put to the STM will be of the same type. This means that we still
   *    achieve a stable call to `putF`. However since the `putF` transaction will return the new data, potentially
   *    containing STM data, we must still classify the transaction as U (as well as S), and so no further S operations
-  *    can be performed in a transaction including the putF. This logic must be handled by implementations of STMOps.
+  *    can be performed in a transaction including the putF. This logic must be handled by implementations of EditOps.
   *    Note that `createListOTF` is classified as unstable if the `create` function is U, since we require that
   *    OTLists are created with exactly the same data on the client and server, to support a single oeprational
   *    transformation history. otListOperation is both S (since OT operations must be stable) and U (since it returns
@@ -127,7 +127,7 @@ import org.rebeam.tree.ot.{OTList, Operation}
   *
   * @tparam F The monad used to express operations
   */
-abstract class STMOps[F[_]: Monad] extends TransactionOps {
+abstract class EditOps[F[_]: Monad] extends TransactionOps {
 
   /**
     * Get data at an [[Id]]

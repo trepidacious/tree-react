@@ -22,14 +22,14 @@ object TodoData {
   // This needs a JsonCodec
   @JsonCodec
   case class TodoItemCompletion(complete: Boolean) extends Delta[TodoItem] {
-    override def apply[F[_] : Monad](a: TodoItem)(implicit stm: STMOps[F]): F[TodoItem] = {
-      // Import STMOps to use in our delta
+    override def apply[F[_] : Monad](a: TodoItem)(implicit stm: EditOps[F]): F[TodoItem] = {
+      // Import EditOps to use in our delta
       import stm._
       if (complete) {
         // Get the context, c, and get the current time, c.moment to make an updated, completed copy of the TodoItem
         context.map(c => a.copy(completed = Some(c.moment)))
       } else {
-        // Just make an updated, incomplete copy of the TodoItem - pure since we don't need any STMOps
+        // Just make an updated, incomplete copy of the TodoItem - pure since we don't need any EditOps
         pure(a.copy(completed = None))
       }
     }
@@ -56,7 +56,7 @@ object TodoData {
   // Action to add a new TodoItem to a TodoList
   @JsonCodec
   case class TodoListAdd(name: String) extends Delta[TodoList] {
-    override def apply[F[_] : Monad](a: TodoList)(implicit stm: STMOps[F]): F[TodoList] = {
+    override def apply[F[_] : Monad](a: TodoList)(implicit stm: EditOps[F]): F[TodoList] = {
       import stm._
       for {
         c <- context  // Get context, we need c.moment for the current time in the TodoItem's created field
@@ -68,7 +68,7 @@ object TodoData {
   // Action to clear all completed TodoItems from TodoList
   @JsonCodec
   case class TodoListClearCompleted() extends Delta[TodoList] {
-    override def apply[F[_] : Monad](a: TodoList)(implicit stm: STMOps[F]): F[TodoList] = {
+    override def apply[F[_] : Monad](a: TodoList)(implicit stm: EditOps[F]): F[TodoList] = {
       import stm._
       for {
         // Traverse with get to yield a F[List[TodoItem]], and map the contained List[TodoItem] by filtering for incomplete items
@@ -92,7 +92,7 @@ object TodoData {
 
   // Transaction to build our initial example data
   object example extends Transaction {
-    def apply[F[_] : Monad](implicit stm: STMOps[F]): F[Unit] = {
+    def apply[F[_] : Monad](implicit stm: EditOps[F]): F[Unit] = {
       import stm._
       for {
         itemIds <- (1 to 5).toList.traverse(i =>

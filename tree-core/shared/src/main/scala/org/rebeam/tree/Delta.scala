@@ -8,29 +8,29 @@ import org.rebeam.tree.ot.{OTList, Operation}
 
 /**
   * A Delta will take a data value, and produce a new data
-  * value using STMOps.
+  * value using EditOps.
   * This is essentially a Transaction that requires a data item
   * to operate on. Converted to a Transaction using a DeltaCursor.
   *
   * @tparam A The data value
   */
 trait Delta[A] {
-  def apply[F[_]: Monad](a: A)(implicit stm: STMOps[F]): F[A]
+  def apply[F[_]: Monad](a: A)(implicit stm: EditOps[F]): F[A]
 }
 
 object Delta {
 
   case class ValueDelta[A](newA: A) extends Delta[A] {
-    def apply[F[_]: Monad](a: A)(implicit stm: STMOps[F]): F[A] = stm.pure(newA)
+    def apply[F[_]: Monad](a: A)(implicit stm: EditOps[F]): F[A] = stm.pure(newA)
   }
 
   case class LensDelta[A, B](lens: Lens[A, B], delta: Delta[B]) extends Delta[A] {
-    override def apply[F[_] : Monad](a: A)(implicit stm: STMOps[F]): F[A] =
+    override def apply[F[_] : Monad](a: A)(implicit stm: EditOps[F]): F[A] =
       delta[F](lens.get(a)).map(lens.set(_)(a))
   }
 
   case class PrismDelta[A, B](prism: Prism[A, B], delta: Delta[B]) extends Delta[A] {
-    override def apply[F[_] : Monad](a: A)(implicit stm: STMOps[F]): F[A] = {
+    override def apply[F[_] : Monad](a: A)(implicit stm: EditOps[F]): F[A] = {
       prism.getOption(a).fold(
         stm.pure(a)
       )(
@@ -40,7 +40,7 @@ object Delta {
   }
 
   case class OptionalDelta[A, B](optional: Optional[A, B], delta: Delta[B]) extends Delta[A] {
-    override def apply[F[_] : Monad](a: A)(implicit stm: STMOps[F]): F[A] =
+    override def apply[F[_] : Monad](a: A)(implicit stm: EditOps[F]): F[A] =
       optional.getOption(a).fold(
         stm.pure(a)
       )(
@@ -49,7 +49,7 @@ object Delta {
   }
 
   case class OptionDelta[A](delta: Delta[A]) extends Delta[Option[A]] {
-    override def apply[F[_] : Monad](a: Option[A])(implicit stm: STMOps[F]): F[Option[A]] =
+    override def apply[F[_] : Monad](a: Option[A])(implicit stm: EditOps[F]): F[Option[A]] =
       a.fold(
         stm.pure(a)
       )(
@@ -66,7 +66,7 @@ object Delta {
     * @param delta  The delta to apply at index
     */
   case class TraversableIndexDelta[T[_]: Traverse, A](index: Int, delta: Delta[A]) extends Delta[T[A]] {
-    override def apply[F[_] : Monad](s: T[A])(implicit stm: STMOps[F]): F[T[A]] =
+    override def apply[F[_] : Monad](s: T[A])(implicit stm: EditOps[F]): F[T[A]] =
       // This maps the provided (A, Int) => F[A] over each pair of (element: A and index), 
       // and turns the resulting T[F[A]] inside out to an F[T[A]]
       s.traverseWithIndexM {
@@ -76,7 +76,7 @@ object Delta {
   }
 
   case class OTListDelta[A](op: Operation[A]) extends Delta[OTList[A]] {
-    override def apply[F[_] : Monad](a: OTList[A])(implicit stm: STMOps[F]): F[OTList[A]] = stm.otListOperation(a, op)
+    override def apply[F[_] : Monad](a: OTList[A])(implicit stm: EditOps[F]): F[OTList[A]] = stm.otListOperation(a, op)
   }
 
 //  def transform[F[_] : Traverse, A](oldList: F[A], modify: A => A, predicate: Int => Boolean): F[A] = {
