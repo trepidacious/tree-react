@@ -16,7 +16,7 @@ object Deps {
   lazy val scalatestPlusScalacheckVersion           = "3.1.1.1"
   lazy val scalacheckVersion          = "1.14.3"
   lazy val kindProjectorVersion       = "0.11.0"
-  lazy val slinkyVersion              = "0.6.4"
+  lazy val slinkyVersion              = "0.6.5"
   lazy val scribeVersion              = "2.7.12"
 
   lazy val kindProjector = 

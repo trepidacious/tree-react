@@ -5,7 +5,7 @@ name := "tree-react root project"
 
 ThisBuild / version := "0.0.1-SNAPSHOT"
 ThisBuild / organization := "org.rebeam"
-ThisBuild / scalaVersion := "2.13.1"
+ThisBuild / scalaVersion := "2.13.2"
 ThisBuild / scalacOptions ++= ScalacOptions.flags
 
 testOptions in Test += Tests.Argument(TestFrameworks.ScalaCheck, "-verbosity", "2")
@@ -223,7 +223,7 @@ lazy val treeSlinkyExtra = project.in(
   Deps.logging,
   Deps.slinky,
   stFlavour := Flavour.Slinky,
-  Compile / npmDependencies ++= Seq("antd" -> "4.2.0")
+  Compile / npmDependencies ++= Seq("antd" -> "4.3.1")
 ).dependsOn(treeSlinky)
 
 lazy val antdApp = project.in(
@@ -231,10 +231,10 @@ lazy val antdApp = project.in(
   ).configure(
     baseSettings, bundlerSettings, browserProject, withCssLoading, reactNpmDeps
   ).settings(
+    // TODO why do we need this? Should be picked up transitively from treeSlinkyExtra?
+    Compile / npmDependencies ++= Seq("antd" -> "4.3.1"),
     webpackDevServerPort := 8080,
   ).dependsOn(treeSlinkyExtra)
-
-
 
 lazy val bootstrapApp = project.in(
     file("bootstrap-app")

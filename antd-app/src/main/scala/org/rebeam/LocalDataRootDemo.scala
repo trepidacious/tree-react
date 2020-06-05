@@ -12,23 +12,19 @@ import slinky.web.html._
 
 import slinky.core.facade.ReactElement
 import typings.antd.components.{List => AntList, _}
-import typings.antd.antdStrings
 
 import slinky.web.html._
 
+import typings.antd.antdStrings
+import typings.antd.paginationPaginationMod.PaginationConfig
+
 // import StringOTView._
-import typings.antd.menuMod.MenuMode
-import typings.antd.menuContextMod.MenuTheme
-import org.scalablytyped.runtime.StringDictionary
 
 import scala.scalajs.js
 import js.JSConverters._
-import typings.antDesignIcons.components.PlusCircleFilled
-
-import org.rebeam.tree.slinkify.Implicits._
-import typings.antDesignIcons.components.MinusCircleFilled
-import typings.antd.antdStrings.vertical
-import typings.antd.paginationPaginationMod.PaginationConfig
+import typings.antd.menuMod.MenuMode
+import typings.antd.menuContextMod.MenuTheme
+import org.rebeam.tree.slinkify.ExtraImplicits._
 
 object LocalDataRootDemo {
 
@@ -44,23 +40,17 @@ object LocalDataRootDemo {
       v.cursorAt[TodoItem](id).map(
         cursor => {
 
-          // We want to use a sui.Input directly below so we can pass in the checkbox as a label,
-          // so we need to handle changes here
           val textCursor = cursor.zoom(TodoItem.text)
 
-          Input(
-            addonBefore = Switch(
-              size = antdStrings.small,
-              onChange = (b: Boolean, _) => cursor.delta(TodoItemCompletion(b)).apply()
-            )(
-              checked := cursor.a.completed.isDefined
-            ),
-          )(
-            placeholder := "Todo item",
-            value := textCursor.a,
-            onChange := (event => textCursor.set(event.target.value).apply()),
-            className := "todo-item"
-          )
+          val switch = Switch.size(antdStrings.small).onChange((b: Boolean, _) => cursor.delta(TodoItemCompletion(b)).apply()).checked(cursor.a.completed.isDefined)
+
+          Input
+            .addonBefore(switch)
+            .placeholder("Todo item")
+            .value(textCursor.a)
+            .onChange(
+              event => textCursor.set(event.target_ChangeEvent.value).apply()
+            ).className("todo-item")
         }
       )
     }
@@ -82,8 +72,8 @@ object LocalDataRootDemo {
           //   p(stringOTView(textCursor)),
           //   p(stringOTView(textCursor)),
             Space(
-              Button(shape = antdStrings.round, `type` = antdStrings.primary, icon = PlusCircleFilled.plain, onClick = _ => cursor.delta(TodoListAdd("New todo")).apply())("Add todo"),
-              Button(shape = antdStrings.round, icon = MinusCircleFilled.plain, onClick = _ => cursor.delta(TodoListClearCompleted()).apply())("Clear completed")
+              Button.shape(antdStrings.round).`type`(antdStrings.primary).onClick(_ => cursor.delta(TodoListAdd("New todo")).apply())("Add todo"),  //.icon(PlusCircleFilled())
+              Button.shape(antdStrings.round).onClick(_ => cursor.delta(TodoListClearCompleted()).apply())("Clear completed"), //.icon(MinusCircleFilled())
             )
           // )
         }
@@ -97,15 +87,14 @@ object LocalDataRootDemo {
   // can still get data from the Context provided by dataProvider, so this can be a ViewP
   val todoListView: FunctionalComponent[TodoList] = new ViewP[TodoList] {
     override def apply(a: TodoList): ReactElement = {
-      Space(
-        direction = vertical
+      Space.direction(
+        antdStrings.vertical
       )(
         todoListSummaryView(a.id),
-        AntList[Id[TodoItem]](
-          pagination = PaginationConfig(), 
-          dataSource = a.items.toJSArray, 
-          renderItem = (id, index) => todoItemView(id).withKey(id.toString)
-        )
+        AntList[Id[TodoItem]]
+          .pagination(PaginationConfig())
+          .dataSource(a.items.toJSArray)
+          .renderItem((id, index) => todoItemView(id).withKey(id.toString))
         // a.items.map(id => todoItemView(id).withKey(id.toString))
       )
     }
@@ -114,16 +103,16 @@ object LocalDataRootDemo {
   val layoutView: FunctionalComponent[TodoList] = new ViewP[TodoList] {
     override def apply(a: TodoList): ReactElement = {
       // div()
-      Layout(_overrides = StringDictionary("className" -> "layout"))(
+      Layout.className("layout")(
         LayoutHeader()(
-          Menu(mode = MenuMode.horizontal, theme = MenuTheme.dark, defaultSelectedKeys = js.Array("1"))(
+          Menu.mode(MenuMode.horizontal).theme(MenuTheme.dark).defaultSelectedKeys(js.Array("1"))(
             MenuItem().withKey("1")("Home"),
             // MenuItem().withKey("2")("Projects"),
             // MenuItem().withKey("3")("Blog")
           )
         ),
         LayoutContent()(
-          PageHeader(title = "Demo", subTitle = "Shows OT String editing and simple todo view")(
+          PageHeader.title("Demo").subTitle("Shows OT String editing and simple todo view")(
             todoListView(a)
           )
         )
@@ -161,6 +150,13 @@ object LocalDataRootDemo {
       // layoutView("Hello")
       // When we have an indexed TodoList, display it
       index.todoList.map[ReactElement](l => layoutView(l)).getOrElse(span()("Empty"))
+      // index.todoList.map[ReactElement](l => div("Hello World!")).getOrElse(span()("Empty"))
+      // Alert
+      //       .message("Alert message title")
+      //       .description("Further details about the context of this alert.")
+      //       .`type`(antdStrings.info)
+      //       .showIcon(true)
+
     },
     todoIndexer,  //This indexer will provide the most recently added list
     example       //This example Transaction populates the STM to display
