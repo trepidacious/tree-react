@@ -130,17 +130,6 @@ import org.rebeam.tree.ot.{OTList, Operation}
 abstract class EditOps[F[_]: Monad] extends TransactionOps {
 
   /**
-    * Get data at an [[Id]]
-    *
-    * U operation - makes STM data at id available to subsequent transactions.
-    *
-    * @param id   The data's [[Id]]
-    * @tparam A   Type of data22
-    * @return     The data at specified [[Id]]
-    */
-  def get[A](id: Id[A]): F[A]
-
-  /**
     * Modify data at an [[Id]]
     *
     * U operation - makes the original STM data at id, and modified data, available to subsequent transactions.

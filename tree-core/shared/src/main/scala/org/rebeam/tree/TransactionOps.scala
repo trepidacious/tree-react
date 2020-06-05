@@ -12,7 +12,7 @@ import cats.Monad
   *
   * @tparam F The monad used to express operations
   */
-abstract class TransactionOps[F[_]: Monad] {
+abstract class TransactionOps[F[_]: Monad] extends ReadOps [F] {
 
   /**
     * Create a pseudo-random Int
@@ -65,6 +65,4 @@ abstract class TransactionOps[F[_]: Monad] {
     */
   def context: F[TransactionContext]
 
-  // For convenience, could use Monad directly
-  def pure[A](a: A): F[A] = implicitly[Monad[F]].pure(a)
 }

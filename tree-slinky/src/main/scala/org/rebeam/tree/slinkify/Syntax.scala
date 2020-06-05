@@ -12,7 +12,7 @@ object Syntax {
   type Callback = () => Unit
 
   object Callback{
-    def apply(f: => Unit): Callback = f _
+    def apply(f: => Unit): Callback = () => f
 
     /**
       * Convenience for calling `dom.console.log`.

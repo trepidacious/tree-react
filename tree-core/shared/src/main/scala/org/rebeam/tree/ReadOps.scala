@@ -18,6 +18,8 @@ abstract class ReadOps[F[_]: Monad] {
     * will retry the operation when missing data has been 
     * retrieved.
     * 
+    * U operation when part of an Edit - makes STM data at id available to subsequent transactions.
+    * 
     * @param id   The data's [[Id]]
     * @tparam A   Type of data
     * @return     The data at specified [[Id]]
