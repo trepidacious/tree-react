@@ -4,7 +4,7 @@ package org.rebeam.tree.slinkify
 import slinky.core.FunctionalComponent
 import slinky.core.facade.ReactElement
 import slinky.web.html._
-import typings.antd.components.{List => _, _}
+// import typings.antd.components.{List => _, _}
 
 object StringView {
 
@@ -19,7 +19,7 @@ object StringView {
       // a Transaction from the delta using the context provided by the cursor, and
       // then uses the implicit ReactTransactor to convert the Transactor to a Callback
       // we can give to React.
-      Input()(
+      input(
         value := c.a,
         onChange := (event => c.set(event.target.value).apply())
       )

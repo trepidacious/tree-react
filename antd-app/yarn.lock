@@ -2957,9 +2957,9 @@ rc-field-form@~1.4.1:
     rc-util "^5.0.0"
 
 rc-input-number@~5.0.0:
-  version "5.0.0"
-  resolved "https://registry.yarnpkg.com/rc-input-number/-/rc-input-number-5.0.0.tgz#a0be34bd4cf316203174d7096797c4c36b0e8a67"
-  integrity sha512-n4waZmQQs992n7AdLnWkCskneZITGUSvHQ8YxWU/BhoxK8uuqkZtZ/OEOxXIv3eEFDpD/tBRiGPCCVCBVccMtw==
+  version "5.0.1"
+  resolved "https://registry.yarnpkg.com/rc-input-number/-/rc-input-number-5.0.1.tgz#bafbea11516fdc34ae309dd56b99ab11ab6bc9bf"
+  integrity sha512-4GgnJCjllAVNsZ9fPA+3LnoIgwUqM8QAWpyoKiTkPDN1UWapXYsPiKJCXOhnmiR0X8xpEoYHiobUaiquMliWiQ==
   dependencies:
     classnames "^2.2.0"
     rc-util "^5.0.1"

@@ -24,7 +24,6 @@ import scala.scalajs.js
 import js.JSConverters._
 import typings.antd.menuMod.MenuMode
 import typings.antd.menuContextMod.MenuTheme
-import org.rebeam.tree.slinkify.ExtraImplicits._
 
 object LocalDataRootDemo {
 

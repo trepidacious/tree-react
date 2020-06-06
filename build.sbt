@@ -54,14 +54,13 @@ lazy val baseSettings: Project => Project =
     )
 
 lazy val bundlerSettings: Project => Project =
-  _.enablePlugins(ScalablyTypedConverterPlugin)
-    .settings(
-      Compile / fastOptJS / webpackExtraArgs += "--mode=development",
-      Compile / fullOptJS / webpackExtraArgs += "--mode=production",
-      Compile / fastOptJS / webpackDevServerExtraArgs += "--mode=development",
-      Compile / fullOptJS / webpackDevServerExtraArgs += "--mode=production",
-      useYarn := true
-    )
+  _.settings(
+    Compile / fastOptJS / webpackExtraArgs += "--mode=development",
+    Compile / fullOptJS / webpackExtraArgs += "--mode=production",
+    Compile / fastOptJS / webpackDevServerExtraArgs += "--mode=development",
+    Compile / fullOptJS / webpackDevServerExtraArgs += "--mode=production",
+    useYarn := true
+  )
 
 // Settings for a js-only project
 lazy val jsProject: Project => Project =
@@ -144,7 +143,7 @@ lazy val root = project.in(file(".")).
     treeOTJS, treeOTJVM,
     treeSlinky,
     treeSlinkyExtra,
-    antdApp,
+    // antdApp,
     // scalajsElectronJS, scalajsElectronJVM,
     // scalajsElectronReactJS, scalajsElectronReactJVM,
     // electronAppJS, electronAppJVM,
@@ -217,34 +216,50 @@ lazy val treeSlinky = project.in(
 lazy val treeSlinkyExtra = project.in(
   file("tree-slinky-extra")
 ).configure(
-  baseSettings, bundlerSettings, browserProject, withCssLoading, reactNpmDeps
+  baseSettings
 ).settings(
   name := "tree-slinky-extra",
   Deps.logging,
-  Deps.slinky,
-  stFlavour := Flavour.Slinky,
-  Compile / npmDependencies ++= Seq("antd" -> "4.3.1")
+  Deps.slinky
 ).dependsOn(treeSlinky)
 
-lazy val antdApp = project.in(
-    file("antd-app")
-  ).configure(
+// lazy val treeSlinkyExtra = project
+//   .in(file("tree-slinky-extra"))
+//   .enablePlugins(ScalablyTypedConverterPlugin)
+//   .configure(
+//     baseSettings, bundlerSettings, browserProject, withCssLoading, reactNpmDeps
+//   )
+//   .settings(
+//     name := "tree-slinky-extra",
+//     Deps.logging,
+//     Deps.slinky,
+//     stFlavour := Flavour.Slinky,
+//     Compile / npmDependencies ++= Seq("antd" -> "4.3.1")
+//   )
+//   .dependsOn(treeSlinky)
+
+lazy val antdApp = project
+  .in(file("antd-app"))
+  .enablePlugins(ScalablyTypedConverterPlugin)
+  .configure(
     baseSettings, bundlerSettings, browserProject, withCssLoading, reactNpmDeps
-  ).settings(
-    // TODO why do we need this? Should be picked up transitively from treeSlinkyExtra?
+  )
+  .settings(
+    stFlavour := Flavour.Slinky,
     Compile / npmDependencies ++= Seq("antd" -> "4.3.1"),
     webpackDevServerPort := 8080,
-  ).dependsOn(treeSlinkyExtra)
+  )
+  .dependsOn(treeSlinkyExtra)
 
-lazy val bootstrapApp = project.in(
-    file("bootstrap-app")
-  ).configure(
-    baseSettings, bundlerSettings, browserProject, withCssLoading, reactNpmDeps
-  ).settings(
-    webpackDevServerPort := 8080,
-    stFlavour := Flavour.Slinky,
-    Compile / npmDependencies ++= Seq("react-bootstrap" -> "1.0.0", "bootstrap" -> "4.4.1")
-  ).dependsOn(treeSlinky)
+// lazy val bootstrapApp = project.in(
+//     file("bootstrap-app")
+//   ).configure(
+//     baseSettings, bundlerSettings, browserProject, withCssLoading, reactNpmDeps
+//   ).settings(
+//     webpackDevServerPort := 8080,
+//     stFlavour := Flavour.Slinky,
+//     Compile / npmDependencies ++= Seq("react-bootstrap" -> "1.0.0", "bootstrap" -> "4.4.1")
+//   ).dependsOn(treeSlinky)
 
 
 //   ///////////////////////
@@ -271,14 +286,14 @@ lazy val bootstrapApp = project.in(
 // lazy val treeSlinkyExtraJS = treeSlinkyExtra.js
 
 
-lazy val antd =
-  project
-    .configure(baseSettings, bundlerSettings, browserProject, withCssLoading, reactNpmDeps)
-    .settings(
-      webpackDevServerPort := 8006,
-      stFlavour := Flavour.Slinky,
-      Compile / npmDependencies ++= Seq("antd" -> "3.26.0")
-    )
+// lazy val antd =
+//   project
+//     .configure(baseSettings, bundlerSettings, browserProject, withCssLoading, reactNpmDeps)
+//     .settings(
+//       webpackDevServerPort := 8006,
+//       stFlavour := Flavour.Slinky,
+//       Compile / npmDependencies ++= Seq("antd" -> "3.26.0")
+//     )
 
 
 
