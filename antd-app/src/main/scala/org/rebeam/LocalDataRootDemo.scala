@@ -42,7 +42,11 @@ object LocalDataRootDemo {
 
           val textCursor = cursor.zoom(TodoItem.text)
 
-          val switch = Switch.size(antdStrings.small).onChange((b: Boolean, _) => cursor.delta(TodoItemCompletion(b)).apply()).checked(cursor.a.completed.isDefined)
+          val switch = Switch
+            .size(antdStrings.small)
+            .onChange(
+              (b: Boolean, _) => cursor.delta(TodoItemCompletion(b)).apply()
+            ).checked(cursor.a.completed.isDefined)
 
           Input
             .addonBefore(switch)
@@ -72,8 +76,17 @@ object LocalDataRootDemo {
           //   p(stringOTView(textCursor)),
           //   p(stringOTView(textCursor)),
             Space(
-              Button.shape(antdStrings.round).`type`(antdStrings.primary).onClick(_ => cursor.delta(TodoListAdd("New todo")).apply())("Add todo"),  //.icon(PlusCircleFilled())
-              Button.shape(antdStrings.round).onClick(_ => cursor.delta(TodoListClearCompleted()).apply())("Clear completed"), //.icon(MinusCircleFilled())
+              Button
+                .shape(antdStrings.round)
+                .`type`(antdStrings.primary)
+                .onClick(
+                  _ => cursor.delta(TodoListAdd("New todo")).apply()
+                )("Add todo"),  //.icon(PlusCircleFilled())
+              Button
+                .shape(antdStrings.round)
+                .onClick(
+                  _ => cursor.delta(TodoListClearCompleted()).apply()
+                )("Clear completed"), //.icon(MinusCircleFilled())
             )
           // )
         }
@@ -105,16 +118,24 @@ object LocalDataRootDemo {
       // div()
       Layout.className("layout")(
         LayoutHeader()(
-          Menu.mode(MenuMode.horizontal).theme(MenuTheme.dark).defaultSelectedKeys(js.Array("1"))(
-            MenuItem().withKey("1")("Home"),
-            // MenuItem().withKey("2")("Projects"),
-            // MenuItem().withKey("3")("Blog")
-          )
+          Menu
+            .mode(MenuMode.horizontal)
+            .theme(MenuTheme.dark)
+            .defaultSelectedKeys(js.Array("1"))(
+              MenuItem()
+                .withKey("1")(
+                  "Home"
+                ),
+              // MenuItem().withKey("2")("Projects"),
+              // MenuItem().withKey("3")("Blog")
+            )
         ),
         LayoutContent()(
-          PageHeader.title("Demo").subTitle("Shows OT String editing and simple todo view")(
-            todoListView(a)
-          )
+          PageHeader
+            .title("Demo")
+            .subTitle("Shows OT String editing and simple todo view")(
+              todoListView(a)
+            )
         )
       )
     }
@@ -149,7 +170,11 @@ object LocalDataRootDemo {
       scribe.debug("LocalDataRootDemo dataProvider.render")
       // layoutView("Hello")
       // When we have an indexed TodoList, display it
-      index.todoList.map[ReactElement](l => layoutView(l)).getOrElse(span()("Empty"))
+      index.todoList.map[ReactElement](
+        l => layoutView(l)
+      ).getOrElse(
+        span()("Empty")
+      )
       // index.todoList.map[ReactElement](l => div("Hello World!")).getOrElse(span()("Empty"))
       // Alert
       //       .message("Alert message title")
