@@ -118,7 +118,7 @@ object DataComponent {
 
           val inner = FunctionalComponent[ValueAndData[A]](
             props => memo.render(props).v
-          )
+          )(new FunctionalComponentName("DataComponent.inner"))
 
           // Note that for React.memo we are returning whether the values are the same - this is the inverse of
           // SCU, hence the `!`
@@ -133,5 +133,5 @@ object DataComponent {
       val data = useContext(contexts.data)
       renderComponent(ValueAndData(props, data))
     }
-  }
+  }(new FunctionalComponentName("DataComponent"))
 }
