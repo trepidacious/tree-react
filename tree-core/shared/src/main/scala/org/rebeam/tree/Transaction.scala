@@ -4,12 +4,22 @@ import cats.Monad
 import cats.implicits._
 
 /**
-  * A Transaction can produce an effect using EditOps. This represents
+  * A Transaction is an Edit producing no result (Unit). 
+  * This can produce an effect using EditOps. This represents
   * an atomic operation performed using the EditOps, getting/setting data, etc.
-  * Using a wrapper allows for use of different effects, and serialisation.
+  * We require an Edit[Unit] to make it clear that no value is returned
+  * when a Transaction runs.
+  * We use a trait to distinguish Edits that are used to build up Transactions
+  * from the Transactions themselves - Transactions are sutiable to be
+  * run as entire self-contained operations, passed to a server for execution, etc.
   */
 trait Transaction extends Edit[Unit]
+
 object Transaction {
+
+  def apply[A](edit: Edit[A]): Transaction = new Transaction {
+    def apply[F[_]: Monad](implicit editOps: EditOps[F]): F[Unit] = edit.map(_ => ())[F]
+  }
 
   /**
     * Applies a delta to the data at an Id in STM
