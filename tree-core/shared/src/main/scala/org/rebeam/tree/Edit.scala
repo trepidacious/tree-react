@@ -31,6 +31,16 @@ object Edit {
     }
   }
 
+  /**
+    * Run a Read as an Edit
+    *
+    * @param r  The Read
+    * @return   The Read, as an Edit
+    */
+  def read[A](r: Read[A]): Edit[A] = new Edit[A] {
+    def apply[F[_]: Monad](implicit editOps: EditOps[F]): F[A] = r[F]
+  }
+
   def pure[A](a: A) = new Edit[A] {
     def apply[F[_]: Monad](implicit editOps: EditOps[F]): F[A] = editOps.pure(a)
   }
