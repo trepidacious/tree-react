@@ -90,22 +90,38 @@ object TodoData {
   implicit val todoItemIdCodec: IdCodec[TodoItem] = IdCodec[TodoItem]("TodoItem")
   implicit val todoListIdCodec: IdCodec[TodoList] = IdCodec[TodoList]("TodoList")
 
+  val exampleEdit: Edit[TodoList] = {
+    import Edit._
+    for {
+      itemIds <- (1 to 5).toList.traverse(i =>
+        for {
+          c <- context
+          item <- put[TodoItem](id => TodoItem(id, c.moment, None, s"Todo $i"))
+        } yield item.id
+      )
+      name <- createOTString("Todos")
+      todoList <- put[TodoList](TodoList(_, itemIds, name))
+    } yield todoList
+  }
+
   // Transaction to build our initial example data
   object example extends Transaction {
     def apply[F[_] : Monad](implicit stm: EditOps[F]): F[Unit] = {
-      import stm._
-      for {
-        itemIds <- (1 to 5).toList.traverse(i =>
-          for {
-            c <- context
-            item <- put[TodoItem](id => TodoItem(id, c.moment, None, s"Todo $i"))
-          } yield item.id
-        )
-        name <- createOTString("Todos")
-        _ <- put[TodoList](TodoList(_, itemIds, name))
-      } yield ()
+      // import stm._
+      // for {
+      //   itemIds <- (1 to 5).toList.traverse(i =>
+      //     for {
+      //       c <- context
+      //       item <- put[TodoItem](id => TodoItem(id, c.moment, None, s"Todo $i"))
+      //     } yield item.id
+      //   )
+      //   name <- createOTString("Todos")
+      //   _ <- put[TodoList](TodoList(_, itemIds, name))
+      // } yield ()
+      exampleEdit.map(_ => ()).apply[F]
     }
   }
+
 
   // We need to be able to encode/decode any acceptable transaction on the data.
   // The simplest case is just to support applying a delta at an id.
