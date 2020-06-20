@@ -127,7 +127,7 @@ import org.rebeam.tree.ot.{OTList, Operation}
   *
   * @tparam F The monad used to express operations
   */
-abstract class EditOps[F[_]: Monad] extends TransactionOps {
+abstract class EditOps[F[_]: Monad] extends TransactionOps[F] {
 
   /**
     * Modify data at an [[Id]]
