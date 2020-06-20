@@ -2,29 +2,151 @@ package org.rebeam
 
 import cats.Monad
 import cats.implicits._
-import org.log4s.getLogger
 import org.rebeam.TodoData._
 import org.rebeam.tree.MapStateSTM.StateDelta
 import org.rebeam.tree._
 import org.rebeam.tree.slinkify._
 
-import slinky.core.facade.ReactElement
-import typings.antd.AntdFacade.{List => _, _}
-import typings.react.ScalableSlinky._
-import org.rebeam.tree.slinkify.Syntax._
-
-import slinky.core.FunctionalComponent
+import slinky.core._
 import slinky.web.html._
 
-import StringOTView._
+import slinky.core.facade.ReactElement
+import typings.antd.components.{List => AntList, _}
+
+import slinky.web.html._
+
+import typings.antd.antdStrings
+import typings.antd.paginationPaginationMod.PaginationConfig
+
+// import StringOTView._
+
+import scala.scalajs.js
+import js.JSConverters._
+import typings.antd.menuMod.MenuMode
+import typings.antd.menuContextMod.MenuTheme
 
 object LocalDataRootDemo {
 
-  private val logger = getLogger
+  // A View accepting the Id of a TodoItem.
+  // This is a View so that it can use ReactViewOps to create a cursor at the id to view/edit the TodoItem.
+  // The view will be re-rendered whenever the data at the Id changes.
+  val todoItemView: FunctionalComponent[Id[TodoItem]] = new View[Id[TodoItem]] {
 
-  // Our index is simple - just store the most recently added list.
-  // The index lets us access this list by retrieving its Id from the TodoList in the index.
-  // Otherwise we wouldn't know the Id, since we don't get any return value from the exampleData Transaction.
+    def apply[F[_]: Monad](id: Id[TodoItem])(implicit v: ReactViewOps[F], tx: ReactTransactor): F[ReactElement] = {
+      scribe.debug(s"View applying from $id")
+
+      // By creating a cursor at the Id, we can enable navigation through the TodoItem
+      v.cursorAt[TodoItem](id).map(
+        cursor => {
+
+          val textCursor = cursor.zoom(TodoItem.text)
+
+          val switch = Switch
+            .size(antdStrings.small)
+            .onChange(
+              (b: Boolean, _) => cursor.delta(TodoItemCompletion(b)).apply()
+            ).checked(cursor.a.completed.isDefined)
+
+          Input
+            .addonBefore(switch)
+            .placeholder("Todo item")
+            .value(textCursor.a)
+            .onChange(
+              event => textCursor.set(event.target_ChangeEvent.value).apply()
+            ).className("todo-item")
+        }
+      )
+    }
+  }.build("todoItemView", onError = e => li(e.toString))
+
+  // A View accepting the Id of a TodoItem.
+  // This is a View so that it can use ReactViewOps to create a cursor at the id to view/edit the TodoItem.
+  // The view will be re-rendered whenever the data at the Id changes.
+  val todoListSummaryView: FunctionalComponent[Id[TodoList]] = new View[Id[TodoList]] {
+
+    def apply[F[_]: Monad](id: Id[TodoList])(implicit v: ReactViewOps[F], tx: ReactTransactor): F[ReactElement] = {
+      scribe.debug(s"View applying from $id")
+
+      // By creating a cursor at the Id, we can enable navigation through the TodoItem
+      v.cursorAt[TodoList](id).map(
+        cursor => {
+          val textCursor = cursor.zoom(TodoList.name)
+          // div(
+          //   p(stringOTView(textCursor)),
+          //   p(stringOTView(textCursor)),
+            Space(
+              Button
+                .shape(antdStrings.round)
+                .`type`(antdStrings.primary)
+                .onClick(
+                  _ => cursor.delta(TodoListAdd("New todo")).apply()
+                )("Add todo"),  //.icon(PlusCircleFilled())
+              Button
+                .shape(antdStrings.round)
+                .onClick(
+                  _ => cursor.delta(TodoListClearCompleted()).apply()
+                )("Clear completed"), //.icon(MinusCircleFilled())
+            )
+          // )
+        }
+      )
+    }
+  }.build("todoItemView", onError = e => li(e.toString))
+
+  // This component uses a child view for each item in the list, each of these will update only when the TodoItem
+  // referenced by that Id changes.
+  // Note that this does not need to be a View itself since it doesn't actually get the data by id - the child views
+  // can still get data from the Context provided by dataProvider, so this can be a ViewP
+  val todoListView: FunctionalComponent[TodoList] = new ViewP[TodoList] {
+    override def apply(a: TodoList): ReactElement = {
+      Space.direction(
+        antdStrings.vertical
+      )(
+        todoListSummaryView(a.id),
+        AntList[Id[TodoItem]]
+          .pagination(PaginationConfig())
+          .dataSource(a.items.toJSArray)
+          .renderItem((id, index) => todoItemView(id).withKey(id.toString))
+        // a.items.map(id => todoItemView(id).withKey(id.toString))
+      )
+    }
+  }.build
+
+  val layoutView: FunctionalComponent[TodoList] = new ViewP[TodoList] {
+    override def apply(a: TodoList): ReactElement = {
+      // div()
+      Layout.className("layout")(
+        LayoutHeader()(
+          Menu
+            .mode(MenuMode.horizontal)
+            .theme(MenuTheme.dark)
+            .defaultSelectedKeys(js.Array("1"))(
+              MenuItem()
+                .withKey("1")(
+                  "Home"
+                ),
+              // MenuItem().withKey("2")("Projects"),
+              // MenuItem().withKey("3")("Blog")
+            )
+        ),
+        LayoutContent()(
+          PageHeader
+            .title("Demo")
+            .subTitle("Shows OT String editing and simple todo view")(
+              todoListView(a)
+            )
+        )
+      )
+    }
+
+  }.build
+
+  // When creating a LocalDataRoot to manage an STM, we need an Indexer that will give us an
+  // index into the data - a way to get the Id of useful data. Otherwise we wouldn't know the
+  // Id of any data in the STM, since Transactions do not return values (at the moment). 
+  // We can then navigate to other data from the index and Refs.
+  //
+  // Our example index is simple - just store the most recently added TodoList.
   case class TodoIndex(todoList: Option[TodoList])
 
   // This indexer will just keep the last put or modified TodoList
@@ -40,94 +162,25 @@ object LocalDataRootDemo {
     }
   }
 
-  // A View accepting the Id of a TodoItem.
-  // This is a View so that it can use ReactViewOps to create a cursor at the id to view/edit the TodoItem.
-  // The view will be re-rendered whenever the data at the Id changes.
-  val todoItemView: FunctionalComponent[Id[TodoItem]] = new View[Id[TodoItem]] {
-    private val logger = getLogger
-
-    def apply[F[_]: Monad](id: Id[TodoItem])(implicit v: ReactViewOps[F], tx: ReactTransactor): F[ReactElement] = {
-      logger.debug(s"View applying from $id")
-
-      // By creating a cursor at the Id, we can enable navigation through the TodoItem
-      v.cursorAt[TodoItem](id).map(
-        cursor => {
-
-          // We want to use a sui.Input directly below so we can pass in the checkbox as a label,
-          // so we need to handle changes here
-          val textCursor = cursor.zoom(TodoItem.text)
-
-          Input(
-            InputProps(
-              placeholder = "Todo item",
-              value = textCursor.a,
-              onChange = onInputValueChange(s => textCursor.set(s).apply()),
-              addonBefore = Switch(SwitchProps(
-                size = typings.antd.antdStrings.small,
-                checked = cursor.a.completed.isDefined,
-                onChange = (b: Boolean, _) => cursor.delta(TodoItemCompletion(b)).apply()
-              ))().toST,  //toST because we are passing as a ReactNode to InputProps
-            )
-          )
-
-        }
-      )
-    }
-  }.build("todoItemView", onError = e => li(e.toString))
-
-  // A View accepting the Id of a TodoItem.
-  // This is a View so that it can use ReactViewOps to create a cursor at the id to view/edit the TodoItem.
-  // The view will be re-rendered whenever the data at the Id changes.
-  val todoListSummaryView: FunctionalComponent[Id[TodoList]] = new View[Id[TodoList]] {
-    private val logger = getLogger
-
-    def apply[F[_]: Monad](id: Id[TodoList])(implicit v: ReactViewOps[F], tx: ReactTransactor): F[ReactElement] = {
-      logger.debug(s"View applying from $id")
-
-      // By creating a cursor at the Id, we can enable navigation through the TodoItem
-      v.cursorAt[TodoList](id).map(
-        cursor => {
-
-          // We want to use a sui.Input directly below so we can pass in the checkbox as a label,
-          // so we need to handle changes here
-          val textCursor = cursor.zoom(TodoList.name)
-          div(
-            stringOTView(textCursor),
-            stringOTView(textCursor)
-          )
-        }
-      )
-    }
-  }.build("todoItemView", onError = e => li(e.toString))
-
-  // This component uses a child view for each item in the list, each of these will update only when the TodoItem
-  // referenced by that Id changes.
-  // Note that this does not need to be a View itself since it doesn't actually get the data by id - the child views
-  // can still get data from the Context provided by dataProvider, so this can be a ViewP
-  val todoListView: FunctionalComponent[TodoList] = new ViewP[TodoList] {
-    override def apply(a: TodoList): ReactElement = {
-      div(
-        todoListSummaryView(a.id),
-        div(
-  //        verticalAlign = sui.List.VerticalAlign.Middle,
-  //        relaxed = true: js.Any
-        )(
-          a.items.map(id => todoItemView(id).withKey(id.toString))
-        )
-      )
-    }
-  }.build
-
   // This component will manage and render an STM, initialised to the example data
   // We only use the index for data, so the model is Unit
   val dataProvider: FunctionalComponent[Unit] = LocalDataRoot[Unit, TodoIndex](
     (_, index) =>{
-      logger.debug("LocalDataRootDemo dataProvider.render")
-      div(
-        span()("Hi there!"),
-        // When we have an indexed TodoList, display it
-        index.todoList.map[ReactElement](l => todoListView(l)).getOrElse(span()("Empty"))
+      scribe.debug("LocalDataRootDemo dataProvider.render")
+      // layoutView("Hello")
+      // When we have an indexed TodoList, display it
+      index.todoList.map[ReactElement](
+        l => layoutView(l)
+      ).getOrElse(
+        span()("Empty")
       )
+      // index.todoList.map[ReactElement](l => div("Hello World!")).getOrElse(span()("Empty"))
+      // Alert
+      //       .message("Alert message title")
+      //       .description("Further details about the context of this alert.")
+      //       .`type`(antdStrings.info)
+      //       .showIcon(true)
+
     },
     todoIndexer,  //This indexer will provide the most recently added list
     example       //This example Transaction populates the STM to display

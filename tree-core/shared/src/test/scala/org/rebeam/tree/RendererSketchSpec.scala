@@ -3,10 +3,12 @@ package org.rebeam.tree
 import cats.implicits._
 import org.rebeam.tree.DataSourceViewOps._
 import org.rebeam.tree.SpecUtils._
+import org.scalatest.matchers.should.Matchers
 import org.scalatest._
-import org.scalatest.prop.Checkers
+import org.scalatestplus.scalacheck.Checkers
 
-class RendererSketchSpec extends WordSpec with Matchers with Checkers {
+
+class RendererSketchSpec extends wordspec.AnyWordSpec with Matchers with Checkers {
 
   val dataSource: DataSource =
     MapDataSource.empty

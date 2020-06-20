@@ -4,33 +4,22 @@ import cats.Monad
 import cats.implicits._
 
 /**
-  * A Transaction can produce an effect and a result using STMOps. This represents
-  * an atomic operation performed using the STMOps, getting/setting data, etc.
-  * Using a wrapper allows for use of different effects, and serialisation.
+  * A Transaction is an Edit producing no result (Unit). 
+  * This can produce an effect using EditOps. This represents
+  * an atomic operation performed using the EditOps, getting/setting data, etc.
+  * We require an Edit[Unit] to make it clear that no value is returned
+  * when a Transaction runs.
+  * We use a trait to distinguish Edits that are used to build up Transactions
+  * from the Transactions themselves - Transactions are sutiable to be
+  * run as entire self-contained operations, passed to a server for execution, etc.
   */
-trait Transaction {
-
-  def apply[F[_]: Monad](implicit stm: STMOps[F]): F[Unit]
-
-  // The following are useful when we have a parametric return type A for the transaction instead of
-  // unit, but not serialisable
-//  def map[B](f: A => B): Transaction[B] = {
-//    val t = this
-//    new Transaction[B] {
-//      override def apply[F[_] : Monad](implicit stm: STMOps[F]): F[B] = t[F].map(f)
-//    }
-//  }
-//
-//  def flatMap[B](f: A => Transaction[B]): Transaction[B] = {
-//    val t = this
-//    new Transaction[B] {
-//      override def apply[F[_] : Monad](implicit stm: STMOps[F]): F[B] = t[F].flatMap(a => f(a)[F])
-//    }
-//  }
-
-}
+trait Transaction extends Edit[Unit]
 
 object Transaction {
+
+  def apply[A](edit: Edit[A]): Transaction = new Transaction {
+    def apply[F[_]: Monad](implicit editOps: EditOps[F]): F[Unit] = edit.map(_ => ())[F]
+  }
 
   /**
     * Applies a delta to the data at an Id in STM
@@ -39,12 +28,12 @@ object Transaction {
     * @tparam A     The type of data
     */
   case class DeltaAtId[A](id: Id[A], delta: Delta[A]) extends Transaction {
-    def apply[F[_]: Monad](implicit stm: STMOps[F]): F[Unit] =
+    def apply[F[_]: Monad](implicit stm: EditOps[F]): F[Unit] =
       stm.modifyF(id, (a: A) => delta[F](a)).map(_ => ())
   }
 
   val doNothing: Transaction = new Transaction {
-    override def apply[F[_] : Monad](implicit stm: STMOps[F]): F[Unit] = stm.pure(())
+    override def apply[F[_] : Monad](implicit stm: EditOps[F]): F[Unit] = stm.pure(())
   }
 
 }

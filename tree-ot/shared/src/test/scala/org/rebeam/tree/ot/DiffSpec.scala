@@ -3,10 +3,12 @@ package org.rebeam.tree.ot
 import org.rebeam.tree.ot.OTGen._
 import org.scalacheck.Prop._
 import org.scalacheck.Prop.forAll
+import org.scalatest.matchers.should.Matchers
 import org.scalatest._
-import org.scalatest.prop.Checkers
+import org.scalatestplus.scalacheck.Checkers
 
-class DiffSpec extends WordSpec with Matchers with Checkers {
+
+class DiffSpec extends wordspec.AnyWordSpec with Matchers with Checkers {
 
   def assertDiff(o: String, n: String, eOp: Operation[Char]): Unit = {
     val op = Diff(o.toList, n.toList)

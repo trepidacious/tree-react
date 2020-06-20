@@ -5,7 +5,7 @@ import japgolly.scalajs.react._
 import scalajs.js
 import scalajs.js.annotation.JSImport
 
-import japgolly.scalajs.react.vdom.html_<^._
+// import japgolly.scalajs.react.vdom.html_<^._
 
 object RatingIcon {
   

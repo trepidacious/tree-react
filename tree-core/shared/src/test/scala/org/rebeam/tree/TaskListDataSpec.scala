@@ -8,12 +8,14 @@ import org.rebeam.tree.MapStateSTM._
 import org.rebeam.tree.Transaction.DeltaAtId
 import org.rebeam.tree.codec.Codec.DeltaCodec
 import org.rebeam.tree.codec.TransactionCodec
+import org.scalatest.matchers.should.Matchers
 import org.scalatest._
-import org.scalatest.prop.Checkers
+import org.scalatestplus.scalacheck.Checkers
+
 
 import SpecUtils._
 
-class TaskListDataSpec extends WordSpec with Matchers with Checkers {
+class TaskListDataSpec extends wordspec.AnyWordSpec with Matchers with Checkers {
 
   private def taskListResult = runS(createTaskList[MapState])
 

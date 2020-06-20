@@ -35,7 +35,7 @@ object SemanticUiDocGenContext extends DocGenContext {
   def isFunctional(pathRaw: String, c: Component): Boolean = false
 
   override def preprocessComponents(all: Map[String, Component]): Map[String, Component] =
-    all.mapValues(preprocessComponent)
+    all.view.mapValues(preprocessComponent).toMap
 
   def preprocessComponent(c: Component): Component = c match {
     case Component(_, "Input", _, _) => c.copy(inheritance = Some(Inheritance("InputHasValue", "n/a")))

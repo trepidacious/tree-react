@@ -123,7 +123,7 @@ object MaterialUiDocGenContext extends DocGenContext {
   def isFunctional(pathRaw: String, c: Component): Boolean = c.displayName != "MuiThemeProvider"
 
   override def preprocessComponents(all: Map[String, Component]): Map[String, Component] =
-    all.mapValues(preprocessComponent)
+    all.view.mapValues(preprocessComponent).toMap
 
   def preprocessComponent(c: Component): Component = {
     // When ListItem "button" prop is true, API indicates that ListItem uses ButtonBase.

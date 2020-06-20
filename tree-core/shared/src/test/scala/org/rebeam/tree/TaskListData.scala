@@ -29,7 +29,7 @@ object TaskListData {
   // Allows TaskLists to be put in STM
   implicit val taskListIdCodec: IdCodec[TaskList] = IdCodec[TaskList]("TaskList")
 
-  def createTaskList[F[_]: Monad](implicit stm: STMOps[F]): F[TaskList] = {
+  def createTaskList[F[_]: Monad](implicit stm: EditOps[F]): F[TaskList] = {
     import stm._
     put[TaskList](
       TaskList(

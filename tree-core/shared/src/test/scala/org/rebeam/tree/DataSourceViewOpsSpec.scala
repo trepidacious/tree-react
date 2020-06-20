@@ -1,13 +1,14 @@
 package org.rebeam.tree
 
 import cats.implicits._
+import org.scalatest.matchers.should.Matchers
 import org.scalatest._
-import org.scalatest.prop.Checkers
+import org.scalatestplus.scalacheck.Checkers
 import SpecUtils._
 import DataSourceViewOps._
 import cats.Monad
 
-class DataSourceViewOpsSpec extends WordSpec with Matchers with Checkers {
+class DataSourceViewOpsSpec extends wordspec.AnyWordSpec with Matchers with Checkers {
 
   val id0: Id[Int] = Id[Int](guid(0, 0, 0))
   val id1: Id[Int] = Id[Int](guid(0, 0, 1))

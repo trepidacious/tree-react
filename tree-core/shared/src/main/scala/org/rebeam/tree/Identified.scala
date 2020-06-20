@@ -9,4 +9,6 @@ trait Identified[+A] {
     * @return The id
     */
   def id: Id[A]
+
+  def byRef: Ref[A] = Ref(id)
 }

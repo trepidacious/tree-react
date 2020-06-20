@@ -2,8 +2,10 @@ package org.rebeam.tree.logoot
 
 import org.rebeam.tree.Guid.SessionId
 import org.rebeam.tree.logoot.Logoot._
+import org.scalatest.matchers.should.Matchers
 import org.scalatest._
-import org.scalatest.prop.Checkers
+import org.scalatestplus.scalacheck.Checkers
+
 import org.scalacheck.Arbitrary._
 import org.scalacheck.{Arbitrary, Gen}
 import org.scalacheck.Gen._
@@ -12,13 +14,13 @@ import cats.implicits._
 import org.rebeam.tree.MapStateSTM
 import org.rebeam.tree.MapStateSTM._
 
-class LogootSpec extends WordSpec with Matchers with Checkers {
+class LogootSpec extends wordspec.AnyWordSpec with Matchers with Checkers {
 
-  def assertCompare[A: Ordering](a: A, b: A, result: Int): Assertion =
+  private def assertCompare[A: Ordering](a: A, b: A, result: Int)=
     assert(implicitly[Ordering[A]].compare(a, b) == result, s" - expected $a compare $b to be $result")
-  def assertLessThan[A: Ordering](a: A, b: A): Assertion = assertCompare(a, b, -1)
-  def assertMoreThan[A: Ordering](a: A, b: A): Assertion = assertCompare(a, b, 1)
-  def assertSame[A: Ordering](a: A, b: A): Assertion = assertCompare(a, b, 0)
+  private def assertLessThan[A: Ordering](a: A, b: A) = assertCompare(a, b, -1)
+  private def assertMoreThan[A: Ordering](a: A, b: A) = assertCompare(a, b, 1)
+  private def assertSame[A: Ordering](a: A, b: A) = assertCompare(a, b, 0)
 
   val identifierTests: List[(Identifier, Identifier, Int)] = List(
     // Same

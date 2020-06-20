@@ -39,10 +39,10 @@ object RefTaskListData {
 
   implicit val taskListIdCodec: IdCodec[TaskList] = IdCodec[TaskList]("TaskList")
 
-  def createTask[F[_]: Monad](i: Int)(implicit stm: STMOps[F]): F[Ref[Task]] =
+  def createTask[F[_]: Monad](i: Int)(implicit stm: EditOps[F]): F[Ref[Task]] =
     stm.put[Task](Task(_, s"Task $i", done = i % 2 == 0)).map(task => Ref(task.id))
 
-  def createTaskList[F[_]: Monad](implicit stm: STMOps[F]): F[TaskList] = {
+  def createTaskList[F[_]: Monad](implicit stm: EditOps[F]): F[TaskList] = {
     import stm._
     for {
       tasks <- 1.to(10).toList.traverse(createTask[F])
@@ -50,7 +50,7 @@ object RefTaskListData {
     } yield taskList
   }
 
-  def printTaskList[F[_]: Monad](l: TaskList)(implicit stm: STMOps[F]): F[String] = {
+  def printTaskList[F[_]: Monad](l: TaskList)(implicit stm: EditOps[F]): F[String] = {
     for {
       tasks <- l.tasks.deref[F]
     } yield s"${l.name}: ${tasks.map(_.prettyPrint).mkString(", ")}"

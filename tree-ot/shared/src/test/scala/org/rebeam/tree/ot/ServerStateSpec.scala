@@ -1,13 +1,15 @@
 package org.rebeam.tree.ot
 
 import org.rebeam.tree.ot.Atom._
+import org.scalatest.matchers.should.Matchers
 import org.scalatest._
-import org.scalatest.prop.Checkers
+import org.scalatestplus.scalacheck.Checkers
+
 
 /**
   * Specification for [[ServerState]]
   */
-class ServerStateSpec extends WordSpec with Matchers with Checkers {
+class ServerStateSpec extends wordspec.AnyWordSpec with Matchers with Checkers {
 
   "ServerState" should {
     "handle simple case" in {
