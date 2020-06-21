@@ -2,6 +2,7 @@ package org.rebeam.tree
 
 import cats.Monad
 import cats.implicits._
+import API._
 
 /**
   * A Transaction is an Edit producing no result (Unit). 

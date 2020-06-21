@@ -9,6 +9,7 @@ import monocle.{Lens, Optional, Prism}
 import org.rebeam.tree.{Delta, Moment}
 import org.rebeam.tree.Delta._
 import org.rebeam.tree.ot.{OTList, Operation}
+import scala.reflect.ClassTag
 //import org.rebeam.tree.ot.{OTCodecs, OTList, Operation}
 
 trait Codec[A] {
@@ -66,7 +67,7 @@ object Codec {
   implicit val momentDeltaCodec: DeltaCodec[Moment] = value[Moment]
 
   def lens[A, B]
-    (name: String, lens: Lens[A, B])
+    (lens: Lens[A, B], name: String)
     (implicit partialBCodec: DeltaCodec[B]): DeltaCodec[A] = new DeltaCodec[A] {
 
     val encoder: PartialEncoder[Delta[A]] = {
@@ -93,7 +94,7 @@ object Codec {
   }
 
   def optional[A, B]
-    (name: String, optional: Optional[A, B])
+    (optional: Optional[A, B], name: String)
     (implicit partialBCodec: DeltaCodec[B]): DeltaCodec[A] = new DeltaCodec[A] {
 
     val encoder: PartialEncoder[Delta[A]] = {
@@ -140,14 +141,14 @@ object Codec {
   }
 
   def lensOption[A, B]
-  (name: String, lensToOption: Lens[A, Option[B]])
+  (lensToOption: Lens[A, Option[B]], name: String)
   (implicit partialBCodec: DeltaCodec[B]): DeltaCodec[A] = {
     implicit val optionDelta: DeltaCodec[Option[B]] = option[B]
-    lens(name, lensToOption)
+    lens(lensToOption, name)
   }
 
   def prism[A, B]
-  (name: String, prism: Prism[A, B])
+  (prism: Prism[A, B], name: String)
   (implicit partialBCodec: DeltaCodec[B]): DeltaCodec[A] = new DeltaCodec[A] {
 
     val encoder: PartialEncoder[Delta[A]] = {
@@ -200,10 +201,10 @@ object Codec {
   def listIndex[A](implicit dCodecA: DeltaCodec[A]): DeltaCodec[List[A]] = traversableIndex[List, A]
   def vectorIndex[A](implicit dCodecA: DeltaCodec[A]): DeltaCodec[Vector[A]] = traversableIndex[Vector, A]
 
-  def action[M, A <: Delta[M]](name: String)(filter: PartialFunction[Delta[M], A])(implicit encodeA: Encoder[A], decodeA: Decoder[A]): DeltaCodec[M] = new DeltaCodec[M] {
+  def delta[M, A <: Delta[M]](name: String)(implicit encodeA: Encoder[A], decodeA: Decoder[A], classTag: ClassTag[A]): DeltaCodec[M] = new DeltaCodec[M] {
     val encoder: PartialEncoder[Delta[M]] =
       (m: Delta[M]) => for {
-        a <- filter.lift(m)
+        a <- classTag.unapply(m)
       } yield Json.obj(
         "ActionDelta" -> Json.obj(
           name -> encodeA(a)
@@ -219,6 +220,14 @@ object Codec {
       //Map to Delta[M] for neatness
     ).map(a => a: Delta[M])
   }
+
+  // implicit class DeltaWithAction[M, A <: Delta[M]](delta: Delta[A])
+
+  // implicit class DeltaCodecOrAction[A](codec: DeltaCodec[A]) {
+  //   def orDelta[D <: Delta[A]](name: String)
+  //     (implicit encodeA: Encoder[D], decodeA: Decoder[D], classTag: ClassTag[D]) = 
+  //       codec.or(action[A, D](name))  
+  // }
 
   def otList[A](implicit encoderA: Encoder[A], decoderA: Decoder[A]): DeltaCodec[OTList[A]] = new DeltaCodec[OTList[A]] {
     import org.rebeam.tree.ot.OTCodecs._

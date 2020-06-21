@@ -4,6 +4,7 @@ import cats.{Monad, Traverse}
 import cats.implicits._
 import monocle.{Lens, Optional, Prism}
 import org.rebeam.tree.ot.{OTList, Operation}
+import API._
 //import org.rebeam.tree.ot.{OTList, Operation}
 
 /**
@@ -16,6 +17,11 @@ import org.rebeam.tree.ot.{OTList, Operation}
   */
 trait Delta[A] {
   def apply[F[_]: Monad](a: A)(implicit stm: EditOps[F]): F[A]
+}
+
+trait DeltaEdit[A] extends Delta[A] {
+  def edit(a: A): Edit[A]
+  def apply[F[_]: Monad](a: A)(implicit stm: EditOps[F]): F[A] = edit(a)[F]
 }
 
 object Delta {

@@ -139,6 +139,7 @@ lazy val browserProject: Project => Project =
 
 lazy val root = project.in(file(".")).
   aggregate(
+    treeProgramJS, treeCoreJVM,
     treeCoreJS, treeCoreJVM,
     treeOTJS, treeOTJVM,
     treeSlinky,
@@ -154,6 +155,30 @@ lazy val root = project.in(file(".")).
     publishLocal := {}
   )
 
+  //////////////////
+ // tree-program //
+//////////////////
+lazy val treeProgram = crossProject(JSPlatform, JVMPlatform).in(
+  file("tree-program")
+//Settings for all projects
+).settings(
+  name := "tree-program",
+
+  Deps.test,
+  Deps.logging,
+  Deps.cats,
+
+  Deps.kindProjector,
+
+).jvmSettings(
+
+).jsSettings(
+  //Produce a module, so we can use @JSImport.
+  scalaJSLinkerConfig ~= { _.withModuleKind(ModuleKind.CommonJSModule) }
+).dependsOn(treeOT)
+
+lazy val treeProgramJVM = treeProgram.jvm
+lazy val treeProgramJS = treeProgram.js
 
   ////////////////
  // tree-core //
@@ -178,7 +203,7 @@ lazy val treeCore = crossProject(JSPlatform, JVMPlatform).in(
 ).jsSettings(
   //Produce a module, so we can use @JSImport.
   scalaJSLinkerConfig ~= { _.withModuleKind(ModuleKind.CommonJSModule) }
-).dependsOn(treeOT)
+).dependsOn(treeOT, treeProgram)
 
 lazy val treeCoreJVM = treeCore.jvm
 lazy val treeCoreJS = treeCore.js

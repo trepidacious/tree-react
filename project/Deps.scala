@@ -58,6 +58,7 @@ object Deps {
   lazy val cats = Seq(
     libraryDependencies ++= Seq(
       "org.typelevel"               %%% "cats-core"         % catsVersion,
+      "org.typelevel"               %%% "alleycats-core"         % catsVersion,
     )
   )
 

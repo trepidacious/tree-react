@@ -1,12 +1,13 @@
 package org.rebeam.tree
 
 import cats.Monad
+import alleycats.Pure
 
 /**
   * Provides ops to get the data at an Id
   * @tparam F The Monad used for ops
   */
-abstract class ReadOps[F[_]: Monad] {
+abstract class ReadOps[F[_]: Monad] extends Pure[F] {
 
   /**
     * Get data at an [[Id]].
