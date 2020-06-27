@@ -3,6 +3,9 @@ package org.rebeam.tree.slinkify
 import cats.Monad
 import cats.implicits._
 import org.rebeam.tree.Ref
+import org.rebeam.tree.API.Read
+import org.rebeam.tree.slinkify.API.ReactView
+import ReactView._
 
 object Implicits {
 
@@ -12,8 +15,8 @@ object Implicits {
       * Produce a list of Cursors from a list of refs, using ReactViewOps.
       * Curosrs are produced at the referenced Id
       */
-    def cursors[F[_]: Monad](implicit v: ReactViewOps[F]): F[List[Cursor[A]]] =
-      l.traverse(ref => v.cursorAt(ref.id))
+    def cursors: ReactView[List[Cursor[A]]] =
+      l.traverse(ref => cursorAt(ref.id))
   }
 
 }
