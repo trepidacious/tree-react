@@ -450,9 +450,8 @@ object API {
       def apply[F[_]: Monad](implicit editOps: EditOps[F]): F[Unit] = editOps.otListOperationUnit(list, op)
     }
   }
+  trait ViewBase extends ReadBase {
 
-  object View extends ReadBase {
-    
     /**
       * Get data at an [[Id]].
       * This will return F[None] if the data is not
@@ -492,4 +491,5 @@ object API {
     }
   }
 
+  object View extends ViewBase
 }

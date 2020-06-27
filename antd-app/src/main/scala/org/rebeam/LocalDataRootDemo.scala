@@ -25,18 +25,20 @@ import js.JSConverters._
 import typings.antd.menuMod.MenuMode
 import typings.antd.menuContextMod.MenuTheme
 
+import slinkify.API._
+import ReactView._
+
 object LocalDataRootDemo {
 
   // A View accepting the Id of a TodoItem.
   // This is a View so that it can use ReactViewOps to create a cursor at the id to view/edit the TodoItem.
   // The view will be re-rendered whenever the data at the Id changes.
-  val todoItemView: FunctionalComponent[Id[TodoItem]] = new View[Id[TodoItem]] {
+  val todoItemView: FunctionalComponent[Id[TodoItem]] = View {
 
-    def apply[F[_]: Monad](id: Id[TodoItem])(implicit v: ReactViewOps[F], tx: ReactTransactor): F[ReactElement] = {
-      scribe.debug(s"View applying from $id")
-
+    // We need an implicit ReactTransactor here, hence the slightly unusual function to a function
+    implicit tx => id => 
       // By creating a cursor at the Id, we can enable navigation through the TodoItem
-      v.cursorAt[TodoItem](id).map(
+      cursorAt[TodoItem](id).map(
         cursor => {
 
           val textCursor = cursor.zoom(TodoItem.text)
@@ -56,19 +58,19 @@ object LocalDataRootDemo {
             ).className("todo-item")
         }
       )
-    }
-  }.build("todoItemView", onError = e => li(e.toString))
+    
+  }
 
   // A View accepting the Id of a TodoItem.
   // This is a View so that it can use ReactViewOps to create a cursor at the id to view/edit the TodoItem.
   // The view will be re-rendered whenever the data at the Id changes.
-  val todoListSummaryView: FunctionalComponent[Id[TodoList]] = new View[Id[TodoList]] {
+  val todoListSummaryView: FunctionalComponent[Id[TodoList]] = View {
 
-    def apply[F[_]: Monad](id: Id[TodoList])(implicit v: ReactViewOps[F], tx: ReactTransactor): F[ReactElement] = {
+    implicit tx => id => {
       scribe.debug(s"View applying from $id")
 
       // By creating a cursor at the Id, we can enable navigation through the TodoItem
-      v.cursorAt[TodoList](id).map(
+      cursorAt[TodoList](id).map(
         cursor => {
           val textCursor = cursor.zoom(TodoList.name)
           // div(
@@ -91,14 +93,14 @@ object LocalDataRootDemo {
         }
       )
     }
-  }.build("todoItemView", onError = e => li(e.toString))
+  }
 
   // This component uses a child view for each item in the list, each of these will update only when the TodoItem
   // referenced by that Id changes.
   // Note that this does not need to be a View itself since it doesn't actually get the data by id - the child views
-  // can still get data from the Context provided by dataProvider, so this can be a ViewP
-  val todoListView: FunctionalComponent[TodoList] = new ViewP[TodoList] {
-    override def apply(a: TodoList): ReactElement = {
+  // can still get data from the Context provided by dataProvider, so this can be a ViewPure
+  val todoListView: FunctionalComponent[TodoList] = ViewPure {
+    a =>
       Space.direction(
         antdStrings.vertical
       )(
@@ -109,11 +111,10 @@ object LocalDataRootDemo {
           .renderItem((id, index) => todoItemView(id).withKey(id.toString))
         // a.items.map(id => todoItemView(id).withKey(id.toString))
       )
-    }
-  }.build
+  }
 
-  val layoutView: FunctionalComponent[TodoList] = new ViewP[TodoList] {
-    override def apply(a: TodoList): ReactElement = {
+  val layoutView: FunctionalComponent[TodoList] = ViewPure {
+    a =>
       // div()
       Layout.className("layout")(
         LayoutHeader()(
@@ -136,10 +137,8 @@ object LocalDataRootDemo {
               todoListView(a)
             )
         )
-      )
-    }
-
-  }.build
+      )    
+  }
 
   // When creating a LocalDataRoot to manage an STM, we need an Indexer that will give us an
   // index into the data - a way to get the Id of useful data. Otherwise we wouldn't know the

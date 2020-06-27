@@ -8,9 +8,9 @@ import slinky.web.html._
 
 object StringView {
 
-  val stringView: FunctionalComponent[Cursor[String]] = new ViewPC[String] {
+  val stringView: FunctionalComponent[Cursor[String]] = ViewPureCursor {
 
-    override def apply(c: Cursor[String])(implicit tx: ReactTransactor): ReactElement = {
+    implicit tx => c => {
 
       scribe.debug(s"stringView applying from $c, transactor $tx")
 
@@ -26,6 +26,6 @@ object StringView {
 
     }
 
-  }.build()
+  }
 
 }

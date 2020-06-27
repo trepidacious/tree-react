@@ -5,6 +5,7 @@ import monocle.Prism
 import cats.Monad
 import cats.implicits._
 import scala.collection.mutable
+import API._
 
 object Implicits {
 
@@ -30,11 +31,11 @@ object Implicits {
   def prismFromOptional[S, A <: S](f: S => Option[A]): Prism[S, A] = Prism(f)(a => a: S)
 
   implicit class RefList[A](l: List[Ref[A]]) {
-    def deref[F[_]: Monad](implicit stm: ReadOps[F]): F[List[A]] =
-      l.traverse[F, A](ref => stm.get(ref.id))
 
-    def derefMap[B, F[_]: Monad](f: A => B)(implicit stm: ReadOps[F]): F[List[B]] =
-      l.traverse[F, A](ref => stm.get(ref.id)).map(_.map(f))
+    val deref: Read[List[A]] = l.traverse(ref => Edit.get(ref.id))
+
+    def derefMap[B](f: A => B): Read[List[B]] = l.traverse(ref => Edit.get(ref.id)).map(_.map(f))
+
   }
 
   implicit class SwappableList[A](l: List[A]) {

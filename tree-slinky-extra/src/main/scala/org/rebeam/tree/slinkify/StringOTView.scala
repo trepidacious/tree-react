@@ -18,7 +18,7 @@ object StringOTView {
    * In detail, this just passes the current String built from the OTList, the most recent CursorUpdate and
    * an edit function to a stringOTInnerView.
    */
-  val stringOTView: FunctionalComponent[Cursor[OTList[Char]]] = new ViewC[OTList[Char]] {
+  val stringOTView: FunctionalComponent[Cursor[OTList[Char]]] = new ViewCursor[OTList[Char]] {
 
     override def apply[F[_] : Monad](c: Cursor[OTList[Char]])
                                     (implicit v: ReactViewOps[F], tx: ReactTransactor): F[ReactElement] = {
