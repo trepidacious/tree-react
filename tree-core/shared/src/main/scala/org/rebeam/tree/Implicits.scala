@@ -30,7 +30,7 @@ object Implicits {
     */
   def prismFromOptional[S, A <: S](f: S => Option[A]): Prism[S, A] = Prism(f)(a => a: S)
 
-  implicit class RefList[A](l: List[Ref[A]]) {
+  implicit class TreeRefList[A](l: List[Ref[A]]) {
 
     val deref: Read[List[A]] = l.traverse(ref => Edit.get(ref.id))
 
@@ -38,7 +38,7 @@ object Implicits {
 
   }
 
-  implicit class SwappableList[A](l: List[A]) {
+  implicit class TreeSwappableList[A](l: List[A]) {
     def swapped(oldIndex: Int, newIndex: Int): List[A] = {
       val lb = mutable.ListBuffer(l: _*)
       val e = lb.remove(oldIndex)

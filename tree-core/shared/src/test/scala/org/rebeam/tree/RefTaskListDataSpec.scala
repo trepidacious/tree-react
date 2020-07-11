@@ -35,7 +35,7 @@ class RefTaskListDataSpec extends wordspec.AnyWordSpec with Matchers with Checke
 //      println(s1)
 //      println(taskList)
 
-      val (s2, printed) = runS(printTaskList[MapState](taskList), s1)
+      val (s2, printed) = runS(printTaskList(taskList)[MapState], s1)
 
 //      println(printed)
 

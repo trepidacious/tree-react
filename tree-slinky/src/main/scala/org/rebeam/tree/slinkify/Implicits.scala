@@ -9,7 +9,7 @@ import ReactView._
 
 object Implicits {
 
-  implicit class RefList[A](l: List[Ref[A]]) {
+  implicit class SlinkifyRefList[A](l: List[Ref[A]]) {
     
     /**
       * Produce a list of Cursors from a list of refs, using ReactViewOps.
