@@ -27,8 +27,19 @@ import typings.antd.menuContextMod.MenuTheme
 
 import slinkify.API._
 import ReactView._
+import typings.react.mod.CSSProperties
+import org.rebeam.tree.view.MaterialColor
 
 object LocalDataRootDemo {
+
+  val avatarBg: CSSProperties = CSSProperties().setBackgroundColor(MaterialColor.BlueGrey(700).toString())
+  val todoItemArcHashView: FunctionalComponent[Id[TodoItem]] = ArcHashView[Id[TodoItem]]
+  val todoItemAvatar: FunctionalComponent[Id[TodoItem]] = ViewPure {
+    id => todoItemArcHashView(id)
+  } 
+
+
+
 
   // A View accepting the Id of a TodoItem.
   // This is a View so that it can use ReactViewOps to create a cursor at the id to view/edit the TodoItem.
@@ -49,13 +60,17 @@ object LocalDataRootDemo {
               (b: Boolean, _) => cursor.delta(TodoItemCompletion(b)).apply()
             ).checked(cursor.a.completed.isDefined)
 
-          Input
-            .addonBefore(switch)
-            .placeholder("Todo item")
-            .value(textCursor.a)
-            .onChange(
-              event => textCursor.set(event.target_ChangeEvent.value).apply()
-            ).className("todo-item")
+          div(
+            todoItemAvatar(id),
+            Input
+              .addonBefore(switch)
+              .placeholder("Todo item")
+              .value(textCursor.a)
+              .onChange(
+                event => textCursor.set(event.target_ChangeEvent.value).apply()
+              ).className("todo-item"),
+
+          )
         }
       )
     
