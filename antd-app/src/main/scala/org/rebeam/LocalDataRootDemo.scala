@@ -60,17 +60,16 @@ object LocalDataRootDemo {
               (b: Boolean, _) => cursor.delta(TodoItemCompletion(b)).apply()
             ).checked(cursor.a.completed.isDefined)
 
-          div(
-            todoItemAvatar(id),
+          // div(
+          //   todoItemAvatar(id),
             Input
               .addonBefore(switch)
               .placeholder("Todo item")
               .value(textCursor.a)
               .onChange(
                 event => textCursor.set(event.target_ChangeEvent.value).apply()
-              ).className("todo-item"),
-
-          )
+              ).className("todo-item")
+          // )
         }
       )
     
