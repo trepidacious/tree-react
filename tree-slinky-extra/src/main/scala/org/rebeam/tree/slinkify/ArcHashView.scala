@@ -82,13 +82,14 @@ object ArcHash {
     val halfSize = size / 2.0
     val sizeCSS = s"${size}px"
     val viewBoxCSS = s"0 0 $size $size"
+    val strokeW = if (size > 28) 2.0 else if (size > 20) 1.5 else 1.0
 
     svg(
       width := sizeCSS,
       height := sizeCSS,
       fill := "none",
 //      ^.stroke := MaterialColor.DeepPurple(100).,
-      strokeWidth := 2,
+      strokeWidth := strokeW,
       strokeLinecap := "round",
       viewBox := viewBoxCSS,
       circle(cx:= center, cy:= center, r := halfSize, fill := bgColor.getOrElse(defaultBackground).toString()),
