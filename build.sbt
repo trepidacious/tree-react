@@ -72,8 +72,9 @@ lazy val reactNpmDeps: Project => Project =
   _.settings(
     Compile / npmDependencies ++= Seq(
       "react" -> "16.13",
+      "@types/react" -> "16.9.23",
       "react-dom" -> "16.13",
-      "@types/react" -> "16.9.23"
+      "@types/react-dom" -> "16.9.8",
     )
   )
 
