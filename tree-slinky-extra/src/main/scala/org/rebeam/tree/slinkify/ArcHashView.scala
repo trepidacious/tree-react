@@ -7,10 +7,46 @@ import slinky.web.html._
 import org.rebeam.tree.view.Color
 // import typings.antd.components.{List => _, _}
 import org.rebeam.tree.view.MaterialColor
+import org.rebeam.tree.view.Colorable
+import scalajs.js
 
 object ArcHashView {
-  def apply[A: ArcHashable: Reusability]: FunctionalComponent[A] = ViewPure {
-    a => ArcHash.icon(a)
+  val tableAvatarStyle = js.Dynamic.literal(
+    position = "absolute",
+    left = "18px",
+    top = "16px"
+  )
+
+  def color[A: ArcHashable : Colorable : Reusability]: FunctionalComponent[A] = ViewPure {
+    a => div(
+      ArcHash.icon(
+        a, 
+        color = Some(Color.White), 
+        bgColor = Some(implicitly[Colorable[A]].colorOf(a))
+      )
+    )
+  }
+
+  def apply[A: ArcHashable : Reusability]: FunctionalComponent[A] = ViewPure {
+    a => div(
+      ArcHash.icon(a)
+    )
+  }
+
+  def colorCell[A: ArcHashable : Colorable : Reusability]: FunctionalComponent[A] = ViewPure {
+    a => div(style := tableAvatarStyle)(
+      ArcHash.icon(
+        a, 
+        color = Some(Color.White), 
+        bgColor = Some(implicitly[Colorable[A]].colorOf(a))
+      )
+    )
+  }
+
+  def cell[A: ArcHashable : Reusability]: FunctionalComponent[A] = ViewPure {
+    a => div(style := tableAvatarStyle)(
+      ArcHash.icon(a)
+    )
   }
 }
 
