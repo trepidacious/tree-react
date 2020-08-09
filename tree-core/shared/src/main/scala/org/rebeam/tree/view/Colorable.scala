@@ -14,5 +14,5 @@ trait Colored {
 
 object Colorable {
   implicit val colorableColor: Colorable[Color] = c => c
-  implicit val coloredColor: Colorable[Colored] = c => c.color
+  implicit def coloredColor[A <: Colored]: Colorable[A] = c => c.color
 }
