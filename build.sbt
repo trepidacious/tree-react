@@ -46,9 +46,10 @@ lazy val baseSettings: Project => Project =
       // scalaVersion := "2.13.1",
       // scalacOptions ++= ScalacOptions.flags,
       scalaJSUseMainModuleInitializer := true,
-      scalaJSLinkerConfig ~= (/* disabled because it somehow triggers many warnings */
-      _.withSourceMap(false)
-        .withModuleKind(ModuleKind.CommonJSModule)),
+      scalaJSLinkerConfig ~= (
+      _.withSourceMap(false) /* disabled because it somehow triggers many warnings */
+        // .withModuleKind(ModuleKind.CommonJSModule) //TODO review
+      ),
       /* for slinky */
       // libraryDependencies ++= Seq("me.shadaj" %%% "slinky-hot" % "0.6.4+2-3c8aef65"),
     )
@@ -71,10 +72,12 @@ lazy val jsProject: Project => Project =
 lazy val reactNpmDeps: Project => Project =
   _.settings(
     Compile / npmDependencies ++= Seq(
-      "react" -> "16.13",
-      "@types/react" -> "16.9.23",
-      "react-dom" -> "16.13",
+      "react" -> "16.13.1",
+      "react-dom" -> "16.13.1",
+      "@types/react" -> "16.9.42",
       "@types/react-dom" -> "16.9.8",
+      "csstype" -> "2.6.11",
+      "@types/prop-types" -> "15.7.3"
     )
   )
 
@@ -99,9 +102,6 @@ lazy val browserProject: Project => Project =
   _.settings(
     start := {
       (Compile / fastOptJS / startWebpackDevServer).value
-      val indexFrom = baseDirectory.value / "assets/index.html"
-      val indexTo = (Compile / fastOptJS / crossTarget).value / "index.html"
-      Files.copy(indexFrom.toPath, indexTo.toPath, REPLACE_EXISTING)
     },
     dist := {
       val artifacts = (Compile / fullOptJS / webpack).value
@@ -118,7 +118,7 @@ lazy val browserProject: Project => Project =
         Files.copy(artifact.data.toPath, target.toPath, REPLACE_EXISTING)
       }
 
-      val indexFrom = baseDirectory.value / "assets/index.html"
+      val indexFrom = baseDirectory.value / "src/main/js/index.html"
       val indexTo = distFolder / "index.html"
 
       val indexPatchedContent = {
@@ -273,7 +273,7 @@ lazy val antdApp = project
   )
   .settings(
     stFlavour := Flavour.Slinky,
-    Compile / npmDependencies ++= Seq("antd" -> "4.3.1"),
+    Compile / npmDependencies ++= Seq("antd" -> "4.5.1"),
     webpackDevServerPort := 8080,
   )
   .dependsOn(treeSlinkyExtra)

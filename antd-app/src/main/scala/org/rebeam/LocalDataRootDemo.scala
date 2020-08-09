@@ -22,13 +22,13 @@ import typings.antd.paginationPaginationMod.PaginationConfig
 
 import scala.scalajs.js
 import js.JSConverters._
-import typings.antd.menuMod.MenuMode
 import typings.antd.menuContextMod.MenuTheme
 
 import slinkify.API._
 import ReactView._
 import typings.react.mod.CSSProperties
 import org.rebeam.tree.view.MaterialColor
+import typings.rcMenu.interfaceMod.MenuMode
 
 object LocalDataRootDemo {
 
@@ -131,7 +131,7 @@ object LocalDataRootDemo {
     a =>
       // div()
       Layout.className("layout")(
-        LayoutHeader()(
+        Layout.Header()(
           Menu
             .mode(MenuMode.horizontal)
             .theme(MenuTheme.dark)
@@ -144,7 +144,7 @@ object LocalDataRootDemo {
               // MenuItem().withKey("3")("Blog")
             )
         ),
-        LayoutContent()(
+        Layout.Content()(
           PageHeader
             .title("Demo")
             .subTitle("Shows OT String editing and simple todo view")(
