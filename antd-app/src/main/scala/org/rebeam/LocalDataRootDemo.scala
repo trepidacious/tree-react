@@ -29,6 +29,8 @@ import ReactView._
 import typings.react.mod.CSSProperties
 import org.rebeam.tree.view.MaterialColor
 import typings.rcMenu.interfaceMod.MenuMode
+import typings.antd.components.Typography
+import typings.antd.antdNumbers
 
 object LocalDataRootDemo {
 
@@ -148,6 +150,7 @@ object LocalDataRootDemo {
           PageHeader
             .title("Demo")
             .subTitle("Shows OT String editing and simple todo view")(
+              Typography.Title.level(antdNumbers.`1`)("Todo List"),
               todoListView(a)
             )
         )

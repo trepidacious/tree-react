@@ -106,7 +106,7 @@ lazy val browserProject: Project => Project =
     dist := {
       val artifacts = (Compile / fullOptJS / webpack).value
       val artifactFolder = (Compile / fullOptJS / crossTarget).value
-      val distFolder = (ThisBuild / baseDirectory).value / "docs" / moduleName.value
+      val distFolder = (ThisBuild / baseDirectory).value / "dist" / moduleName.value
 
       distFolder.mkdirs()
       artifacts.foreach { artifact =>
@@ -145,6 +145,7 @@ lazy val root = project.in(file(".")).
     treeOTJS, treeOTJVM,
     treeSlinky,
     treeSlinkyExtra,
+    treeServer,
     // antdApp,
     // scalajsElectronJS, scalajsElectronJVM,
     // scalajsElectronReactJS, scalajsElectronReactJVM,
@@ -205,6 +206,26 @@ lazy val treeCore = crossProject(JSPlatform, JVMPlatform).in(
   //Produce a module, so we can use @JSImport.
   scalaJSLinkerConfig ~= { _.withModuleKind(ModuleKind.CommonJSModule) }
 ).dependsOn(treeOT, treeProgram)
+
+  //////////////////
+ // tree-server //
+/////////////////
+lazy val treeServer = project.in(
+  file("tree-server")
+//Settings for all projects
+).settings(
+  name := "tree-server",
+
+  Deps.test,
+  Deps.logging,
+  Deps.circe,
+  Deps.cats,
+  Deps.shapeless,
+  Deps.monocle,
+
+  Deps.kindProjector,
+
+).dependsOn(treeCoreJVM)
 
 lazy val treeCoreJVM = treeCore.jvm
 lazy val treeCoreJS = treeCore.js
