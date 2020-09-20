@@ -42,16 +42,11 @@ lazy val dist = TaskKey[File]("dist")
 lazy val baseSettings: Project => Project =
   _.enablePlugins(ScalaJSPlugin)
     .settings(
-      // version := "0.1-SNAPSHOT",
-      // scalaVersion := "2.13.1",
-      // scalacOptions ++= ScalacOptions.flags,
       scalaJSUseMainModuleInitializer := true,
       scalaJSLinkerConfig ~= (
       _.withSourceMap(false) /* disabled because it somehow triggers many warnings */
         // .withModuleKind(ModuleKind.CommonJSModule) //TODO review
       ),
-      /* for slinky */
-      // libraryDependencies ++= Seq("me.shadaj" %%% "slinky-hot" % "0.6.4+2-3c8aef65"),
     )
 
 lazy val bundlerSettings: Project => Project =
