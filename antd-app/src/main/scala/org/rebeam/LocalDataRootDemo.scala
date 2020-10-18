@@ -62,16 +62,13 @@ object LocalDataRootDemo {
               (b: Boolean, _) => cursor.delta(TodoItemCompletion(b)).apply()
             ).checked(cursor.a.completed.isDefined)
 
-          // div(
-          //   todoItemAvatar(id),
-            Input
-              .addonBefore(switch)
-              .placeholder("Todo item")
-              .value(textCursor.a)
-              .onChange(
-                event => textCursor.set(event.target_ChangeEvent.value).apply()
-              ).className("todo-item")
-          // )
+          Input
+            .addonBefore(switch)
+            .placeholder("Todo item")
+            .value(textCursor.a)
+            .onChange(
+              event => textCursor.set(event.target_ChangeEvent.value).apply()
+            ).className("todo-item")
         }
       )
     
@@ -119,7 +116,7 @@ object LocalDataRootDemo {
     a =>
       Space.direction(
         antdStrings.vertical
-      )(
+      ).style(CSSProperties().setWidth("100%"))(
         todoListSummaryView(a.id),
         AntList[Id[TodoItem]]
           .pagination(PaginationConfig())
