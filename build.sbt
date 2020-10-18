@@ -268,7 +268,10 @@ lazy val antdApp = project
   )
   .settings(
     stFlavour := Flavour.Slinky,
-    Compile / npmDependencies ++= Seq("antd" -> "4.5.1"),
+    Compile / npmDependencies ++= Seq(
+      "antd" -> "4.5.1",
+      "rc-menu" -> "8.5.2",
+    ),
     webpackDevServerPort := 8080,
   )
   .dependsOn(treeSlinkyExtra)
