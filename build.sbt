@@ -33,7 +33,7 @@ scalacOptions in ThisBuild ++= Seq(
 testOptions in Test += Tests.Argument(TestFrameworks.ScalaCheck, "-verbosity", "2")
 
 resolvers ++= Seq(
-  Resolver.bintrayRepo("oyvindberg", "ScalablyTyped"),
+  // Resolver.bintrayRepo("oyvindberg", "ScalablyTyped"),
   Resolver.sonatypeRepo("releases"),
   Resolver.sonatypeRepo("snapshots")
 )
@@ -202,11 +202,12 @@ lazy val root = project.in(file(".")).
     treeCoreJS, treeCoreJVM,
     treeOTJS, treeOTJVM,
     treeReactJS, treeReactJVM,
-    treeSlinkyJS, treeSlinkyJVM,
-    treeSlinkyExtraJS, treeSlinkyExtraJVM,
+    // treeSlinkyJS, treeSlinkyJVM,
+    // treeSlinkyExtraJS, treeSlinkyExtraJVM,
     electronAppJS, electronAppJVM,
     suiElectronAppJS, suiElectronAppJVM,
-    antdApp,
+    scalajsReactCommonJS, scalajsReactCommonJVM,
+    // antdApp,
     suiApp
   ).settings(
     publish := {},
@@ -270,7 +271,7 @@ lazy val scalajsReactDocgenFacade = crossProject(JSPlatform, JVMPlatform).in(fil
   ),
 
   //For Circe
-  addCompilerPlugin("org.scalamacros" %% "paradise" % "2.1.0" cross CrossVersion.patch)
+  addCompilerPlugin("org.scalamacros" %% "paradise" % "2.1.1" cross CrossVersion.patch)
 
 ).jsSettings(
   //Scalajs dependencies that are used on the client only
@@ -554,61 +555,61 @@ lazy val treeReactJS = treeReact.js
   ////////////////
  // tree-slinky //
 ////////////////
-lazy val treeSlinky = crossProject(JSPlatform, JVMPlatform).in(
-  file("tree-slinky")
-  //Settings for all projects
-).configure(
-  jsProject
-).settings(
-  name := "tree-slinky",
-  libraryDependencies += "org.log4s" %%% "log4s" % log4sVersion,
-  addCompilerPlugin(
-    "org.scalamacros" % "paradise" % "2.1.1" cross CrossVersion.patch
-  )
-).jvmSettings(
+// lazy val treeSlinky = crossProject(JSPlatform, JVMPlatform).in(
+//   file("tree-slinky")
+//   //Settings for all projects
+// ).configure(
+//   jsProject
+// ).settings(
+//   name := "tree-slinky",
+//   libraryDependencies += "org.log4s" %%% "log4s" % log4sVersion,
+//   addCompilerPlugin(
+//     "org.scalamacros" % "paradise" % "2.1.1" cross CrossVersion.patch
+//   )
+// ).jvmSettings(
 
-).jsSettings(
-  //Scalajs dependencies that are used on the client only
-  resolvers += Resolver.jcenterRepo,
+// ).jsSettings(
+//   //Scalajs dependencies that are used on the client only
+//   resolvers += Resolver.jcenterRepo,
 
-  slinkyDeps,
+//   slinkyDeps,
   
-  libraryDependencies ++= Seq(
-    ScalablyTyped.A.`antd-slinky-facade`,
-    ScalablyTyped.R.`react-dom`,
-  ),
-//  scalacOptions += "-Ymacro-debug-lite",
+//   libraryDependencies ++= Seq(
+//     ScalablyTyped.A.`antd-slinky-facade`,
+//     ScalablyTyped.R.`react-dom`,
+//   ),
+// //  scalacOptions += "-Ymacro-debug-lite",
 
-  //Produce a module, so we can use @JSImport.
-  scalaJSLinkerConfig ~= { _.withModuleKind(ModuleKind.CommonJSModule) }
-).dependsOn(treeCore)
+//   //Produce a module, so we can use @JSImport.
+//   scalaJSLinkerConfig ~= { _.withModuleKind(ModuleKind.CommonJSModule) }
+// ).dependsOn(treeCore)
 
-lazy val treeSlinkyJVM = treeSlinky.jvm
-lazy val treeSlinkyJS = treeSlinky.js
+// lazy val treeSlinkyJVM = treeSlinky.jvm
+// lazy val treeSlinkyJS = treeSlinky.js
 
   ///////////////////////
  // tree-slinky-extra //
 ///////////////////////
-lazy val treeSlinkyExtra = crossProject(JSPlatform, JVMPlatform).in(
-  file("tree-slinky-extra")
-  //Settings for all projects
-).configure(
-  jsProject
-).settings(
-  name := "tree-slinky-extra",
-  libraryDependencies += "org.log4s" %%% "log4s" % log4sVersion,
-  addCompilerPlugin(
-    "org.scalamacros" % "paradise" % "2.1.1" cross CrossVersion.patch
-  )
-).jvmSettings(
+// lazy val treeSlinkyExtra = crossProject(JSPlatform, JVMPlatform).in(
+//   file("tree-slinky-extra")
+//   //Settings for all projects
+// ).configure(
+//   jsProject
+// ).settings(
+//   name := "tree-slinky-extra",
+//   libraryDependencies += "org.log4s" %%% "log4s" % log4sVersion,
+//   addCompilerPlugin(
+//     "org.scalamacros" % "paradise" % "2.1.1" cross CrossVersion.patch
+//   )
+// ).jvmSettings(
 
-).jsSettings(
-  //Produce a module, so we can use @JSImport.
-  scalaJSLinkerConfig ~= { _.withModuleKind(ModuleKind.CommonJSModule) }
-).dependsOn(treeSlinky)
+// ).jsSettings(
+//   //Produce a module, so we can use @JSImport.
+//   scalaJSLinkerConfig ~= { _.withModuleKind(ModuleKind.CommonJSModule) }
+// ).dependsOn(treeSlinky)
 
-lazy val treeSlinkyExtraJVM = treeSlinkyExtra.jvm
-lazy val treeSlinkyExtraJS = treeSlinkyExtra.js
+// lazy val treeSlinkyExtraJVM = treeSlinkyExtra.jvm
+// lazy val treeSlinkyExtraJS = treeSlinkyExtra.js
 
   //////////////////
  // electron-app //
@@ -701,22 +702,22 @@ lazy val suiElectronApp = crossProject(JSPlatform, JVMPlatform).in(file("sui-ele
 lazy val suiElectronAppJVM = suiElectronApp.jvm
 lazy val suiElectronAppJS = suiElectronApp.js
 
-lazy val antdApp =
-  project.in(file("antd-app"))
-    .configure(jsProject, bundlerSettings, browserProject, withCssLoading)
-    .settings(
-      webpackDevServerPort := 8080,
-      addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.1" cross CrossVersion.full),
-      libraryDependencies ++= Seq(
-        ScalablyTyped.A.`antd-slinky-facade`,
-        ScalablyTyped.R.`react-dom`,
-      ),
-      Compile / npmDependencies ++= Seq(
-        "react" -> "16.8",
-        "react-dom" -> "16.8",
-        "prop-types" -> "^15.0.0",
-      )
-    ).dependsOn(treeSlinkyJS, treeSlinkyExtraJS)
+// lazy val antdApp =
+//   project.in(file("antd-app"))
+//     .configure(jsProject, bundlerSettings, browserProject, withCssLoading)
+//     .settings(
+//       webpackDevServerPort := 8080,
+//       addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.1" cross CrossVersion.full),
+//       libraryDependencies ++= Seq(
+//         ScalablyTyped.A.`antd-slinky-facade`,
+//         ScalablyTyped.R.`react-dom`,
+//       ),
+//       Compile / npmDependencies ++= Seq(
+//         "react" -> "16.8",
+//         "react-dom" -> "16.8",
+//         "prop-types" -> "^15.0.0",
+//       )
+//     ).dependsOn(treeSlinkyJS, treeSlinkyExtraJS)
 
 lazy val suiApp =
   project.in(file("sui-app"))
